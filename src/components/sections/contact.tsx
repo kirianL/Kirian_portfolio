@@ -3,12 +3,17 @@ import { motion } from "framer-motion";
 import { MessageCircle, Calendar as CalendarIcon, Mail } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 import Cal, { getCalApi } from "@calcom/embed-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
 export function Contact() {
   const { data } = useLanguage();
   const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     (async function () {
@@ -128,15 +133,18 @@ export function Contact() {
               </div>
             </div>
             <div className="flex-1 w-full bg-white dark:bg-zinc-950">
-              <Cal
-                namespace="1-hour-meeting"
-                calLink="kirianluna/1-hour-meeting"
-                style={{ width: "100%", height: "100%", minHeight: "600px" }}
-                config={{
-                  layout: "month_view",
-                  theme: resolvedTheme === "dark" ? "dark" : "light",
-                }}
-              />
+              {mounted && (
+                <Cal
+                  key={resolvedTheme}
+                  namespace="1-hour-meeting"
+                  calLink="kirianluna/1-hour-meeting"
+                  style={{ width: "100%", height: "100%", minHeight: "600px" }}
+                  config={{
+                    layout: "month_view",
+                    theme: resolvedTheme === "dark" ? "dark" : "light",
+                  }}
+                />
+              )}
             </div>
           </motion.div>
         </div>
