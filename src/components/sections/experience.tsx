@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { CheckCircle2, MapPin } from "lucide-react";
 
@@ -8,12 +7,7 @@ export function Experience() {
   return (
     <section id="experience" className="py-20 bg-background/50">
       <div className="container px-6 mx-auto max-w-6xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className=""
-        >
+        <div className="">
           {/* Header */}
           <div className="text-center space-y-4 mb-20">
             <h2 className="text-3xl md:text-5xl font-black text-foreground dark:text-white tracking-tight">
@@ -32,12 +26,8 @@ export function Experience() {
           <div className="grid grid-cols-1 gap-12 max-w-5xl mx-auto">
             {data.projects.list.map((project, index) => {
               return (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
                   className="group relative flex flex-col md:flex-row bg-card dark:bg-card/40 backdrop-blur-xl border border-border/60 rounded-[2rem] overflow-hidden hover:border-primary/40 shadow-sm hover:shadow-xl transition-all duration-500"
                 >
                   {/* Left Side: Logo & Industry */}
@@ -138,11 +128,11 @@ export function Experience() {
                       ))}
                     </div>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

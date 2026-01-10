@@ -1,10 +1,33 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Send } from "lucide-react";
+import { Send, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
+import { useState } from "react";
 
 export function Contact() {
   const { data } = useLanguage();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const response = await fetch("https://formspree.io/f/xyzkpvvp", {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (response.ok) {
+      setIsSubmitted(true);
+      (e.target as HTMLFormElement).reset();
+    }
+    setIsSubmitting(false);
+  };
 
   return (
     <section
@@ -66,46 +89,90 @@ export function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/70 ml-1">
-                    {data.contact.form.name}
-                  </label>
-                  <input
-                    placeholder={data.contact.form.namePlaceholder}
-                    className="w-full bg-transparent border-0 border-b border-border/60 rounded-none px-1 h-12 outline-none focus:outline-none focus:border-primary transition-all placeholder:text-muted-foreground/30 text-base"
-                  />
+            {isSubmitted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center justify-center p-12 bg-primary/5 border border-primary/20 rounded-3xl text-center space-y-4"
+              >
+                <CheckCircle2 className="w-16 h-16 text-primary" />
+                <h3 className="text-2xl font-bold text-foreground">
+                  ¡Mensaje Enviado!
+                </h3>
+                <p className="text-muted-foreground">
+                  Gracias por contactarme. Te responderé lo antes posible.
+                </p>
+                <Button
+                  onClick={() => setIsSubmitted(false)}
+                  variant="outline"
+                  className="rounded-full mt-4"
+                >
+                  Enviar otro mensaje
+                </Button>
+              </motion.div>
+            ) : (
+              <form
+                className="space-y-8"
+                onSubmit={handleSubmit}
+                action="https://formspree.io/f/xyzkpvvp"
+                method="POST"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/70 ml-1">
+                      {data.contact.form.name}
+                    </label>
+                    <input
+                      name="name"
+                      required
+                      placeholder={data.contact.form.namePlaceholder}
+                      className="w-full bg-transparent border-0 border-b border-border/60 rounded-none px-1 h-12 outline-none focus:outline-none focus:border-primary transition-all placeholder:text-muted-foreground/30 text-base"
+                    />
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/70 ml-1">
+                      {data.contact.form.email}
+                    </label>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder={data.contact.form.emailPlaceholder}
+                      className="w-full bg-transparent border-0 border-b border-border/60 rounded-none px-1 h-12 outline-none focus:outline-none focus:border-primary transition-all placeholder:text-muted-foreground/30 text-base"
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-3">
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/70 ml-1">
-                    {data.contact.form.email}
+                    {data.contact.form.message}
                   </label>
-                  <input
-                    type="email"
-                    placeholder={data.contact.form.emailPlaceholder}
-                    className="w-full bg-transparent border-0 border-b border-border/60 rounded-none px-1 h-12 outline-none focus:outline-none focus:border-primary transition-all placeholder:text-muted-foreground/30 text-base"
+                  <textarea
+                    name="message"
+                    required
+                    placeholder={data.contact.form.messagePlaceholder}
+                    className="w-full min-h-[120px] bg-transparent border-0 border-b border-border/60 rounded-none px-1 outline-none focus:outline-none focus:border-primary transition-all resize-none placeholder:text-muted-foreground/30 text-base flex-1"
                   />
                 </div>
-              </div>
 
-              <div className="space-y-3">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/70 ml-1">
-                  {data.contact.form.message}
-                </label>
-                <textarea
-                  placeholder={data.contact.form.messagePlaceholder}
-                  className="w-full min-h-[120px] bg-transparent border-0 border-b border-border/60 rounded-none px-1 outline-none focus:outline-none focus:border-primary transition-all resize-none placeholder:text-muted-foreground/30 text-base flex-1"
-                />
-              </div>
-
-              <Button className="group relative w-full h-14 bg-foreground text-background hover:bg-foreground/90 rounded-none text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 overflow-hidden">
-                <span className="relative z-10 flex items-center justify-center gap-3">
-                  {data.contact.form.submit} <Send className="w-4 h-4" />
-                </span>
-              </Button>
-            </form>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="group relative w-full h-14 bg-foreground text-background hover:bg-foreground/90 rounded-none text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 overflow-hidden disabled:opacity-50"
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-3">
+                    {isSubmitting ? (
+                      data.contact.form.sending
+                    ) : (
+                      <>
+                        {data.contact.form.submit} <Send className="w-4 h-4" />
+                      </>
+                    )}
+                  </span>
+                </Button>
+              </form>
+            )}
           </motion.div>
         </div>
       </div>

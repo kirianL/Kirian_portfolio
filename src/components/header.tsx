@@ -73,7 +73,7 @@ export function Header() {
             className="hidden sm:flex rounded-full px-4 border-primary/20 hover:bg-primary/10 hover:text-primary transition-all duration-200"
             asChild
           >
-            <a href="/cv.pdf" download="CV_Kirian_Luna.pdf">
+            <a href="/CV.pdf" download="CV_Kirian_Luna.pdf">
               {data.nav.cv}
             </a>
           </Button>
