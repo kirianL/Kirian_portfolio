@@ -16,7 +16,10 @@ export function Contact() {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
 
+  useEffect(() => {
+    if (!mounted) return;
     // Explicitly update Cal.com UI settings whenever the theme changes
     (async function () {
       const cal = await getCalApi({ namespace: "1-hour-meeting" });
@@ -26,7 +29,7 @@ export function Contact() {
         layout: "month_view",
       });
     })();
-  }, [themeToUse]);
+  }, [themeToUse, mounted]);
 
   const whatsappUrl = `https://wa.me/50688775391?text=${encodeURIComponent(
     "Hola Kirian, vi tu portfolio y me gustaría contactarte."
@@ -136,22 +139,24 @@ export function Contact() {
                 </p>
               </div>
             </div>
-            <div className="flex-1 w-full bg-white dark:bg-zinc-950">
-              <Cal
-                key={`cal-${themeToUse}`}
-                namespace="1-hour-meeting"
-                calLink="kirianluna/1-hour-meeting"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  minHeight: "600px",
-                  overflow: "scroll",
-                }}
-                config={{
-                  layout: "month_view",
-                  theme: themeToUse,
-                }}
-              />
+            <div className="flex-1 w-full bg-white dark:bg-zinc-950 overflow-auto">
+              {mounted && (
+                <Cal
+                  key={themeToUse}
+                  namespace="1-hour-meeting"
+                  calLink="kirianluna/1-hour-meeting"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    minHeight: "600px",
+                    overflow: "scroll",
+                  }}
+                  config={{
+                    layout: "month_view",
+                    theme: themeToUse,
+                  }}
+                />
+              )}
             </div>
           </motion.div>
         </div>
