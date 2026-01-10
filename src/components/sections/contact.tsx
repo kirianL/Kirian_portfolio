@@ -11,24 +11,28 @@ export function Contact() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Determine the effective theme (fallback to light if unsure)
+  const themeToUse = resolvedTheme === "dark" ? "dark" : "light";
 
   useEffect(() => {
+    setMounted(true);
+
+    // Explicitly update Cal.com UI settings whenever the theme changes
     (async function () {
       const cal = await getCalApi({ namespace: "1-hour-meeting" });
       cal("ui", {
+        theme: themeToUse,
         hideEventTypeDetails: false,
         layout: "month_view",
-        theme: resolvedTheme === "dark" ? "dark" : "light",
       });
     })();
-  }, [resolvedTheme]);
+  }, [themeToUse]);
 
   const whatsappUrl = `https://wa.me/50688775391?text=${encodeURIComponent(
     "Hola Kirian, vi tu portfolio y me gustaría contactarte."
   )}`;
+
+  if (!mounted) return null;
 
   return (
     <section
@@ -133,18 +137,21 @@ export function Contact() {
               </div>
             </div>
             <div className="flex-1 w-full bg-white dark:bg-zinc-950">
-              {mounted && (
-                <Cal
-                  key={resolvedTheme}
-                  namespace="1-hour-meeting"
-                  calLink="kirianluna/1-hour-meeting"
-                  style={{ width: "100%", height: "100%", minHeight: "600px" }}
-                  config={{
-                    layout: "month_view",
-                    theme: resolvedTheme === "dark" ? "dark" : "light",
-                  }}
-                />
-              )}
+              <Cal
+                key={`cal-${themeToUse}`}
+                namespace="1-hour-meeting"
+                calLink="kirianluna/1-hour-meeting"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  minHeight: "600px",
+                  overflow: "scroll",
+                }}
+                config={{
+                  layout: "month_view",
+                  theme: themeToUse,
+                }}
+              />
             </div>
           </motion.div>
         </div>
