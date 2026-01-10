@@ -115,7 +115,7 @@ export function Contact() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-8 bg-card dark:bg-card/40 border border-border/60 rounded-[2.5rem] overflow-hidden backdrop-blur-xl shadow-2xl h-[600px] flex flex-col"
+            className="lg:col-span-8 bg-card dark:bg-card/40 border border-border/60 rounded-[2.5rem] overflow-hidden backdrop-blur-xl shadow-2xl min-h-[850px] flex flex-col"
           >
             <div className="p-6 border-b border-border/40 flex items-center gap-4 bg-primary/5">
               <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20">
@@ -130,11 +130,11 @@ export function Contact() {
                 </p>
               </div>
             </div>
-            <div className="flex-1 overflow-hidden bg-white dark:bg-zinc-950">
+            <div className="flex-1 w-full bg-white dark:bg-zinc-950 overflow-auto">
               <Cal
                 namespace="1-hour-meeting"
                 calLink="kirianluna/1-hour-meeting"
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%", height: "100%", minHeight: "800px" }}
                 config={{ layout: "month_view", theme: "dark" }}
               />
             </div>
