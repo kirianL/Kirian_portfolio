@@ -40,93 +40,96 @@ export function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Direct Contact Options */}
-          <div className="lg:col-span-4 space-y-8">
+        <div className="flex flex-col gap-12">
+          {/* Top Row: Direct Contact Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-primary/5 border border-primary/20 rounded-[2rem] p-8 md:p-10 space-y-8 backdrop-blur-xl shadow-xl"
+              className="bg-primary/5 border border-primary/20 rounded-[2rem] p-8 flex flex-col items-center text-center gap-4 backdrop-blur-xl shadow-lg"
             >
-              <div className="flex flex-col items-center text-center gap-6">
-                <div className="relative">
-                  <div className="absolute -inset-4 bg-primary/20 blur-2xl rounded-full opacity-60 animate-pulse" />
-                  <div className="relative w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
-                    <MessageCircle className="w-8 h-8 text-primary" />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-foreground">
-                    WhatsApp Directo
-                  </h3>
-                  <p className="text-sm text-muted-foreground font-medium">
-                    Respuesta rápida para consultas inmediatas.
-                  </p>
-                </div>
-
-                <Button
-                  asChild
-                  className="group relative w-full h-14 bg-primary text-white hover:bg-primary/90 rounded-xl text-sm font-bold transition-all duration-300 shadow-lg shadow-primary/20"
-                >
-                  <a
-                    href={whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-3"
-                  >
-                    <MessageCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
-                    Enviar WhatsApp
-                  </a>
-                </Button>
-              </div>
-
-              <div className="pt-6 border-t border-border/40 text-center">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-1">
-                    <Mail className="w-3 h-3" /> E-mail
-                  </div>
-                  <a
-                    href={`mailto:${data.contact.email}`}
-                    className="text-base font-bold text-foreground hover:text-primary transition-colors"
-                  >
-                    {data.contact.email}
-                  </a>
+              <div className="relative">
+                <div className="absolute -inset-3 bg-primary/20 blur-xl rounded-full opacity-60 animate-pulse" />
+                <div className="relative w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20">
+                  <MessageCircle className="w-6 h-6 text-primary" />
                 </div>
               </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold text-foreground">WhatsApp</h3>
+                <p className="text-xs text-muted-foreground font-medium">
+                  Respuesta inmediata
+                </p>
+              </div>
+              <Button
+                asChild
+                className="w-full h-11 bg-primary text-white hover:bg-primary/90 rounded-lg text-sm font-bold shadow-md shadow-primary/10"
+              >
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                  Contactar ahora
+                </a>
+              </Button>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="p-8 bg-secondary/5 border border-border/40 rounded-[2rem] text-center"
+              className="bg-secondary/5 border border-border/40 rounded-[2rem] p-8 flex flex-col items-center text-center gap-4 backdrop-blur-xl shadow-lg"
             >
-              <p className="text-sm text-muted-foreground italic">
+              <div className="relative">
+                <div className="relative w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center border border-border/20">
+                  <Mail className="w-6 h-6 text-foreground/70" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold text-foreground">
+                  Correo Electrónico
+                </h3>
+                <p className="text-xs text-muted-foreground font-medium">
+                  {data.contact.email}
+                </p>
+              </div>
+              <Button
+                asChild
+                variant="outline"
+                className="w-full h-11 rounded-lg text-sm font-bold border-border/60"
+              >
+                <a href={`mailto:${data.contact.email}`}>Enviar E-mail</a>
+              </Button>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="hidden lg:flex bg-card dark:bg-card/20 border border-border/40 rounded-[2rem] p-8 items-center justify-center text-center italic"
+            >
+              <p className="text-sm text-muted-foreground">
                 "Convertimos ideas complejas en soluciones digitales elegantes."
               </p>
             </motion.div>
           </div>
 
-          {/* Cal.com Calendar */}
+          {/* Bottom Row: Full Width Calendar */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-8 bg-card dark:bg-card/40 border border-border/60 rounded-[2.5rem] overflow-hidden backdrop-blur-xl shadow-2xl min-h-[850px] flex flex-col"
+            className="bg-card dark:bg-card/40 border border-border/60 rounded-[3rem] overflow-hidden backdrop-blur-xl shadow-2xl min-h-[900px] flex flex-col w-full"
           >
-            <div className="p-6 border-b border-border/40 flex items-center gap-4 bg-primary/5">
-              <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20">
-                <CalendarIcon className="w-5 h-5 text-primary" />
+            <div className="p-8 border-b border-border/40 flex items-center gap-6 bg-primary/5">
+              <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
+                <CalendarIcon className="w-6 h-6 text-primary" />
               </div>
               <div className="text-left">
-                <h3 className="font-bold text-foreground tracking-tight">
+                <h3 className="text-xl font-bold text-foreground tracking-tight">
                   Agendar una Reunión
                 </h3>
-                <p className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/70">
-                  Sesión de 1 hora
+                <p className="text-[11px] uppercase tracking-widest font-black text-muted-foreground/70">
+                  Sesión de consultoría de 1 hora
                 </p>
               </div>
             </div>
@@ -134,7 +137,7 @@ export function Contact() {
               <Cal
                 namespace="1-hour-meeting"
                 calLink="kirianluna/1-hour-meeting"
-                style={{ width: "100%", height: "100%", minHeight: "800px" }}
+                style={{ width: "100%", height: "100%", minHeight: "850px" }}
                 config={{ layout: "month_view", theme: "dark" }}
               />
             </div>
