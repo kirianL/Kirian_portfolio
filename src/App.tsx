@@ -1,25 +1,36 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { Hero } from "@/components/sections/hero";
-import { About } from "@/components/sections/about";
-import { Skills } from "@/components/sections/skills";
-import { Experience } from "@/components/sections/experience";
-import { Contact } from "@/components/sections/contact";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { Home } from "@/components/pages/home";
+import { ProjectDetail } from "@/components/pages/project-detail";
+import { useLayoutEffect } from "react";
 
-// Lazy loading for sections below the fold if needed, but for a one-page portfolio,
-// direct imports are often fine for SEO. I'll stick to direct for now to ensure smooth scroll.
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useLayoutEffect(() => {
+    // Synchronous scroll to top before paint
+    window.scrollTo(0, 0);
+    // Disable browser scroll restoration
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   return (
     <div className="relative min-h-screen bg-background font-sans antialiased selection:bg-primary/20 selection:text-primary">
+      <ScrollToTop />
       <Header />
 
       <main className="pb-32">
-        <Hero />
-        <About />
-        <Skills />
-        <Experience />
-        <Contact />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/project/:slug" element={<ProjectDetail />} />
+        </Routes>
       </main>
 
       <Footer />

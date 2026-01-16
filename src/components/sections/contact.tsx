@@ -34,7 +34,7 @@ export function Contact() {
           viewport={{ once: true }}
           className="mb-16 text-center space-y-4"
         >
-          <h2 className="text-3xl md:text-5xl font-black text-foreground dark:text-white tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-black text-foreground dark:text-white tracking-wider font-heal">
             {data.contact.title}
           </h2>
           <div className="h-1 w-16 bg-primary mx-auto rounded-full" />
@@ -59,7 +59,7 @@ export function Contact() {
                 </div>
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-bold text-foreground">
+                <h3 className="text-base font-bold text-foreground font-heal">
                   WhatsApp
                 </h3>
                 <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
@@ -89,7 +89,9 @@ export function Contact() {
                 </div>
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-bold text-foreground">Correo</h3>
+                <h3 className="text-base font-bold text-foreground font-heal">
+                  Correo
+                </h3>
                 <p className="text-[10px] text-muted-foreground font-medium truncate w-full px-2 uppercase tracking-wider">
                   {data.contact.email}
                 </p>
@@ -116,7 +118,7 @@ export function Contact() {
                 <CalendarIcon className="w-5 h-5 text-primary" />
               </div>
               <div className="text-left">
-                <h3 className="font-bold text-foreground tracking-tight">
+                <h3 className="font-bold text-foreground tracking-wide font-heal">
                   Agendar una Reunión
                 </h3>
                 <p className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/70">

@@ -14,6 +14,8 @@ window.addEventListener("load", () => {
   }, 100);
 });
 
+import { BrowserRouter } from "react-router-dom";
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider
@@ -23,7 +25,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       enableSystem={false}
     >
       <LanguageProvider>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </LanguageProvider>
     </ThemeProvider>
   </React.StrictMode>

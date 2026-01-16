@@ -1,192 +1,150 @@
 import { motion } from "framer-motion";
-import { User, MapPin, GraduationCap, Code } from "lucide-react";
+import { MapPin, Globe, Smartphone } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { GithubActivity } from "@/components/ui/github-activity";
+import { MapComponent } from "@/components/ui/map-component";
+import flag from "@/assets/costa-rica.png";
 
 export function About() {
   const { data } = useLanguage();
-  const prefersReducedMotion = useReducedMotion();
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8 },
+    },
+  };
 
   return (
-    <section id="about" className="py-24 bg-background">
-      <div className="container px-4 md:px-6 mx-auto max-w-6xl">
+    <section
+      id="about"
+      className="py-32 relative overflow-hidden bg-background"
+    >
+      <div className="container px-4 md:px-6 mx-auto max-w-5xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: prefersReducedMotion ? 0.01 : 0.5 }}
-          className="space-y-16"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="flex flex-col gap-24"
         >
-          {/* Header */}
-          <div className="space-y-4">
-            <h2 className="text-sm font-semibold tracking-widest text-primary uppercase text-left">
-              {data.about.title}
-            </h2>
-            <h3 className="text-3xl md:text-5xl font-bold text-foreground max-w-2xl text-left leading-tight">
-              {data.about.intro}
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start border-t border-border pt-12">
-            {/* Left Column: Biography */}
-            <div className="md:col-span-7 space-y-8">
-              <div className="prose prose-lg dark:prose-invert text-foreground/80 dark:text-muted-foreground leading-relaxed">
+          {/* 1. MAIN SPLIT SECTION */}
+          <motion.div
+            variants={itemVariants}
+            className="grid md:grid-cols-2 gap-12 lg:gap-20 items-start"
+          >
+            {/* Left Column: Bio & Stack */}
+            <div className="space-y-8">
+              <h2 className="text-4xl md:text-5xl font-bold tracking-wider text-foreground leading-tight font-heal">
+                {data.about.title}
+              </h2>
+              <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
+                <p className="font-medium text-foreground/90 text-xl">
+                  {data.about.intro}
+                </p>
                 {data.about.bio.map((paragraph, index) => (
-                  <motion.p
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{
-                      duration: prefersReducedMotion ? 0.01 : 0.4,
-                      delay: prefersReducedMotion ? 0 : index * 0.1,
-                    }}
-                  >
-                    {paragraph}
-                  </motion.p>
+                  <p key={index}>{paragraph}</p>
                 ))}
               </div>
-            </div>
 
-            {/* Right Column: Details */}
-            <div className="md:col-span-5 space-y-8 md:pl-8 md:border-l border-border/50">
-              {/* Role & Location */}
-              <div className="space-y-4">
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: prefersReducedMotion ? 0.01 : 0.4,
-                    delay: prefersReducedMotion ? 0 : 0.2,
-                  }}
-                  className="flex items-start gap-4 gpu-accelerated"
-                >
-                  <div className="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center shrink-0">
-                    <User className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-foreground">
-                      {data.about.roleTitle}
-                    </h4>
-                    <p className="text-sm text-foreground/70 dark:text-muted-foreground">
-                      {data.title}
-                    </p>
-                  </div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: prefersReducedMotion ? 0.01 : 0.4,
-                    delay: prefersReducedMotion ? 0 : 0.3,
-                  }}
-                  className="flex items-start gap-4 gpu-accelerated"
-                >
-                  <div className="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center shrink-0">
-                    <MapPin className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-foreground">
-                      {data.about.locationTitle}
-                    </h4>
-                    <p className="text-sm text-foreground/70 dark:text-muted-foreground">
-                      {data.location}
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
-
-              <div className="w-full h-px bg-border/50" />
-
-              {/* Experience & Education */}
-              <div className="space-y-4">
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: prefersReducedMotion ? 0.01 : 0.4,
-                    delay: prefersReducedMotion ? 0 : 0.4,
-                  }}
-                  className="flex items-start gap-4 gpu-accelerated"
-                >
-                  <div className="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center shrink-0">
-                    <Code className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-foreground">
-                      {data.about.experienceTitle}
-                    </h4>
-                    <p className="text-sm text-foreground/80 dark:text-white/90">
-                      {data.experience}
-                    </p>
-                  </div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: prefersReducedMotion ? 0.01 : 0.4,
-                    delay: prefersReducedMotion ? 0 : 0.5,
-                  }}
-                  className="flex items-start gap-4 gpu-accelerated"
-                >
-                  <div className="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center shrink-0">
-                    <GraduationCap className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-foreground">
-                      {data.about.educationTitle}
-                    </h4>
-                    <p className="text-sm text-foreground/80 dark:text-white/90">
-                      {data.education.degree}
-                    </p>
-                    <p className="text-xs text-foreground/70 dark:text-white/70">
-                      {data.education.institution} • {data.education.period}
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Tech Stack Mini-Preview (Optional) */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: prefersReducedMotion ? 0.01 : 0.4,
-                  delay: prefersReducedMotion ? 0 : 0.6,
-                }}
-                className="pt-4"
-              >
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground/60 dark:text-muted-foreground mb-4">
+              <div className="pt-8 border-t border-border/40">
+                <h4 className="text-sm font-bold text-foreground font-heal tracking-widest uppercase mb-4">
                   {data.about.stackTitle}
                 </h4>
-                <div className="flex flex-wrap gap-2">
-                  {["React", "Next.js", "Laravel", "Tailwind"].map(
-                    (tech, index) => (
-                      <motion.span
-                        key={tech}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{
-                          duration: prefersReducedMotion ? 0.01 : 0.3,
-                          delay: prefersReducedMotion ? 0 : 0.7 + index * 0.05,
-                        }}
-                        className="px-3 py-1 bg-secondary rounded-full text-xs font-medium text-foreground transition-transform duration-200 hover:scale-105 gpu-accelerated"
-                      >
-                        {tech}
-                      </motion.span>
-                    )
-                  )}
+                <div className="flex flex-wrap gap-3">
+                  {["React", "Next.js", "Laravel", "Tailwind"].map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1.5 rounded-md bg-secondary/50 border border-border/50 text-xs font-mono text-foreground/80"
+                    >
+                      {tech}
+                    </span>
+                  ))}
                 </div>
-              </motion.div>
+              </div>
             </div>
-          </div>
+
+            {/* Right Column: Map & Info */}
+            <div className="flex flex-col gap-8">
+              {/* Map Section - Right Only */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-bold text-foreground font-heal tracking-wide flex items-center gap-3">
+                    {data.hero.based}
+                    <img
+                      src={flag}
+                      alt="Costa Rica Flag"
+                      className="w-8 h-auto object-contain rounded-sm shadow-sm"
+                    />
+                  </h3>
+                  <div className="flex items-center gap-2 text-muted-foreground bg-secondary/30 px-3 py-1 rounded-full border border-border/50">
+                    <MapPin className="w-3 h-3" />
+                    <span className="text-[10px] font-mono uppercase tracking-widest">
+                      GMT-6
+                    </span>
+                  </div>
+                </div>
+                <div className="relative w-full aspect-[2.5/1] md:aspect-square rounded-3xl overflow-hidden border border-border/50 bg-secondary/10 shadow-2xl">
+                  <MapComponent />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-1 gap-3 md:gap-4 h-full">
+                {/* Experience Card - Stat Style */}
+                <div className="p-4 rounded-2xl bg-secondary/10 border border-border/40 hover:border-primary/20 hover:bg-secondary/20 transition-all duration-300 flex flex-col items-center justify-center text-center gap-2 h-full">
+                  <div className="p-2 rounded-full bg-purple-500/10 mb-1">
+                    <Smartphone className="w-5 h-5 text-purple-500" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-2xl font-bold text-foreground font-heal leading-none">
+                      2+
+                    </p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      {data.about.experienceTitle}
+                    </p>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/80 leading-tight">
+                    Desarrollo Web
+                  </p>
+                </div>
+
+                {/* Education Card - Stat Style */}
+                <div className="p-4 rounded-2xl bg-secondary/10 border border-border/40 hover:border-primary/20 hover:bg-secondary/20 transition-all duration-300 flex flex-col items-center justify-center text-center gap-2 h-full">
+                  <div className="p-2 rounded-full bg-orange-500/10 mb-1">
+                    <Globe className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-lg md:text-xl font-bold text-foreground font-heal leading-none text-center">
+                      Ing. Sistemas
+                    </p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      {data.about.educationTitle}
+                    </p>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/80 leading-tight line-clamp-1">
+                    Universidad Latina
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 2. GITHUB ACTIVITY */}
+          <motion.div variants={itemVariants} className="w-full">
+            <GithubActivity />
+          </motion.div>
         </motion.div>
       </div>
     </section>

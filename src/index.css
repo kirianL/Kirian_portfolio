@@ -1,68 +1,155 @@
+@font-face {
+  font-family: "DxFiggle";
+  src: url("/src/assets/fonts/Dx Figgle.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "HealTheWeb";
+  src: url("/src/assets/fonts/HealTheWebB-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 220 33% 98%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 221.2 83.2% 53.3%;
+    --primary: 221 83% 53%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 214 32% 91%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 221 83% 53%;
+    --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 222 47% 2%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 222 47% 4%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 222 47% 4%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 222 47% 8%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 222 47% 12%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 217 91% 60%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --border: 222 47% 15%;
+    --input: 222 47% 15%;
+    --ring: 217 91% 60%;
+  }
+  .leaflet-container {
+    @apply !bg-card !font-[inherit];
+    @apply !bg-card !font-[inherit];
+  }
+  .leaflet-container a {
+    @apply !text-inherit;
+    @apply !text-inherit;
+  }
+  .leaflet-div-icon {
+    @apply !bg-transparent !border-none;
+    @apply !bg-transparent !border-none;
+  }
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-content,
+  .leaflet-popup-content p {
+    @apply ![all:unset];
+    @apply ![all:unset];
+  }
+  .leaflet-popup {
+    @apply !animate-none;
+    @apply !animate-none;
+  }
+  .leaflet-popup-close-button {
+    @apply ring-offset-background focus:ring-ring bg-secondary rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:outline-hidden;
+    @apply ring-offset-background focus:ring-ring bg-secondary rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:outline-hidden;
+  }
+  .leaflet-tooltip,
+  .leaflet-draw-tooltip {
+    @apply !bg-foreground !text-background !animate-none !rounded-md !border-none !p-0 !px-3 !py-1.5 !shadow-none;
+    @apply !bg-foreground !text-background !animate-none !rounded-md !border-none !p-0 !px-3 !py-1.5 !shadow-none;
+  }
+  .leaflet-draw-tooltip:before {
+    @apply bg-foreground !top-1/2 !right-0.5 size-2.5 translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[2px] !border-none;
+    @apply bg-foreground !top-1/2 !right-0.5 size-2.5 translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[2px] !border-none;
+  }
+  .leaflet-error-draw-tooltip {
+    @apply !bg-destructive !text-white;
+    @apply !bg-destructive !text-white;
+  }
+  .leaflet-error-draw-tooltip:before {
+    @apply bg-destructive;
+    @apply bg-destructive;
+  }
+  .leaflet-draw-tooltip-subtext {
+    @apply !text-background;
+    @apply !text-background;
+  }
+  .leaflet-popup-tip-container,
+  .leaflet-tooltip-top:before,
+  .leaflet-tooltip-bottom:before,
+  .leaflet-tooltip-left:before,
+  .leaflet-tooltip-right:before {
+    @apply hidden;
+    @apply hidden;
+  }
+  .leaflet-control-attribution {
+    @apply !bg-muted rounded-md !px-[4px] !py-[2px] text-[10px] !leading-none !text-inherit;
+    @apply !bg-muted rounded-md !px-[4px] !py-[2px] text-[10px] !leading-none !text-inherit;
+  }
+  .leaflet-draw-guide-dash {
+    @apply rounded-full;
+    @apply rounded-full;
+  }
+  .leaflet-edit-marker-selected {
+    @apply !border-transparent !bg-transparent;
+    @apply !border-transparent !bg-transparent;
+  }
+  .marker-cluster div {
+    @apply font-[inherit];
+    @apply font-[inherit];
   }
 }
 
@@ -71,12 +158,12 @@
     @apply border-border;
   }
 
-  /* Smooth scrolling with offset for fixed header */
+  /* Custom scroll padding for fixed header */
   html {
-    scroll-behavior: smooth;
     scroll-padding-top: 80px;
   }
 
+  /* Optimize font rendering and loading */
   /* Optimize font rendering and loading */
   body {
     @apply bg-background text-foreground;
@@ -84,6 +171,24 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Global smooth theme transition - Colors ONLY to prevent layout jank */
+  :root {
+    --transition-duration: 0.1s; /* Ultra-fast, almost instant */
+    --transition-timing: ease-out;
+  }
+
+  /* OPTIMIZATION: Zero-latency theme switch. 
+     No transitions on body for immediate response. */
+  body {
+    transition: none;
+  }
+
+  /* Utility for specific elements that NEED smooth color changes */
+  .trans-colors {
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+      color 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
   }
 
   /* Disable smooth scroll for users who prefer reduced motion */
@@ -119,6 +224,7 @@
   .optimized-hover {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
+    will-change: transform;
   }
 
   .optimized-hover:hover {
@@ -128,8 +234,10 @@
   /* Smooth transitions for theme changes */
   .theme-transition {
     transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
       color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 }
 
@@ -159,25 +267,7 @@
   will-change: transform, opacity;
 }
 
-/* Enhanced View Transitions for theme switching */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-::view-transition-group(root) {
-  animation-duration: 0.75s;
-  animation-timing-function: cubic-bezier(0.85, 0, 0.15, 1);
-}
-
-::view-transition-old(root) {
-  z-index: 1;
-}
-
-::view-transition-new(root) {
-  z-index: 9999;
-}
+/* Removed View Transitions for instantaneous feel */
 
 /* Loading skeleton animation */
 @keyframes skeleton-loading {
@@ -198,4 +288,43 @@
   );
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+/* Ray Lights Effects */
+.ray-light {
+  background-color: hsla(216, 57%, 45%, 0.5);
+  background: radial-gradient(
+    ellipse closest-side at center,
+    hsl(138, 57%, 69%) 0%,
+    hsla(216, 57%, 45%, 0.5) 100%
+  );
+}
+
+.ray-light-secondary {
+  background-color: hsla(202, 56%, 31%, 0.25);
+  background-image: radial-gradient(
+    ellipse farthest-corner at center,
+    hsl(164, 39%, 53%) 0%,
+    hsla(202, 56%, 31%, 0.25) 55%
+  );
+}
+
+/* Marker Pulse Animation */
+@keyframes marker-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-marker-pulse {
+  animation: marker-pulse 2s ease-in-out infinite;
 }

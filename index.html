@@ -33,6 +33,14 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Prevent scroll restoration with CSS lock -->
+    <script>
+      // Set scroll restoration to manual ASAP
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
