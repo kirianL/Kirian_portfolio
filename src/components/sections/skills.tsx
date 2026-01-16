@@ -183,7 +183,7 @@ export function Skills() {
         </div>
 
         <div className="space-y-12">
-          {categories.map((cat, catIndex) => (
+          {categories.map((cat) => (
             <div key={cat.id} className="space-y-4">
               <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">
                 {cat.title}
