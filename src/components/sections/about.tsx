@@ -5,11 +5,6 @@ import { GithubActivity } from "@/components/ui/github-activity";
 import { MapComponent } from "@/components/ui/map-component";
 import flag from "@/assets/costa-rica.png";
 import { Button } from "@/components/ui/button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBriefcase,
-  faGraduationCap,
-} from "@fortawesome/free-solid-svg-icons";
 
 export function About() {
   const { data } = useLanguage();
