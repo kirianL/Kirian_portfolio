@@ -34,7 +34,7 @@ export function About() {
       className="py-32 relative overflow-hidden bg-background"
     >
       <div className="container px-4 md:px-6 mx-auto max-w-7xl">
-        <div className="flex flex-col gap-32">
+        <div className="flex flex-col gap-16 md:gap-32">
           {/* Header Section */}
           <div className="text-center space-y-4 mb-12">
             <div className="inline-block px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
@@ -122,10 +122,10 @@ export function About() {
           {/* 2. SECONDARY SECTION: MAP & STATS */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0 items-stretch border-y border-border py-16">
             <div className="lg:col-span-7 relative h-[400px] lg:h-auto min-h-[400px]">
-              <div className="w-full h-full bg-secondary/5 border border-border transition-all duration-1000 overflow-hidden group">
+              <div className="w-full h-full bg-secondary/5 border border-border transition-all duration-1000 overflow-hidden group pointer-events-none">
                 <MapComponent />
               </div>
-              <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-md px-3 py-1 border border-border z-10 shadow-sm">
+              <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-md px-3 py-1 border border-border z-10 shadow-sm pointer-events-none">
                 <span className="text-editorial-meta !text-primary font-bold">
                   GMT-6 / {time}
                 </span>

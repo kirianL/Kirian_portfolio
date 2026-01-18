@@ -221,9 +221,9 @@
     background-size: 25% 100%;
   }
 
-  /* Performance: CSS Containment for sections */
+  /* Performance: Removed section containment as it may cause visibility issues on some mobile browsers */
   section {
-    contain: layout style;
+    position: relative;
   }
 }
 
