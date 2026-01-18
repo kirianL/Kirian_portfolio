@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { smoothScrollToElement } from "@/utils/smooth-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,12 +17,7 @@ export function Hero() {
       <div className="container relative z-10 mx-auto max-w-7xl">
         <div className="flex flex-col lg:flex-row items-center lg:items-center gap-12 lg:gap-0 lg:min-h-[75vh]">
           {/* Vibrant Profile Image Container */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-[160px] md:max-w-[220px] lg:w-[45%] xl:w-[40%] aspect-[4/5] lg:aspect-[3/4] z-10 lg:mr-12"
-          >
+          <div className="relative w-full max-w-[160px] md:max-w-[220px] lg:w-[45%] xl:w-[40%] aspect-[4/5] lg:aspect-[3/4] z-10 lg:mr-12">
             <div className="w-full h-full bg-secondary/5 border border-border overflow-hidden relative group">
               <img
                 src="/profile.webp"
@@ -37,15 +31,10 @@ export function Hero() {
             </div>
             {/* Grid Pattern Behind Photo Overlay */}
             <div className="absolute -bottom-6 -right-6 w-32 h-32 border-r border-b border-primary/20 -z-10" />
-          </motion.div>
+          </div>
 
           {/* Main Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 w-full text-center lg:text-left lg:z-20 pt-8 lg:pt-0"
-          >
+          <div className="flex-1 w-full text-center lg:text-left lg:z-20 pt-8 lg:pt-0">
             <div className="space-y-4 md:space-y-6 mb-10 flex flex-col items-center lg:items-start">
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                 <span className="text-editorial-meta ml-1 text-primary font-bold">
@@ -116,17 +105,12 @@ export function Hero() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Primary Accent Glow */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 0.6, scale: 1 }}
-        transition={{ delay: 0.5, duration: 1 }}
-        className="absolute -top-20 -right-20 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-primary/20 to-transparent blur-[120px] -z-10 pointer-events-none"
-      />
+      <div className="absolute -top-20 -right-20 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-primary/20 to-transparent blur-[120px] -z-10 pointer-events-none opacity-60" />
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+
 import { useLanguage } from "@/context/language-context";
 import { GithubActivity } from "@/components/ui/github-activity";
 import { MapComponent } from "@/components/ui/map-component";
@@ -34,13 +34,7 @@ export function About() {
       className="py-32 relative overflow-hidden bg-background"
     >
       <div className="container px-4 md:px-6 mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "200px" }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col gap-32"
-        >
+        <div className="flex flex-col gap-32">
           {/* Header Section */}
           <div className="text-center space-y-4 mb-12">
             <div className="inline-block px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
@@ -182,7 +176,7 @@ export function About() {
           <div className="w-full">
             <GithubActivity />
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
