@@ -1,6 +1,4 @@
-import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 // SVGL Icons - Local imports
 import { ReactIcon } from "@/components/ui/svgs/reactDark";
@@ -106,47 +104,10 @@ const iconMap: Record<string, any> = {
   Figma: Figma,
 };
 
-function SkillItem({
-  skill,
-  index,
-  prefersReducedMotion,
-}: {
-  skill: any;
-  index: number;
-  prefersReducedMotion: boolean;
-}) {
-  if (skill.name === "Sanctum") return null;
-  const Icon = iconMap[skill.name] || Icons.Terminal;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-10px" }}
-      transition={{
-        duration: 0.2,
-        delay: prefersReducedMotion ? 0 : index * 0.02,
-        ease: "easeOut",
-      }}
-      className="
-        flex items-center gap-2.5 px-4 py-2 rounded-full
-        border border-border/40 bg-background/50
-        hover:border-primary/40 hover:bg-secondary/40
-        cursor-default select-none
-        group
-      "
-    >
-      <Icon className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
-      <span className="text-xs sm:text-sm font-medium text-muted-foreground group-hover:text-foreground">
-        {skill.name}
-      </span>
-    </motion.div>
-  );
-}
+// Skill item logic integrated into main map
 
 export function Skills() {
   const { data }: { data: any } = useLanguage();
-  const prefersReducedMotion = useReducedMotion();
 
   const categories = [
     {
@@ -159,7 +120,9 @@ export function Skills() {
       title: data.skills.categories?.backend || "Backend",
       items: data.skills.list.filter(
         (s: any) =>
-          s.category === "Backend" && s.id !== "Sanctum" && s.name !== "Sanctum"
+          s.category === "Backend" &&
+          s.id !== "Sanctum" &&
+          s.name !== "Sanctum",
       ),
     },
     {
@@ -172,35 +135,50 @@ export function Skills() {
   return (
     <section
       id="habilidades"
-      className="py-16 md:py-24 bg-background border-t border-border/10"
+      className="py-32 bg-background border-t border-border editorial-grid"
     >
-      <div className="container max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="mb-10 md:mb-16 text-center space-y-2">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-wider text-foreground font-heal">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Section Header */}
+        <div className="mb-20 space-y-4">
+          <span className="text-editorial-meta">{data.skills.title}</span>
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tighter leading-none font-heal text-foreground">
             {data.skills.title}
           </h2>
-          <div className="h-1 w-12 bg-primary/60 rounded-full mx-auto" />
         </div>
 
-        <div className="space-y-12">
-          {categories.map((cat) => (
-            <div key={cat.id} className="space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">
-                {cat.title}
-              </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pt-12 border-t border-border">
+          <div className="lg:col-span-4">
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              {data.skills.description}
+            </p>
+          </div>
 
-              <div className="flex flex-wrap gap-3">
-                {cat.items.map((skill: any, idx: number) => (
-                  <SkillItem
-                    key={skill.name}
-                    skill={skill}
-                    index={idx}
-                    prefersReducedMotion={prefersReducedMotion}
-                  />
-                ))}
+          <div className="lg:col-span-8 space-y-16">
+            {categories.map((cat) => (
+              <div key={cat.id} className="space-y-6">
+                <h3 className="text-editorial-meta text-primary font-bold">
+                  {cat.title}
+                </h3>
+
+                <div className="flex flex-wrap gap-x-8 gap-y-4">
+                  {cat.items.map((skill: any) => {
+                    const Icon = iconMap[skill.name] || Icons.Terminal;
+                    return (
+                      <div
+                        key={skill.name}
+                        className="flex items-center gap-3 group"
+                      >
+                        <Icon className="w-5 h-5 text-muted-foreground transition-all group-hover:scale-125 duration-300" />
+                        <span className="text-sm font-mono text-foreground/80 group-hover:text-primary transition-colors uppercase tracking-widest font-bold">
+                          {skill.name}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

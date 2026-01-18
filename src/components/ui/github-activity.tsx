@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github } from "lucide-react";
+import { useLanguage } from "@/context/language-context";
 
 interface ContributionDay {
   contributionCount: number;
@@ -34,6 +35,7 @@ const MONTHS_ES = [
 const DAYS_SHORT = ["D", "L", "M", "M", "J", "V", "S"];
 
 export function GithubActivity() {
+  const { data: langData } = useLanguage();
   const [data, setData] = useState<ContributionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [hoveredDay, setHoveredDay] = useState<ContributionDay | null>(null);
@@ -181,11 +183,12 @@ export function GithubActivity() {
         <div className="flex flex-col gap-1">
           <h3 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2 font-heal tracking-wide">
             <Github className="w-4 h-4 sm:w-5 sm:h-5 text-foreground" />
-            Actividad de GitHub
+            {langData.contact.githubActivityTitle}
           </h3>
           <div className="text-xs sm:text-sm text-muted-foreground/80 flex items-center h-6 min-w-0">
             <span className="shrink-0">
-              {totalYear} contribuciones en {new Date().getFullYear()}
+              {totalYear} {langData.contact.contributionsLabel}{" "}
+              {new Date().getFullYear()}
             </span>
             <div className="flex-1 ml-3 border-l border-border pl-3 overflow-visible h-full flex items-center">
               <AnimatePresence mode="popLayout">
@@ -219,7 +222,7 @@ export function GithubActivity() {
           </div>
         </div>
         <div className="flex items-center gap-2 text-[10px] font-medium text-muted-foreground bg-secondary/30 px-3 py-1 rounded-full border border-border/50 self-start sm:self-center">
-          <span>Menos</span>
+          <span>{langData.contact.lessLabel}</span>
           <div className="flex gap-1">
             {[0, 1, 2, 3, 4].map((lvl) => (
               <div
@@ -228,7 +231,7 @@ export function GithubActivity() {
               />
             ))}
           </div>
-          <span>Más</span>
+          <span>{langData.contact.moreLabel}</span>
         </div>
       </div>
 
@@ -325,10 +328,8 @@ function generateMockData(): ContributionData {
   for (let i = 0; i < 52; i++) {
     const contributionDays: ContributionDay[] = [];
     for (let j = 0; j < 7; j++) {
-      const rand = Math.random();
-      const count = rand > 0.8 ? Math.floor(Math.random() * 5) + 1 : 0;
       contributionDays.push({
-        contributionCount: count,
+        contributionCount: 0,
         date: currentDate.toISOString().split("T")[0],
       });
       currentDate.setDate(currentDate.getDate() + 1);

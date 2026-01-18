@@ -8,7 +8,7 @@ import carrusel5 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel5.jpg";
 export const puertoLimonDetails = {
   ES: {
     slug: "puerto-limon",
-    name: "Landing Page Puerto Limón",
+    name: "Puerto Limón",
     year: "2025-2026",
     industry: "Cultura / Turismo",
     company: "Personal",
@@ -71,7 +71,7 @@ export const puertoLimonDetails = {
   },
   EN: {
     slug: "puerto-limon",
-    name: "Landing Page Puerto Limón",
+    name: "Puerto Limón",
     year: "2025-2026",
     industry: "Culture / Tourism",
     company: "Personal",
@@ -133,7 +133,7 @@ export const puertoLimonDetails = {
   },
   PT: {
     slug: "puerto-limon",
-    name: "Landing Page Puerto Limón",
+    name: "Puerto Limón",
     year: "2025-2026",
     industry: "Cultura / Turismo",
     company: "Personal",

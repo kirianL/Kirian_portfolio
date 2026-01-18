@@ -45,8 +45,17 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
+        sans: ["Chillax", "ui-sans-serif", "system-ui", "sans-serif"],
         figgle: ["DxFiggle", "sans-serif"],
-        heal: ["HealTheWeb", "sans-serif"],
+        heal: ["Chillax", "sans-serif"],
+      },
+      letterSpacing: {
+        tighter: "-0.05em",
+        editorial: "0.2em",
+      },
+      fontSize: {
+        "10xl": ["10rem", { lineHeight: "0.9" }],
+        "11xl": ["12rem", { lineHeight: "0.85" }],
       },
     },
   },

@@ -38,9 +38,9 @@ const es = {
   title: "Ingeniero en Sistemas",
   location: "Costa Rica",
   locationIcon: "🇨🇷",
-  experience: "2 años de experiencia",
+  experience: "2 años",
   education: {
-    degree: "Ingeniería en Sistemas",
+    degree: "Ingeniería en Sistemas Computacionales",
     institution: "Universidad Latina de Costa Rica",
     period: "2023–2026",
   },
@@ -55,7 +55,7 @@ const es = {
     techStackLabel: "Stack:",
     techStack: ["React", "Next.js", "TypeScript", "TailwindCSS"],
     stats: {
-      exp: "2+ Años",
+      exp: "2 años",
       projects: "Proyectos",
       commitment: "Compromiso",
     },
@@ -75,6 +75,10 @@ const es = {
     experienceTitle: "Experiencia",
     educationTitle: "Educación",
     stackTitle: "Stack Tecnológico Moderno",
+    coreStackLabel: "Core Stack",
+    locationLabel: "Ubicación",
+    educationLabel: "Educación",
+    experienceLabel: "Experiencia",
   },
   skills: {
     title: "Habilidades Técnicas",
@@ -99,6 +103,8 @@ const es = {
       { name: "GitHub", category: "Tools" },
       { name: "Figma", category: "Tools" },
     ],
+    description:
+      "Experiencia construida sobre frameworks modernos y principios fundamentales de ingeniería.",
   },
   projects: {
     title: "Proyectos",
@@ -107,6 +113,7 @@ const es = {
       "Una selección de proyectos donde diseño, cultura y tecnología convergen.",
     featuresLabel: "Características",
     resultsLabel: "Impacto",
+    caseStudyLabel: "Caso de Estudio",
     list: [
       puertoLimonDetails.ES,
       brisasDelRioDetails.ES,
@@ -117,6 +124,12 @@ const es = {
     title: "Contacto",
     desc: "¿Tienes alguna idea o proyecto en mente? ¡Hablemos!",
     infoTitle: "Información de contacto",
+    instantLabel: "Instantáneo",
+    emailLabel: "Correo",
+    githubActivityTitle: "Actividad de GitHub",
+    moreLabel: "Más",
+    lessLabel: "Menos",
+    contributionsLabel: "contribuciones en",
     form: {
       name: "Nombre",
       namePlaceholder: "Tu nombre",
@@ -134,6 +147,8 @@ const es = {
   footer: {
     rights: "Todos los derechos reservados.",
     brandName: "Kirian Luna Quirós",
+    connectedLabel: "Conectado",
+    directLabel: "Directo",
     bio: "Un solucionador de problemas dedicado que prospera aprendiendo y construyendo.",
     me: {
       title: "Yo",
@@ -144,7 +159,7 @@ const es = {
       ],
     },
     site: {
-      title: "Este sitio",
+      title: "Este site",
       links: [
         { label: "Analíticas", href: "#" },
         { label: "RSS", href: "#" },
@@ -193,9 +208,9 @@ const en: typeof es = {
   title: "Systems Engineer",
   location: "Costa Rica",
   locationIcon: "🇨🇷",
-  experience: "2 years of experience",
+  experience: "2 years",
   education: {
-    degree: "Systems Engineering",
+    degree: "Computer Systems Engineering",
     institution: "Universidad Latina de Costa Rica",
     period: "2023–2026",
   },
@@ -211,7 +226,7 @@ const en: typeof es = {
     techStack: ["React", "Next.js", "TypeScript", "TailwindCSS"],
 
     stats: {
-      exp: "2+ Years",
+      exp: "2 years",
       projects: "Projects",
       commitment: "Commitment",
     },
@@ -231,6 +246,10 @@ const en: typeof es = {
     experienceTitle: "Experience",
     educationTitle: "Education",
     stackTitle: "Modern Tech Stack",
+    coreStackLabel: "Core Stack",
+    locationLabel: "Location",
+    educationLabel: "Education",
+    experienceLabel: "Experience",
   },
   skills: {
     title: "Technical Skills",
@@ -256,6 +275,8 @@ const en: typeof es = {
       { name: "GitHub", category: "Tools" },
       { name: "Figma", category: "Tools" },
     ],
+    description:
+      "Expertise built on modern frameworks and core engineering principles.",
   },
   projects: {
     title: "Projects",
@@ -264,6 +285,7 @@ const en: typeof es = {
       "A selection of projects where design, culture, and technology converge.",
     featuresLabel: "Features",
     resultsLabel: "Impact",
+    caseStudyLabel: "Case Study",
     list: [
       puertoLimonDetails.EN,
       brisasDelRioDetails.EN,
@@ -274,6 +296,12 @@ const en: typeof es = {
     title: "Contact",
     desc: "Have an idea or project in mind? Let's talk!",
     infoTitle: "Contact information",
+    instantLabel: "Instant",
+    emailLabel: "Email",
+    githubActivityTitle: "GitHub Activity",
+    moreLabel: "More",
+    lessLabel: "Less",
+    contributionsLabel: "contributions in",
     form: {
       name: "Name",
       namePlaceholder: "Your name",
@@ -291,6 +319,8 @@ const en: typeof es = {
   footer: {
     rights: "All rights reserved.",
     brandName: "Kirian Luna Quirós",
+    connectedLabel: "Connected",
+    directLabel: "Direct",
     bio: "A dedicated problem-solver who thrives on learning and building.",
     me: {
       title: "Me",
@@ -350,9 +380,9 @@ const pt: typeof es = {
   title: "Engenheiro de Sistemas",
   location: "Costa Rica",
   locationIcon: "🇨🇷",
-  experience: "2 anos de experiência",
+  experience: "2 anos",
   education: {
-    degree: "Engenharia de Sistemas",
+    degree: "Engenharia de Sistemas Computacionais",
     institution: "Universidad Latina de Costa Rica",
     period: "2023–2026",
   },
@@ -368,7 +398,7 @@ const pt: typeof es = {
     techStack: ["React", "Next.js", "TypeScript", "TailwindCSS"],
 
     stats: {
-      exp: "2+ Anos",
+      exp: "2 anos",
       projects: "Projetos",
       commitment: "Compromisso",
     },
@@ -380,7 +410,7 @@ const pt: typeof es = {
     intro:
       "Mais do que código, crio soluções. Minha abordagem combina técnica sólida com design intuitivo.",
     bio: [
-      "Sou un apaixonado Engenheiro de Sistemas focado em criar soluções tecnológicas eficientes e escaláveis. Com 2 anos de experiência em desenvolvimento de software, eu me especializo em construir experiências de usuário fluidas e arquiteturas robustas.",
+      "Sou um apaixonado Engenheiro de Sistemas focado em criar soluções tecnológicas eficientes e escaláveis. Com 2 anos de experiência em desenvolvimento de software, eu me especializo em construir experiências de usuário fluidas e arquiteturas robustas.",
       "Meu foco está no código limpo, desempenho ideal e design centrado no usuário. Estou sempre aprendendo as últimas tecnologias para entregar os melhores resultados em cada projeto.",
     ],
     roleTitle: "O Desenvolvedor",
@@ -388,6 +418,10 @@ const pt: typeof es = {
     experienceTitle: "Experiência",
     educationTitle: "Educação",
     stackTitle: "Stack Tecnológica Moderna",
+    coreStackLabel: "Core Stack",
+    locationLabel: "Localização",
+    educationLabel: "Educação",
+    experienceLabel: "Experiência",
   },
   skills: {
     title: "Habilidades Técnicas",
@@ -413,6 +447,8 @@ const pt: typeof es = {
       { name: "GitHub", category: "Tools" },
       { name: "Figma", category: "Tools" },
     ],
+    description:
+      "Experiência baseada em frameworks modernos e princípios fundamentais de engenharia.",
   },
   projects: {
     title: "Projetos",
@@ -421,6 +457,7 @@ const pt: typeof es = {
       "Uma seleção de projetos onde design, cultura e tecnologia convergem.",
     featuresLabel: "Funcionalidades",
     resultsLabel: "Impacto",
+    caseStudyLabel: "Caso de Estudo",
     list: [
       puertoLimonDetails.PT,
       brisasDelRioDetails.PT,
@@ -431,6 +468,12 @@ const pt: typeof es = {
     title: "Contato",
     desc: "Tem uma ideia ou projeto em mente? Vamos conversar!",
     infoTitle: "Informações de contato",
+    instantLabel: "Instantâneo",
+    emailLabel: "E-mail",
+    githubActivityTitle: "Atividade do GitHub",
+    moreLabel: "Mais",
+    lessLabel: "Menos",
+    contributionsLabel: "contribuições em",
     form: {
       name: "Nome",
       namePlaceholder: "Seu nome",
@@ -446,8 +489,10 @@ const pt: typeof es = {
     linkedin: "https://www.linkedin.com/in/kirianluna",
   },
   footer: {
-    rights: "Todos os direitos reservados.",
+    rights: "Todos os derechos reservados.",
     brandName: "Kirian Luna Quirós",
+    connectedLabel: "Conectado",
+    directLabel: "Direto",
     bio: "Um solucionador de problemas dedicado que prospera aprendendo e construindo.",
     me: {
       title: "Eu",

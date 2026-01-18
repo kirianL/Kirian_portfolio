@@ -10,62 +10,54 @@ export function Experience() {
       id="projects"
       className="py-24 md:py-32 bg-background relative overflow-hidden"
     >
-      <div className="container max-w-6xl mx-auto px-6">
-        {/* Section Header - Matching Skills Design */}
-        <div className="mb-10 md:mb-16 text-center space-y-2">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-wider text-foreground font-heal">
-            {data.projects.title}
+      <div className="container max-w-7xl mx-auto px-4 md:px-6">
+        {/* Section Header */}
+        <div className="mb-20 space-y-4">
+          <span className="text-editorial-meta">{data.projects.title}</span>
+          <h2 className="text-5xl md:text-6xl font-bold tracking-tighter leading-none font-heal text-foreground">
+            {data.hero.ctaExplore}
           </h2>
-          <div className="h-1 w-12 bg-primary/60 rounded-full mx-auto" />
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          {data.projects.list.map((project: any, index: number) => (
-            <Link
-              key={index}
-              to={`/project/${project.slug}`}
-              className="group relative flex flex-col gap-4 cursor-pointer"
-            >
-              {/* Card Image / Visual */}
-              <div className="aspect-video w-full overflow-hidden rounded-2xl bg-secondary/10 border border-border/50 relative">
-                <img
-                  src={project.image}
-                  alt={project.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-background/20 group-hover:bg-background/0 transition-colors duration-500" />
-
-                {/* Year Badge floating in image */}
-                <div className="absolute top-4 left-4 px-3 py-1 bg-background/90 backdrop-blur-md rounded-full border border-border/50 text-xs font-mono font-bold text-foreground z-10">
-                  {project.year}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-12 md:gap-y-24">
+          {data.projects.list.map((project: any, index: number) => {
+            return (
+              <Link
+                key={index}
+                to={`/project/${project.slug}`}
+                className="group flex flex-col gap-3 md:gap-6"
+              >
+                {/* Image Container */}
+                <div className="aspect-[4/3] w-full overflow-hidden border border-border relative bg-secondary/5">
+                  <img
+                    src={project.image}
+                    alt={project.name}
+                    className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105"
+                  />
                 </div>
 
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </div>
+                {/* Content */}
+                <div className="space-y-2 md:space-y-4 max-w-3xl relative">
+                  {/* Arrow Icon - Positioned absolutely */}
+                  <ArrowRight className="absolute top-0 right-0 w-4 h-4 md:w-6 md:h-6 text-muted-foreground group-hover:text-primary -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
 
-              {/* Card Content */}
-              <div className="space-y-3 px-1">
-                <div className="flex items-start justify-between gap-4">
-                  <h3 className="text-2xl font-bold text-foreground font-heal group-hover:text-primary transition-colors leading-tight">
-                    {project.name.split("·")[0]}
-                  </h3>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary -rotate-45 group-hover:rotate-0 transition-transform duration-300 transform-origin-center mt-1" />
+                  <div className="space-y-0.5 md:space-y-1 pr-8 md:pr-10">
+                    <span className="text-[8px] md:text-[10px] font-mono uppercase tracking-widest text-primary font-bold block">
+                      {data.projects.caseStudyLabel}
+                    </span>
+                    <h3 className="text-base md:text-2xl font-bold text-foreground font-heal group-hover:text-primary transition-colors leading-tight">
+                      {project.name.split("·")[0]}
+                    </h3>
+                  </div>
+
+                  <p className="text-muted-foreground line-clamp-2 leading-relaxed text-xs md:text-lg">
+                    {project.description}
+                  </p>
                 </div>
-
-                <p className="text-muted-foreground line-clamp-2 leading-relaxed">
-                  {project.description}
-                </p>
-
-                <div className="pt-2 flex items-center gap-2 text-sm font-bold text-foreground/80 group-hover:text-primary transition-colors">
-                  Read more <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

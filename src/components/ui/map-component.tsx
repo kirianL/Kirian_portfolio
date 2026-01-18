@@ -22,7 +22,17 @@ export function MapComponent() {
 
   return (
     <div className="w-full h-full absolute inset-0 z-0">
-      <Map center={position} zoom={14} key={resolvedTheme}>
+      <Map
+        center={position}
+        zoom={14}
+        key={resolvedTheme}
+        dragging={false}
+        scrollWheelZoom={false}
+        doubleClickZoom={false}
+        touchZoom={false}
+        boxZoom={false}
+        keyboard={false}
+      >
         <MapTileLayer />
       </Map>
     </div>

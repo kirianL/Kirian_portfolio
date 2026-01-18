@@ -135,7 +135,7 @@ export const youngLegendsDetails = {
     objective:
       "Impulsionar a arte urbana e consolidar o coletivo como referência profissional, difundindo a história e o talento individual e grupal de seus artistas.",
     concept: [
-      "Projeto cultural e de representación artística",
+      "Projeto cultural e de representação artística",
       "Estética Urbana Premium",
       "Narrativa de legado cultural",
       "Conteúdo (música, fotos) como eixo central",
