@@ -124,7 +124,7 @@ export function About() {
               </div>
               <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-md px-3 py-1 border border-border z-10 shadow-sm">
                 <span className="text-editorial-meta !text-primary font-bold">
-                  LIVE FEED / GMT-6 / {time}
+                  GMT-6 / {time}
                 </span>
               </div>
             </div>
