@@ -74,7 +74,17 @@ export function Hero() {
 
             <div className="flex flex-col md:flex-row items-center lg:items-start gap-10 md:gap-16">
               <p className="max-w-md text-lg text-muted-foreground leading-relaxed font-medium">
-                {data.hero.desc}
+                {data.hero.desc
+                  .split(/(el diseño|la seguridad)/g)
+                  .map((part, i) =>
+                    part === "el diseño" || part === "la seguridad" ? (
+                      <span key={i} className="text-primary font-bold">
+                        {part}
+                      </span>
+                    ) : (
+                      part
+                    ),
+                  )}
               </p>
 
               <div className="flex flex-col gap-6">
