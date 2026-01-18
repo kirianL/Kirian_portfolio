@@ -140,7 +140,9 @@ export function Skills() {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="mb-20 space-y-4">
-          <span className="text-editorial-meta">{data.skills.title}</span>
+          <span className="text-editorial-meta">
+            {data.contact.capabilitiesLabel}
+          </span>
           <h2 className="text-5xl md:text-6xl font-bold tracking-tighter leading-none font-heal text-foreground">
             {data.skills.title}
           </h2>

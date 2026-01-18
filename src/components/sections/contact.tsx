@@ -32,7 +32,9 @@ export function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0 items-start">
           {/* Left: Editorial Header */}
           <div className="lg:col-span-5 space-y-8">
-            <span className="text-editorial-meta">{data.contact.title}</span>
+            <span className="text-editorial-meta">
+              {data.contact.connectLabel}
+            </span>
             <h2 className="text-5xl md:text-6xl font-bold tracking-tighter leading-none font-heal text-foreground">
               {data.contact.title}
             </h2>
@@ -76,7 +78,7 @@ export function Contact() {
                   </span>
                   <a
                     href={`mailto:${data.contact.email}`}
-                    className="block text-xl font-bold font-heal hover:text-primary transition-colors truncate max-w-[200px] md:max-w-none"
+                    className="block text-xl font-bold font-heal hover:text-primary transition-colors break-all md:break-normal"
                   >
                     {data.contact.email}
                   </a>
@@ -107,7 +109,9 @@ export function Contact() {
                 />
               </div>
               <div className="px-6 py-4 border-t border-border flex items-center justify-center bg-primary/5">
-                <span className="text-editorial-meta">MEETING / 1 HOUR</span>
+                <span className="text-editorial-meta">
+                  {data.contact.meetingLabel}
+                </span>
               </div>
             </motion.div>
           </div>

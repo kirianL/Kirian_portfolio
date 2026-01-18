@@ -64,6 +64,13 @@ const es = {
   },
   about: {
     title: "Sobre Mí",
+    badgeLabel: "En busca de nuevas oportunidades",
+    heroTitle: "Desarrollador Full Stack & Amante de las Ideas",
+    heroSubtitle:
+      "Impulsando productos digitales con pasión por el código y el diseño.",
+    ctaWork: "Mira mi trabajo",
+    ctaContact: "Hablemos",
+    experienceSub: "Trayectoria Profesional",
     intro:
       "Más que código, creo soluciones. Mi enfoque combina técnica sólida con diseño intuitivo.",
     bio: [
@@ -130,6 +137,8 @@ const es = {
     moreLabel: "Más",
     lessLabel: "Menos",
     contributionsLabel: "contribuciones en",
+    capabilitiesLabel: "CAPACIDADES",
+    connectLabel: "CONECTEMOS",
     form: {
       name: "Nombre",
       namePlaceholder: "Tu nombre",
@@ -140,6 +149,7 @@ const es = {
       submit: "Enviar mensaje",
       sending: "Enviando...",
     },
+    meetingLabel: "REUNIÓN / 1 HORA",
     email: "kirianluna.u@gmail.com",
     github: "https://github.com/kirianL",
     linkedin: "https://www.linkedin.com/in/kirianluna",
@@ -235,6 +245,13 @@ const en: typeof es = {
   },
   about: {
     title: "About Me",
+    badgeLabel: "Open to new opportunities",
+    heroTitle: "Full Stack Developer & Passionate Creator",
+    heroSubtitle:
+      "Boosting digital products with a passion for code and design.",
+    ctaWork: "See my work",
+    ctaContact: "Let's talk",
+    experienceSub: "Professional Path",
     intro:
       "More than code, I create solutions. My approach combines solid technique with intuitive design.",
     bio: [
@@ -302,6 +319,8 @@ const en: typeof es = {
     moreLabel: "More",
     lessLabel: "Less",
     contributionsLabel: "contributions in",
+    capabilitiesLabel: "CAPABILITIES",
+    connectLabel: "LET'S CONNECT",
     form: {
       name: "Name",
       namePlaceholder: "Your name",
@@ -312,6 +331,7 @@ const en: typeof es = {
       submit: "Send message",
       sending: "Sending...",
     },
+    meetingLabel: "MEETING / 1 HOUR",
     email: "kirianluna.u@gmail.com",
     github: "https://github.com/kirianL",
     linkedin: "https://www.linkedin.com/in/kirianluna",
@@ -407,6 +427,13 @@ const pt: typeof es = {
   },
   about: {
     title: "Sobre Mim",
+    badgeLabel: "Em busca de novas oportunidades",
+    heroTitle: "Desenvolvedor Full Stack & Amante de Ideias",
+    heroSubtitle:
+      "Impulsionando produtos digitais com paixão por código e design.",
+    ctaWork: "Veja meu trabalho",
+    ctaContact: "Vamos conversar",
+    experienceSub: "Trajetória Profissional",
     intro:
       "Mais do que código, crio soluções. Minha abordagem combina técnica sólida com design intuitivo.",
     bio: [
@@ -474,6 +501,8 @@ const pt: typeof es = {
     moreLabel: "Mais",
     lessLabel: "Menos",
     contributionsLabel: "contribuições em",
+    capabilitiesLabel: "CAPACIDADES",
+    connectLabel: "CONECTEMOS",
     form: {
       name: "Nome",
       namePlaceholder: "Seu nome",
@@ -484,12 +513,13 @@ const pt: typeof es = {
       submit: "Enviar mensagem",
       sending: "Enviando...",
     },
+    meetingLabel: "REUNIÃO / 1 HORA",
     email: "kirianluna.u@gmail.com",
     github: "https://github.com/kirianL",
     linkedin: "https://www.linkedin.com/in/kirianluna",
   },
   footer: {
-    rights: "Todos os derechos reservados.",
+    rights: "Todos os direitos reservados.",
     brandName: "Kirian Luna Quirós",
     connectedLabel: "Conectado",
     directLabel: "Direto",

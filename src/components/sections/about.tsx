@@ -4,6 +4,12 @@ import { useLanguage } from "@/context/language-context";
 import { GithubActivity } from "@/components/ui/github-activity";
 import { MapComponent } from "@/components/ui/map-component";
 import flag from "@/assets/costa-rica.png";
+import { Button } from "@/components/ui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBriefcase,
+  faGraduationCap,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function About() {
   const { data } = useLanguage();
@@ -12,7 +18,6 @@ export function About() {
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      // Format for Costa Rica (GMT-6)
       const options: Intl.DateTimeFormatOptions = {
         timeZone: "America/Costa_Rica",
         hour: "2-digit",
@@ -60,11 +65,39 @@ export function About() {
           viewport={{ once: true, margin: "-50px" }}
           className="flex flex-col gap-32"
         >
+          {/* Header Section */}
+          <div className="text-center space-y-4 mb-12">
+            <div className="inline-block px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
+              {data.about.badgeLabel}
+            </div>
+            <h1 className="text-4xl md:text-7xl font-bold tracking-tighter text-foreground font-heal leading-tight">
+              {data.about.heroTitle}
+            </h1>
+            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+              {data.about.heroSubtitle}
+            </p>
+            <div className="flex items-center justify-center gap-4 pt-4">
+              <Button
+                className="rounded-full px-8 h-12 text-base font-medium transition-all duration-300 hover:scale-105"
+                asChild
+              >
+                <a href="#projects">{data.about.ctaWork}</a>
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full px-8 h-12 text-base font-medium border-primary/20 hover:bg-primary/5 transition-all duration-300"
+                asChild
+              >
+                <a href="#contact">{data.about.ctaContact}</a>
+              </Button>
+            </div>
+          </div>
+
           {/* 1. LEAD SECTION */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0 items-start">
             <div className="lg:col-span-5 space-y-8">
               <span className="text-editorial-meta">{data.about.title}</span>
-              <h2 className="text-5xl md:text-6xl font-bold tracking-tighter leading-none font-heal text-foreground">
+              <h2 className="text-3xl md:text-5xl font-bold font-heal leading-tight text-foreground">
                 {data.about.intro}
               </h2>
             </div>
@@ -90,7 +123,7 @@ export function About() {
                     {["React", "Next.js", "Laravel", "Tailwind"].map((tech) => (
                       <span
                         key={tech}
-                        className="text-xs font-mono text-foreground"
+                        className="text-xs font-mono text-foreground uppercase tracking-widest"
                       >
                         {tech}
                       </span>
@@ -132,32 +165,44 @@ export function About() {
             <div className="lg:col-span-1" />
 
             <div className="lg:col-span-4 flex flex-col justify-between gap-12 lg:gap-0">
-              <div className="space-y-12">
-                <div className="group space-y-2">
-                  <span className="text-editorial-meta">
-                    {data.about.educationLabel}
-                  </span>
-                  <p className="text-sm font-mono text-muted-foreground">
-                    {data.education.degree}
-                  </p>
-                  <p className="text-sm font-mono text-muted-foreground">
-                    {data.education.institution}
-                  </p>
+              <div className="space-y-0">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="h-2 w-2 rounded-full bg-primary" />
+                  <h3 className="text-xl font-bold tracking-tight text-foreground uppercase">
+                    {data.about.experienceSub}
+                  </h3>
                 </div>
 
-                <div className="group space-y-2">
-                  <span className="text-editorial-meta">
+                <div className="py-6 border-t border-border/60 group flex justify-between items-start gap-4">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary/80 pt-1 shrink-0">
+                    {data.about.educationLabel}
+                  </span>
+                  <div className="text-right">
+                    <p className="text-lg md:text-xl font-bold font-heal leading-tight group-hover:text-primary transition-colors text-balance">
+                      {data.education.degree}
+                    </p>
+                    <p className="text-[10px] md:text-xs font-mono text-muted-foreground mt-1">
+                      {data.education.institution}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="py-6 border-t border-border/60 group flex justify-between items-start gap-4">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary/80 pt-1 shrink-0">
                     {data.about.experienceLabel}
                   </span>
-                  <p className="text-sm font-mono text-muted-foreground">
-                    {data.experience}
-                  </p>
+                  <div className="text-right">
+                    <p className="text-lg md:text-xl font-bold font-heal leading-tight group-hover:text-primary transition-colors">
+                      {data.experience}
+                    </p>
+                  </div>
                 </div>
+                <div className="border-t border-border/60 w-full" />
               </div>
             </div>
           </div>
 
-          {/* 2. GITHUB ACTIVITY */}
+          {/* 3. GITHUB ACTIVITY */}
           <motion.div variants={itemVariants} className="w-full">
             <GithubActivity />
           </motion.div>
