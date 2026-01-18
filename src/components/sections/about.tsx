@@ -28,25 +28,6 @@ export function About() {
     return () => clearInterval(interval);
   }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8 },
-    },
-  };
-
   return (
     <section
       id="about"
@@ -54,10 +35,10 @@ export function About() {
     >
       <div className="container px-4 md:px-6 mx-auto max-w-7xl">
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "200px" }}
+          transition={{ duration: 0.5 }}
           className="flex flex-col gap-32"
         >
           {/* Header Section */}
@@ -198,9 +179,9 @@ export function About() {
           </div>
 
           {/* 3. GITHUB ACTIVITY */}
-          <motion.div variants={itemVariants} className="w-full">
+          <div className="w-full">
             <GithubActivity />
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>

@@ -4,7 +4,6 @@ import { smoothScrollToElement } from "@/utils/smooth-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import profileImage from "@/assets/profile.webp";
 
 export function Hero() {
   const { data } = useLanguage();
@@ -22,16 +21,18 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="relative w-full max-w-[160px] md:max-w-[220px] lg:w-[45%] xl:w-[40%] aspect-[4/5] lg:aspect-[3/4] z-10 lg:mr-12"
           >
             <div className="w-full h-full bg-secondary/5 border border-border overflow-hidden relative group">
               <img
-                src={profileImage}
+                src="/profile.webp"
                 alt={data.name}
                 className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                 loading="eager"
                 decoding="async"
+                // @ts-ignore
+                fetchpriority="high"
               />
             </div>
             {/* Grid Pattern Behind Photo Overlay */}
@@ -40,9 +41,9 @@ export function Hero() {
 
           {/* Main Title */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="flex-1 w-full text-center lg:text-left lg:z-20 pt-8 lg:pt-0"
           >
             <div className="space-y-4 md:space-y-6 mb-10 flex flex-col items-center lg:items-start">

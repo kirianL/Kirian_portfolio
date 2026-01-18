@@ -94,7 +94,8 @@ export function Contact() {
             <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "200px" }}
+              transition={{ duration: 0.4 }}
               className="bg-card border border-border overflow-hidden backdrop-blur-sm shadow-xl flex flex-col w-full"
             >
               <div className="w-full bg-white dark:bg-zinc-950 min-h-[600px]">
