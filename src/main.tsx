@@ -5,15 +5,6 @@ import "./index.css";
 import { ThemeProvider } from "./components/theme-provider";
 import { LanguageProvider } from "./context/language-context";
 
-// Prevent color transitions on page load
-document.documentElement.classList.add("no-transition");
-window.addEventListener("load", () => {
-  // Remove no-transition class after page loads
-  setTimeout(() => {
-    document.documentElement.classList.remove("no-transition");
-  }, 100);
-});
-
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -30,5 +21,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </BrowserRouter>
       </LanguageProvider>
     </ThemeProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

@@ -11,10 +11,7 @@ export function Contact() {
   useEffect(() => {
     (async function () {
       const cal = await getCalApi({ namespace: "1-hour-meeting" });
-      cal("ui", {
-        hideEventTypeDetails: false,
-        layout: "month_view",
-      });
+      cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
     })();
   }, []);
 
@@ -23,10 +20,7 @@ export function Contact() {
   )}`;
 
   return (
-    <section
-      id="contact"
-      className="py-32 bg-background border-t border-border/50"
-    >
+    <section id="contact" className="py-24 md:py-32 border-t border-border/50">
       <div className="container px-4 md:px-6 mx-auto max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0 items-start">
           {/* Left: Editorial Header */}

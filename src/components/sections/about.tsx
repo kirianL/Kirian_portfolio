@@ -13,27 +13,24 @@ export function About() {
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: "America/Costa_Rica",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      };
-      setTime(new Intl.DateTimeFormat("en-US", options).format(now));
+      setTime(
+        now.toLocaleTimeString("en-US", {
+          timeZone: "America/Costa_Rica",
+          hour12: false,
+        }),
+      );
     };
-
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section
-      id="about"
-      className="py-32 relative overflow-hidden bg-background"
-    >
-      <div className="container px-4 md:px-6 mx-auto max-w-7xl">
+    <section id="about" className="py-24 md:py-32 relative overflow-hidden">
+      {/* Background Decorative Element */}
+      <div className="absolute top-1/4 -right-64 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+
+      <div className="container px-4 md:px-6 mx-auto max-w-7xl relative">
         <div className="flex flex-col gap-16 md:gap-32">
           {/* Header Section */}
           <div className="text-center space-y-4 mb-12">

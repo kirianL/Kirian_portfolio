@@ -170,12 +170,6 @@
     --transition-timing: ease-out;
   }
 
-  /* OPTIMIZATION: Zero-latency theme switch. 
-     No transitions on body for immediate response. */
-  body {
-    transition: none;
-  }
-
   /* Utility for specific elements that NEED smooth color changes */
   .trans-colors {
     transition:
