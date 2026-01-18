@@ -236,7 +236,7 @@ export function GithubActivity() {
       </div>
 
       <div className="w-full relative group rounded-2xl border border-border/60 dark:border-white/5 bg-secondary/10 dark:bg-black/20 p-3 sm:p-6 backdrop-blur-md shadow-sm">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none -z-10" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[50px] md:blur-[100px] pointer-events-none -z-10" />
 
         <div className="flex flex-col gap-2">
           <div className="flex ml-6 sm:ml-8 h-4 relative w-full pr-8">
@@ -272,15 +272,12 @@ export function GithubActivity() {
                   className="flex flex-col gap-[1px] sm:gap-[3px] flex-1"
                 >
                   {week.contributionDays.map((day: ContributionDay) => (
-                    <motion.div
+                    <div
                       key={day.date}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: i * 0.001 }}
                       onMouseEnter={() => setHoveredDay(day)}
                       onMouseLeave={() => setHoveredDay(null)}
                       className={cn(
-                        "w-full aspect-square rounded-[1px] sm:rounded-[2px] relative cursor-pointer border border-transparent hover:border-white/30 dark:hover:border-white/20",
+                        "w-full aspect-square rounded-[1px] sm:rounded-[2px] relative cursor-pointer border border-transparent hover:border-white/30 dark:hover:border-white/20 transition-colors duration-100",
                         getColor(day.contributionCount),
                       )}
                     />

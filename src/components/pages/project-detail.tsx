@@ -42,8 +42,8 @@ export function ProjectDetail() {
     >
       {/* Background Effects Layer - z-0 to be behind content (image covers it) and behind header (shows through if transparent) */}
       <div className="absolute inset-x-0 top-0 h-[800px] overflow-hidden pointer-events-none z-0">
-        <div className="absolute rounded-full blur-[48px] ray-light-secondary h-[117px] w-[585px] -rotate-[37deg] opacity-20 -top-[40px] left-[-20%] md:left-[560px]" />
-        <div className="absolute rounded-full blur-[48px] ray-light-secondary h-[267px] w-[1192px] -rotate-[37deg] opacity-45 -top-[60px] left-[-10%] md:left-[680px]" />
+        <div className="absolute rounded-full blur-[24px] md:blur-[48px] ray-light-secondary h-[80px] md:h-[117px] w-[300px] md:w-[585px] -rotate-[37deg] opacity-20 -top-[20px] md:-top-[40px] left-[-10%] md:left-[560px] will-change-transform" />
+        <div className="absolute rounded-full blur-[24px] md:blur-[48px] ray-light-secondary h-[150px] md:h-[267px] w-[600px] md:w-[1192px] -rotate-[37deg] opacity-30 md:opacity-45 -top-[30px] md:-top-[60px] left-[-5%] md:left-[680px] will-change-transform" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 border-x border-border/40 min-h-screen pt-24 md:pt-32 pb-24 relative z-10">

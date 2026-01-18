@@ -12,9 +12,9 @@ export function Hero() {
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center overflow-hidden pt-32 md:pt-40 pb-20 px-4 bg-background">
       {/* Enhanced Background Glows (Ray Lights) - More Vibrant */}
-      <div className="absolute rounded-full blur-[60px] ray-light h-[300px] w-[1200px] rotate-[-20deg] opacity-60 md:opacity-40 -top-[200px] left-[100px]" />
-      <div className="absolute rounded-full blur-[60px] ray-light-secondary h-[400px] w-[1500px] rotate-[40deg] opacity-60 -left-[200px] -top-[300px]" />
-      <div className="absolute rounded-full blur-[60px] ray-light h-[500px] w-[1200px] rotate-[-32deg] opacity-50 -top-[100px] left-[800px]" />
+      <div className="absolute rounded-full blur-[30px] md:blur-[60px] ray-light h-[200px] md:h-[300px] w-[600px] md:w-[1200px] rotate-[-20deg] opacity-40 md:opacity-40 -top-[100px] md:-top-[200px] left-[-100px] md:left-[100px] will-change-transform" />
+      <div className="absolute rounded-full blur-[30px] md:blur-[60px] ray-light-secondary h-[250px] md:h-[400px] w-[800px] md:w-[1500px] rotate-[40deg] opacity-40 md:opacity-60 -left-[100px] md:-left-[200px] -top-[150px] md:-top-[300px] will-change-transform" />
+      <div className="absolute rounded-full blur-[30px] md:blur-[60px] ray-light h-[300px] md:h-[500px] w-[600px] md:w-[1200px] rotate-[-32deg] opacity-40 md:opacity-50 -top-[50px] md:-top-[100px] left-[200px] md:left-[800px] will-change-transform" />
 
       <div className="container relative z-10 mx-auto max-w-7xl">
         <div className="flex flex-col lg:flex-row items-center lg:items-center gap-12 lg:gap-0 lg:min-h-[75vh]">
@@ -31,6 +31,7 @@ export function Hero() {
                 alt={data.name}
                 className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                 loading="eager"
+                decoding="async"
               />
             </div>
             {/* Grid Pattern Behind Photo Overlay */}
