@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { GithubActivity } from "@/components/ui/github-activity";
@@ -6,6 +7,26 @@ import flag from "@/assets/costa-rica.png";
 
 export function About() {
   const { data } = useLanguage();
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      // Format for Costa Rica (GMT-6)
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: "America/Costa_Rica",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      };
+      setTime(new Intl.DateTimeFormat("en-US", options).format(now));
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -103,7 +124,7 @@ export function About() {
               </div>
               <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-md px-3 py-1 border border-border z-10 shadow-sm">
                 <span className="text-editorial-meta !text-primary font-bold">
-                  LIVE FEED / GMT-6
+                  LIVE FEED / GMT-6 / {time}
                 </span>
               </div>
             </div>
@@ -116,9 +137,6 @@ export function About() {
                   <span className="text-editorial-meta">
                     {data.about.educationLabel}
                   </span>
-                  <h4 className="text-2xl font-bold font-heal leading-tight group-hover:text-primary transition-colors">
-                    {data.about.educationTitle}
-                  </h4>
                   <p className="text-sm font-mono text-muted-foreground">
                     {data.education.degree}
                   </p>
@@ -131,9 +149,6 @@ export function About() {
                   <span className="text-editorial-meta">
                     {data.about.experienceLabel}
                   </span>
-                  <h4 className="text-2xl font-bold font-heal leading-tight group-hover:text-primary transition-colors">
-                    {data.about.experienceTitle}
-                  </h4>
                   <p className="text-sm font-mono text-muted-foreground">
                     {data.experience}
                   </p>
