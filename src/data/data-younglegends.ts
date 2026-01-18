@@ -1,4 +1,4 @@
-import youngLegendsImg from "@/assets/ImagesProjects/YoungLegends/Hero.png";
+import youngLegendsImg from "@/assets/ImagesProjects/YoungLegends/Hero.webp";
 
 export const youngLegendsDetails = {
   ES: {

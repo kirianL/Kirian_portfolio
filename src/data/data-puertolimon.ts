@@ -1,9 +1,9 @@
-import puertoLimonImg from "@/assets/ImagesProjects/Puerto-Limon/PuertoLimón.png";
-import carrusel1 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel1.jpg";
-import carrusel2 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel2.jpg";
-import carrusel3 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel3.jpg";
-import carrusel4 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel4.jpg";
-import carrusel5 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel5.jpg";
+import puertoLimonImg from "@/assets/ImagesProjects/Puerto-Limon/PuertoLimón.webp";
+import carrusel1 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel1.webp";
+import carrusel2 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel2.webp";
+import carrusel3 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel3.webp";
+import carrusel4 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel4.webp";
+import carrusel5 from "@/assets/ImagesProjects/Puerto-Limon/Carrusel5.webp";
 
 export const puertoLimonDetails = {
   ES: {

@@ -4,7 +4,7 @@ import { smoothScrollToElement } from "@/utils/smooth-scroll";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import profileImage from "@/assets/profile.png";
+import profileImage from "@/assets/profile.webp";
 
 export function Hero() {
   const { data } = useLanguage();

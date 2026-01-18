@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/context/language-context";
 import { GithubActivity } from "@/components/ui/github-activity";
 import { MapComponent } from "@/components/ui/map-component";
-import flag from "@/assets/costa-rica.png";
+import flag from "@/assets/costa-rica.webp";
 import { Button } from "@/components/ui/button";
 
 export function About() {

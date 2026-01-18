@@ -1,4 +1,4 @@
-import brisasDelRioImg from "@/assets/ImagesProjects/Brisas-Rio/Hero.png";
+import brisasDelRioImg from "@/assets/ImagesProjects/Brisas-Rio/Hero.webp";
 // No hay carrusel por ahora, usamos la misma imagen o dejamos vacío
 // Logos\Brisas del Rio.png mencionado por el usuario se usará como imagen principal si se desea,
 // pero en Puerto Limon se usa una imagen de la carpeta ImagesProjects.
