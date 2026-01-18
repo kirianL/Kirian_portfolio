@@ -233,6 +233,16 @@ export function ProjectDetail() {
           {/* Sidebar */}
           <div className="space-y-8 lg:sticky lg:top-32">
             <div className="p-6 rounded-2xl border border-border/50 bg-secondary/5 space-y-8">
+              {project.slug === "young-legends" && (
+                <div className="space-y-2">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                    Status
+                  </p>
+                  <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                    {project.status}
+                  </span>
+                </div>
+              )}
               {/* Role */}
               <div className="space-y-2">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">

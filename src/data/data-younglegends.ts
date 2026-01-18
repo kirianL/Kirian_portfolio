@@ -8,7 +8,7 @@ export const youngLegendsDetails = {
     industry: "Cultura / Portafolio Artístico",
     company: "Colectivo Young Legends",
     location: "Costa Rica",
-    status: "Completado",
+    status: "En desarrollo",
     closingQuote: "“DONDE EL ARTE SE CONVIERTE EN LEGADO”",
     image: youngLegendsImg,
     description:
@@ -65,7 +65,7 @@ export const youngLegendsDetails = {
     industry: "Culture / Artistic Portfolio",
     company: "Young Legends Collective",
     location: "Costa Rica",
-    status: "Completed",
+    status: "In Development",
     closingQuote: "“WHERE ART BECOMES LEGACY”",
     image: youngLegendsImg,
     description: "Digital platform for the Young Legends urban art collective.",
@@ -121,7 +121,7 @@ export const youngLegendsDetails = {
     industry: "Cultura / Portfólio Artístico",
     company: "Coletivo Young Legends",
     location: "Costa Rica",
-    status: "Concluído",
+    status: "Em desenvolvimento",
     closingQuote: "“ONDE A ARTE SE TORNA LEGADO”",
     image: youngLegendsImg,
     description:

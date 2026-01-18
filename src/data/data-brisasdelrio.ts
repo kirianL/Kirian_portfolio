@@ -40,7 +40,7 @@ export const brisasDelRioDetails = {
       "Amenidades",
       "Contacto directo",
     ],
-    gallery: [brisasDelRioImg],
+
     challenges:
       "Presentar de manera atractiva el entorno natural y los beneficios del proyecto manteniendo un alto rendimiento web.",
     technical: [
@@ -90,7 +90,7 @@ export const brisasDelRioDetails = {
       "Amenities",
       "Direct Contact",
     ],
-    gallery: [brisasDelRioImg],
+
     challenges:
       "Attractively present the natural environment and project benefits while maintaining high web performance.",
     technical: ["Optimized components", "Modular structure", "SEO optimized"],
@@ -136,7 +136,7 @@ export const brisasDelRioDetails = {
       "Comodidades",
       "Contato direto",
     ],
-    gallery: [brisasDelRioImg],
+
     challenges:
       "Apresentar de forma atraente o ambiente natural e os benefícios do projeto, mantendo um alto desempenho web.",
     technical: ["Componentes otimizados", "Estrutura modular", "SEO otimizado"],
