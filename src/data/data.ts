@@ -1,6 +1,37 @@
 import { puertoLimonDetails } from "./data-puertolimon";
+import { brisasDelRioDetails } from "./data-brisasdelrio";
+import { youngLegendsDetails } from "./data-younglegends";
 
 export type Language = "ES" | "EN" | "PT";
+
+export interface Project {
+  slug: string;
+  name: string;
+  year: string;
+  industry: string;
+  company: string;
+  location: string;
+  status: string;
+  closingQuote?: string;
+  image: string;
+  description: string;
+  longDescription: string;
+  overview: string;
+  role: string;
+  stack: string[];
+  objective?: string;
+  concept?: string[];
+  ux?: string[];
+  keySections?: string[];
+  gallery?: string[];
+  challenges?: string;
+  technical?: string[];
+  credits?: {
+    name: string;
+    link: string;
+  };
+  link: string;
+}
 
 const es = {
   name: "Kirian Luna Quirós",
@@ -76,7 +107,11 @@ const es = {
       "Una selección de proyectos donde diseño, cultura y tecnología convergen.",
     featuresLabel: "Características",
     resultsLabel: "Impacto",
-    list: [puertoLimonDetails.ES],
+    list: [
+      puertoLimonDetails.ES,
+      brisasDelRioDetails.ES,
+      youngLegendsDetails.ES,
+    ] as Project[],
   },
   contact: {
     title: "Contacto",
@@ -148,7 +183,7 @@ const es = {
     keySectionsLabel: "Secciones Clave",
     challengesLabel: "Retos Abordados",
     technicalLabel: "Implementación Técnica",
-    closingQuote: "“Lo mejor de Limón es su gente”",
+    closingQuote: "“Pasión por el detalle e innovación”",
     photosBy: "Fotos por",
   },
 };
@@ -229,7 +264,11 @@ const en: typeof es = {
       "A selection of projects where design, culture, and technology converge.",
     featuresLabel: "Features",
     resultsLabel: "Impact",
-    list: [puertoLimonDetails.EN],
+    list: [
+      puertoLimonDetails.EN,
+      brisasDelRioDetails.EN,
+      youngLegendsDetails.EN,
+    ] as Project[],
   },
   contact: {
     title: "Contact",
@@ -301,7 +340,7 @@ const en: typeof es = {
     keySectionsLabel: "Key Sections",
     challengesLabel: "Challenges Addressed",
     technicalLabel: "Technical Implementation",
-    closingQuote: "“The best of Limón is its people”",
+    closingQuote: "“Passion for detail and innovation”",
     photosBy: "Photos by",
   },
 };
@@ -382,7 +421,11 @@ const pt: typeof es = {
       "Uma seleção de projetos onde design, cultura e tecnologia convergem.",
     featuresLabel: "Funcionalidades",
     resultsLabel: "Impacto",
-    list: [puertoLimonDetails.PT],
+    list: [
+      puertoLimonDetails.PT,
+      brisasDelRioDetails.PT,
+      youngLegendsDetails.PT,
+    ] as Project[],
   },
   contact: {
     title: "Contato",
@@ -454,7 +497,7 @@ const pt: typeof es = {
     keySectionsLabel: "Seções Principais",
     challengesLabel: "Desafios Abordados",
     technicalLabel: "Implementação Técnica",
-    closingQuote: "“O melhor de Limón é a sua gente”",
+    closingQuote: "“Paixão pelo detalhe e inovação”",
     photosBy: "Fotos por",
   },
 };

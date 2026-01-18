@@ -7,10 +7,10 @@ export function Footer() {
 
   return (
     <footer className="py-12 bg-background border-t border-border/50">
-      <div className="container mx-auto px-6 max-w-7xl flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="container mx-auto px-6 max-w-7xl flex flex-col items-center justify-center gap-6 md:flex-row md:justify-between md:gap-8">
         {/* Brand with Flag */}
-        <div className="flex items-center gap-3">
-          <div className="text-sm font-bold text-foreground/80 font-heal tracking-[0.2em] uppercase">
+        <div className="flex items-center gap-3 order-1">
+          <div className="text-sm font-bold text-foreground/80 font-heal tracking-[0.2em] uppercase text-center md:text-left">
             {data.footer.brandName}
           </div>
           <img
@@ -21,7 +21,7 @@ export function Footer() {
         </div>
 
         {/* Social Links (Text) with Flag */}
-        <div className="flex items-center gap-8">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 order-2">
           <a
             href={data.contact.github}
             target="_blank"
@@ -47,7 +47,7 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
+        <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest text-center md:text-left order-3">
           &copy; {currentYear} — {data.footer.rights}
         </div>
       </div>

@@ -46,7 +46,7 @@ export function ProjectDetail() {
         <div className="absolute rounded-full blur-[48px] ray-light-secondary h-[267px] w-[1192px] -rotate-[37deg] opacity-45 -top-[60px] left-[-10%] md:left-[680px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 border-x border-border/40 min-h-screen pt-24 md:pt-32 pb-24 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 border-x border-border/40 min-h-screen pt-24 md:pt-32 pb-24 relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-12">
           <Link
@@ -69,10 +69,10 @@ export function ProjectDetail() {
             {/* Title & Simple Hero */}
             <div className="space-y-8">
               <div className="space-y-4">
-                <h1 className="text-4xl md:text-5xl font-bold font-heal leading-tight text-foreground">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heal leading-tight text-foreground">
                   {project.name}
                 </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
+                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl">
                   {project.overview}
                 </p>
               </div>
@@ -170,25 +170,29 @@ export function ProjectDetail() {
 
             {/* Key Sections & Challenges/Tech */}
             <div className="grid md:grid-cols-2 gap-12 pt-8 border-t border-border/50">
-              {project.keySections && (
+              {project.keySections && project.keySections.length > 0 && (
                 <section className="space-y-6">
                   <h2 className="text-2xl font-bold font-heal">
                     {data.projectDetail.keySectionsLabel}
                   </h2>
-                  <ul className="grid grid-cols-2 gap-3">
-                    {project.keySections.map((item: string, idx: number) => (
-                      <li
-                        key={idx}
-                        className={`p-3 rounded-lg bg-secondary/5 border border-border/50 text-foreground/90 font-medium text-sm flex items-center ${
-                          idx === project.keySections.length - 1
-                            ? "col-span-2"
-                            : ""
-                        }`}
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary/70 mr-2 flex-shrink-0" />
-                        {item}
-                      </li>
-                    ))}
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {project.keySections.map((item: string, idx: number) => {
+                      const isLast =
+                        idx === (project.keySections?.length ?? 0) - 1;
+                      const isOddCount =
+                        (project.keySections?.length ?? 0) % 2 !== 0;
+                      return (
+                        <li
+                          key={idx}
+                          className={`p-3 rounded-lg bg-secondary/5 border border-border/50 text-foreground/90 font-medium text-sm flex items-center ${
+                            isLast && isOddCount ? "sm:col-span-2" : ""
+                          }`}
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary/70 mr-2 flex-shrink-0" />
+                          {item}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </section>
               )}
@@ -268,7 +272,7 @@ export function ProjectDetail() {
 
             {/* Closing Quote */}
             <blockquote className="text-xl font-heal italic text-muted-foreground text-center px-4">
-              {data.projectDetail.closingQuote}
+              {project.closingQuote || data.projectDetail.closingQuote}
             </blockquote>
           </div>
         </div>

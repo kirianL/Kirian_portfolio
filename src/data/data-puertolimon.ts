@@ -14,6 +14,7 @@ export const puertoLimonDetails = {
     company: "Personal",
     location: "Costa Rica",
     status: "En desarrollo",
+    closingQuote: "“Lo mejor de Limón es su gente”",
     image: puertoLimonImg,
     description:
       "Una experiencia digital que documenta y celebra la identidad viva del Caribe costarricense.",
@@ -76,6 +77,7 @@ export const puertoLimonDetails = {
     company: "Personal",
     location: "Costa Rica",
     status: "In Development",
+    closingQuote: "“The best of Limón is its people”",
     image: puertoLimonImg,
     description:
       "A digital experience characterizing and celebrating the living identity of the Costa Rican Caribbean.",
@@ -137,6 +139,7 @@ export const puertoLimonDetails = {
     company: "Personal",
     location: "Costa Rica",
     status: "Em desenvolvimento",
+    closingQuote: "“O melhor de Limón é a sua gente”",
     image: puertoLimonImg,
     description:
       "Uma experiência digital que documenta e celebra a identidade viva do Caribe costarriquenho.",

@@ -55,32 +55,30 @@ export function Hero() {
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider text-foreground font-heal leading-[1.1]">
-                <span className="text-blue-500 block mb-2 whitespace-nowrap">
-                  {data.name}
-                </span>
-                <span className="text-foreground/80 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-sans tracking-tight block">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wider text-foreground font-heal leading-[1.1]">
+                <span className="text-blue-500 block mb-2">{data.name}</span>
+                <span className="text-foreground/80 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-sans tracking-tight block">
                   {data.hero.role}
                 </span>
               </h1>
               <p className="max-w-xl mx-auto lg:mx-0 text-base sm:text-lg text-muted-foreground/80 leading-relaxed font-medium">
                 {data.hero.desc
                   .split(
-                    /(el diseño|la seguridad|design|security|o design|a segurança)/i
+                    /(el diseño|la seguridad|design|security|o design|a segurança)/i,
                   )
                   .map((part, i) =>
                     /(el diseño|la seguridad|design|security|o design|a segurança)/i.test(
-                      part
+                      part,
                     ) ? (
                       <span
                         key={i}
-                        className="text-blue-500 font-heal tracking-wide whitespace-nowrap"
+                        className="text-blue-500 font-heal tracking-wide"
                       >
                         {part}
                       </span>
                     ) : (
                       part
-                    )
+                    ),
                   )}
               </p>
             </div>

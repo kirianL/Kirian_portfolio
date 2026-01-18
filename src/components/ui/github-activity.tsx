@@ -44,6 +44,9 @@ export function GithubActivity() {
       const username = import.meta.env.VITE_GITHUB_USERNAME || "kirianL";
 
       if (!token) {
+        console.warn(
+          "GitHub Activity: VITE_GITHUB_TOKEN is missing in environment.",
+        );
         setData(generateMockData());
         setLoading(false);
         return;
@@ -79,7 +82,7 @@ export function GithubActivity() {
 
         if (!res.ok) {
           throw new Error(
-            `GitHub API returned ${res.status}: ${res.statusText}`
+            `GitHub API returned ${res.status}: ${res.statusText}`,
           );
         }
 
@@ -124,8 +127,8 @@ export function GithubActivity() {
     const dataMap = new Map<string, number>();
     data.weeks.forEach((w) =>
       w.contributionDays.forEach((d) =>
-        dataMap.set(d.date, d.contributionCount)
-      )
+        dataMap.set(d.date, d.contributionCount),
+      ),
     );
 
     // Adjust to start of week (Sunday)
@@ -197,7 +200,7 @@ export function GithubActivity() {
                   >
                     <span className="capitalize">
                       {new Date(
-                        hoveredDay.date + "T12:00:00"
+                        hoveredDay.date + "T12:00:00",
                       ).toLocaleDateString("es-ES", {
                         weekday: "long",
                         day: "numeric",
@@ -275,7 +278,7 @@ export function GithubActivity() {
                       onMouseLeave={() => setHoveredDay(null)}
                       className={cn(
                         "w-full aspect-square rounded-[1px] sm:rounded-[2px] relative cursor-pointer border border-transparent hover:border-white/30 dark:hover:border-white/20",
-                        getColor(day.contributionCount)
+                        getColor(day.contributionCount),
                       )}
                     />
                   ))}
