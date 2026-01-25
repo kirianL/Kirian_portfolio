@@ -1,6 +1,7 @@
 import { puertoLimonDetails } from "./data-puertolimon";
 import { brisasDelRioDetails } from "./data-brisasdelrio";
 import { youngLegendsDetails } from "./data-younglegends";
+import { umpMusicDetails } from "./data-umpmusic";
 
 export type Language = "ES" | "EN" | "PT";
 
@@ -125,6 +126,7 @@ const es = {
       puertoLimonDetails.ES,
       brisasDelRioDetails.ES,
       youngLegendsDetails.ES,
+      umpMusicDetails.ES,
     ] as Project[],
   },
   contact: {
@@ -307,6 +309,7 @@ const en: typeof es = {
       puertoLimonDetails.EN,
       brisasDelRioDetails.EN,
       youngLegendsDetails.EN,
+      umpMusicDetails.EN,
     ] as Project[],
   },
   contact: {
@@ -489,6 +492,7 @@ const pt: typeof es = {
       puertoLimonDetails.PT,
       brisasDelRioDetails.PT,
       youngLegendsDetails.PT,
+      umpMusicDetails.PT,
     ] as Project[],
   },
   contact: {

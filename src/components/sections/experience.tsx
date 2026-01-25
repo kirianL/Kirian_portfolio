@@ -33,7 +33,7 @@ export function Experience() {
                   <img
                     src={project.image}
                     alt={project.name}
-                    className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-all duration-700 ease-out"
                   />
                 </div>
 
