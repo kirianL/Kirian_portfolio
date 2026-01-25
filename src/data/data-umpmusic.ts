@@ -65,41 +65,41 @@ export const umpMusicDetails = {
     closingQuote: "“CINEMATIC AND EDITORIAL”",
     image: umpMusicImg,
     description:
-      "High visual impact landing page with optimized performance for UMP.",
+      "High-impact visual landing page with optimized performance for UMP.",
     longDescription:
-      "The platform serves as the central presentation hub for the brand, its artists, news, and social links. A 'premium/brutalist' aesthetic reflecting the label's urban and modern identity.",
+      "The platform serves as the central hub for the brand, showcasing its artists, news, and social links. It features a 'premium/brutalist' aesthetic that mirrors the record label's modern, urban identity.",
     overview:
-      "Central presentation point for the brand, prioritizing visitor conversion to followers and an immersive experience.",
+      "A central hub for the brand, prioritizing the conversion of visitors into followers through an immersive experience.",
     role: "UI/UX Design · Frontend Development · Optimization",
     stack: ["Next.js 16", "TypeScript", "Tailwind CSS", "Supabase"],
     objective:
-      "Create a high visual impact landing page with optimized performance, prioritizing conversion and offering an immersive experience on both mobile and desktop.",
+      "To create a visually striking, high-performance landing page that prioritizes conversion and delivers an immersive experience across both mobile and desktop devices.",
     concept: [
       "Cinematic and Editorial Aesthetic",
       "Brutalist Minimalism",
       "Sophisticated Underground Atmosphere",
-      "Predominant use of dark backgrounds with neon accents",
+      "Dominant dark backgrounds with neon accents",
     ],
     ux: [
       "Mobile-First Design",
-      "Intuitive and smooth Navigation",
-      "Micro-interactions and instant visual feedback",
-      "Ultra-fast loading speed",
+      "Intuitive and Fluid Navigation",
+      "Micro-interactions and Instant Visual Feedback",
+      "Ultra-fast Loading Speeds",
     ],
     keySections: [
-      "High Impact Hero Section",
+      "High-Impact Hero Section",
       "Featured Artists (Masonry Grid)",
       "Latest News (Editorial List)",
       "Social Connect",
     ],
     challenges:
-      "Balance between rich aesthetics/effects and optimal performance (LCP/CLS). Adaptation of complex layouts (grids) to mobile devices.",
+      "Balancing rich aesthetics and visual effects with optimal performance (LCP/CLS). Adapting complex layouts (such as grids) for seamless mobile usage.",
     technical: [
       "Next.js 16 (App Router) and Server Components",
-      "TypeScript for robustness",
-      "Tailwind CSS for styles and design system",
+      "TypeScript for Robustness",
+      "Tailwind CSS for Styling and Design System",
       "Supabase as Backend/DB",
-      "Optimized image loading",
+      "Optimized Image Loading",
     ],
     credits: {
       name: "UMP Music Team",
@@ -120,13 +120,13 @@ export const umpMusicDetails = {
     description:
       "Landing page de alto impacto visual e desempenho otimizado para a UMP.",
     longDescription:
-      "A plataforma serve como o ponto central de apresentação para a marca, seus artistas, notícias e links sociais. Busca-se uma estética 'premium/brutalista' que reflita a identidade urbana e moderna do selo.",
+      "A plataforma serve como o hub central da marca, apresentando seus artistas, notícias e links sociais. Busca-se uma estética 'premium/brutalista' que reflita a identidade urbana e moderna da gravadora.",
     overview:
-      "Ponto central de apresentação para a marca, priorizando a conversão de visitantes em seguidores e uma experiência imersiva.",
+      "Hub central de apresentação da marca, priorizando a conversão de visitantes em seguidores e uma experiência imersiva.",
     role: "Design UI/UX · Desenvolvimento Frontend · Otimização",
     stack: ["Next.js 16", "TypeScript", "Tailwind CSS", "Supabase"],
     objective:
-      "Criar uma landing page de alto impacto visual e desempenho otimizado, priorizando a conversão e oferecendo uma experiência imersiva tanto em mobile quanto desktop.",
+      "Criar uma landing page de visual impactante e desempenho otimizado, priorizando a conversão e oferecendo uma experiência imersiva tanto em mobile quanto desktop.",
     concept: [
       "Estética Cinemática e Editorial",
       "Minimalismo Brutalista",
@@ -135,24 +135,24 @@ export const umpMusicDetails = {
     ],
     ux: [
       "Design Mobile-First",
-      "Navegação Intuitiva e fluida",
-      "Micro-interações e feedback visual instantâneo",
-      "Velocidade de carregamento ultrarrápida",
+      "Navegação Intuitiva e Fluida",
+      "Micro-interações e Feedback Visual Instantâneo",
+      "Velocidade de Carregamento Ultrarrápida",
     ],
     keySections: [
-      "Hero Section de alto impacto",
-      "Featured Artists (Grid Masonry)",
-      "Latest News (Lista Editorial)",
-      "Social Connect",
+      "Hero Section de Alto Impacto",
+      "Artistas em Destaque (Grid Masonry)",
+      "Últimas Notícias (Lista Editorial)",
+      "Conexão Social",
     ],
     challenges:
-      "Equilíbrio entre uma estética rica em imagens/efeitos e um desempenho ideal (LCP/CLS). Adaptação de layouts complexos (grids) para dispositivos móveis.",
+      "Equilíbrio entre uma estética rica em imagens/efeitos e um desempenho ideal (LCP/CLS). Adaptação de layouts complexos (grids) para dispositivos móveis de forma fluida.",
     technical: [
       "Next.js 16 (App Router) e Server Components",
-      "TypeScript para robustez",
-      "Tailwind CSS para estilos e sistema de design",
+      "TypeScript para Robustez",
+      "Tailwind CSS para Estilos e Sistema de Design",
       "Supabase como Backend/DB",
-      "Carregamento de imagens otimizado",
+      "Carregamento de Imagens Otimizado",
     ],
     credits: {
       name: "Equipe UMP Music",
