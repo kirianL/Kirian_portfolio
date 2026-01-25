@@ -8,7 +8,7 @@ export const umpMusicDetails = {
     industry: "Música / Plataforma Digital",
     company: "Underground Music Platform",
     location: "Costa Rica",
-    status: "Completado",
+    status: "En desarrollo",
     closingQuote: "“CINEMÁTICA Y EDITORIAL”",
     image: umpMusicImg,
     description:
@@ -61,7 +61,7 @@ export const umpMusicDetails = {
     industry: "Music / Digital Platform",
     company: "Underground Music Platform",
     location: "Costa Rica",
-    status: "Completed",
+    status: "In Development",
     closingQuote: "“CINEMATIC AND EDITORIAL”",
     image: umpMusicImg,
     description:
@@ -114,7 +114,7 @@ export const umpMusicDetails = {
     industry: "Música / Plataforma Digital",
     company: "Underground Music Platform",
     location: "Costa Rica",
-    status: "Concluído",
+    status: "Em desenvolvimento",
     closingQuote: "“CINEMÁTICO E EDITORIAL”",
     image: umpMusicImg,
     description:
