@@ -3,7 +3,7 @@ title: "Digitalizar una identidad cultural: el reto de hacer justicia a Limón e
 description: "Cómo representar la riqueza cultural de Limón en una plataforma web interactiva sin simplificar su historia y condiciones sociales."
 date: "June 13, 2026"
 category: "Cultura / Diseño"
-image: "/blog-limon-identity.png"
+image: "/blog-limon-identity.jpg"
 ---
 
 Como desarrollador web, estoy acostumbrado a resolver problemas técnicos. Pienso en rendimiento, arquitectura de información, experiencia de usuario, accesibilidad y escalabilidad. Sin embargo, al comenzar a trabajar en una propuesta digital inspirada en Limón, descubrí que el desafío más complejo no tenía nada que ver con código.
