@@ -1,0 +1,48 @@
+name: Broadcast Newsletter
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/content/blog/**'
+
+jobs:
+  broadcast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run newsletter script
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_SENDER: ${{ secrets.RESEND_SENDER || 'onboarding@resend.dev' }}
+        run: node scripts/send-newsletter.js
+
+      - name: Commit newsletter state changes
+        run: |
+          git config --local user.email "kirianluna.u@gmail.com"
+          git config --local user.name "Kirian Luna Quirós"
+          
+          # Check if sent-newsletter.json has changed
+          if git diff --name-only | grep -q "src/data/sent-newsletter.json"; then
+            echo "Newsletter state changed. Committing changes..."
+            git add src/data/sent-newsletter.json
+            git commit -m "chore: update newsletter state [skip ci]"
+            git push origin main
+          else
+            echo "No newsletter state changes to commit."
+          fi

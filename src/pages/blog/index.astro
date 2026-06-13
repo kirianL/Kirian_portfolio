@@ -70,6 +70,70 @@ const posts = allPosts
         ))}
       </section>
 
+      <!-- Newsletter Section -->
+      <section class="mt-4 p-6 rounded-2xl bg-card-surface border border-border flex flex-col gap-4">
+        <h3 class="text-primary-text font-semibold text-sm">Subscribe to the newsletter</h3>
+        <p class="text-muted-text text-xs leading-relaxed">
+          Get notified whenever I publish a new article about design, engineering, and web performance. No spam, unsubscribe at any time.
+        </p>
+        <form id="subscribe-form" class="flex gap-2 mt-1">
+          <input 
+            type="email" 
+            required 
+            placeholder="your@email.com" 
+            class="flex-1 px-3 py-2 text-xs rounded-xl border border-border bg-background text-primary-text focus:outline-none focus:border-primary transition-colors"
+          />
+          <button 
+            type="submit" 
+            class="px-4 py-2 text-xs bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+          >
+            Subscribe
+          </button>
+        </form>
+        <p id="subscribe-message" class="text-xs font-mono hidden"></p>
+      </section>
+
+      <script>
+        const form = document.getElementById('subscribe-form') as HTMLFormElement;
+        const message = document.getElementById('subscribe-message') as HTMLParagraphElement;
+
+        form?.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+          const email = emailInput.value;
+          
+          const button = form.querySelector('button') as HTMLButtonElement;
+          const originalText = button.textContent;
+          button.disabled = true;
+          button.textContent = 'Subscribing...';
+          
+          try {
+            const res = await fetch('/api/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            
+            if (res.ok) {
+              message.textContent = '✓ Successfully subscribed!';
+              message.className = 'text-xs font-mono text-green-600';
+              form.reset();
+            } else {
+              message.textContent = `✗ ${data.error || 'Something went wrong'}`;
+              message.className = 'text-xs font-mono text-red-600';
+            }
+          } catch (err) {
+            message.textContent = '✗ Connection error. Please try again.';
+            message.className = 'text-xs font-mono text-red-600';
+          } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+            message.classList.remove('hidden');
+          }
+        });
+      </script>
+
       <!-- Footer -->
       <footer class="mt-8 text-center text-xs text-muted-text font-mono border-t border-border/20 pt-8">
         Made with &lt;3
