@@ -36,29 +36,37 @@ Furthermore, according to data from the [United Nations Development Programme (U
 | Afro-descendant population | 23%                |
 | Cantons                    | 6                  |
 
-<div class="my-6 p-5 rounded-[14px] border border-border bg-card-surface flex flex-col gap-4">
+<div class="my-6 p-5 rounded-[14px] border border-border bg-card-surface flex flex-col gap-5">
   <div class="text-xs font-semibold tracking-tight text-primary-text uppercase font-mono">Ethnic representation of the province</div>
-  <div class="flex flex-col gap-4">
-    <div class="group">
-      <div class="flex justify-between items-baseline mb-1">
-        <span class="text-xs font-medium text-muted-text group-hover:text-primary transition-colors duration-200">Afro-descendants</span>
-        <span class="text-xs font-mono font-semibold text-primary-text">23%</span>
-      </div>
-      <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
-        <div class="bg-blue-500 h-full rounded-full transition-all duration-500 ease-out" style="width: 23%"></div>
-      </div>
+  <div class="relative h-44 flex items-end justify-around gap-4 px-2 border-b border-border/80 pb-1">
+    <div class="absolute inset-x-0 bottom-0 top-0 flex flex-col justify-between pointer-events-none" aria-hidden="true">
+      <div class="w-full border-t border-dashed border-border/60"></div>
+      <div class="w-full border-t border-dashed border-border/60"></div>
+      <div class="w-full border-t border-dashed border-border/60"></div>
+      <div class="w-full border-t border-dashed border-border/60"></div>
     </div>
-    <div class="group">
-      <div class="flex justify-between items-baseline mb-1">
-        <span class="text-xs font-medium text-muted-text group-hover:text-primary transition-colors duration-200">Rest of the population</span>
-        <span class="text-xs font-mono font-semibold text-primary-text">77%</span>
+    <div class="relative z-10 flex flex-col items-center w-1/3 group">
+      <span class="text-xs font-mono font-bold text-blue-500 mb-0.5">23%</span>
+      <div class="w-full bg-muted rounded-t-md overflow-hidden flex items-end h-28">
+        <div class="bg-blue-500 w-full rounded-t-md transition-all duration-700 ease-out" style="height: 23%"></div>
       </div>
-      <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
-        <div class="bg-primary h-full rounded-full transition-all duration-500 ease-out" style="width: 77%"></div>
+      <span class="text-[10px] font-medium text-muted-text text-center line-clamp-1 mt-1">Afro-descendants</span>
+    </div>
+    <div class="relative z-10 flex flex-col items-center w-1/3 group">
+      <span class="text-xs font-mono font-bold text-primary mb-0.5">77%</span>
+      <div class="w-full bg-muted rounded-t-md overflow-hidden flex items-end h-28">
+        <div class="bg-primary w-full rounded-t-md transition-all duration-700 ease-out" style="height: 77%"></div>
       </div>
+      <span class="text-[10px] font-medium text-muted-text text-center line-clamp-1 mt-1">Rest</span>
     </div>
   </div>
-  <div class="text-[9px] text-muted-text font-mono border-t border-border pt-2.5">Source: INEC and UNDP</div>
+  <div class="flex justify-between items-center text-[9px] text-muted-text font-mono">
+    <span>Source: INEC and UNDP</span>
+    <span class="flex items-center gap-2">
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-500"></span> Afro (23%)
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-primary"></span> Rest (77%)
+    </span>
+  </div>
 </div>
 
 However, when comparing these figures with the number of digital projects dedicated to documenting Limonense identity, the contrast is stark.
@@ -165,7 +173,7 @@ Instead of starting with tourism, the structure was organized around:
 1. History.
 2. Culture.
 3. Community.
-4. Gastronomía.
+4. Gastronomy.
 5. Experiences.
 
 Because before being a tourist destination, Limón is a living cultural identity.
@@ -174,35 +182,41 @@ Because before being a tourist destination, Limón is a living cultural identity
 
 ## What I Learned
 
-One of the most striking pieces of data found during the research was not related to culture.
-
 It was related to inequality.
 
 According to data compiled by the [UNDP (PNUD)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf?utm_source=chatgpt.com) from census records, approximately one-third of Limonense households lived in poverty.
 
-<div class="my-6 p-5 rounded-[14px] border border-border bg-card-surface flex flex-col gap-4">
+<div class="my-6 p-5 rounded-[14px] border border-border bg-card-surface flex flex-col gap-5">
   <div class="text-xs font-semibold tracking-tight text-primary-text uppercase font-mono">Households in poverty conditions (Limón)</div>
-  <div class="flex flex-col gap-4">
-    <div class="group">
-      <div class="flex justify-between items-baseline mb-1">
-        <span class="text-xs font-medium text-muted-text group-hover:text-primary transition-colors duration-200">Households in poverty</span>
-        <span class="text-xs font-mono font-semibold text-primary-text">31%</span>
-      </div>
-      <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
-        <div class="bg-red-500 h-full rounded-full transition-all duration-500 ease-out" style="width: 31%"></div>
-      </div>
+  <div class="relative h-44 flex items-end justify-around gap-4 px-2 border-b border-border/80 pb-1">
+    <div class="absolute inset-x-0 bottom-0 top-0 flex flex-col justify-between pointer-events-none" aria-hidden="true">
+      <div class="w-full border-t border-dashed border-border/60"></div>
+      <div class="w-full border-t border-dashed border-border/60"></div>
+      <div class="w-full border-t border-dashed border-border/60"></div>
+      <div class="w-full border-t border-dashed border-border/60"></div>
     </div>
-    <div class="group">
-      <div class="flex justify-between items-baseline mb-1">
-        <span class="text-xs font-medium text-muted-text group-hover:text-primary transition-colors duration-200">Other households</span>
-        <span class="text-xs font-mono font-semibold text-primary-text">69%</span>
+    <div class="relative z-10 flex flex-col items-center w-1/3 group">
+      <span class="text-xs font-mono font-bold text-red-500 mb-0.5">31%</span>
+      <div class="w-full bg-muted rounded-t-md overflow-hidden flex items-end h-28">
+        <div class="bg-red-500 w-full rounded-t-md transition-all duration-700 ease-out" style="height: 31%"></div>
       </div>
-      <div class="w-full h-2 bg-muted rounded-full overflow-hidden">
-        <div class="bg-primary h-full rounded-full transition-all duration-500 ease-out" style="width: 69%"></div>
+      <span class="text-[10px] font-medium text-muted-text text-center line-clamp-1 mt-1">In Poverty</span>
+    </div>
+    <div class="relative z-10 flex flex-col items-center w-1/3 group">
+      <span class="text-xs font-mono font-bold text-primary mb-0.5">69%</span>
+      <div class="w-full bg-muted rounded-t-md overflow-hidden flex items-end h-28">
+        <div class="bg-primary w-full rounded-t-md transition-all duration-700 ease-out" style="height: 69%"></div>
       </div>
+      <span class="text-[10px] font-medium text-muted-text text-center line-clamp-1 mt-1">Other Households</span>
     </div>
   </div>
-  <div class="text-[9px] text-muted-text font-mono border-t border-border pt-2.5">Source: UNDP - Social indicators of Limón</div>
+  <div class="flex justify-between items-center text-[9px] text-muted-text font-mono">
+    <span>Source: UNDP</span>
+    <span class="flex items-center gap-2">
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500"></span> Poverty (31%)
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-primary"></span> Others (69%)
+    </span>
+  </div>
 </div>
 
 This data changed the way I understood the project.

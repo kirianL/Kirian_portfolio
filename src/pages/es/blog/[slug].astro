@@ -138,8 +138,36 @@ const { Content } = await render(post);
   </main>
 </Layout>
 
+<script>
+  const setupLinks = () => {
+    const links = document.querySelectorAll('article.prose a');
+    links.forEach(link => {
+      if (link.getAttribute('href')?.startsWith('http')) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+      }
+    });
+  };
+
+  setupLinks();
+  document.addEventListener('astro:after-swap', setupLinks);
+</script>
+
 <style is:global>
   /* Markdown styling scoped to the article */
+  article.prose a {
+    color: #404040;
+    text-decoration: underline;
+    text-underline-offset: 2.5px;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+  .dark article.prose a {
+    color: #a3a3a3;
+  }
+  article.prose a:hover {
+    color: hsl(var(--primary));
+  }
   article.prose h2 {
     font-size: 1.125rem;
     font-weight: 600;
