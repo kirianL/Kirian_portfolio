@@ -36,30 +36,29 @@ Furthermore, according to data from the [United Nations Development Programme (U
 | Afro-descendant population | 23%                |
 | Cantons                    | 6                  |
 
-<div class="my-8 p-5 rounded-[14px] border border-border bg-card-surface flex flex-col gap-4 max-w-sm mx-auto">
-  <div class="text-[11px] font-semibold tracking-wider text-primary-text uppercase font-mono text-center">Ethnic representation of the province</div>
-  <div class="relative h-32 flex items-end justify-center gap-16 border-b border-border/60 pb-3">
-    <div class="absolute inset-x-0 top-0 bottom-3 flex flex-col justify-between pointer-events-none" aria-hidden="true">
-      <div class="w-full border-t border-dashed border-border/40"></div>
-      <div class="w-full border-t border-dashed border-border/40"></div>
-      <div class="w-full border-t border-dashed border-border/40"></div>
-    </div>
-    <div class="relative z-10 flex flex-col items-center w-12">
-      <span class="text-xs font-mono font-bold text-blue-500 mb-1">23%</span>
-      <div class="h-20 w-3.5 bg-muted rounded-full relative flex items-end">
-        <div class="bg-blue-500 w-full rounded-full transition-all duration-700 ease-out" style="height: 23%"></div>
+<div class="my-6 p-6 rounded-[14px] border border-border bg-card-surface flex flex-col gap-6 max-w-md mx-auto">
+  <div class="text-xs font-semibold tracking-wider text-primary-text uppercase font-mono border-b border-border pb-2">Ethnic representation of the province</div>
+  <div class="flex flex-col gap-5">
+    <div class="flex items-center gap-4">
+      <div class="text-3xl font-bold font-mono text-blue-500 w-16 text-right">23%</div>
+      <div class="flex-1 flex flex-col gap-1.5">
+        <span class="text-xs font-medium text-primary-text">Afro-descendants</span>
+        <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+          <div class="bg-blue-500 h-full rounded-full" style="width: 23%"></div>
+        </div>
       </div>
-      <span class="text-[10px] font-medium text-muted-text font-mono uppercase mt-1.5 text-center">Afro</span>
     </div>
-    <div class="relative z-10 flex flex-col items-center w-12">
-      <span class="text-xs font-mono font-bold text-primary mb-1">77%</span>
-      <div class="h-20 w-3.5 bg-muted rounded-full relative flex items-end">
-        <div class="bg-primary w-full rounded-full transition-all duration-700 ease-out" style="height: 77%"></div>
+    <div class="flex items-center gap-4">
+      <div class="text-3xl font-bold font-mono text-primary w-16 text-right">77%</div>
+      <div class="flex-1 flex flex-col gap-1.5">
+        <span class="text-xs font-medium text-primary-text">Rest of the population</span>
+        <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+          <div class="bg-primary h-full rounded-full" style="width: 77%"></div>
+        </div>
       </div>
-      <span class="text-[10px] font-medium text-muted-text font-mono uppercase mt-1.5 text-center">Rest</span>
     </div>
   </div>
-  <div class="text-[9px] text-muted-text font-mono text-center">Source: INEC and UNDP</div>
+  <div class="text-[9px] text-muted-text font-mono pt-1">Source: INEC and UNDP</div>
 </div>
 
 However, when comparing these figures with the number of digital projects dedicated to documenting Limonense identity, the contrast is stark.
@@ -179,30 +178,29 @@ It was related to inequality.
 
 According to data compiled by the [UNDP (PNUD)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf?utm_source=chatgpt.com) from census records, approximately one-third of Limonense households lived in poverty.
 
-<div class="my-8 p-5 rounded-[14px] border border-border bg-card-surface flex flex-col gap-4 max-w-sm mx-auto">
-  <div class="text-[11px] font-semibold tracking-tight text-primary-text uppercase font-mono text-center">Households in poverty conditions (Limón)</div>
-  <div class="relative h-32 flex items-end justify-center gap-16 border-b border-border/60 pb-3">
-    <div class="absolute inset-x-0 top-0 bottom-3 flex flex-col justify-between pointer-events-none" aria-hidden="true">
-      <div class="w-full border-t border-dashed border-border/40"></div>
-      <div class="w-full border-t border-dashed border-border/40"></div>
-      <div class="w-full border-t border-dashed border-border/40"></div>
-    </div>
-    <div class="relative z-10 flex flex-col items-center w-16">
-      <span class="text-xs font-mono font-bold text-red-500 mb-1">31%</span>
-      <div class="h-20 w-3.5 bg-muted rounded-full relative flex items-end">
-        <div class="bg-red-500 w-full rounded-full transition-all duration-700 ease-out" style="height: 31%"></div>
+<div class="my-6 p-6 rounded-[14px] border border-border bg-card-surface flex flex-col gap-6 max-w-md mx-auto">
+  <div class="text-xs font-semibold tracking-wider text-primary-text uppercase font-mono border-b border-border pb-2">Households in poverty conditions (Limón)</div>
+  <div class="flex flex-col gap-5">
+    <div class="flex items-center gap-4">
+      <div class="text-3xl font-bold font-mono text-red-500 w-16 text-right">31%</div>
+      <div class="flex-1 flex flex-col gap-1.5">
+        <span class="text-xs font-medium text-primary-text">Households in poverty</span>
+        <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+          <div class="bg-red-500 h-full rounded-full" style="width: 31%"></div>
+        </div>
       </div>
-      <span class="text-[10px] font-medium text-muted-text font-mono uppercase mt-1.5 text-center text-center">Poverty</span>
     </div>
-    <div class="relative z-10 flex flex-col items-center w-16">
-      <span class="text-xs font-mono font-bold text-primary mb-1">69%</span>
-      <div class="h-20 w-3.5 bg-muted rounded-full relative flex items-end">
-        <div class="bg-primary w-full rounded-full transition-all duration-700 ease-out" style="height: 69%"></div>
+    <div class="flex items-center gap-4">
+      <div class="text-3xl font-bold font-mono text-primary w-16 text-right">69%</div>
+      <div class="flex-1 flex flex-col gap-1.5">
+        <span class="text-xs font-medium text-primary-text">Other households</span>
+        <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+          <div class="bg-primary h-full rounded-full" style="width: 69%"></div>
+        </div>
       </div>
-      <span class="text-[10px] font-medium text-muted-text font-mono uppercase mt-1.5 text-center text-center">Other</span>
     </div>
   </div>
-  <div class="text-[9px] text-muted-text font-mono text-center">Source: UNDP</div>
+  <div class="text-[9px] text-muted-text font-mono pt-1">Source: UNDP - Social indicators of Limón</div>
 </div>
 
 This data changed the way I understood the project.
