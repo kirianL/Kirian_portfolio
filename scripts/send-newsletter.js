@@ -242,73 +242,75 @@ async function run() {
 
   console.log(`Found ${unsentPosts.length} new articles to send.`);
 
-  // Find Resend Audience ID
-  let audienceId = process.env.RESEND_AUDIENCE_ID;
-  if (!audienceId) {
-    const audiencesList = await resend.audiences.list();
-    const existingAudience = audiencesList.data?.find(aud => aud.name === 'Blog Subscribers');
-    if (existingAudience) {
-      audienceId = existingAudience.id;
+  // Find or create Resend Segment ID for 'Blog Subscribers'
+  let segmentId = process.env.RESEND_AUDIENCE_ID;
+  if (!segmentId) {
+    const segmentsList = await resend.segments.list();
+    const existingSegment = segmentsList.data?.data?.find(seg => seg.name === 'Blog Subscribers');
+    if (existingSegment) {
+      segmentId = existingSegment.id;
+    } else {
+      console.log('Creating "Blog Subscribers" segment...');
+      const newSegment = await resend.segments.create({ name: 'Blog Subscribers' });
+      if (newSegment.error) {
+        console.error('Failed to create segment in Resend:', newSegment.error.message);
+        return;
+      }
+      segmentId = newSegment.data?.id;
     }
   }
 
-  if (!audienceId) {
-    console.log('Error: Could not find "Blog Subscribers" audience in Resend. Please ensure subscribers exist.');
+  if (!segmentId) {
+    console.error('Error: Could not identify or create "Blog Subscribers" segment.');
     return;
   }
 
-  // Fetch all contacts in audience
-  const contactsResponse = await resend.contacts.list({ audienceId });
-  const contacts = contactsResponse.data || [];
+  // Fetch all contacts in audience/segment to verify we have subscribers
+  const contactsResponse = await resend.contacts.list({ audienceId: segmentId });
+  const contacts = contactsResponse.data?.data || [];
 
   if (contacts.length === 0) {
-    console.log('No subscribers found in the Resend Audience. Storing post slugs as sent without emailing.');
+    console.log('No subscribers found in the "Blog Subscribers" segment. Storing post slugs as sent without emailing.');
     unsentPosts.forEach(post => state.sent.push(post.slug));
     fs.writeFileSync(sentFilePath, JSON.stringify(state, null, 2));
     return;
   }
 
-  console.log(`Sending to ${contacts.length} subscribers...`);
+  console.log(`Sending broadcast to segment "${segmentId}"...`);
 
   // Loop through each unsent post
   for (const post of unsentPosts) {
-    const batch = [];
-    
-    // Create personalized email for each contact (for the custom unsubscribe link)
-    for (const contact of contacts) {
-      // Prevent emailing contacts that are unsubscribed inside Resend
-      if (contact.unsubscribed) continue;
+    const unsubscribeUrl = '{{{RESEND_UNSUBSCRIBE_URL}}}';
+    const htmlContent = renderEmail(post, unsubscribeUrl, post.isSpanish);
+    const subject = post.isSpanish ? `Nuevo artículo: ${post.title}` : `New article: ${post.title}`;
 
-      const unsubscribeUrl = `${siteUrl}/api/unsubscribe?email=${encodeURIComponent(contact.email)}`;
-      const htmlContent = renderEmail(post, unsubscribeUrl, post.isSpanish);
-      const subject = post.isSpanish ? `Nuevo artículo: ${post.title}` : `New article: ${post.title}`;
-
-      batch.push({
+    try {
+      console.log(`Creating broadcast for: "${post.title}"...`);
+      const broadcastResult = await resend.broadcasts.create({
+        segmentId: segmentId,
         from: sender,
-        to: contact.email,
         subject: subject,
         html: htmlContent
       });
-    }
 
-    // Chunk batch into chunks of 100 (Resend limit is 150)
-    const chunkSize = 100;
-    for (let i = 0; i < batch.length; i += chunkSize) {
-      const chunk = batch.slice(i, i + chunkSize);
-      try {
-        const result = await resend.batch.send(chunk);
-        if (result.error) {
-          console.error('Failed to send email chunk:', result.error);
-        } else {
-          console.log(`Sent chunk of ${chunk.length} emails successfully.`);
-        }
-      } catch (err) {
-        console.error('Network error while sending chunk:', err);
+      if (broadcastResult.error) {
+        console.error('Failed to create broadcast:', broadcastResult.error.message);
+        continue;
       }
-    }
 
-    // Add post to sent list
-    state.sent.push(post.slug);
+      const broadcastId = broadcastResult.data.id;
+      console.log(`Broadcast created successfully with ID: ${broadcastId}. Sending broadcast now...`);
+
+      const sendResult = await resend.broadcasts.send(broadcastId);
+      if (sendResult.error) {
+        console.error('Failed to send broadcast:', sendResult.error.message);
+      } else {
+        console.log(`Broadcast sent successfully.`);
+        state.sent.push(post.slug);
+      }
+    } catch (err) {
+      console.error(`Network or unexpected error while broadcasting post "${post.slug}":`, err);
+    }
   }
 
   // Save the sent list state back to the file
