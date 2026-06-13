@@ -36,6 +36,11 @@ const toolsSkills = skills.filter(s => s.category === 'Tools');
             <p class="text-muted-text tracking-tight text-sm">
               {data.title}
             </p>
+            <p class="text-muted-text tracking-tight text-xs mt-0.5 flex items-center gap-1">
+              <span>{data.hero.based.split('Costa Rica')[0]}</span>
+              <span class="text-blue-600 hover:text-blue-800 transition-colors font-medium cursor-pointer">Costa Rica</span>
+              <span>{data.locationIcon}</span>
+            </p>
           </div>
         </div>
         
