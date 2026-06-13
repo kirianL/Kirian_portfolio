@@ -285,27 +285,19 @@ async function run() {
     const subject = post.isSpanish ? `Nuevo artículo: ${post.title}` : `New article: ${post.title}`;
 
     try {
-      console.log(`Creating broadcast for: "${post.title}"...`);
+      console.log(`Creating and sending broadcast for: "${post.title}"...`);
       const broadcastResult = await resend.broadcasts.create({
         segmentId: segmentId,
         from: sender,
         subject: subject,
-        html: htmlContent
+        html: htmlContent,
+        send: true
       });
 
       if (broadcastResult.error) {
-        console.error('Failed to create broadcast:', broadcastResult.error.message);
-        continue;
-      }
-
-      const broadcastId = broadcastResult.data.id;
-      console.log(`Broadcast created successfully with ID: ${broadcastId}. Sending broadcast now...`);
-
-      const sendResult = await resend.broadcasts.send(broadcastId);
-      if (sendResult.error) {
-        console.error('Failed to send broadcast:', sendResult.error.message);
+        console.error('Failed to send broadcast:', broadcastResult.error.message);
       } else {
-        console.log(`Broadcast sent successfully.`);
+        console.log(`Broadcast sent successfully. ID: ${broadcastResult.data.id}`);
         state.sent.push(post.slug);
       }
     } catch (err) {
