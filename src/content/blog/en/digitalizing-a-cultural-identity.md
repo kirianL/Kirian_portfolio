@@ -154,7 +154,7 @@ The priority was to use authentic images and avoid generic stock photos.
 
 People had to occupy a central place. I did not want to show a touristy or idealized version of Limón, but a representation closer to daily reality in the province.
 
-During the visual research process, the photographic work of Xaxier Sandi Castillo served as an important reference to understand how photography can document identity, memory, and territory from a local perspective. His work demonstrates the importance of communities participating in building the region's visual narrative, preventing history from being told solely from external viewpoints.
+During the visual research process, the photographic work of [Xaxier Sandi Castillo](https://www.instagram.com/amkras_/) served as an important reference to understand how photography can document identity, memory, and territory from a local perspective. His work demonstrates the importance of communities participating in building the region's visual narrative, preventing history from being told solely from external viewpoints.
 
 For that reason, one of the project's premises was to prioritize images produced by people who know and live the daily reality of Limón, ensuring that the visual representation retains greater authenticity and cultural context.
 
@@ -290,7 +290,7 @@ Because if one thing became clear during this process, it is that the best way t
 
 ## Credits and Visual Inspiration
 
-* Documentary inspiration and photographic reference: Xaxier Sandi Castillo
+* Documentary inspiration and photographic reference: [Xaxier Sandi Castillo](https://www.instagram.com/amkras_/)
 * Community archive and historical memory: [Mi Limón of Yesterday](https://www.facebook.com/share/g/1CeUp5KFKT/?utm_source=chatgpt.com)
 
 ---

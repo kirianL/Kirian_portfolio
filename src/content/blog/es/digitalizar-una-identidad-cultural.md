@@ -161,7 +161,7 @@ La prioridad fue utilizar imágenes auténticas y evitar fotografías genéricas
 
 Las personas debían ocupar un lugar central. No quería mostrar una versión turística o idealizada de Limón, sino una representación más cercana a la realidad cotidiana de la provincia.
 
-Durante el proceso de investigación visual, el trabajo fotográfico de Xaxier Sandi Castillo sirvió como una referencia importante para comprender cómo la fotografía puede documentar identidad, memoria y territorio desde una perspectiva local. Su trabajo demuestra la importancia de que las propias comunidades participen en la construcción de la narrativa visual de la región, evitando que la historia sea contada únicamente desde miradas externas.
+Durante el proceso de investigación visual, el trabajo fotográfico de [Xaxier Sandi Castillo](https://www.instagram.com/amkras_/) sirvió como una referencia importante para comprender cómo la fotografía puede documentar identidad, memoria y territorio desde una perspectiva local. Su trabajo demuestra la importancia de que las propias comunidades participen en la construcción de la narrativa visual de la región, evitando que la historia sea contada únicamente desde miradas externas.
 
 Por esa razón, una de las premisas del proyecto fue priorizar imágenes producidas por personas que conocen y viven la realidad limonense, permitiendo que la representación visual conserve mayor autenticidad y contexto cultural.
 
@@ -299,7 +299,7 @@ Porque si algo quedó claro durante este proceso es que la mejor manera de conta
 
 ## Créditos fotográficos e inspiración visual
 
-* Inspiración documental y referencia fotográfica: Xaxier Sandi Castillo
+* Inspiración documental y referencia fotográfica: [Xaxier Sandi Castillo](https://www.instagram.com/amkras_/)
 * Archivo comunitario y memoria histórica: [Mi Limón de Ayer](https://www.facebook.com/share/g/1CeUp5KFKT/?utm_source=chatgpt.com)
 
 ---
