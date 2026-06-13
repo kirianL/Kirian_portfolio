@@ -24,6 +24,41 @@ const navLabels = {
 // Get localized prefix (empty for 'en', '/es' for Spanish, etc.)
 const localePrefix = currentLocale === 'en' ? '' : `/${currentLocale}`;
 const homePath = currentLocale === 'en' ? '/' : `/${currentLocale}/`;
+
+const pathname = Astro.url.pathname;
+
+// Mapping for blog posts to keep translation on detail pages
+const blogMapping: Record<string, string> = {
+  '/blog/digitalizing-a-cultural-identity': '/es/blog/digitalizar-una-identidad-cultural',
+  '/blog/digitalizing-a-cultural-identity/': '/es/blog/digitalizar-una-identidad-cultural/',
+  '/es/blog/digitalizar-una-identidad-cultural': '/blog/digitalizing-a-cultural-identity',
+  '/es/blog/digitalizar-una-identidad-cultural/': '/blog/digitalizing-a-cultural-identity/',
+};
+
+let enPath = '/';
+let esPath = '/es/';
+
+if (blogMapping[pathname]) {
+  if (currentLocale === 'en') {
+    enPath = pathname;
+    esPath = blogMapping[pathname];
+  } else {
+    esPath = pathname;
+    enPath = blogMapping[pathname];
+  }
+} else if (pathname === '/blog' || pathname === '/blog/') {
+  enPath = '/blog/';
+  esPath = '/es/blog/';
+} else if (pathname === '/es/blog' || pathname === '/es/blog/') {
+  enPath = '/blog/';
+  esPath = '/es/blog/';
+} else if (pathname.startsWith('/es/')) {
+  enPath = pathname.replace(/^\/es/, '') || '/';
+  esPath = pathname;
+} else if (pathname !== '/') {
+  enPath = pathname;
+  esPath = `/es${pathname}`;
+}
 ---
 
 <nav class="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-md">
@@ -49,13 +84,13 @@ const homePath = currentLocale === 'en' ? '/' : `/${currentLocale}/`;
       <!-- Language Selector (Minimalist active-pills layout) -->
       <div class="flex items-center gap-0.5 font-mono text-[10px] text-muted-text bg-muted-secondary/40 p-0.5 rounded-lg border border-border/20">
         <a 
-          href="/" 
+          href={enPath} 
           class={`px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === 'en' ? 'bg-card-surface text-primary-text font-bold shadow-xs' : 'hover:text-primary-text'}`}
         >
           EN
         </a>
         <a 
-          href="/es/" 
+          href={esPath} 
           class={`px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === 'es' ? 'bg-card-surface text-primary-text font-bold shadow-xs' : 'hover:text-primary-text'}`}
         >
           ES
