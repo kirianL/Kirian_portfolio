@@ -1,0 +1,125 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Navbar from '../../../components/Navbar.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const esPosts = posts.filter(post => post.id.startsWith('es/'));
+  
+  return esPosts.map(post => {
+    const slug = post.id.replace(/^es\//, '');
+    return {
+      params: { slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout 
+  title={`${post.data.title} | Kirian Luna Quirós`} 
+  description={post.data.description}
+  lang="es"
+  image={post.data.image}
+>
+  <Navbar />
+  
+  <main class="min-h-screen bg-background px-4 sm:px-0">
+    <div class="max-w-xl mx-auto md:px-0 px-2 pt-28 pb-16 flex flex-col gap-8">
+      
+      <!-- Back Link -->
+      <a href="/es/blog/" class="group flex items-center gap-1.5 text-xs text-muted-text hover:text-primary transition-colors w-fit font-mono">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+        Volver al blog
+      </a>
+      
+      <!-- Header -->
+      <header class="flex flex-col gap-3">
+        <div class="flex items-center justify-between text-[10px] font-mono text-muted-text">
+          <span>{post.data.date}</span>
+          <span class="px-2 py-0.5 bg-muted-secondary text-primary-text rounded-full font-medium text-[9px]">{post.data.category}</span>
+        </div>
+        <h1 class="text-primary-text font-semibold tracking-tight text-xl sm:text-2xl mt-1 leading-snug">
+          {post.data.title}
+        </h1>
+        <p class="text-muted-text text-sm leading-relaxed mt-1">
+          {post.data.description}
+        </p>
+      </header>
+
+      <!-- Post Cover Image -->
+      <div class="w-full aspect-[16/9] overflow-hidden rounded-2xl bg-muted-secondary border border-border/50">
+        <img 
+          src={post.data.image} 
+          alt={post.data.title} 
+          class="w-full h-full object-cover" 
+        />
+      </div>
+
+      <!-- Article Content -->
+      <article class="prose w-full">
+        <Content />
+      </article>
+
+      <!-- Footer -->
+      <footer class="mt-8 text-center text-xs text-muted-text font-mono border-t border-border/20 pt-8">
+        Made with &lt;3
+      </footer>
+
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+  /* Markdown styling scoped to the article */
+  article.prose h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-primary-text);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+  article.prose p {
+    font-size: 0.875rem;
+    line-height: 1.625;
+    color: var(--color-muted-text);
+    margin-bottom: 1.25rem;
+  }
+  article.prose code {
+    font-family: var(--font-geistmono);
+    font-size: 0.8125rem;
+    background-color: var(--color-muted-secondary);
+    padding: 0.125rem 0.25rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+  article.prose pre {
+    background-color: var(--color-muted-secondary);
+    border: 1px solid var(--color-border);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+  article.prose pre code {
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+  }
+  article.prose ul {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1.25rem;
+    color: var(--color-muted-text);
+    font-size: 0.875rem;
+  }
+  article.prose li {
+    margin-bottom: 0.5rem;
+  }
+</style>

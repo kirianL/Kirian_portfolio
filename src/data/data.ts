@@ -3,7 +3,7 @@ import { brisasDelRioDetails } from "./data-brisasdelrio";
 import { youngLegendsDetails } from "./data-younglegends";
 import { umpMusicDetails } from "./data-umpmusic";
 
-export type Language = "ES" | "EN" | "PT";
+export type Language = "ES" | "EN";
 
 export interface Project {
   slug: string;
@@ -288,7 +288,6 @@ const en: typeof es = {
       { name: "JavaScript", category: "Frontend" },
       { name: "Laravel", category: "Backend" },
       { name: "PHP", category: "Backend" },
-      { name: "Sanctum", category: "Backend" },
       { name: "API REST", category: "Backend" },
       { name: "Git", category: "Tools" },
       { name: "GitHub", category: "Tools" },
@@ -398,191 +397,7 @@ const en: typeof es = {
   },
 };
 
-const pt: typeof es = {
-  name: "Kirian Luna Quirós",
-  title: "Engenheiro de Sistemas",
-  location: "Costa Rica",
-  locationIcon: "🇨🇷",
-  experience: "2 anos",
-  education: {
-    degree: "Engenharia de Sistemas Computacionais",
-    institution: "Universidad Latina de Costa Rica",
-    period: "2023–2026",
-  },
-  hero: {
-    greeting: "Eu sou Kirian,",
-    role: "Engenheiro de Sistemas",
-    sub: "Projetando experiências digitais impactantes.",
-    desc: "Apaixonado pelo desenvolvimento web, focado em transformar ideias complexas em soluções elegantes, funcionais e seguras, onde o design, a experiência do usuário e a segurança são tão importantes quanto o desempenho e a qualidade do código.",
-    based: "Baseado na Costa Rica",
-    ctaProjects: "Ver meus trabalhos",
-    ctaContact: "Vamos conversar",
-    techStackLabel: "Stack:",
-    techStack: ["React", "Next.js", "TypeScript", "TailwindCSS"],
-
-    stats: {
-      exp: "2 anos",
-      projects: "Projetos",
-      commitment: "Compromisso",
-    },
-    availability: "Disponível para projetos",
-    ctaExplore: "Explorar mais",
-  },
-  about: {
-    title: "Sobre Mim",
-    badgeLabel: "Em busca de novas oportunidades",
-    heroTitle: "Desenvolvedor Full Stack & Amante de Ideias",
-    heroSubtitle:
-      "Impulsionando produtos digitais com paixão por código e design.",
-    ctaWork: "Veja meu trabalho",
-    ctaContact: "Vamos conversar",
-    experienceSub: "Trajetória Profissional",
-    intro:
-      "Mais do que código, crio soluções. Minha abordagem combina técnica sólida com design intuitivo.",
-    bio: [
-      "Sou um apaixonado Engenheiro de Sistemas focado em criar soluções tecnológicas eficientes e escaláveis. Com 2 anos de experiência em desenvolvimento de software, eu me especializo em construir experiências de usuário fluidas e arquiteturas robustas.",
-      "Meu foco está no código limpo, desempenho ideal e design centrado no usuário. Estou sempre aprendendo as últimas tecnologias para entregar os melhores resultados em cada projeto.",
-    ],
-    roleTitle: "O Desenvolvedor",
-    locationTitle: "Localização",
-    experienceTitle: "Experiência",
-    educationTitle: "Educação",
-    stackTitle: "Stack Tecnológica Moderna",
-    coreStackLabel: "Core Stack",
-    locationLabel: "Localização",
-    educationLabel: "Educação",
-    experienceLabel: "Experiência",
-  },
-  skills: {
-    title: "Habilidades Técnicas",
-    categories: {
-      frontend: "Frontend",
-      backend: "Backend",
-      tools: "Ferramentas",
-    },
-    list: [
-      { name: "React", category: "Frontend" },
-      { name: "Next.js", category: "Frontend" },
-      { name: "TypeScript", category: "Frontend" },
-      { name: "TailwindCSS", category: "Frontend" },
-      { name: "shadcn/ui", category: "Frontend" },
-      { name: "HTML5", category: "Frontend" },
-      { name: "CSS3", category: "Frontend" },
-      { name: "JavaScript", category: "Frontend" },
-      { name: "Laravel", category: "Backend" },
-      { name: "PHP", category: "Backend" },
-      { name: "Sanctum", category: "Backend" },
-      { name: "API REST", category: "Backend" },
-      { name: "Git", category: "Tools" },
-      { name: "GitHub", category: "Tools" },
-      { name: "Figma", category: "Tools" },
-    ],
-    description:
-      "Experiência baseada em frameworks modernos e princípios fundamentais de engenharia.",
-  },
-  projects: {
-    title: "Projetos",
-    subtitle: "Experiência Interativa & Desenvolvimento",
-    description:
-      "Uma seleção de projetos onde design, cultura e tecnologia convergem.",
-    featuresLabel: "Funcionalidades",
-    resultsLabel: "Impacto",
-    caseStudyLabel: "Caso de Estudo",
-    list: [
-      puertoLimonDetails.PT,
-      brisasDelRioDetails.PT,
-      youngLegendsDetails.PT,
-      umpMusicDetails.PT,
-    ] as Project[],
-  },
-  contact: {
-    title: "Contato",
-    desc: "Tem uma ideia ou projeto em mente? Vamos conversar!",
-    infoTitle: "Informações de contato",
-    instantLabel: "Instantâneo",
-    emailLabel: "E-mail",
-    githubActivityTitle: "Atividade do GitHub",
-    moreLabel: "Mais",
-    lessLabel: "Menos",
-    contributionsLabel: "contribuições em",
-    capabilitiesLabel: "CAPACIDADES",
-    connectLabel: "CONECTEMOS",
-    form: {
-      name: "Nome",
-      namePlaceholder: "Seu nome",
-      email: "E-mail",
-      emailPlaceholder: "voce@email.com",
-      message: "Mensagem",
-      messagePlaceholder: "Como posso ajudar você?",
-      submit: "Enviar mensagem",
-      sending: "Enviando...",
-    },
-    meetingLabel: "REUNIÃO / 1 HORA",
-    email: "kirianluna.u@gmail.com",
-    github: "https://github.com/kirianL",
-    linkedin: "https://www.linkedin.com/in/kirianluna",
-  },
-  footer: {
-    rights: "Todos os direitos reservados.",
-    brandName: "Kirian Luna Quirós",
-    connectedLabel: "Conectado",
-    directLabel: "Direto",
-    bio: "Um solucionador de problemas dedicado que prospera aprendendo e construindo.",
-    me: {
-      title: "Eu",
-      links: [
-        { label: "Projetos", href: "#projetos" },
-        { label: "Blog", href: "#" },
-        { label: "Bookmarks", href: "#" },
-      ],
-    },
-    site: {
-      title: "Este site",
-      links: [
-        { label: "Analíticas", href: "#" },
-        { label: "RSS", href: "#" },
-        {
-          label: "Código Fonte",
-          href: "https://github.com/kirianL/Kirian_portfolio",
-        },
-      ],
-    },
-  },
-  nav: {
-    about: "Sobre",
-    skills: "Habilidades",
-    projects: "Projetos",
-    contact: "Contato",
-    cv: "Baixar CV",
-  },
-  projectDetail: {
-    back: "Voltar para projetos",
-    about: "Sobre o projeto",
-    features: "Características Principais",
-    approach: "Abordagem",
-    details: "Detalhes do Projeto",
-    role: "Função",
-    status: "Status",
-    tech: "Tecnologias",
-    creditsLabel: "Créditos da Foto",
-    view: "Ver Projeto",
-    notFound: "Projeto não encontrado",
-    backHome: "Voltar ao início",
-    objectiveLabel: "Objetivo do Projeto",
-    conceptLabel: "Abordagem Conceitual",
-    uxLabel: "Experiência do Usuário (UX)",
-    visualSectionLabel: "Seção Visual em Destaque",
-    visualQuote: "Reforçando a narrativa visual e a conexão emocional.",
-    keySectionsLabel: "Seções Principais",
-    challengesLabel: "Desafios Abordados",
-    technicalLabel: "Implementação Técnica",
-    closingQuote: "“Paixão pelo detalhe e inovação”",
-    photosBy: "Fotos por",
-  },
-};
-
 export const dictionaries: Record<Language, typeof es> = {
   ES: es,
   EN: en,
-  PT: pt,
 };

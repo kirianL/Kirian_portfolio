@@ -1,0 +1,80 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+
+import { getCollection } from 'astro:content';
+
+// Localized blog content
+const title = "Blog";
+const description = "Sharing thoughts on design, engineering, and web performance.";
+
+// Fetch English posts from Content Collection
+const allPosts = await getCollection('blog');
+const posts = allPosts
+  .filter(post => post.id.startsWith('en/'))
+  .map(post => ({
+    title: post.data.title,
+    description: post.data.description,
+    date: post.data.date,
+    category: post.data.category,
+    image: post.data.image,
+    link: `/blog/${post.id.replace(/^en\//, '')}/`
+  }));
+---
+
+<Layout 
+  title="Blog | Kirian Luna Quirós" 
+  description={description}
+  lang="en"
+>
+  <Navbar />
+  
+  <main class="min-h-screen bg-background px-4 sm:px-0">
+    <div class="max-w-xl mx-auto md:px-0 px-2 pt-28 pb-16 flex flex-col gap-12">
+      
+      <!-- Page Header -->
+      <header class="flex flex-col gap-y-4">
+        <h1 class="text-primary-text font-semibold tracking-tight text-xl">
+          {title}
+        </h1>
+        <p class="text-muted-text text-sm leading-relaxed max-w-md">
+          {description}
+        </p>
+      </header>
+
+      <!-- Blog Posts List -->
+      <section class="flex flex-col gap-6">
+        {posts.map((post) => (
+          <a href={post.link} class="group flex flex-col gap-3 p-3 rounded-2xl bg-card-surface border border-border hover:border-primary/20 transition-all duration-300">
+            <div class="w-full aspect-[16/9] overflow-hidden rounded-xl bg-muted-secondary border border-border/50">
+              <img 
+                src={post.image} 
+                alt={post.title} 
+                class="w-full h-full object-cover group-hover:scale-[1.01] transition-transform duration-500 ease-out" 
+                loading="lazy"
+              />
+            </div>
+            <div class="flex flex-col gap-1 px-1 py-0.5">
+              <div class="flex items-center justify-between text-[10px] font-mono text-muted-text">
+                <span>{post.date}</span>
+                <span class="px-2 py-0.5 bg-muted-secondary text-primary-text rounded-full font-medium text-[9px]">{post.category}</span>
+              </div>
+              <h3 class="text-primary-text font-semibold text-sm group-hover:text-primary transition-colors mt-1">
+                {post.title}
+              </h3>
+              <p class="text-muted-text text-xs leading-relaxed mt-0.5">
+                {post.description}
+              </p>
+            </div>
+          </a>
+        ))}
+      </section>
+
+      <!-- Footer -->
+      <footer class="mt-8 text-center text-xs text-muted-text font-mono border-t border-border/20 pt-8">
+        Made with &lt;3
+      </footer>
+
+    </div>
+  </main>
+</Layout>

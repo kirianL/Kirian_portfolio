@@ -1,0 +1,60 @@
+---
+const currentLocale = Astro.currentLocale || 'en';
+
+// Localized navigation labels
+const navLabels = {
+  en: {
+    home: 'Home',
+    projects: 'Projects',
+    blog: 'Blog',
+    skills: 'Skills',
+    contact: 'Contact'
+  },
+  es: {
+    home: 'Inicio',
+    projects: 'Proyectos',
+    blog: 'Blog',
+    skills: 'Habilidades',
+    contact: 'Contacto'
+  }
+}[currentLocale as 'en' | 'es'];
+
+// Get localized prefix (empty for 'en', '/es' for Spanish, etc.)
+const localePrefix = currentLocale === 'en' ? '' : `/${currentLocale}`;
+const homePath = currentLocale === 'en' ? '/' : `/${currentLocale}/`;
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-md">
+  <div class="max-w-xl mx-auto px-4 sm:px-0 py-5 flex items-center justify-between">
+    <!-- Brand / Logo Link -->
+    <a href={homePath} class="text-sm font-semibold tracking-tight text-primary-text hover:text-primary transition-colors">
+      {navLabels.home}
+    </a>
+
+    <!-- Nav Links + Language Selector -->
+    <div class="flex items-center gap-5">
+      <div class="flex items-center gap-3.5 text-xs font-medium text-muted-text">
+        <a href={`${homePath}#proyectos`} class="hover:text-primary-text transition-colors">{navLabels.projects}</a>
+        <a href={`${localePrefix || ''}/blog/`} class="hover:text-primary-text transition-colors">{navLabels.blog}</a>
+        <a href={`${homePath}#habilidades`} class="hover:text-primary-text transition-colors">{navLabels.skills}</a>
+        <a href={`${homePath}#contacto`} class="hover:text-primary-text transition-colors">{navLabels.contact}</a>
+      </div>
+
+      <!-- Language Selector (Minimalist active-pills layout) -->
+      <div class="flex items-center gap-0.5 font-mono text-[10px] text-muted-text bg-muted-secondary/40 p-0.5 rounded-lg border border-border/20">
+        <a 
+          href="/" 
+          class={`px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === 'en' ? 'bg-card-surface text-primary-text font-bold shadow-xs' : 'hover:text-primary-text'}`}
+        >
+          EN
+        </a>
+        <a 
+          href="/es/" 
+          class={`px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === 'es' ? 'bg-card-surface text-primary-text font-bold shadow-xs' : 'hover:text-primary-text'}`}
+        >
+          ES
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
