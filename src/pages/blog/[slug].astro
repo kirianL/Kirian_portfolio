@@ -156,17 +156,29 @@ const { Content } = await render(post);
 <style is:global>
   /* Markdown styling scoped to the article */
   article.prose a {
-    color: #404040;
-    text-decoration: underline;
-    text-underline-offset: 2.5px;
+    color: #171717;
+    text-decoration: none;
     font-weight: 500;
     transition: color 0.15s ease;
   }
   .dark article.prose a {
-    color: #a3a3a3;
+    color: #e5e5e5;
   }
   article.prose a:hover {
     color: hsl(var(--primary));
+    text-decoration: none;
+  }
+  article.prose hr {
+    border: none;
+    text-align: center;
+    margin: 2.5rem 0;
+  }
+  article.prose hr::after {
+    content: "···";
+    letter-spacing: 0.8em;
+    color: var(--color-muted-text);
+    font-size: 1.25rem;
+    font-weight: bold;
   }
   article.prose h2 {
     font-size: 1.125rem;
