@@ -65,6 +65,70 @@ const { Content } = await render(post);
         <Content />
       </article>
 
+      <!-- Newsletter Section -->
+      <section class="mt-8 p-6 rounded-2xl bg-card-surface border border-border flex flex-col gap-4">
+        <h3 class="text-primary-text font-semibold text-sm">Suscríbete al boletín</h3>
+        <p class="text-muted-text text-xs leading-relaxed">
+          Recibe notificaciones cada vez que publique un nuevo artículo sobre diseño, ingeniería y rendimiento web. Sin spam, desactívalo en cualquier momento.
+        </p>
+        <form id="subscribe-form" class="flex gap-2 mt-1">
+          <input 
+            type="email" 
+            required 
+            placeholder="tu@email.com" 
+            class="flex-1 px-3 py-2 text-xs rounded-xl border border-border bg-background text-primary-text focus:outline-none focus:border-primary transition-colors"
+          />
+          <button 
+            type="submit" 
+            class="px-4 py-2 text-xs bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+          >
+            Suscribirse
+          </button>
+        </form>
+        <p id="subscribe-message" class="text-xs font-mono hidden"></p>
+      </section>
+
+      <script>
+        const form = document.getElementById('subscribe-form') as HTMLFormElement;
+        const message = document.getElementById('subscribe-message') as HTMLParagraphElement;
+
+        form?.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+          const email = emailInput.value;
+          
+          const button = form.querySelector('button') as HTMLButtonElement;
+          const originalText = button.textContent;
+          button.disabled = true;
+          button.textContent = 'Suscribiendo...';
+          
+          try {
+            const res = await fetch('/api/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            
+            if (res.ok) {
+              message.textContent = '✓ ¡Suscrito con éxito!';
+              message.className = 'text-xs font-mono text-green-600';
+              form.reset();
+            } else {
+              message.textContent = `✗ ${data.error || 'Algo salió mal'}`;
+              message.className = 'text-xs font-mono text-red-600';
+            }
+          } catch (err) {
+            message.textContent = '✗ Error de conexión. Por favor intenta de nuevo.';
+            message.className = 'text-xs font-mono text-red-600';
+          } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+            message.classList.remove('hidden');
+          }
+        });
+      </script>
+
       <!-- Footer -->
       <footer class="mt-8 text-center text-xs text-muted-text font-mono border-t border-border/20 pt-8">
         Made with &lt;3
