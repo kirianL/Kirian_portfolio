@@ -30,7 +30,7 @@ Resulta paradójico considerando la relevancia histórica y cultural de la provi
 | Población afrodescendiente | 23% |
 | Cantones | 6 |
 
-<div class="my-6 p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
+<div class="my-6 p-4 sm:p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
   <div class="text-xs font-semibold tracking-tight text-primary-text uppercase font-mono">Representación étnica de la provincia</div>
   <div class="flex flex-col gap-3">
     <div>
@@ -114,7 +114,7 @@ En lugar de comenzar por el turismo, la estructura se organizó alrededor de la 
 
 Uno de los datos más impactantes encontrados durante la investigación no tenía relación con cultura, sino con desigualdad. Según información recopilada por el PNUD a partir de datos censales, aproximadamente una tercera parte de los hogares limonenses se encontraba en condición de pobreza.
 
-<div class="my-6 p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
+<div class="my-6 p-4 sm:p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
   <div class="text-xs font-semibold tracking-tight text-primary-text uppercase font-mono">Hogares en condición de pobreza (Limón)</div>
   <div class="flex flex-col gap-3">
     <div>

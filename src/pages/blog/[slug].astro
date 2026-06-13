@@ -29,7 +29,7 @@ const { Content } = await render(post);
   <Navbar />
   
   <main class="min-h-screen bg-background px-4 sm:px-0">
-    <div class="max-w-xl mx-auto md:px-0 px-2 pt-28 pb-16 flex flex-col gap-8">
+    <div class="max-w-xl mx-auto md:px-0 px-4 pt-28 pb-16 flex flex-col gap-8">
       
       <!-- Back Link -->
       <a href="/blog/" class="group flex items-center gap-1.5 text-xs text-muted-text hover:text-primary transition-colors w-fit font-mono">
@@ -71,16 +71,16 @@ const { Content } = await render(post);
         <p class="text-muted-text text-xs leading-relaxed">
           Get notified whenever I publish a new article about design, engineering, and web performance. No spam, unsubscribe at any time.
         </p>
-        <form id="subscribe-form" class="flex gap-2 mt-1">
+        <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-1">
           <input 
             type="email" 
             required 
             placeholder="your@email.com" 
-            class="flex-1 px-3 py-2 text-xs rounded-xl border border-border bg-background text-primary-text focus:outline-none focus:border-primary transition-colors"
+            class="flex-1 w-full px-3 py-2 text-xs rounded-xl border border-border bg-background text-primary-text focus:outline-none focus:border-primary transition-colors"
           />
           <button 
             type="submit" 
-            class="px-4 py-2 text-xs bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+            class="w-full sm:w-auto px-4 py-2 text-xs bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
           >
             Subscribe
           </button>
@@ -185,5 +185,25 @@ const { Content } = await render(post);
   }
   article.prose li {
     margin-bottom: 0.5rem;
+  }
+  /* Table styling */
+  article.prose table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.8125rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  article.prose th, article.prose td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    white-space: nowrap;
+  }
+  article.prose th {
+    font-weight: 600;
+    color: var(--color-primary-text);
   }
 </style>

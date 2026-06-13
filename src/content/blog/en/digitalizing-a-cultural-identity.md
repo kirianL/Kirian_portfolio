@@ -30,7 +30,7 @@ This is paradoxical considering the province's historical and cultural relevance
 | Afro-descendant population | 23% |
 | Cantons | 6 |
 
-<div class="my-6 p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
+<div class="my-6 p-4 sm:p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
   <div class="text-xs font-semibold tracking-tight text-primary-text uppercase font-mono">Ethnic representation of the province</div>
   <div class="flex flex-col gap-3">
     <div>
@@ -114,7 +114,7 @@ Instead of starting with tourism, the structure was organized around history, cu
 
 One of the most striking pieces of data found during the research was not related to culture, but to inequality. According to data compiled by the UNDP from census records, approximately one-third of Limonense households lived in poverty.
 
-<div class="my-6 p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
+<div class="my-6 p-4 sm:p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
   <div class="text-xs font-semibold tracking-tight text-primary-text uppercase font-mono">Households in poverty conditions (Limón)</div>
   <div class="flex flex-col gap-3">
     <div>
