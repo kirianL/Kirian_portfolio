@@ -30,29 +30,80 @@ Resulta paradójico considerando la relevancia histórica y cultural de la provi
 | Población afrodescendiente | 23% |
 | Cantones | 6 |
 
-<div class="my-6 p-4 sm:p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
-  <div class="text-xs font-semibold tracking-tight text-primary-text uppercase font-mono">Representación étnica de la provincia</div>
-  <div class="flex flex-col gap-3">
-    <div>
-      <div class="flex justify-between text-xs text-muted-text mb-1">
-        <span>Afrodescendientes</span>
-        <span class="font-semibold text-primary-text">23%</span>
-      </div>
-      <div class="w-full h-2 bg-muted-secondary rounded-full overflow-hidden">
-        <div class="bg-blue-600 h-full rounded-full" style="width: 23%"></div>
-      </div>
+<div class="my-8 p-5 sm:p-6 rounded-2xl border border-border bg-card-surface flex flex-col gap-6 shadow-xs">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
+    <div class="flex flex-col">
+      <span class="text-xs font-bold tracking-wider text-muted-foreground uppercase font-mono">Cifras del INEC y PNUD</span>
+      <h4 class="text-base font-semibold text-foreground mt-0.5">Representación étnica de la provincia</h4>
     </div>
-    <div>
-      <div class="flex justify-between text-xs text-muted-text mb-1">
-        <span>Resto de la población</span>
-        <span class="font-semibold text-primary-text">77%</span>
+    <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-blue-500 shadow-sm shadow-blue-500/20"></span>
+        <span class="text-muted-foreground">Afrodescendientes</span>
       </div>
-      <div class="w-full h-2 bg-muted-secondary rounded-full overflow-hidden">
-        <div class="bg-primary h-full rounded-full" style="width: 77%"></div>
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-primary shadow-sm shadow-primary/20"></span>
+        <span class="text-muted-foreground">Resto de la población</span>
       </div>
     </div>
   </div>
-  <div class="text-[9px] text-muted-text font-mono">Fuente: INEC y PNUD</div>
+
+  <div class="relative py-4">
+    <div class="absolute inset-y-0 left-0 right-0 flex justify-between pointer-events-none" aria-hidden="true">
+      <div class="h-full border-l border-dashed border-border/80"></div>
+      <div class="h-full border-l border-dashed border-border/80"></div>
+      <div class="h-full border-l border-dashed border-border/80"></div>
+      <div class="h-full border-l border-dashed border-border/80"></div>
+      <div class="h-full border-l border-dashed border-border/80"></div>
+    </div>
+
+    <div class="relative z-10 flex flex-col gap-5">
+      <div class="group flex flex-col gap-1.5">
+        <div class="flex justify-between items-center text-sm">
+          <span class="font-medium text-foreground group-hover:text-blue-500 transition-colors">Afrodescendientes</span>
+          <span class="font-bold text-blue-500 font-mono text-base">23%</span>
+        </div>
+        <div class="w-full h-8 bg-muted rounded-lg overflow-hidden border border-border/40 p-1 flex items-center transition-all duration-300 group-hover:border-blue-500/30">
+          <div 
+            class="bg-blue-500 h-full rounded-md shadow-inner transition-all duration-500 ease-out flex items-center justify-end pr-2.5 min-w-[36px]" 
+            style="width: 23%"
+          >
+            <span class="text-[10px] font-bold text-white font-mono">23%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="group flex flex-col gap-1.5">
+        <div class="flex justify-between items-center text-sm">
+          <span class="font-medium text-foreground group-hover:text-primary transition-colors">Resto de la población</span>
+          <span class="font-bold text-primary font-mono text-base">77%</span>
+        </div>
+        <div class="w-full h-8 bg-muted rounded-lg overflow-hidden border border-border/40 p-1 flex items-center transition-all duration-300 group-hover:border-primary/30">
+          <div 
+            class="bg-primary h-full rounded-md shadow-inner transition-all duration-500 ease-out flex items-center justify-end pr-2.5" 
+            style="width: 77%"
+          >
+            <span class="text-[10px] font-bold text-primary-foreground font-mono">77%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-between text-[10px] font-mono text-muted-foreground/60 border-t border-border/30 pt-3 mt-1" aria-hidden="true">
+    <span>0%</span>
+    <span>25%</span>
+    <span>50%</span>
+    <span>75%</span>
+    <span>100%</span>
+  </div>
+  
+  <div class="text-[10px] text-muted-foreground/80 font-mono flex items-center gap-1.5 mt-1">
+    <svg class="w-3.5 h-3.5 text-muted-foreground/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span>Fuente: INEC y PNUD</span>
+  </div>
 </div>
 
 Sin embargo, al comparar estas cifras con la cantidad de proyectos digitales dedicados a documentar la identidad limonense, el contraste es evidente.
@@ -114,29 +165,80 @@ En lugar de comenzar por el turismo, la estructura se organizó alrededor de la 
 
 Uno de los datos más impactantes encontrados durante la investigación no tenía relación con cultura, sino con desigualdad. Según información recopilada por el PNUD a partir de datos censales, aproximadamente una tercera parte de los hogares limonenses se encontraba en condición de pobreza.
 
-<div class="my-6 p-4 sm:p-5 rounded-2xl border border-border bg-card-surface flex flex-col gap-4">
-  <div class="text-xs font-semibold tracking-tight text-primary-text uppercase font-mono">Hogares en condición de pobreza (Limón)</div>
-  <div class="flex flex-col gap-3">
-    <div>
-      <div class="flex justify-between text-xs text-muted-text mb-1">
-        <span>Hogares en pobreza</span>
-        <span class="font-semibold text-primary-text">31%</span>
-      </div>
-      <div class="w-full h-2 bg-muted-secondary rounded-full overflow-hidden">
-        <div class="bg-red-500 h-full rounded-full" style="width: 31%"></div>
-      </div>
+<div class="my-8 p-5 sm:p-6 rounded-2xl border border-border bg-card-surface flex flex-col gap-6 shadow-xs">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
+    <div class="flex flex-col">
+      <span class="text-xs font-bold tracking-wider text-muted-foreground uppercase font-mono">Indicadores de Calidad de Vida</span>
+      <h4 class="text-base font-semibold text-foreground mt-0.5">Hogares en condición de pobreza (Limón)</h4>
     </div>
-    <div>
-      <div class="flex justify-between text-xs text-muted-text mb-1">
-        <span>Otros hogares</span>
-        <span class="font-semibold text-primary-text">69%</span>
+    <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-red-500 shadow-sm shadow-red-500/20"></span>
+        <span class="text-muted-foreground">En condición de pobreza</span>
       </div>
-      <div class="w-full h-2 bg-muted-secondary rounded-full overflow-hidden">
-        <div class="bg-primary h-full rounded-full" style="width: 69%"></div>
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-primary shadow-sm shadow-primary/20"></span>
+        <span class="text-muted-foreground">Otros hogares</span>
       </div>
     </div>
   </div>
-  <div class="text-[9px] text-muted-text font-mono">Fuente: PNUD - Indicadores sociales de Limón</div>
+
+  <div class="relative py-4">
+    <div class="absolute inset-y-0 left-0 right-0 flex justify-between pointer-events-none" aria-hidden="true">
+      <div class="h-full border-l border-dashed border-border/80"></div>
+      <div class="h-full border-l border-dashed border-border/80"></div>
+      <div class="h-full border-l border-dashed border-border/80"></div>
+      <div class="h-full border-l border-dashed border-border/80"></div>
+      <div class="h-full border-l border-dashed border-border/80"></div>
+    </div>
+
+    <div class="relative z-10 flex flex-col gap-5">
+      <div class="group flex flex-col gap-1.5">
+        <div class="flex justify-between items-center text-sm">
+          <span class="font-medium text-foreground group-hover:text-red-500 transition-colors">Hogares en pobreza</span>
+          <span class="font-bold text-red-500 font-mono text-base">31%</span>
+        </div>
+        <div class="w-full h-8 bg-muted rounded-lg overflow-hidden border border-border/40 p-1 flex items-center transition-all duration-300 group-hover:border-red-500/30">
+          <div 
+            class="bg-red-500 h-full rounded-md shadow-inner transition-all duration-500 ease-out flex items-center justify-end pr-2.5 min-w-[36px]" 
+            style="width: 31%"
+          >
+            <span class="text-[10px] font-bold text-white font-mono">31%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="group flex flex-col gap-1.5">
+        <div class="flex justify-between items-center text-sm">
+          <span class="font-medium text-foreground group-hover:text-primary transition-colors">Otros hogares</span>
+          <span class="font-bold text-primary font-mono text-base">69%</span>
+        </div>
+        <div class="w-full h-8 bg-muted rounded-lg overflow-hidden border border-border/40 p-1 flex items-center transition-all duration-300 group-hover:border-primary/30">
+          <div 
+            class="bg-primary h-full rounded-md shadow-inner transition-all duration-500 ease-out flex items-center justify-end pr-2.5" 
+            style="width: 69%"
+          >
+            <span class="text-[10px] font-bold text-primary-foreground font-mono">69%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-between text-[10px] font-mono text-muted-foreground/60 border-t border-border/30 pt-3 mt-1" aria-hidden="true">
+    <span>0%</span>
+    <span>25%</span>
+    <span>50%</span>
+    <span>75%</span>
+    <span>100%</span>
+  </div>
+  
+  <div class="text-[10px] text-muted-foreground/80 font-mono flex items-center gap-1.5 mt-1">
+    <svg class="w-3.5 h-3.5 text-muted-foreground/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span>Fuente: PNUD - Indicadores sociales de Limón</span>
+  </div>
 </div>
 
 Este dato cambió mi forma de entender el proyecto. Porque representar una cultura no significa mostrar únicamente aquello que resulta atractivo; también implica reconocer los desafíos que forman parte de su realidad. La identidad de una comunidad no existe aislada de sus condiciones sociales y económicas.
