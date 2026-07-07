@@ -1,0 +1,225 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import { dictionaries } from "../data/data";
+
+const currentLocale = 'EN';
+const data = dictionaries[currentLocale];
+---
+
+<Layout 
+  title="Contact | Kirian Luna Quirós"
+  description="Get in touch with Kirian Luna Quirós. Fill out the form or connect via email and social media."
+  lang="en"
+>
+  <Navbar />
+  
+  <main class="max-w-xl mx-auto px-4 sm:px-0 pt-28 pb-16">
+    <div class="flex flex-col gap-10">
+      
+      <!-- Contact Header -->
+      <section class="flex flex-col gap-3 px-1">
+        <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+          contact.
+        </h1>
+        <p class="text-grayscale-11 text-xs leading-normal">
+          You can contact me using the form or via the links below.
+        </p>
+      </section>
+
+      <!-- Contact Form -->
+      <section class="px-1">
+        <form 
+          id="contact-form" 
+          action="https://formspree.io/f/xvgooyob" 
+          method="POST" 
+          class="flex flex-col gap-3.5"
+        >
+          <!-- Row 1: Name and Email -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <input 
+              type="text" 
+              name="name" 
+              required
+              placeholder="John Doe" 
+              class="w-full px-3.5 py-2 text-xs rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-12 placeholder-grayscale-10 focus:outline-none focus:border-accent-9 transition-colors shadow-3xs"
+            />
+            <input 
+              type="email" 
+              name="email" 
+              required
+              placeholder="john@doe.com" 
+              class="w-full px-3.5 py-2 text-xs rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-12 placeholder-grayscale-10 focus:outline-none focus:border-accent-9 transition-colors shadow-3xs"
+            />
+          </div>
+
+          <!-- Row 2: Message Textarea -->
+          <textarea 
+            name="message" 
+            rows="5"
+            required
+            placeholder="Enter your message" 
+            class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-12 placeholder-grayscale-10 focus:outline-none focus:border-accent-9 transition-colors resize-none shadow-3xs"
+          ></textarea>
+
+          <!-- Row 3: Submit Button and Helper Text -->
+          <div class="flex items-center justify-between mt-1">
+            <button 
+              type="submit" 
+              id="submit-btn"
+              class="px-4 py-2 bg-grayscale-12 dark:bg-grayscale-1 text-grayscale-1 dark:text-grayscale-12 text-xs font-semibold rounded-xl hover:opacity-90 active:scale-[0.98] transition-all cursor-pointer shadow-sm select-none"
+            >
+              Send message
+            </button>
+            <span class="text-[11px] text-grayscale-10 select-none">
+              or <kbd class="px-1.5 py-0.5 rounded border border-grayscale-3 dark:border-grayscale-4 bg-grayscale-2 dark:bg-grayscale-3 text-[10px] font-mono shadow-3xs font-medium">Enter</kbd> to send
+            </span>
+          </div>
+
+          <!-- Status Message Indicator -->
+          <p id="form-status" class="hidden text-xs font-medium text-emerald-600 dark:text-emerald-400 mt-2 select-none"></p>
+        </form>
+      </section>
+
+      <!-- Socials Section -->
+      <section class="flex flex-col gap-5 px-1 mt-2">
+        <h2 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+          socials.
+        </h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4.5 mt-1">
+          <!-- GitHub -->
+          <a 
+            href={data.contact.github} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="flex items-center gap-2.5 text-xs font-medium text-grayscale-11 hover:text-grayscale-12 transition-all w-fit group"
+          >
+            <div class="w-7 h-7 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/40 flex items-center justify-center shadow-3xs">
+              <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current text-grayscale-12">
+                <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+              </svg>
+            </div>
+            <span class="font-mono text-grayscale-10 group-hover:text-grayscale-12 transition-colors">@kirianL</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 text-grayscale-10 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+
+          <!-- LinkedIn -->
+          <a 
+            href={data.contact.linkedin} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="flex items-center gap-2.5 text-xs font-medium text-grayscale-11 hover:text-grayscale-12 transition-all w-fit group"
+          >
+            <div class="w-7 h-7 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/40 flex items-center justify-center shadow-3xs">
+              <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current text-[#0a66c2]">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </div>
+            <span class="font-mono text-grayscale-10 group-hover:text-grayscale-12 transition-colors">@kirianluna</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 text-grayscale-10 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+
+          <!-- Email -->
+          <a 
+            href={`mailto:${data.contact.email}`} 
+            class="flex items-center gap-2.5 text-xs font-medium text-grayscale-11 hover:text-grayscale-12 transition-all w-fit group"
+          >
+            <div class="w-7 h-7 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/40 flex items-center justify-center shadow-3xs">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-[#7c3aed]">
+                <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+            </div>
+            <span class="font-mono text-grayscale-10 group-hover:text-grayscale-12 transition-colors">{data.contact.email}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 text-grayscale-10 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+
+          <!-- CV (English) -->
+          <a 
+            href="/CVs/CV_KirianLuna_EN.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="flex items-center gap-2.5 text-xs font-medium text-grayscale-11 hover:text-grayscale-12 transition-all w-fit group"
+          >
+            <div class="w-7 h-7 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/40 flex items-center justify-center shadow-3xs">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-[#dc2626]">
+                <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>
+              </svg>
+            </div>
+            <span class="font-mono text-grayscale-10 group-hover:text-grayscale-12 transition-colors">CV_KirianLuna_EN.pdf</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3 text-grayscale-10 opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8">
+        Made with &lt;3
+      </footer>
+
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const setupContactForm = () => {
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    const status = document.getElementById('form-status');
+    const submitBtn = document.getElementById('submit-btn');
+
+    if (!form || !status || !submitBtn) return;
+
+    // Handle Formspree submission via AJAX to prevent redirect
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      submitBtn.textContent = 'Sending...';
+      submitBtn.setAttribute('disabled', 'true');
+
+      try {
+        const response = await fetch(form.action, {
+          method: form.method,
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          status.textContent = 'Message sent successfully!';
+          status.classList.remove('hidden', 'text-red-600', 'dark:text-red-400');
+          status.classList.add('text-emerald-600', 'dark:text-emerald-400');
+          form.reset();
+        } else {
+          throw new Error('Form submission failed');
+        }
+      } catch (err) {
+        status.textContent = 'Oops! There was a problem sending your message.';
+        status.classList.remove('hidden', 'text-emerald-600', 'dark:text-emerald-400');
+        status.classList.add('text-red-600', 'dark:text-red-400');
+      } finally {
+        submitBtn.textContent = 'Send message';
+        submitBtn.removeAttribute('disabled');
+      }
+    });
+
+    // Submit on Enter inside inputs / textarea (allow Shift+Enter for newlines in textarea)
+    form.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'TEXTAREA' && e.shiftKey) {
+          // Allow Shift + Enter for newline
+          return;
+        }
+        
+        // Prevent default enter behavior and trigger submit
+        e.preventDefault();
+        form.requestSubmit();
+      }
+    });
+  };
+
+  setupContactForm();
+  document.addEventListener('astro:after-swap', setupContactForm);
+</script>
