@@ -29,15 +29,15 @@ const posts = allPosts
 >
   <Navbar />
   
-  <main class="min-h-screen bg-background px-4 sm:px-0">
+  <main class="min-h-screen bg-grayscale-1 px-4 sm:px-0">
     <div class="max-w-xl mx-auto md:px-0 px-4 pt-28 pb-16 flex flex-col gap-12">
       
       <!-- Page Header -->
       <header class="flex flex-col gap-y-4">
-        <h1 class="text-primary-text font-semibold tracking-tight text-xl">
+        <h1 class="text-grayscale-12 font-semibold tracking-tight text-xl">
           {title}
         </h1>
-        <p class="text-muted-text text-sm leading-relaxed max-w-md">
+        <p class="text-grayscale-11 text-sm leading-relaxed max-w-md">
           {description}
         </p>
       </header>
@@ -45,8 +45,8 @@ const posts = allPosts
       <!-- Blog Posts List -->
       <section class="flex flex-col gap-6">
         {posts.map((post) => (
-          <a href={post.link} class="group flex flex-col gap-3 p-3 rounded-2xl bg-card-surface border border-border hover:border-primary/20 transition-all duration-300">
-            <div class="w-full aspect-[16/9] overflow-hidden rounded-xl bg-muted-secondary border border-border/50">
+          <a href={post.link} class="group flex flex-col gap-3.5 p-3 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 transition-all duration-200 shadow-xs">
+            <div class="w-full aspect-[16/9] overflow-hidden rounded-lg bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/50">
               <img 
                 src={post.image} 
                 alt={post.title} 
@@ -55,14 +55,14 @@ const posts = allPosts
               />
             </div>
             <div class="flex flex-col gap-1 px-1 py-0.5">
-              <div class="flex items-center justify-between text-[10px] font-mono text-muted-text">
+              <div class="flex items-center justify-between text-[10px] font-mono text-grayscale-10">
                 <span>{post.date}</span>
-                <span class="px-2 py-0.5 bg-muted-secondary text-primary-text rounded-full font-medium text-[9px]">{post.category}</span>
+                <span class="px-2.5 py-0.5 bg-grayscale-3 text-grayscale-11 rounded-full font-medium text-[9px] shadow-3xs">{post.category}</span>
               </div>
-              <h3 class="text-primary-text font-semibold text-sm group-hover:text-primary transition-colors mt-1">
+              <h3 class="text-grayscale-12 font-semibold text-[13.5px] leading-tight group-hover:text-accent-9 transition-colors mt-2">
                 {post.title}
               </h3>
-              <p class="text-muted-text text-xs leading-relaxed mt-0.5">
+              <p class="text-grayscale-11 text-[12.5px] leading-relaxed mt-1">
                 {post.description}
               </p>
             </div>
@@ -71,9 +71,9 @@ const posts = allPosts
       </section>
 
       <!-- Newsletter Section -->
-      <section class="mt-4 p-6 rounded-2xl bg-card-surface border border-border flex flex-col gap-4">
-        <h3 class="text-primary-text font-semibold text-sm">Subscribe to the newsletter</h3>
-        <p class="text-muted-text text-xs leading-relaxed">
+      <section class="mt-4 p-5 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 flex flex-col gap-4 shadow-xs">
+        <h3 class="text-grayscale-12 font-semibold text-sm">Subscribe to the newsletter</h3>
+        <p class="text-grayscale-11 text-xs leading-relaxed">
           Get notified whenever I publish a new article about design, engineering, and web performance. No spam, unsubscribe at any time.
         </p>
         <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-1">
@@ -81,11 +81,11 @@ const posts = allPosts
             type="email" 
             required 
             placeholder="your@email.com" 
-            class="flex-1 w-full px-3 py-2 text-xs rounded-xl border border-border bg-background text-primary-text focus:outline-none focus:border-primary transition-colors"
+            class="flex-1 w-full px-3 py-2 text-xs rounded-lg border border-grayscale-3 bg-grayscale-1 text-grayscale-12 focus:outline-none focus:border-accent-9 transition-colors"
           />
           <button 
             type="submit" 
-            class="w-full sm:w-auto px-4 py-2 text-xs bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+            class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
           >
             Subscribe
           </button>
@@ -135,7 +135,7 @@ const posts = allPosts
       </script>
 
       <!-- Footer -->
-      <footer class="mt-8 text-center text-xs text-muted-text font-mono border-t border-border/20 pt-8">
+      <footer class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8">
         Made with &lt;3
       </footer>
 

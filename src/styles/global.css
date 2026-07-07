@@ -55,32 +55,6 @@ body {
   --font-mono: "GeistMono", monospace;
   --font-chillax: "Chillax", sans-serif;
   --font-figgle: "DxFiggle", serif;
-
-  --color-grayscale-1: var(--color-grayscale-1);
-  --color-grayscale-2: var(--color-grayscale-2);
-  --color-grayscale-3: var(--color-grayscale-3);
-  --color-grayscale-4: var(--color-grayscale-4);
-  --color-grayscale-5: var(--color-grayscale-5);
-  --color-grayscale-6: var(--color-grayscale-6);
-  --color-grayscale-7: var(--color-grayscale-7);
-  --color-grayscale-8: var(--color-grayscale-8);
-  --color-grayscale-9: var(--color-grayscale-9);
-  --color-grayscale-10: var(--color-grayscale-10);
-  --color-grayscale-11: var(--color-grayscale-11);
-  --color-grayscale-12: var(--color-grayscale-12);
-
-  --color-accent-1: var(--color-accent-1);
-  --color-accent-2: var(--color-accent-2);
-  --color-accent-3: var(--color-accent-3);
-  --color-accent-4: var(--color-accent-4);
-  --color-accent-5: var(--color-accent-5);
-  --color-accent-6: var(--color-accent-6);
-  --color-accent-7: var(--color-accent-7);
-  --color-accent-8: var(--color-accent-8);
-  --color-accent-9: var(--color-accent-9);
-  --color-accent-10: var(--color-accent-10);
-  --color-accent-11: var(--color-accent-11);
-  --color-accent-12: var(--color-accent-12);
 }
 
 @layer base {

@@ -28,31 +28,31 @@ const { Content } = await render(post);
 >
   <Navbar />
   
-  <main class="min-h-screen bg-background px-4 sm:px-0">
+  <main class="min-h-screen bg-grayscale-1 px-4 sm:px-0">
     <div class="max-w-xl mx-auto md:px-0 px-4 pt-28 pb-16 flex flex-col gap-8">
       
       <!-- Back Link -->
-      <a href="/es/blog/" class="group flex items-center gap-1.5 text-xs text-muted-text hover:text-primary transition-colors w-fit font-mono">
+      <a href="/es/blog/" class="group flex items-center gap-1.5 text-xs text-grayscale-11 hover:text-accent-9 transition-colors w-fit font-mono">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
         Volver al blog
       </a>
       
       <!-- Header -->
       <header class="flex flex-col gap-3">
-        <div class="flex items-center justify-between text-[10px] font-mono text-muted-text">
+        <div class="flex items-center justify-between text-[10px] font-mono text-grayscale-10">
           <span>{post.data.date}</span>
-          <span class="px-2 py-0.5 bg-muted-secondary text-primary-text rounded-full font-medium text-[9px]">{post.data.category}</span>
+          <span class="px-2.5 py-0.5 bg-grayscale-3 text-grayscale-11 rounded-full font-medium text-[9px] shadow-3xs">{post.data.category}</span>
         </div>
-        <h1 class="text-primary-text font-semibold tracking-tight text-xl sm:text-2xl mt-1 leading-snug">
+        <h1 class="text-grayscale-12 font-semibold tracking-tight text-xl sm:text-2xl mt-1 leading-snug">
           {post.data.title}
         </h1>
-        <p class="text-muted-text text-sm leading-relaxed mt-1">
+        <p class="text-grayscale-11 text-sm leading-relaxed mt-1">
           {post.data.description}
         </p>
       </header>
 
       <!-- Post Cover Image -->
-      <div class="w-full aspect-[16/9] overflow-hidden rounded-2xl bg-muted-secondary border border-border/50">
+      <div class="w-full aspect-[16/9] overflow-hidden rounded-lg bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/50">
         <img 
           src={post.data.image} 
           alt={post.data.title} 
@@ -66,9 +66,9 @@ const { Content } = await render(post);
       </article>
 
       <!-- Newsletter Section -->
-      <section class="mt-8 p-6 rounded-2xl bg-card-surface border border-border flex flex-col gap-4">
-        <h3 class="text-primary-text font-semibold text-sm">Suscríbete al boletín</h3>
-        <p class="text-muted-text text-xs leading-relaxed">
+      <section class="mt-8 p-5 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 flex flex-col gap-4 shadow-xs">
+        <h3 class="text-grayscale-12 font-semibold text-sm">Suscríbete al boletín</h3>
+        <p class="text-grayscale-11 text-xs leading-relaxed">
           Recibe notificaciones cada vez que publique un nuevo artículo sobre diseño, ingeniería y rendimiento web. Sin spam, desactívalo en cualquier momento.
         </p>
         <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-1">
@@ -76,11 +76,11 @@ const { Content } = await render(post);
             type="email" 
             required 
             placeholder="tu@email.com" 
-            class="flex-1 w-full px-3 py-2 text-xs rounded-xl border border-border bg-background text-primary-text focus:outline-none focus:border-primary transition-colors"
+            class="flex-1 w-full px-3 py-2 text-xs rounded-lg border border-grayscale-3 bg-grayscale-1 text-grayscale-12 focus:outline-none focus:border-accent-9 transition-colors"
           />
           <button 
             type="submit" 
-            class="w-full sm:w-auto px-4 py-2 text-xs bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+            class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
           >
             Suscribirse
           </button>
@@ -130,7 +130,7 @@ const { Content } = await render(post);
       </script>
 
       <!-- Footer -->
-      <footer class="mt-8 text-center text-xs text-muted-text font-mono border-t border-border/20 pt-8">
+      <footer class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8">
         Made with &lt;3
       </footer>
 
@@ -156,16 +156,13 @@ const { Content } = await render(post);
 <style is:global>
   /* Markdown styling scoped to the article */
   article.prose a {
-    color: #171717;
+    color: var(--color-accent-9);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.15s ease;
   }
-  .dark article.prose a {
-    color: #e5e5e5;
-  }
   article.prose a:hover {
-    color: hsl(var(--primary));
+    color: var(--color-accent-10);
     text-decoration: none;
   }
   article.prose hr {
@@ -176,14 +173,14 @@ const { Content } = await render(post);
   article.prose hr::after {
     content: "···";
     letter-spacing: 0.8em;
-    color: var(--color-muted-text);
+    color: var(--color-grayscale-10);
     font-size: 1.25rem;
     font-weight: bold;
   }
   article.prose h2 {
     font-size: 1.125rem;
     font-weight: 600;
-    color: var(--color-primary-text);
+    color: var(--color-grayscale-12);
     margin-top: 2rem;
     margin-bottom: 0.75rem;
     letter-spacing: -0.02em;
@@ -191,20 +188,20 @@ const { Content } = await render(post);
   article.prose p {
     font-size: 0.875rem;
     line-height: 1.625;
-    color: var(--color-muted-text);
+    color: var(--color-grayscale-11);
     margin-bottom: 1.25rem;
   }
   article.prose code {
     font-family: var(--font-geistmono);
     font-size: 0.8125rem;
-    background-color: var(--color-muted-secondary);
+    background-color: var(--color-grayscale-2);
     padding: 0.125rem 0.25rem;
     border-radius: 4px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-grayscale-3);
   }
   article.prose pre {
-    background-color: var(--color-muted-secondary);
-    border: 1px solid var(--color-border);
+    background-color: var(--color-grayscale-2);
+    border: 1px solid var(--color-grayscale-3);
     padding: 1rem;
     border-radius: 8px;
     overflow-x: auto;
@@ -220,7 +217,7 @@ const { Content } = await render(post);
     list-style-type: disc;
     padding-left: 1.25rem;
     margin-bottom: 1.25rem;
-    color: var(--color-muted-text);
+    color: var(--color-grayscale-11);
     font-size: 0.875rem;
   }
   article.prose li {
@@ -238,12 +235,12 @@ const { Content } = await render(post);
   }
   article.prose th, article.prose td {
     padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-grayscale-3);
     text-align: left;
     white-space: nowrap;
   }
   article.prose th {
     font-weight: 600;
-    color: var(--color-primary-text);
+    color: var(--color-grayscale-12);
   }
 </style>
