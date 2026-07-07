@@ -1,0 +1,80 @@
+---
+import { dictionaries } from "../data/data";
+
+const currentLocale = Astro.currentLocale === 'es' ? 'ES' : 'EN';
+const data = dictionaries[currentLocale];
+const sectionTitle = currentLocale === 'ES' ? 'Experiencia Laboral' : 'Work Experience';
+const experienceList = data.experienceList || [];
+---
+
+<section id="experiencia" class="flex flex-col w-full gap-5">
+  <h2 class="text-grayscale-11 font-mono font-medium text-xs uppercase tracking-wider px-1">
+    {sectionTitle}
+  </h2>
+  <div class="flex flex-col gap-6">
+    {
+      experienceList.map((exp) => (
+        <div class="flex flex-col sm:grid sm:grid-cols-[130px_1fr] gap-x-4 gap-y-2 group">
+          <!-- Left Column: Period -->
+          <div class="text-grayscale-10 text-xs font-mono select-none pt-1 sm:block hidden px-1">
+            {exp.period}
+          </div>
+          
+          <!-- Right Column: Role & Company -->
+          <div class="flex flex-col gap-2">
+            <!-- Header for small screens showing both period and role -->
+            <div class="flex flex-col gap-1">
+              <div class="sm:hidden text-[10px] font-mono uppercase tracking-wider text-grayscale-10 select-none mb-1">
+                {exp.period}
+              </div>
+              <div class="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[13.5px]">
+                <span class="text-grayscale-12 font-medium tracking-tight">
+                  {exp.role} {currentLocale === 'ES' ? 'en' : 'at'}
+                </span>
+                
+                <!-- Company pill/badge -->
+                <a
+                  href={exp.companyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={`inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium rounded-full border transition-all duration-200 shadow-xs ${exp.companyColor}`}
+                >
+                  {exp.companyLogo === "cal" && (
+                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                  )}
+                  {exp.companyLogo === "airbnb" && (
+                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 21c-1.3 0-2.5-.7-3.2-1.8C7.5 17.1 6 13.5 6 10c0-3.3 2.7-6 6-6s6 2.7 6 6c0 3.5-1.5 7.1-2.8 9.2-.7 1.1-1.9 1.8-3.2 1.8zm0-15c-2.2 0-4 1.8-4 4 0 2.8 1.3 6 2.5 8 .7 1.1 2.3 1.1 3 0 1.2-2 2.5-5.2 2.5-8 0-2.2-1.8-4-4-4zm0 2.5c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5z" fill="currentColor" stroke="none" />
+                    </svg>
+                  )}
+                  {exp.companyLogo === "meta" && (
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                      <path d="M16.4 6c-2 0-3.6 1.1-4.4 2.7C11.2 7.1 9.6 6 7.6 6 4.3 6 2.1 8.5 2.1 12c0 3.4 2.2 6 5.5 6 2 0 3.6-1.1 4.4-2.7.8 1.6 2.4 2.7 4.4 2.7 3.3 0 5.5-2.6 5.5-6 0-3.4-2.2-6-5.5-6zm0 9.7c-2 0-3.3-1.4-3.7-3.1.4-1.7 1.7-3.1 3.7-3.1 2.2 0 3.6 1.7 3.6 3.7s-1.4 3.7-3.6 3.7zm-8.8 0c-2.2 0-3.6-1.7-3.6-3.7s1.4-3.7 3.6-3.7c2 0 3.3 1.4 3.7 3.1-.4 1.7-1.7 3.1-3.7 3.1z"/>
+                    </svg>
+                  )}
+                  <span class="tracking-tight">{exp.company}</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Experience details with quiet arrow bullet -->
+            <div class="flex gap-2 text-grayscale-11 text-[13px] leading-relaxed">
+              <svg class="w-3 h-3 text-grayscale-9 mt-[4px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+              <p class="tracking-tight text-grayscale-11 group-hover:text-grayscale-12 transition-colors duration-200">
+                {exp.description}
+              </p>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

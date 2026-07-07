@@ -1,0 +1,220 @@
+---
+import TechIcon from "./TechIcon.astro";
+import { dictionaries } from "../data/data";
+
+const currentLocale = Astro.currentLocale === 'es' ? 'ES' : 'EN';
+const data = dictionaries[currentLocale];
+
+const categories = [
+  { id: "languages", num: "01", name: currentLocale === 'ES' ? "Lenguajes" : "Languages" },
+  { id: "design", num: "02", name: currentLocale === 'ES' ? "Diseño" : "Design" },
+  { id: "frontend", num: "03", name: currentLocale === 'ES' ? "Frontend" : "Frontend" },
+  { id: "backend", num: "04", name: currentLocale === 'ES' ? "Backend & DB" : "Backend & DB" },
+  { id: "ai", num: "05", name: currentLocale === 'ES' ? "AI" : "AI" }
+];
+
+const skills = data.skills.list || [];
+---
+
+<section id="habilidades" class="w-full">
+  <div id="tech-stack-container" class="tech-stack-section flex flex-col w-full view-list">
+    <!-- Header Row -->
+    <div class="flex items-center justify-between w-full mb-5">
+      <h2 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+        stack.
+      </h2>
+      
+      <!-- View Switcher — smooth pill toggle, quiet & bordered -->
+      <div class="stack-switcher relative flex items-center bg-grayscale-2 dark:bg-grayscale-2/60 border border-grayscale-3 dark:border-grayscale-3/40 rounded-full p-[2px] select-none" role="tablist">
+        <!-- Sliding white indicator -->
+        <div id="stack-indicator" class="absolute top-[2px] left-[2px] h-[calc(100%-4px)] w-[calc(50%-2px)] bg-white dark:bg-grayscale-4 rounded-full border border-grayscale-3/50 dark:border-grayscale-4 shadow-3xs transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] will-change-transform"></div>
+        
+        <button 
+          id="list-view-btn" 
+          type="button"
+          role="tab"
+          aria-selected="true"
+          class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
+          title={currentLocale === 'ES' ? 'Vista de lista' : 'List view'}
+        >
+          <svg class="w-[13px] h-[13px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <button 
+          id="grid-view-btn" 
+          type="button"
+          role="tab"
+          aria-selected="false"
+          class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
+          title={currentLocale === 'ES' ? 'Vista de cuadrícula' : 'Grid view'}
+        >
+          <svg class="w-[13px] h-[13px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="flex flex-col">
+      {categories.map((cat, idx) => {
+        const catSkills = skills.filter((s) => s.category.toLowerCase() === cat.id);
+        if (catSkills.length === 0) return null;
+        const isLast = idx === categories.length - 1;
+        
+        return (
+          <div class="stack-category-row">
+            {/* === LIST VIEW === */}
+            <div class:list={[
+              "list-container py-5 sm:grid sm:grid-cols-[140px_1fr] gap-x-8 items-center border-t border-grayscale-3 dark:border-grayscale-3/30",
+              isLast && "border-b border-grayscale-3 dark:border-grayscale-3/30"
+            ]}>
+              <div class="flex items-center gap-2 select-none mb-3 sm:mb-0">
+                <span class="text-grayscale-10 dark:text-grayscale-10 font-mono text-[11px] leading-none font-medium">{cat.num}</span>
+                <span class="text-grayscale-11 dark:text-grayscale-11 text-[13px] leading-none font-normal">{cat.name}</span>
+              </div>
+              <div class="flex flex-wrap gap-x-2.5 gap-y-2.5 items-center">
+                {catSkills.map((skill) => (
+                  <div class="tech-item px-3 py-1.5 rounded-full bg-grayscale-2 dark:bg-grayscale-2/40 border border-grayscale-3 dark:border-grayscale-3/20 hover:bg-grayscale-3 dark:hover:bg-grayscale-3/50 transition-all duration-200 flex items-center gap-2 cursor-default select-none text-grayscale-12 shadow-3xs">
+                    <TechIcon name={skill.name} class="w-[14px] h-[14px] shrink-0" />
+                    <span class="text-[12.5px] font-medium leading-none tracking-tight">{skill.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* === GRID VIEW === */}
+            <div class:list={[
+              "grid-container hidden py-5 border-t border-grayscale-3 dark:border-grayscale-3/30",
+              isLast && "border-b border-grayscale-3 dark:border-grayscale-3/30"
+            ]}>
+              <div class="flex items-center gap-2 select-none mb-4">
+                <span class="text-grayscale-10 dark:text-grayscale-10 font-mono text-[11px] leading-none font-medium">{cat.num}</span>
+                <span class="text-grayscale-11 dark:text-grayscale-11 text-[13px] leading-none font-normal">{cat.name}</span>
+              </div>
+              <div class="flex flex-wrap gap-3">
+                {catSkills.map((skill) => (
+                  <div class="tech-item group/griditem relative w-11 h-11 rounded-xl border border-grayscale-3 dark:border-grayscale-3/30 bg-white dark:bg-grayscale-2/60 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 flex items-center justify-center cursor-default select-none transition-all duration-200 shadow-3xs">
+                    <TechIcon name={skill.name} class="w-5 h-5 transition-transform duration-200 group-hover/griditem:scale-110" />
+                    
+                    {/* Tooltip */}
+                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 px-2.5 py-1 text-[10px] font-mono tracking-tight bg-grayscale-12 text-grayscale-1 border border-grayscale-3 rounded-lg opacity-0 pointer-events-none group-hover/griditem:opacity-100 group-hover/griditem:-translate-y-0.5 transition-all duration-200 ease-out shadow-lg z-50 whitespace-nowrap after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-[5px] after:border-transparent after:border-t-grayscale-12">
+                      {skill.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* Smooth opacity transitions for hover focus effect */
+  .tech-item {
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                background-color 0.2s ease,
+                border-color 0.2s ease;
+    will-change: opacity, transform;
+  }
+
+  /* Fade out other items only when an active item is hovered */
+  .list-container:hover .tech-item:not(:hover),
+  .grid-container:hover .tech-item:not(:hover) {
+    opacity: 0.45;
+  }
+  
+  .tech-item:hover {
+    opacity: 1 !important;
+    transform: translateY(-1px);
+  }
+
+  /* View toggle animations */
+  .tech-stack-section.view-list .list-container {
+    display: grid !important;
+    animation: stackSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  .tech-stack-section.view-list .grid-container {
+    display: none !important;
+  }
+  .tech-stack-section.view-grid .list-container {
+    display: none !important;
+  }
+  .tech-stack-section.view-grid .grid-container {
+    display: block !important;
+    animation: stackSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  /* Mobile: list view is block, not grid */
+  @media (max-width: 639px) {
+    .tech-stack-section.view-list .list-container {
+      display: block !important;
+    }
+  }
+
+  @keyframes stackSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  const setupToggle = () => {
+    const listBtn = document.getElementById('list-view-btn');
+    const gridBtn = document.getElementById('grid-view-btn');
+    const container = document.getElementById('tech-stack-container');
+    const indicator = document.getElementById('stack-indicator');
+
+    if (!listBtn || !gridBtn || !container || !indicator) return;
+
+    const setView = (view: 'list' | 'grid') => {
+      container.classList.toggle('view-list', view === 'list');
+      container.classList.toggle('view-grid', view === 'grid');
+
+      // Slide indicator smoothly
+      if (view === 'list') {
+        indicator.style.transform = 'translateX(0)';
+      } else {
+        indicator.style.transform = `translateX(${listBtn.offsetWidth}px)`;
+      }
+
+      // Grayscale colors for active / inactive state
+      const isDark = document.documentElement.classList.contains('dark');
+      
+      // Compute styles dynamically based on the root theme variables
+      listBtn.style.color = view === 'list' ? 'var(--color-grayscale-12)' : 'var(--color-grayscale-10)';
+      gridBtn.style.color = view === 'grid' ? 'var(--color-grayscale-12)' : 'var(--color-grayscale-10)';
+      
+      // ARIA
+      listBtn.setAttribute('aria-selected', String(view === 'list'));
+      gridBtn.setAttribute('aria-selected', String(view === 'grid'));
+
+      localStorage.setItem('tech-stack-view', view);
+    };
+
+    const savedView = (localStorage.getItem('tech-stack-view') as 'list' | 'grid') || 'list';
+    requestAnimationFrame(() => setView(savedView));
+
+    listBtn.addEventListener('click', () => setView('list'));
+    gridBtn.addEventListener('click', () => setView('grid'));
+  };
+
+  setupToggle();
+  document.addEventListener('astro:after-swap', setupToggle);
+</script>

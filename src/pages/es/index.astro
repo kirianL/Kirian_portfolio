@@ -3,16 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import DitheredAvatar from '../../components/DitheredAvatar.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import WorkExperience from '../../components/WorkExperience.astro';
+import TechStack from '../../components/TechStack.astro';
 import { dictionaries } from '../../data/data';
 
 const data = dictionaries.ES;
 const projects = data.projects.list;
-const skills = data.skills.list;
-
-// Group skills by category
-const frontendSkills = skills.filter(s => s.category === 'Frontend');
-const backendSkills = skills.filter(s => s.category === 'Backend');
-const toolsSkills = skills.filter(s => s.category === 'Tools');
 ---
 
 <Layout 
@@ -22,29 +18,29 @@ const toolsSkills = skills.filter(s => s.category === 'Tools');
 >
   <Navbar />
   
-  <main class="min-h-screen bg-background px-4 sm:px-0">
-    <div class="max-w-xl mx-auto md:px-0 px-4 pt-28 pb-16 flex flex-col gap-16">
+  <main class="min-h-screen bg-grayscale-1 px-4 sm:px-0">
+    <div class="max-w-xl mx-auto md:px-0 px-4 pt-28 pb-16 flex flex-col gap-14">
       
       <!-- Header / Identity -->
-      <header class="flex flex-col gap-y-8">
-        <div class="flex items-center gap-3">
+      <header class="flex flex-col gap-y-6">
+        <div class="flex items-center gap-4">
           <DitheredAvatar src="/profile.webp" alt={data.name} />
           <div>
-            <h1 class="text-primary-text font-semibold tracking-tight text-sm">
+            <h1 class="text-grayscale-12 font-semibold tracking-tight text-sm">
               {data.name}
             </h1>
-            <p class="text-muted-text tracking-tight text-sm">
+            <p class="text-grayscale-11 tracking-tight text-sm mt-0.5">
               {data.title}
             </p>
-            <p class="text-muted-text tracking-tight text-xs mt-0.5 flex items-center gap-1">
+            <p class="text-grayscale-11 tracking-tight text-xs mt-1 flex items-center gap-1">
               <span>{data.hero.based.split('Costa Rica')[0]}</span>
-              <span class="text-blue-600 hover:text-blue-800 transition-colors font-medium cursor-pointer">Costa Rica</span>
+              <span class="text-accent-9 hover:text-accent-10 transition-colors font-medium cursor-pointer">Costa Rica</span>
               <span>{data.locationIcon}</span>
             </p>
           </div>
         </div>
         
-        <section class="flex flex-col gap-4 tracking-tight text-muted-text text-sm leading-relaxed">
+        <section class="flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed">
           <p>
             {data.hero.desc}
           </p>
@@ -54,9 +50,12 @@ const toolsSkills = skills.filter(s => s.category === 'Tools');
         </section>
       </header>
 
+      <!-- Work Experience Section -->
+      <WorkExperience />
+
       <!-- Projects Section -->
-      <section id="proyectos" class="flex flex-col w-full gap-6">
-        <h2 class="text-primary-text font-semibold text-sm">
+      <section id="proyectos" class="flex flex-col w-full gap-5">
+        <h2 class="text-grayscale-11 font-mono font-medium text-xs uppercase tracking-wider px-1">
           {data.projects.title}
         </h2>
         <div class="flex flex-col gap-3">
@@ -71,60 +70,16 @@ const toolsSkills = skills.filter(s => s.category === 'Tools');
         </div>
       </section>
 
-      <!-- Skills Section (Horizontal grouped layout) -->
-      <section id="habilidades" class="flex flex-col gap-5">
-        <h2 class="text-primary-text font-semibold text-sm">
-          {data.skills.title}
-        </h2>
-        <div class="flex flex-col gap-5">
-          {frontendSkills.length > 0 && (
-            <div class="flex flex-col gap-2">
-              <h3 class="text-xs font-mono uppercase tracking-wider text-muted-text">Frontend</h3>
-              <div class="flex flex-wrap gap-2">
-                {frontendSkills.map(skill => (
-                  <span class="px-3 py-1 text-xs rounded-full border border-border bg-card-surface text-primary-text font-medium">
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {backendSkills.length > 0 && (
-            <div class="flex flex-col gap-2">
-              <h3 class="text-xs font-mono uppercase tracking-wider text-muted-text">Backend</h3>
-              <div class="flex flex-wrap gap-2">
-                {backendSkills.map(skill => (
-                  <span class="px-3 py-1 text-xs rounded-full border border-border bg-card-surface text-primary-text font-medium">
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {toolsSkills.length > 0 && (
-            <div class="flex flex-col gap-2">
-              <h3 class="text-xs font-mono uppercase tracking-wider text-muted-text">Tools</h3>
-              <div class="flex flex-wrap gap-2">
-                {toolsSkills.map(skill => (
-                  <span class="px-3 py-1 text-xs rounded-full border border-border bg-card-surface text-primary-text font-medium">
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
+      <!-- Skills Section (Interactive Tech Stack) -->
+      <TechStack />
 
       <!-- Blog Section (Minimalist with horizontal cover) -->
       <section id="blog" class="flex flex-col gap-5">
-        <h2 class="text-primary-text font-semibold text-sm">
+        <h2 class="text-grayscale-11 font-mono font-medium text-xs uppercase tracking-wider px-1">
           Escritos
         </h2>
-        <a href="/es/blog/digitalizar-una-identidad-cultural/" class="group flex flex-col gap-3 p-3 rounded-2xl bg-card-surface border border-border hover:border-primary/20 transition-all duration-200">
-          <div class="w-full aspect-[16/9] overflow-hidden rounded-xl bg-muted-secondary border border-border/50">
+        <a href="/es/blog/digitalizar-una-identidad-cultural/" class="group flex flex-col gap-3.5 p-3 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 transition-all duration-200 shadow-xs">
+          <div class="w-full aspect-[16/9] overflow-hidden rounded-lg bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/50">
             <img 
               src="/blog-limon-identity.png" 
               alt="Digitalizar una identidad cultural: el reto de hacer justicia a Limón en una página web" 
@@ -133,14 +88,14 @@ const toolsSkills = skills.filter(s => s.category === 'Tools');
             />
           </div>
           <div class="flex flex-col gap-1 px-1 py-0.5">
-            <div class="flex items-center justify-between text-[10px] font-mono text-muted-text">
+            <div class="flex items-center justify-between text-[10px] font-mono text-grayscale-10">
               <span>13 de Junio, 2026</span>
-              <span class="px-2 py-0.5 bg-muted-secondary text-primary-text rounded-full font-medium text-[9px]">Cultura / Diseño</span>
+              <span class="px-2.5 py-0.5 bg-grayscale-3 text-grayscale-11 rounded-full font-medium text-[9px] shadow-3xs">Cultura / Diseño</span>
             </div>
-            <h3 class="text-primary-text font-semibold text-sm group-hover:text-primary transition-colors mt-1">
+            <h3 class="text-grayscale-12 font-semibold text-[13.5px] leading-tight group-hover:text-accent-9 transition-colors mt-2">
               Digitalizar una identidad cultural: el reto de hacer justicia a Limón en una página web
             </h3>
-            <p class="text-muted-text text-xs leading-relaxed mt-0.5">
+            <p class="text-grayscale-11 text-[12.5px] leading-relaxed mt-1">
               Cómo representar la riqueza cultural de Limón en una plataforma web interactiva sin simplificar su historia y condiciones sociales.
             </p>
           </div>
@@ -148,32 +103,32 @@ const toolsSkills = skills.filter(s => s.category === 'Tools');
       </section>
 
       <!-- Contact Section -->
-      <section id="contacto" class="flex flex-col gap-4">
-        <h2 class="text-primary-text font-semibold text-sm font-inter">
+      <section id="contacto" class="flex flex-col gap-5">
+        <h2 class="text-grayscale-11 font-mono font-medium text-xs uppercase tracking-wider px-1">
           Conectemos
         </h2>
-        <div class="flex flex-col gap-1">
-          <div class="flex justify-between py-2 border-b border-border/10">
-            <span class="text-primary-text text-sm font-medium">Email</span>
-            <a href={`mailto:${data.contact.email}`} class="contact-link text-muted-text hover:text-primary text-sm font-mono transition-colors">{data.contact.email}</a>
+        <div class="flex flex-col gap-0.5 px-1">
+          <div class="flex justify-between py-2.5 border-b border-grayscale-3/40 dark:border-grayscale-3/20">
+            <span class="text-grayscale-12 text-sm font-medium">Email</span>
+            <a href={`mailto:${data.contact.email}`} class="contact-link text-grayscale-11 hover:text-accent-9 text-sm font-mono transition-colors">{data.contact.email}</a>
           </div>
-          <div class="flex justify-between py-2 border-b border-border/10">
-            <span class="text-primary-text text-sm font-medium">LinkedIn</span>
-            <a href={data.contact.linkedin} target="_blank" rel="noopener noreferrer" class="contact-link text-muted-text hover:text-primary text-sm font-mono transition-colors">linkedin.com/in/kirianluna</a>
+          <div class="flex justify-between py-2.5 border-b border-grayscale-3/40 dark:border-grayscale-3/20">
+            <span class="text-grayscale-12 text-sm font-medium">LinkedIn</span>
+            <a href={data.contact.linkedin} target="_blank" rel="noopener noreferrer" class="contact-link text-grayscale-11 hover:text-accent-9 text-sm font-mono transition-colors">linkedin.com/in/kirianluna</a>
           </div>
-          <div class="flex justify-between py-2 border-b border-border/10">
-            <span class="text-primary-text text-sm font-medium">GitHub</span>
-            <a href={data.contact.github} target="_blank" rel="noopener noreferrer" class="contact-link text-muted-text hover:text-primary text-sm font-mono transition-colors">github.com/kirianL</a>
+          <div class="flex justify-between py-2.5 border-b border-grayscale-3/40 dark:border-grayscale-3/20">
+            <span class="text-grayscale-12 text-sm font-medium">GitHub</span>
+            <a href={data.contact.github} target="_blank" rel="noopener noreferrer" class="contact-link text-grayscale-11 hover:text-accent-9 text-sm font-mono transition-colors">github.com/kirianL</a>
           </div>
-          <div class="flex justify-between py-2">
-            <span class="text-primary-text text-sm font-medium">Curriculum Vitae</span>
-            <a href="/CVs/CV_KirianLuna_ES.pdf" target="_blank" rel="noopener noreferrer" class="contact-link text-muted-text hover:text-primary text-sm font-mono transition-colors">CV_KirianLuna_ES.pdf</a>
+          <div class="flex justify-between py-2.5">
+            <span class="text-grayscale-12 text-sm font-medium">Curriculum Vitae</span>
+            <a href="/CVs/CV_KirianLuna_ES.pdf" target="_blank" rel="noopener noreferrer" class="contact-link text-grayscale-11 hover:text-accent-9 text-sm font-mono transition-colors">CV_KirianLuna_ES.pdf</a>
           </div>
         </div>
       </section>
 
       <!-- Footer -->
-      <footer class="mt-8 text-center text-xs text-muted-text font-mono border-t border-border/20 pt-8">
+      <footer class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8">
         Made with &lt;3
       </footer>
 
