@@ -33,6 +33,30 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
 ---
 
 <section id="proyectos" class="w-full">
+  <!-- Inline script to prevent FOUC / visual jumps of wrong categories on load -->
+  <script is:inline id="projects-fouc-script">
+    (function() {
+      const savedFilter = localStorage.getItem('projects-filter') || 'Personal';
+      if (savedFilter === 'SorinLabs') {
+        const style = document.createElement('style');
+        style.id = 'projects-fouc-style';
+        style.innerHTML = `
+          .project-list-row[data-company="Personal"],
+          .project-grid-row-wrapper[data-company="Personal"] {
+            display: none !important;
+          }
+          .project-list-row[data-company="SorinLabs"] {
+            display: flex !important;
+          }
+          .project-grid-row-wrapper[data-company="SorinLabs"] {
+            display: flex !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    })();
+  </script>
+  
   <div id="projects-section-container" class="projects-section flex flex-col w-full view-list">
     
     <!-- Title & Subtitle for Projects Page -->
@@ -59,66 +83,34 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
         "flex items-center",
         isProjectsPage ? "justify-between w-full px-1" : "gap-2"
       ]}>
-        <!-- Filter Dropdown - Localized & Interactive -->
-        <div class="relative inline-block text-left">
+        <!-- Segmented Filter Switcher -->
+        <div class="project-filter-switcher relative flex items-center bg-grayscale-2 dark:bg-grayscale-2/60 border border-grayscale-3 dark:border-grayscale-3/40 rounded-full p-[2px] select-none" role="tablist">
+          <div id="projects-filter-indicator" class="absolute top-[2px] left-[2px] h-[calc(100%-4px)] bg-white dark:bg-grayscale-4 rounded-full border border-grayscale-3/50 dark:border-grayscale-4 shadow-3xs transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] will-change-transform"></div>
+          
           <button 
-            id="projects-filter-btn" 
+            id="filter-personal-btn"
             type="button"
-            class="relative z-10 flex items-center gap-2 px-3 py-1.5 rounded-full border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/60 text-grayscale-12 hover:bg-grayscale-2 dark:hover:bg-grayscale-3 transition-colors text-xs font-medium cursor-pointer shadow-3xs"
-            aria-expanded="false"
-            aria-haspopup="true"
+            role="tab"
+            aria-selected="true"
+            class="relative z-10 px-3.5 h-7 rounded-full flex items-center gap-1.5 cursor-pointer transition-colors duration-200 text-[12px] font-medium"
           >
-            <!-- Active Filter Icon Container -->
-            <div id="filter-active-icon" class="w-4 h-4 rounded-full overflow-hidden shrink-0 flex items-center justify-center">
-              <img src="/profile.webp" class="w-full h-full object-cover" id="filter-avatar-img" />
-              <!-- Inline Sorin Labs SVG for dark/light mode (initially hidden) -->
-              <svg id="filter-logo-svg" viewBox="0 0 558.93 644.34" class="w-[13px] h-[13px] fill-current text-grayscale-12 hidden">
-                <path d="M428.21,372.44h130.26c-.33,12.64-1.5,25.07-3.46,37.24-2.03,12.72-4.94,25.16-8.65,37.24-3.93,12.83-8.75,25.27-14.41,37.24-3.26,6.93-6.81,13.7-10.62,20.29-3.34,5.79-6.88,11.44-10.61,16.95-8.01,11.85-16.92,23.05-26.63,33.51-1.16,1.25-2.34,2.5-3.53,3.73-10.41,10.82-21.68,20.8-33.71,29.83-3.39,2.55-6.84,5.03-10.35,7.41-8.63,5.9-17.61,11.31-26.9,16.22-11.93,6.31-24.37,11.78-37.24,16.32-4.8,1.7-9.65,3.26-14.56,4.7-7.43,2.17-15,4.05-22.68,5.6-12.15,2.47-24.58,4.15-37.24,4.98-6.15.4-12.36.61-18.62.61s-12.47-.21-18.62-.61c-12.66-.83-25.09-2.51-37.24-4.98-7.68-1.55-15.25-3.43-22.68-5.6-4.92-1.44-9.77-3-14.56-4.7-12.87-4.54-25.32-10.01-37.24-16.32-9.29-4.91-18.27-10.32-26.9-16.22-3.51-2.38-6.96-4.86-10.35-7.41-12.03-9.03-23.31-19.02-33.71-29.83-1.19-1.24-2.37-2.48-3.53-3.73-9.71-10.46-18.61-21.66-26.63-33.51-3.74-5.51-7.28-11.17-10.61-16.95-3.81-6.59-7.36-13.36-10.62-20.29-5.66-11.97-10.49-24.41-14.41-37.24-3.71-12.08-6.61-24.52-8.65-37.24-1.97-12.17-3.14-24.6-3.46-37.24h130.26c0,12.86,1.63,25.34,4.7,37.24,3.17,12.34,7.88,24.05,13.92,34.93.43.77.86,1.54,1.31,2.31,8.1,14.02,18.44,26.59,30.5,37.24,1.77,1.56,3.58,3.09,5.43,4.57,11.2,8.98,23.73,16.37,37.24,21.84,11.75,4.76,24.23,8.06,37.24,9.68,6.1.76,12.31,1.15,18.62,1.15s12.52-.39,18.62-1.15c13.01-1.62,25.5-4.92,37.24-9.68,13.51-5.47,26.04-12.86,37.24-21.84,1.85-1.48,3.66-3.01,5.43-4.57,12.07-10.65,22.4-23.23,30.5-37.24.45-.77.88-1.53,1.31-2.31,6.04-10.88,10.76-22.6,13.92-34.93,3.07-11.9,4.7-24.38,4.7-37.24Z"/>
-                <polygon points="558.93 223.46 558.93 335.19 .28 335.19 .28 223.46 149.25 223.46 112.01 186.22 87.77 161.98 74.76 148.98 37.52 111.73 112.01 37.24 223.74 148.98 223.74 0 335.47 0 335.47 148.98 447.2 37.24 521.69 111.73 484.45 148.98 471.44 161.98 447.2 186.22 409.96 223.46 558.93 223.46"/>
-              </svg>
-            </div>
-            
-            <span id="filter-active-label">Personal</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-grayscale-10 shrink-0"><path d="m6 9 6 6 6-6"/></svg>
+            <img src="/profile.webp" class="w-3.5 h-3.5 rounded-full object-cover shrink-0" />
+            <span>Personal</span>
           </button>
-
-          <!-- Dropdown Menu -->
-          <div 
-            id="projects-filter-menu" 
-            class="absolute right-0 top-full mt-2 w-40 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2 p-1.5 shadow-md z-50 hidden flex-col gap-0.5 opacity-0 scale-95 transition-all duration-150 origin-top-right"
-            role="menu"
+          
+          <button 
+            id="filter-sorin-btn"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            class="relative z-10 px-3.5 h-7 rounded-full flex items-center gap-1.5 cursor-pointer transition-colors duration-200 text-[12px] font-medium"
           >
-            <!-- Option: Personal -->
-            <button 
-              type="button"
-              data-value="Personal" 
-              role="menuitem"
-              class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium text-grayscale-12 hover:bg-grayscale-2 dark:hover:bg-grayscale-3/50 cursor-pointer text-left transition-colors"
-            >
-              <div class="flex items-center gap-2">
-                <img src="/profile.webp" class="w-4 h-4 rounded-full object-cover" />
-                <span>Personal</span>
-              </div>
-              <svg class="check-icon w-3.5 h-3.5 text-accent-9 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            </button>
-            
-            <!-- Option: Sorin Labs -->
-            <button 
-              type="button"
-              data-value="SorinLabs" 
-              role="menuitem"
-              class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[12px] font-medium text-grayscale-12 hover:bg-grayscale-2 dark:hover:bg-grayscale-3/50 cursor-pointer text-left transition-colors"
-            >
-              <div class="flex items-center gap-2">
-                <svg viewBox="0 0 558.93 644.34" class="w-[14px] h-[14px] fill-current text-grayscale-12">
-                  <path d="M428.21,372.44h130.26c-.33,12.64-1.5,25.07-3.46,37.24-2.03,12.72-4.94,25.16-8.65,37.24-3.93,12.83-8.75,25.27-14.41,37.24-3.26,6.93-6.81,13.7-10.62,20.29-3.34,5.79-6.88,11.44-10.61,16.95-8.01,11.85-16.92,23.05-26.63,33.51-1.16,1.25-2.34,2.5-3.53,3.73-10.41,10.82-21.68,20.8-33.71,29.83-3.39,2.55-6.84,5.03-10.35,7.41-8.63,5.9-17.61,11.31-26.9,16.22-11.93,6.31-24.37,11.78-37.24,16.32-4.8,1.7-9.65,3.26-14.56,4.7-7.43,2.17-15,4.05-22.68,5.6-12.15,2.47-24.58,4.15-37.24,4.98-6.15.4-12.36.61-18.62.61s-12.47-.21-18.62-.61c-12.66-.83-25.09-2.51-37.24-4.98-7.68-1.55-15.25-3.43-22.68-5.6-4.92-1.44-9.77-3-14.56-4.7-12.87-4.54-25.32-10.01-37.24-16.32-9.29-4.91-18.27-10.32-26.9-16.22-3.51-2.38-6.96-4.86-10.35-7.41-12.03-9.03-23.31-19.02-33.71-29.83-1.19-1.24-2.37-2.48-3.53-3.73-9.71-10.46-18.61-21.66-26.63-33.51-3.74-5.51-7.28-11.17-10.61-16.95-3.81-6.59-7.36-13.36-10.62-20.29-5.66-11.97-10.49-24.41-14.41-37.24-3.71-12.08-6.61-24.52-8.65-37.24-1.97-12.17-3.14-24.6-3.46-37.24h130.26c0,12.86,1.63,25.34,4.7,37.24,3.17,12.34,7.88,24.05,13.92,34.93.43.77.86,1.54,1.31,2.31,8.1,14.02,18.44,26.59,30.5,37.24,1.77,1.56,3.58,3.09,5.43,4.57,11.2,8.98,23.73,16.37,37.24,21.84,11.75,4.76,24.23,8.06,37.24,9.68,6.1.76,12.31,1.15,18.62,1.15s12.52-.39,18.62-1.15c13.01-1.62,25.5-4.92,37.24-9.68,13.51-5.47,26.04-12.86,37.24-21.84,1.85-1.48,3.66-3.01,5.43-4.57,12.07-10.65,22.4-23.23,30.5-37.24.45-.77.88-1.53,1.31-2.31,6.04-10.88,10.76-22.6,13.92-34.93,3.07-11.9,4.7-24.38,4.7-37.24Z"/>
-                  <polygon points="558.93 223.46 558.93 335.19 .28 335.19 .28 223.46 149.25 223.46 112.01 186.22 87.77 161.98 74.76 148.98 37.52 111.73 112.01 37.24 223.74 148.98 223.74 0 335.47 0 335.47 148.98 447.2 37.24 521.69 111.73 484.45 148.98 471.44 161.98 447.2 186.22 409.96 223.46 558.93 223.46"/>
-                </svg>
-                <span>Sorin Labs</span>
-              </div>
-              <svg class="check-icon w-3.5 h-3.5 text-accent-9 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            </button>
-          </div>
+            <svg viewBox="0 0 558.93 644.34" class="w-[13px] h-[13px] fill-current shrink-0 text-[#261cc1]">
+              <path d="M428.21,372.44h130.26c-.33,12.64-1.5,25.07-3.46,37.24-2.03,12.72-4.94,25.16-8.65,37.24-3.93,12.83-8.75,25.27-14.41,37.24-3.26,6.93-6.81,13.7-10.62,20.29-3.34,5.79-6.88,11.44-10.61,16.95-8.01,11.85-16.92,23.05-26.63,33.51-1.16,1.25-2.34,2.5-3.53,3.73-10.41,10.82-21.68,20.8-33.71,29.83-3.39,2.55-6.84,5.03-10.35,7.41-8.63,5.9-17.61,11.31-26.9,16.22-11.93,6.31-24.37,11.78-37.24,16.32-4.8,1.7-9.65,3.26-14.56,4.7-7.43,2.17-15,4.05-22.68,5.6-12.15,2.47-24.58,4.15-37.24,4.98-6.15.4-12.36.61-18.62.61s-12.47-.21-18.62-.61c-12.66-.83-25.09-2.51-37.24-4.98-7.68-1.55-15.25-3.43-22.68-5.6-4.92-1.44-9.77-3-14.56-4.7-12.87-4.54-25.32-10.01-37.24-16.32-9.29-4.91-18.27-10.32-26.9-16.22-3.51-2.38-6.96-4.86-10.35-7.41-12.03-9.03-23.31-19.02-33.71-29.83-1.19-1.24-2.37-2.48-3.53-3.73-9.71-10.46-18.61-21.66-26.63-33.51-3.74-5.51-7.28-11.17-10.61-16.95-3.81-6.59-7.36-13.36-10.62-20.29-5.66-11.97-10.49-24.41-14.41-37.24-3.71-12.08-6.61-24.52-8.65-37.24-1.97-12.17-3.14-24.6-3.46-37.24h130.26c0,12.86,1.63,25.34,4.7,37.24,3.17,12.34,7.88,24.05,13.92,34.93.43.77.86,1.54,1.31,2.31,8.1,14.02,18.44,26.59,30.5,37.24,1.77,1.56,3.58,3.09,5.43,4.57,11.2,8.98,23.73,16.37,37.24,21.84,11.75,4.76,24.23,8.06,37.24,9.68,6.1.76,12.31,1.15,18.62,1.15s12.52-.39,18.62-1.15c13.01-1.62,25.5-4.92,37.24-9.68,13.51-5.47,26.04-12.86,37.24-21.84,1.85-1.48,3.66-3.01,5.43-4.57,12.07-10.65,22.4-23.23,30.5-37.24.45-.77.88-1.53,1.31-2.31,6.04-10.88,10.76-22.6,13.92-34.93,3.07-11.9,4.7-24.38,4.7-37.24Z"/>
+              <polygon points="558.93 223.46 558.93 335.19 .28 335.19 .28 223.46 149.25 223.46 112.01 186.22 87.77 161.98 74.76 148.98 37.52 111.73 112.01 37.24 223.74 148.98 223.74 0 335.47 0 335.47 148.98 447.2 37.24 521.69 111.73 484.45 148.98 471.44 161.98 447.2 186.22 409.96 223.46 558.93 223.46"/>
+            </svg>
+            <span>Sorin Labs</span>
+          </button>
         </div>
 
         <!-- View Switcher — smooth pill toggle -->
@@ -162,7 +154,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
     <div class="flex flex-col">
       
       <!-- === LIST VIEW === -->
-      <div id="projects-list-container" class="projects-list-view flex flex-col w-full">
+      <div id="projects-list-container" class="projects-list-view flex flex-col w-full opacity-0">
         {categorizedProjects.map((project) => {
           const isInitiallyFilteredOut = project.category !== "Personal";
           return (
@@ -211,7 +203,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
       </div>
 
       <!-- === GRID VIEW === -->
-      <div id="projects-grid-container" class="projects-grid-view hidden grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8 w-full">
+      <div id="projects-grid-container" class="projects-grid-view hidden grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8 w-full opacity-0">
         {categorizedProjects.map((project) => {
           const isInitiallyFilteredOut = project.category !== "Personal";
           return (
@@ -381,100 +373,88 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
       gridBtn.addEventListener('click', () => setView('grid'));
     }
 
-    // 2. Category Dropdown Selector
-    if (filterBtn && filterMenu && activeLabel && avatarImg && logoSvg) {
-      // Toggle dropdown open/close
-      const toggleMenu = (open?: boolean) => {
-        const isCurrentlyOpen = !filterMenu.classList.contains('hidden');
-        const nextState = open !== undefined ? open : !isCurrentlyOpen;
+    // 2. Segmented Pill Filter Selector
+    const filterPersonalBtn = document.getElementById('filter-personal-btn');
+    const filterSorinBtn = document.getElementById('filter-sorin-btn');
+    const filterIndicator = document.getElementById('projects-filter-indicator');
 
-        if (nextState) {
-          filterMenu.classList.remove('hidden');
-          // Wait for display then apply transition classes
-          requestAnimationFrame(() => {
-            filterMenu.classList.remove('opacity-0', 'scale-95');
-            filterMenu.classList.add('opacity-100', 'scale-100');
-          });
-          filterBtn.setAttribute('aria-expanded', 'true');
-        } else {
-          filterMenu.classList.remove('opacity-100', 'scale-100');
-          filterMenu.classList.add('opacity-0', 'scale-95');
-          // Hide completely after transition finishes
-          const onTransitionEnd = () => {
-            filterMenu.classList.add('hidden');
-            filterMenu.removeEventListener('transitionend', onTransitionEnd);
-          };
-          filterMenu.addEventListener('transitionend', onTransitionEnd);
-          filterBtn.setAttribute('aria-expanded', 'false');
-        }
-      };
-
-      filterBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleMenu();
-      });
-
-      // Close on clicking outside
-      document.addEventListener('click', () => {
-        toggleMenu(false);
-      });
-
-      // Filter function
+    if (filterPersonalBtn && filterSorinBtn && filterIndicator) {
       const applyFilter = (category: 'Personal' | 'SorinLabs') => {
-        // Update trigger button state
-        activeLabel.textContent = category === 'Personal' ? 'Personal' : 'Sorin Labs';
-        
-        if (category === 'Personal') {
-          avatarImg.classList.remove('hidden');
-          logoSvg.classList.add('hidden');
-        } else {
-          avatarImg.classList.add('hidden');
-          logoSvg.classList.remove('hidden');
+        // Remove the FOUC prevention style tag if it exists
+        const foucStyle = document.getElementById('projects-fouc-style');
+        if (foucStyle) {
+          foucStyle.remove();
         }
 
-        // Highlight selected dropdown option
-        const menuItems = filterMenu.querySelectorAll('button[data-value]');
-        menuItems.forEach((btn) => {
-          const val = btn.getAttribute('data-value');
-          const isSelected = val === category;
-          const checkIcon = btn.querySelector('.check-icon');
-          if (checkIcon) {
-            checkIcon.classList.toggle('hidden', !isSelected);
-          }
-          btn.classList.toggle('bg-grayscale-2', isSelected);
-          btn.classList.toggle('dark:bg-grayscale-3/50', isSelected);
-        });
+        const isPersonal = category === 'Personal';
+        
+        // Slide filter indicator pill
+        const activeBtn = isPersonal ? filterPersonalBtn : filterSorinBtn;
+        filterIndicator.style.width = `${activeBtn.offsetWidth}px`;
+        filterIndicator.style.transform = `translateX(${activeBtn.offsetLeft - filterPersonalBtn.offsetLeft}px)`;
+
+        // Update ARIA
+        filterPersonalBtn.setAttribute('aria-selected', String(isPersonal));
+        filterSorinBtn.setAttribute('aria-selected', String(!isPersonal));
+
+        // Colors
+        filterPersonalBtn.style.color = isPersonal ? 'var(--color-grayscale-12)' : 'var(--color-grayscale-10)';
+        filterSorinBtn.style.color = !isPersonal ? 'var(--color-grayscale-12)' : 'var(--color-grayscale-10)';
 
         // Fade out the list and grid containers first to prevent layout jumps
         const listContainer = document.getElementById('projects-list-container');
         const gridContainer = document.getElementById('projects-grid-container');
 
         if (listContainer && gridContainer) {
-          listContainer.style.opacity = '0';
-          gridContainer.style.opacity = '0';
+          const isInitialLoad = listContainer.classList.contains('opacity-0') || gridContainer.classList.contains('opacity-0');
           
-          setTimeout(() => {
+          if (isInitialLoad) {
+            // Apply filter immediately while invisible to prevent flash
             const listRows = document.querySelectorAll('.project-list-row');
             const gridRows = document.querySelectorAll('.project-grid-row-wrapper');
 
             const filterItems = (rows: NodeListOf<Element>) => {
               rows.forEach(row => {
                 const val = row.getAttribute('data-company');
-                if (val === category) {
-                  row.classList.remove('filtered-out');
-                } else {
-                  row.classList.add('filtered-out');
-                }
+                row.classList.toggle('filtered-out', val !== category);
               });
             };
 
             filterItems(listRows);
             filterItems(gridRows);
 
-            // Fade back in smoothly
-            listContainer.style.opacity = '1';
-            gridContainer.style.opacity = '1';
-          }, 150);
+            // Remove opacity-0 class to trigger layout transition fade-in
+            listContainer.classList.remove('opacity-0');
+            gridContainer.classList.remove('opacity-0');
+            
+            // Set opacity to 1
+            requestAnimationFrame(() => {
+              listContainer.style.opacity = '1';
+              gridContainer.style.opacity = '1';
+            });
+          } else {
+            // Standard filter switch animation
+            listContainer.style.opacity = '0';
+            gridContainer.style.opacity = '0';
+            
+            setTimeout(() => {
+              const listRows = document.querySelectorAll('.project-list-row');
+              const gridRows = document.querySelectorAll('.project-grid-row-wrapper');
+
+              const filterItems = (rows: NodeListOf<Element>) => {
+                rows.forEach(row => {
+                  const val = row.getAttribute('data-company');
+                  row.classList.toggle('filtered-out', val !== category);
+                });
+              };
+
+              filterItems(listRows);
+              filterItems(gridRows);
+
+              listContainer.style.opacity = '1';
+              gridContainer.style.opacity = '1';
+            }, 150);
+          }
         } else {
           // Fallback if elements aren't ready
           const listRows = document.querySelectorAll('.project-list-row');
@@ -492,20 +472,16 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
         localStorage.setItem('projects-filter', category);
       };
 
-      // Set up click listeners for items
-      const menuItems = filterMenu.querySelectorAll('button[data-value]');
-      menuItems.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const val = btn.getAttribute('data-value') as 'Personal' | 'SorinLabs';
-          applyFilter(val);
-          toggleMenu(false);
-        });
-      });
+      // Set up click listeners
+      filterPersonalBtn.addEventListener('click', () => applyFilter('Personal'));
+      filterSorinBtn.addEventListener('click', () => applyFilter('SorinLabs'));
 
       // Apply initial state
       const savedFilter = (localStorage.getItem('projects-filter') as 'Personal' | 'SorinLabs') || 'Personal';
-      requestAnimationFrame(() => applyFilter(savedFilter));
+      // Wait for layout/DOM measuring to ensure accurate offsetWidth/offsetLeft
+      requestAnimationFrame(() => {
+        setTimeout(() => applyFilter(savedFilter), 50);
+      });
     }
   };
 
