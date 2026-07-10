@@ -7,96 +7,12 @@ interface Props {
 const { src, alt } = Astro.props;
 ---
 
-<div class="relative w-10 h-10 shrink-0 select-none overflow-hidden rounded-lg bg-muted-secondary border border-border">
-  <canvas 
-    id="dithered-avatar" 
-    class="w-full h-full object-cover" 
-    width="40" 
-    height="40"
-    data-src={src}
-    aria-label={alt}
-  ></canvas>
+<div class="relative w-15 h-15 sm:w-16 sm:h-16 shrink-0 select-none overflow-hidden rounded-xl">
+  <img 
+    src={src} 
+    alt={alt}
+    class="w-full h-full object-cover"
+    loading="eager"
+  />
 </div>
 
-<style>
-  canvas {
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-  }
-</style>
-
-<script>
-  function applyDither() {
-    const canvas = document.getElementById('dithered-avatar') as HTMLCanvasElement | null;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const img = new Image();
-    const imgSrc = canvas.getAttribute('data-src');
-    if (!imgSrc) return;
-
-    img.crossOrigin = "anonymous";
-    img.src = imgSrc;
-
-    img.onload = () => {
-      // 1. Draw image to 40x40 canvas
-      ctx.drawImage(img, 0, 0, 40, 40);
-
-      // 2. Get image data
-      const imgData = ctx.getImageData(0, 0, 40, 40);
-      const data = imgData.data;
-
-      // 3. Bayer 4x4 Dithering Matrix
-      const bayerMatrix = [
-        [  0, 128,  32, 160 ],
-        [ 192,  64, 224,  96 ],
-        [  48, 176,  16, 144 ],
-        [ 240, 112, 208,  80 ]
-      ];
-
-      // Duo-tone palette colors (matching design system)
-      // Dark color: #171717 (23, 23, 23)
-      // Light color: #ffffff (255, 255, 255)
-      const darkColor = { r: 23, g: 23, b: 23 };
-      const lightColor = { r: 255, g: 255, b: 255 };
-
-      // 4. Process pixels
-      for (let y = 0; y < 40; y++) {
-        for (let x = 0; x < 40; x++) {
-          const idx = (y * 40 + x) * 4;
-          const r = data[idx];
-          const g = data[idx + 1];
-          const b = data[idx + 2];
-
-          // Calculate perceived brightness
-          const gray = 0.299 * r + 0.587 * g + 0.114 * b;
-
-          // Determine threshold
-          const threshold = (bayerMatrix[y % 4][x % 4] / 256) * 255;
-
-          // Dither and map to palette
-          if (gray > threshold) {
-            data[idx] = lightColor.r;
-            data[idx + 1] = lightColor.g;
-            data[idx + 2] = lightColor.b;
-          } else {
-            data[idx] = darkColor.r;
-            data[idx + 1] = darkColor.g;
-            data[idx + 2] = darkColor.b;
-          }
-          // Opacity is fully opaque
-          data[idx + 3] = 255;
-        }
-      }
-
-      // 5. Draw dithered pixels back to canvas
-      ctx.putImageData(imgData, 0, 0);
-    };
-  }
-
-  // Run immediately and on view transitions / page loads
-  applyDither();
-  document.addEventListener('astro:after-swap', applyDither);
-</script>

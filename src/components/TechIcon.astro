@@ -40,7 +40,7 @@ const injectClass = (svgCode: string, cls: string) => {
       </>
     )
   ) : (
-    <span class="text-[9px] font-mono font-bold select-none opacity-50">{name.slice(0, 2).toUpperCase()}</span>
+    <span class={`${className} rounded bg-grayscale-3 dark:bg-grayscale-3/40 border border-grayscale-4/30 inline-block shrink-0`}></span>
   )
 }
 </span>

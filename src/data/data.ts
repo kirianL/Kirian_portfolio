@@ -90,31 +90,22 @@ const es = {
   },
   experienceList: [
     {
-      period: "2025 - Presente",
-      role: "Lead Designer",
-      company: "Cal.com",
-      companyUrl: "https://cal.com",
+      period: "oct. 2025 - feb. 2026",
+      role: "Desarrollador full-stack",
+      company: "KJsolutions",
+      companyUrl: "https://kjsolutions.dev",
       companyColor: "bg-[#f3f3f3]/90 hover:bg-[#e4e4e7] border-black/5 text-[#111111] dark:bg-zinc-800/80 dark:border-zinc-700/50 dark:text-zinc-200 dark:hover:bg-zinc-700/80",
       companyLogo: "cal",
-      description: "Diseñé un panel de control que mostraba datos en tiempo real a los usuarios relacionados con el uso de su aplicación bajo la tutoría del diseñador principal."
+      description: "Desarrollador Full-Stack en WebmasterCR, encargado del diseño, desarrollo e implementación de aplicaciones web completas, trabajando tanto en el frontend como en el backend. Participé en la creación de interfaces modernas, optimización de rendimiento y desarrollo de APIs, utilizando tecnologías actuales para ofrecer soluciones eficientes y escalables."
     },
     {
-      period: "2023 - 2025",
-      role: "Product Designer",
-      company: "airbnb",
-      companyUrl: "https://airbnb.com",
+      period: "ene. 2026 – abr. 2026",
+      role: "Práctica Profesional: Sistema de Gestión Académica",
+      company: "Liceo Experimental Bilingüe de Pococí",
+      companyUrl: "https://lebp.ed.cr",
       companyColor: "bg-[#ffebee]/90 hover:bg-[#ffcdd2] border-[#ffd0d6]/50 text-[#ff5a5f] dark:bg-[#3e1b1d] dark:border-[#5c2a2d] dark:text-[#ff8a8f] dark:hover:bg-[#4d2225]",
       companyLogo: "airbnb",
-      description: "Diseñé un panel de control que mostraba datos en tiempo real a los usuarios relacionados con el uso de su aplicación bajo la tutoría del diseñador principal."
-    },
-    {
-      period: "2021 - 2023",
-      role: "Junior Designer",
-      company: "Meta",
-      companyUrl: "https://meta.com",
-      companyColor: "bg-[#f0f7ff]/90 hover:bg-[#d0e8ff] border-[#d0e8ff]/50 text-[#0064e0] dark:bg-[#0c2447] dark:border-[#143666] dark:text-[#539eff] dark:hover:bg-[#102d55]",
-      companyLogo: "meta",
-      description: "Diseñé un panel de control que mostraba datos en tiempo real a los usuarios relacionados con el uso de su aplicación bajo la tutoría del diseñador principal."
+      description: "Asociado con Universidad Latina de Costa Rica. Diseñé e implementé un sistema integral full-stack para la gestión académica del Liceo Experimental Bilingüe Pococí (LEBP). El sistema centraliza la administración de estudiantes, matrículas, asistencia con alertas por correo, calificaciones y reportes en PDF/Excel. Construido con Next.js (App Router), React 19, TypeScript, PostgreSQL y Prisma ORM; implementando autenticación JWT con control de acceso por roles (RBAC) y un sistema robusto de auditoría."
     }
   ],
   skills: {
@@ -325,31 +316,22 @@ const en: typeof es = {
   },
   experienceList: [
     {
-      period: "2025 - Present",
-      role: "Lead Designer",
-      company: "Cal.com",
-      companyUrl: "https://cal.com",
+      period: "Oct. 2025 - Feb. 2026",
+      role: "Full-Stack Developer",
+      company: "KJsolutions",
+      companyUrl: "https://kjsolutions.dev",
       companyColor: "bg-[#f3f3f3]/90 hover:bg-[#e4e4e7] border-black/5 text-[#111111] dark:bg-zinc-800/80 dark:border-zinc-700/50 dark:text-zinc-200 dark:hover:bg-zinc-700/80",
       companyLogo: "cal",
-      description: "Designed a dashboard which showcased the realtime data to the users related to their app usuage under the mentorship of the senior designer."
+      description: "Desarrollador Full-Stack en WebmasterCR, encargado del diseño, desarrollo e implementación de aplicaciones web completas, trabajando tanto en el frontend como en el backend. Participé en la creación de interfaces modernas, optimización de rendimiento y desarrollo de APIs, utilizando tecnologías actuales para ofrecer soluciones eficientes y escalables."
     },
     {
-      period: "2023 - 2025",
-      role: "Product Designer",
-      company: "airbnb",
-      companyUrl: "https://airbnb.com",
+      period: "Jan. 2026 - Apr. 2026",
+      role: "Professional Internship: Academic Management System",
+      company: "Liceo Experimental Bilingüe de Pococí",
+      companyUrl: "https://lebp.ed.cr",
       companyColor: "bg-[#ffebee]/90 hover:bg-[#ffcdd2] border-[#ffd0d6]/50 text-[#ff5a5f] dark:bg-[#3e1b1d] dark:border-[#5c2a2d] dark:text-[#ff8a8f] dark:hover:bg-[#4d2225]",
       companyLogo: "airbnb",
-      description: "Designed a dashboard which showcased the realtime data to the users related to their app usuage under the mentorship of the senior designer."
-    },
-    {
-      period: "2021 - 2023",
-      role: "Junior Designer",
-      company: "Meta",
-      companyUrl: "https://meta.com",
-      companyColor: "bg-[#f0f7ff]/90 hover:bg-[#d0e8ff] border-[#d0e8ff]/50 text-[#0064e0] dark:bg-[#0c2447] dark:border-[#143666] dark:text-[#539eff] dark:hover:bg-[#102d55]",
-      companyLogo: "meta",
-      description: "Designed a dashboard which showcased the realtime data to the users related to their app usuage under the mentorship of the senior designer."
+      description: "Associated with Universidad Latina de Costa Rica. Designed and implemented a comprehensive full-stack system for academic management at Liceo Experimental Bilingüe Pococí (LEBP). The system centralizes student administration, enrollment, real-time attendance with email notifications, grades, and PDF/Excel reports. Built with Next.js (App Router), React 19, TypeScript, PostgreSQL, and Prisma ORM; featuring JWT authentication with Role-Based Access Control (RBAC) and a robust audit log system."
     }
   ],
   skills: {

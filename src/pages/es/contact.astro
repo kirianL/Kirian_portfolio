@@ -3,7 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import { dictionaries } from "../../data/data";
 
-const currentLocale = 'ES';
+const currentLocale = (Astro.currentLocale || "es").toUpperCase() as 'EN' | 'ES';
 const data = dictionaries[currentLocale];
 ---
 
