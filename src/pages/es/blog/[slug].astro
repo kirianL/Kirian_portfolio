@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import Navbar from '../../../components/Navbar.astro';
+import Footer from '../../../components/Footer.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -130,9 +131,7 @@ const { Content } = await render(post);
       </script>
 
       <!-- Footer -->
-      <footer class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8">
-        Made with &lt;3
-      </footer>
+      <Footer />
 
     </div>
   </main>

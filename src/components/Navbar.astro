@@ -74,15 +74,15 @@ if (blogMapping[pathname]) {
     <!-- Brand / Logo Link -->
     <a
       href={homePath}
-      class="text-sm font-semibold tracking-tight text-grayscale-12 hover:text-accent-9 transition-colors"
+      class="text-xs sm:text-sm font-semibold tracking-tight text-grayscale-12 hover:text-accent-9 transition-colors"
     >
       {navLabels.home}
     </a>
 
     <!-- Nav Links + Language Selector -->
-    <div class="flex items-center gap-5">
+    <div class="flex items-center gap-2.5 sm:gap-5">
       <div
-        class="flex items-center gap-4 text-[12.5px] font-medium text-grayscale-11"
+        class="flex items-center gap-2.5 sm:gap-4 text-[11px] sm:text-[12.5px] font-medium text-grayscale-11"
       >
         <a
           href={`${localePrefix || ""}/projects/`}
@@ -128,17 +128,17 @@ if (blogMapping[pathname]) {
 
       <!-- Language Selector (Minimalist active-pills layout, quiet & bordered) -->
       <div
-        class="flex items-center gap-0.5 font-mono text-[10px] text-grayscale-10 bg-grayscale-2/60 p-0.5 rounded-lg border border-grayscale-3/40"
+        class="flex items-center gap-0.5 font-mono text-[10px] text-grayscale-10 bg-grayscale-2/60 p-0.5 rounded-lg border border-grayscale-3/40 shrink-0"
       >
         <a
           href={enPath}
-          class={`px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "en" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
+          class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "en" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
         >
           EN
         </a>
         <a
           href={esPath}
-          class={`px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "es" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
+          class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "es" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
         >
           ES
         </a>

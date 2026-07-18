@@ -1,0 +1,43 @@
+---
+const currentLocale = Astro.currentLocale || "en";
+const text = currentLocale === "es" ? "Hecho con <3" : "Made with <3";
+---
+
+<footer
+  class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8"
+>
+  {text}<span id="umami-stats" class="opacity-0 transition-opacity duration-300"></span>
+</footer>
+
+<script>
+  async function loadStats() {
+    const container = document.getElementById('umami-stats');
+    if (!container) return;
+    
+    // Read the share token from environment variable or fallback to the website ID
+    const shareToken = import.meta.env.PUBLIC_UMAMI_SHARE_TOKEN || "427114d6-abc8-410e-adb2-98cc7571b5d3";
+    
+    try {
+      const startAt = new Date('2024-01-01').getTime();
+      const endAt = Date.now();
+      const res = await fetch(`https://cloud.umami.is/api/share/${shareToken}/stats?startAt=${startAt}&endAt=${endAt}`);
+      if (res.ok) {
+        const data = await res.json();
+        const views = data.pageviews?.value || 0;
+        if (views > 0) {
+          const formatted = new Intl.NumberFormat().format(views);
+          const isEs = document.documentElement.lang === 'es' || window.location.pathname.includes('/es/');
+          container.textContent = isEs ? ` • ${formatted} visitas` : ` • ${formatted} views`;
+          container.classList.remove('opacity-0');
+        }
+      }
+    } catch (e) {
+      console.warn("Could not load Umami stats:", e);
+    }
+  }
+
+  // Load on initial load
+  loadStats();
+  // Support Astro view transitions
+  document.addEventListener('astro:page-load', loadStats);
+</script>

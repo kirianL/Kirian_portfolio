@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
 import { dictionaries } from "../data/data";
 
 const currentLocale = (Astro.currentLocale || "en").toUpperCase() as 'EN' | 'ES';
@@ -42,14 +43,14 @@ const data = dictionaries[currentLocale];
               name="name" 
               required
               placeholder="John Doe" 
-              class="w-full px-3.5 py-2 text-xs rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-12 placeholder-grayscale-10 focus:outline-none focus:border-accent-9 transition-colors shadow-3xs"
+              class="w-full px-3.5 py-2 text-[16px] sm:text-xs rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-12 placeholder-grayscale-10 focus:outline-none focus:border-accent-9 transition-colors shadow-3xs"
             />
             <input 
               type="email" 
               name="email" 
               required
               placeholder="john@doe.com" 
-              class="w-full px-3.5 py-2 text-xs rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-12 placeholder-grayscale-10 focus:outline-none focus:border-accent-9 transition-colors shadow-3xs"
+              class="w-full px-3.5 py-2 text-[16px] sm:text-xs rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-12 placeholder-grayscale-10 focus:outline-none focus:border-accent-9 transition-colors shadow-3xs"
             />
           </div>
 
@@ -59,7 +60,7 @@ const data = dictionaries[currentLocale];
             rows="5"
             required
             placeholder="Enter your message" 
-            class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-12 placeholder-grayscale-10 focus:outline-none focus:border-accent-9 transition-colors resize-none shadow-3xs"
+            class="w-full px-3.5 py-2.5 text-[16px] sm:text-xs rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-12 placeholder-grayscale-10 focus:outline-none focus:border-accent-9 transition-colors resize-none shadow-3xs"
           ></textarea>
 
           <!-- Row 3: Submit Button and Helper Text -->
@@ -153,9 +154,7 @@ const data = dictionaries[currentLocale];
       </section>
 
       <!-- Footer -->
-      <footer class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8">
-        Made with &lt;3
-      </footer>
+      <Footer />
 
     </div>
   </main>

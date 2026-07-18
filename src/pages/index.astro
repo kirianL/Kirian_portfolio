@@ -5,6 +5,7 @@ import DitheredAvatar from "../components/DitheredAvatar.astro";
 import Projects from "../components/Projects.astro";
 import WorkExperience from "../components/WorkExperience.astro";
 import TechStack from "../components/TechStack.astro";
+import Footer from "../components/Footer.astro";
 import { dictionaries } from "../data/data";
 
 const data = dictionaries.EN;
@@ -75,7 +76,7 @@ const data = dictionaries.EN;
         <!-- Bio -->
         <section class="flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed">
           <p>{data.hero.desc}</p>
-          <p>Currently working with <strong class="text-grayscale-12 font-medium">TypeScript</strong>, <strong class="text-grayscale-12 font-medium">React</strong>, <strong class="text-grayscale-12 font-medium">Next.js</strong>, and <strong class="text-grayscale-12 font-medium">Tailwind CSS</strong>.</p>
+          <p>Specializing in the <strong class="text-grayscale-12 font-medium">TypeScript</strong> ecosystem, crafting high-performance user interfaces and robust web applications.</p>
         </section>
 
         <!-- Social icons row -->
@@ -206,11 +207,7 @@ const data = dictionaries.EN;
       </section>
 
       <!-- Footer -->
-      <footer
-        class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8"
-      >
-        Made with &lt;3
-      </footer>
+      <Footer />
     </div>
   </main>
 </Layout>
