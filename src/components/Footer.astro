@@ -14,39 +14,39 @@ const text = currentLocale === "es" ? "Hecho con <3" : "Made with <3";
     const container = document.getElementById('umami-stats');
     if (!container) return;
     
-    const websiteId = "427114d6-abc8-410e-adb2-98cc7571b5d3";
     const shareToken = import.meta.env.PUBLIC_UMAMI_SHARE_TOKEN || "IKILGPgXIuMcSBcX";
     
     try {
-      // 1. Get the token from the share API
-      const authRes = await fetch(`https://api.umami.is/api/share/${shareToken}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ websiteId })
-      });
-      
+      // 1. Get the JWT token and metadata from the share endpoint
+      const authRes = await fetch(`https://cloud.umami.is/analytics/us/api/share/${shareToken}`);
       if (!authRes.ok) return;
-      const { token } = await authRes.json();
-      if (!token) return;
+      const authData = await authRes.json();
+      const token = authData.token;
+      const websiteId = authData.websiteId;
+      if (!token || !websiteId) return;
 
-      // 2. Fetch stats using the Bearer token
+      // 2. Fetch stats using the shared token headers
       const startAt = new Date('2024-01-01').getTime();
       const endAt = Date.now();
-      const statsRes = await fetch(`https://api.umami.is/api/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`, {
+      const statsRes = await fetch(`https://cloud.umami.is/analytics/us/api/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'x-umami-share-token': token,
+          'x-umami-share-context': 'share'
         }
       });
       
       if (statsRes.ok) {
         const data = await statsRes.json();
-        const views = data.pageviews?.value || 0;
+        const views = data.pageviews || 0;
+        const visitors = data.visitors || 0;
         if (views > 0) {
-          const formatted = new Intl.NumberFormat().format(views);
+          const formattedViews = new Intl.NumberFormat().format(views);
+          const formattedVisitors = new Intl.NumberFormat().format(visitors);
           const isEs = document.documentElement.lang === 'es' || window.location.pathname.includes('/es/');
-          container.textContent = isEs ? ` • ${formatted} visitas` : ` • ${formatted} views`;
+          
+          container.textContent = isEs 
+            ? ` • ${formattedViews} vistas • Visitante #${formattedVisitors}` 
+            : ` • ${formattedViews} views • Visitor #${formattedVisitors}`;
           container.classList.remove('opacity-0');
         }
       }
