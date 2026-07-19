@@ -1,15 +1,15 @@
 ---
-import { getCollection, render } from 'astro:content';
-import Layout from '../../../layouts/Layout.astro';
-import Navbar from '../../../components/Navbar.astro';
-import Footer from '../../../components/Footer.astro';
+import { getCollection, render } from "astro:content";
+import Layout from "../../../layouts/Layout.astro";
+import Navbar from "../../../components/Navbar.astro";
+import Footer from "../../../components/Footer.astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  const esPosts = posts.filter(post => post.id.startsWith('es/'));
-  
-  return esPosts.map(post => {
-    const slug = post.id.replace(/^es\//, '');
+  const posts = await getCollection("blog");
+  const esPosts = posts.filter((post) => post.id.startsWith("es/"));
+
+  return esPosts.map((post) => {
+    const slug = post.id.replace(/^es\//, "");
     return {
       params: { slug },
       props: { post },
@@ -21,30 +21,51 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<Layout 
-  title={`${post.data.title} | Kirian Luna Quirós`} 
+<Layout
+  title={`${post.data.title} | Kirian Luna Quirós`}
   description={post.data.description}
   lang="es"
   image={post.data.image}
 >
   <Navbar />
-  
+
   <main class="min-h-screen bg-grayscale-1 px-4 sm:px-0">
     <div class="max-w-xl mx-auto md:px-0 px-4 pt-28 pb-16 flex flex-col gap-8">
-      
       <!-- Back Link -->
-      <a href="/es/blog/" class="group flex items-center gap-1.5 text-xs text-grayscale-11 hover:text-accent-9 transition-colors w-fit font-mono">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
+      <a
+        href="/es/blog/"
+        class="group flex items-center gap-1.5 text-xs text-grayscale-11 hover:text-accent-9 transition-colors w-fit font-mono"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="group-hover:-translate-x-0.5 transition-transform"
+          ><path d="m15 18-6-6 6-6"></path></svg
+        >
         Volver al blog
       </a>
-      
+
       <!-- Header -->
       <header class="flex flex-col gap-3">
-        <div class="flex items-center justify-between text-[10px] font-mono text-grayscale-10">
+        <div
+          class="flex items-center justify-between text-[10px] font-mono text-grayscale-10"
+        >
           <span>{post.data.date}</span>
-          <span class="px-2.5 py-0.5 bg-grayscale-3 text-grayscale-11 rounded-full font-medium text-[9px] shadow-3xs">{post.data.category}</span>
+          <span
+            class="px-2.5 py-0.5 bg-grayscale-3 text-grayscale-11 rounded-full font-medium text-[9px] shadow-3xs"
+            >{post.data.category}</span
+          >
         </div>
-        <h1 class="text-grayscale-12 font-semibold tracking-tight text-xl sm:text-2xl mt-1 leading-snug">
+        <h1
+          class="text-grayscale-12 font-semibold tracking-tight text-xl sm:text-2xl mt-1 leading-snug"
+        >
           {post.data.title}
         </h1>
         <p class="text-grayscale-11 text-sm leading-relaxed mt-1">
@@ -53,11 +74,13 @@ const { Content } = await render(post);
       </header>
 
       <!-- Post Cover Image -->
-      <div class="w-full aspect-[16/9] overflow-hidden rounded-lg bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/50">
-        <img 
-          src={post.data.image} 
-          alt={post.data.title} 
-          class="w-full h-full object-cover" 
+      <div
+        class="w-full aspect-[16/9] overflow-hidden rounded-lg bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/50"
+      >
+        <img
+          src={post.data.image}
+          alt={post.data.title}
+          class="w-full h-full object-cover"
         />
       </div>
 
@@ -67,20 +90,26 @@ const { Content } = await render(post);
       </article>
 
       <!-- Newsletter Section -->
-      <section class="mt-8 p-5 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 flex flex-col gap-4 shadow-xs">
-        <h3 class="text-grayscale-12 font-semibold text-sm">Suscríbete al boletín</h3>
+      <section
+        class="mt-8 p-5 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 flex flex-col gap-4 shadow-xs"
+      >
+        <h3 class="text-grayscale-12 font-semibold text-sm">
+          Suscríbete al boletín
+        </h3>
         <p class="text-grayscale-11 text-xs leading-relaxed">
-          Recibe notificaciones cada vez que publique un nuevo artículo sobre diseño, ingeniería y rendimiento web. Sin spam, desactívalo en cualquier momento.
+          Recibe notificaciones cada vez que publique un nuevo artículo sobre
+          diseño, ingeniería y rendimiento web. Sin spam, desactívalo en
+          cualquier momento.
         </p>
         <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-1">
-          <input 
-            type="email" 
-            required 
-            placeholder="tu@email.com" 
+          <input
+            type="email"
+            required
+            placeholder="tu@email.com"
             class="flex-1 w-full px-3 py-2 text-xs rounded-lg border border-grayscale-3 bg-grayscale-1 text-grayscale-12 focus:outline-none focus:border-accent-9 transition-colors"
           />
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
           >
             Suscribirse
@@ -90,66 +119,72 @@ const { Content } = await render(post);
       </section>
 
       <script>
-        const form = document.getElementById('subscribe-form') as HTMLFormElement;
-        const message = document.getElementById('subscribe-message') as HTMLParagraphElement;
+        const form = document.getElementById(
+          "subscribe-form",
+        ) as HTMLFormElement;
+        const message = document.getElementById(
+          "subscribe-message",
+        ) as HTMLParagraphElement;
 
-        form?.addEventListener('submit', async (e) => {
+        form?.addEventListener("submit", async (e) => {
           e.preventDefault();
-          const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+          const emailInput = form.querySelector(
+            'input[type="email"]',
+          ) as HTMLInputElement;
           const email = emailInput.value;
-          
-          const button = form.querySelector('button') as HTMLButtonElement;
+
+          const button = form.querySelector("button") as HTMLButtonElement;
           const originalText = button.textContent;
           button.disabled = true;
-          button.textContent = 'Suscribiendo...';
-          
+          button.textContent = "Suscribiendo...";
+
           try {
-            const res = await fetch('/api/subscribe', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email, lang: 'es' })
+            const res = await fetch("/api/subscribe", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, lang: "es" }),
             });
             const data = await res.json();
-            
+
             if (res.ok) {
-              message.textContent = '✓ ¡Suscrito con éxito!';
-              message.className = 'text-xs font-mono text-green-600';
+              message.textContent = "✓ ¡Suscrito con éxito!";
+              message.className = "text-xs font-mono text-green-600";
               form.reset();
             } else {
-              message.textContent = `✗ ${data.error || 'Algo salió mal'}`;
-              message.className = 'text-xs font-mono text-red-600';
+              message.textContent = `✗ ${data.error || "Algo salió mal"}`;
+              message.className = "text-xs font-mono text-red-600";
             }
           } catch (err) {
-            message.textContent = '✗ Error de conexión. Por favor intenta de nuevo.';
-            message.className = 'text-xs font-mono text-red-600';
+            message.textContent =
+              "✗ Error de conexión. Por favor intenta de nuevo.";
+            message.className = "text-xs font-mono text-red-600";
           } finally {
             button.disabled = false;
             button.textContent = originalText;
-            message.classList.remove('hidden');
+            message.classList.remove("hidden");
           }
         });
       </script>
 
       <!-- Footer -->
       <Footer />
-
     </div>
   </main>
 </Layout>
 
 <script>
   const setupLinks = () => {
-    const links = document.querySelectorAll('article.prose a');
-    links.forEach(link => {
-      if (link.getAttribute('href')?.startsWith('http')) {
-        link.setAttribute('target', '_blank');
-        link.setAttribute('rel', 'noopener noreferrer');
+    const links = document.querySelectorAll("article.prose a");
+    links.forEach((link) => {
+      if (link.getAttribute("href")?.startsWith("http")) {
+        link.setAttribute("target", "_blank");
+        link.setAttribute("rel", "noopener noreferrer");
       }
     });
   };
 
   setupLinks();
-  document.addEventListener('astro:after-swap', setupLinks);
+  document.addEventListener("astro:after-swap", setupLinks);
 </script>
 
 <style is:global>
@@ -232,7 +267,8 @@ const { Content } = await render(post);
     font-size: 0.8125rem;
     -webkit-overflow-scrolling: touch;
   }
-  article.prose th, article.prose td {
+  article.prose th,
+  article.prose td {
     padding: 0.5rem 0.75rem;
     border-bottom: 1px solid var(--color-grayscale-3);
     text-align: left;
