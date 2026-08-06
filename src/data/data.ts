@@ -14,7 +14,7 @@ export interface Project {
   location: string;
   status: string;
   closingQuote?: string;
-  image: string;
+  image: string | any;
   description: string;
   longDescription: string;
   overview: string;
@@ -24,7 +24,7 @@ export interface Project {
   concept?: string[];
   ux?: string[];
   keySections?: string[];
-  gallery?: string[];
+  gallery?: any[];
   challenges?: string;
   technical?: string[];
   credits?: {
@@ -38,7 +38,7 @@ const es = {
   name: "Kirian Luna Quirós",
   title: "Ingeniero de Software",
   location: "Costa Rica",
-  locationIcon: "🇨🇷",
+  locationIcon: "",
   experience: "2+ Años",
   education: {
     degree: "Ingeniería en Sistemas Computacionales",
@@ -275,7 +275,7 @@ const en: typeof es = {
   name: "Kirian Luna Quirós",
   title: "Software Engineer",
   location: "Costa Rica",
-  locationIcon: "🇨🇷",
+  locationIcon: "",
   experience: "2+ Years",
   education: {
     degree: "Computer Systems Engineering",

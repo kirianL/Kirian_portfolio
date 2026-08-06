@@ -270,6 +270,21 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
       </div>
       
     </div>
+
+    <!-- Ver mas proyectos CTA -->
+    {!isProjectsPage && (
+      <div class="flex justify-center w-full mt-7 px-1">
+        <a
+          href={currentLocale === 'ES' ? '/es/projects' : '/projects'}
+          class="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-full bg-grayscale-2 hover:bg-grayscale-3 dark:bg-grayscale-3/40 dark:hover:bg-grayscale-3/70 text-grayscale-12 border border-grayscale-3/70 dark:border-grayscale-4/50 transition-all duration-200 shadow-3xs group select-none"
+        >
+          <span>{currentLocale === 'ES' ? 'Ver más proyectos' : 'View more projects'}</span>
+          <svg class="w-3.5 h-3.5 text-grayscale-10 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    )}
   </div>
 </section>
 
