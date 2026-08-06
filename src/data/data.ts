@@ -36,10 +36,10 @@ export interface Project {
 
 const es = {
   name: "Kirian Luna Quirós",
-  title: "Ingeniero en Sistemas",
+  title: "Ingeniero de Software",
   location: "Costa Rica",
   locationIcon: "🇨🇷",
-  experience: "2 años",
+  experience: "2+ Años",
   education: {
     degree: "Ingeniería en Sistemas Computacionales",
     institution: "Universidad Latina de Costa Rica",
@@ -47,20 +47,20 @@ const es = {
   },
   hero: {
     greeting: "Soy Kirian,",
-    role: "Ingeniero de Sistemas",
-    sub: "Diseño experiencias digitales que impactan.",
-    desc: "Apasionado por el desarrollo web, enfocado en transformar ideas complejas en soluciones elegantes, funcionales y seguras, donde el diseño, la experiencia del usuario y la seguridad son tan importantes como el rendimiento y la calidad del código.",
+    role: "Ingeniero de Software",
+    sub: "Construyendo software escalable y productos digitales.",
+    desc: "Ingeniero de Software especializado en aplicaciones full-stack modernas y soluciones digitales. Me apasiona crear software donde la estética cuidada, el diseño visual sofisticado y la excelencia técnica convergen para construir productos escalables con experiencias de usuario memorables.",
     based: "Basado en Costa Rica",
     ctaProjects: "Ver mis trabajos",
     ctaContact: "Hablemos",
     techStackLabel: "Stack:",
     techStack: ["React", "Next.js", "TypeScript", "TailwindCSS"],
     stats: {
-      exp: "2 años",
+      exp: "2+ Años",
       projects: "Proyectos",
       commitment: "Compromiso",
     },
-    availability: "Disponible para proyectos",
+    availability: "Disponible para oportunidades en Ingeniería de Software",
     ctaExplore: "Explorar más",
   },
   about: {
@@ -90,13 +90,24 @@ const es = {
   },
   experienceList: [
     {
+      period: "ene. 2026 – presente",
+      role: "Ingeniero de Software",
+      company: "Ultimate Media Productions",
+      companyUrl: "https://ump-landing-page.vercel.app/es",
+      companyColor: "bg-[#eef2ff]/90 hover:bg-[#e0e7ff] border-[#c7d2fe]/60 text-[#4f46e5] dark:bg-[#1e1b4b]/60 dark:border-[#3730a3]/50 dark:text-[#818cf8] dark:hover:bg-[#312e81]/60",
+      companyLogo: "code",
+      description: "Diseño, desarrollo y entrega de soluciones digitales personalizadas para clientes de Ultimate Media Productions, liderando proyectos desde la recolección de requerimientos hasta el despliegue. Construcción de aplicaciones web escalables, automatización de flujos de trabajo e integración de APIs de terceros para optimizar la eficiencia operativa y fortalecer la presencia digital.",
+      stack: ["Next.js", "TypeScript", "React 19", "Node.js", "PostgreSQL", "Tailwind CSS", "Prisma ORM", "Docker"]
+    },
+    {
       period: "oct. 2025 - feb. 2026",
       role: "Desarrollador full-stack",
-      company: "KJsolutions",
-      companyUrl: "https://kjsolutions.dev",
+      company: "WebMasterCR",
+      companyUrl: "https://webmastercr.com",
       companyColor: "bg-[#f3f3f3]/90 hover:bg-[#e4e4e7] border-black/5 text-[#111111] dark:bg-zinc-800/80 dark:border-zinc-700/50 dark:text-zinc-200 dark:hover:bg-zinc-700/80",
       companyLogo: "cal",
-      description: "Desarrollador Full-Stack en WebmasterCR, encargado del diseño, desarrollo e implementación de aplicaciones web completas, trabajando tanto en el frontend como en el backend. Participé en la creación de interfaces modernas, optimización de rendimiento y desarrollo de APIs, utilizando tecnologías actuales para ofrecer soluciones eficientes y escalables."
+      description: "Desarrollador Full-Stack en WebmasterCR, encargado del diseño, desarrollo e implementación de aplicaciones web completas, trabajando tanto en el frontend como en el backend. Participé en la creación de interfaces modernas, optimización de rendimiento y desarrollo de APIs, utilizando tecnologías actuales para ofrecer soluciones eficientes y escalables.",
+      stack: ["React", "TypeScript", "Node.js", "REST APIs", "Tailwind CSS"]
     },
     {
       period: "ene. 2026 – abr. 2026",
@@ -105,7 +116,8 @@ const es = {
       companyUrl: "https://lebp.ed.cr",
       companyColor: "bg-[#ffebee]/90 hover:bg-[#ffcdd2] border-[#ffd0d6]/50 text-[#ff5a5f] dark:bg-[#3e1b1d] dark:border-[#5c2a2d] dark:text-[#ff8a8f] dark:hover:bg-[#4d2225]",
       companyLogo: "airbnb",
-      description: "Asociado con Universidad Latina de Costa Rica. Diseñé e implementé un sistema integral full-stack para la gestión académica del Liceo Experimental Bilingüe Pococí (LEBP). El sistema centraliza la administración de estudiantes, matrículas, asistencia con alertas por correo, calificaciones y reportes en PDF/Excel. Construido con Next.js (App Router), React 19, TypeScript, PostgreSQL y Prisma ORM; implementando autenticación JWT con control de acceso por roles (RBAC) y un sistema robusto de auditoría."
+      description: "Asociado con Universidad Latina de Costa Rica. Diseñé e implementé un sistema integral full-stack para la gestión académica del Liceo Experimental Bilingüe Pococí (LEBP). El sistema centraliza la administración de estudiantes, matrículas, asistencia con alertas por correo, calificaciones y reportes en PDF/Excel. Construido con Next.js (App Router), React 19, TypeScript, PostgreSQL y Prisma ORM; implementando autenticación JWT con control de acceso por roles (RBAC) y un sistema robusto de auditoría.",
+      stack: ["Next.js", "React 19", "TypeScript", "PostgreSQL", "Prisma ORM", "JWT / RBAC"]
     }
   ],
   skills: {
@@ -159,7 +171,7 @@ const es = {
       "Experiencia construida sobre frameworks modernos y principios fundamentales de ingeniería.",
   },
   projects: {
-    title: "Proyectos",
+    title: "Proyectos Destacados",
     subtitle: "Experiencia Interactiva & Desarrollo",
     description:
       "Una selección de proyectos donde diseño, cultura y tecnología convergen.",
@@ -261,10 +273,10 @@ const es = {
 
 const en: typeof es = {
   name: "Kirian Luna Quirós",
-  title: "Systems Engineer",
+  title: "Software Engineer",
   location: "Costa Rica",
   locationIcon: "🇨🇷",
-  experience: "2 years",
+  experience: "2+ Years",
   education: {
     degree: "Computer Systems Engineering",
     institution: "Universidad Latina de Costa Rica",
@@ -272,9 +284,9 @@ const en: typeof es = {
   },
   hero: {
     greeting: "I'm Kirian,",
-    role: "Systems Engineer",
-    sub: "Designing impactful digital experiences.",
-    desc: "Passionate about web development, focused on transforming complex ideas into elegant, functional, and secure solutions, where design, user experience, and security are as important as performance and code quality.",
+    role: "Software Engineer",
+    sub: "Building scalable software & digital products.",
+    desc: "Software Engineer specializing in modern full-stack applications and digital solutions. I'm passionate about crafting software where refined aesthetics, thoughtful visual design, and high-performance engineering converge to build scalable products with memorable user experiences.",
     based: "Based in Costa Rica",
     ctaProjects: "View my work",
     ctaContact: "Let's talk",
@@ -282,11 +294,11 @@ const en: typeof es = {
     techStack: ["React", "Next.js", "TypeScript", "TailwindCSS"],
 
     stats: {
-      exp: "2 years",
+      exp: "2+ Years",
       projects: "Projects",
       commitment: "Commitment",
     },
-    availability: "Available for projects",
+    availability: "Open to Software Engineering opportunities",
     ctaExplore: "Explore More",
   },
   about: {
@@ -316,13 +328,24 @@ const en: typeof es = {
   },
   experienceList: [
     {
+      period: "Jan. 2026 – Present",
+      role: "Software Engineer",
+      company: "Ultimate Media Productions",
+      companyUrl: "https://ump-landing-page.vercel.app/en",
+      companyColor: "bg-[#eef2ff]/90 hover:bg-[#e0e7ff] border-[#c7d2fe]/60 text-[#4f46e5] dark:bg-[#1e1b4b]/60 dark:border-[#3730a3]/50 dark:text-[#818cf8] dark:hover:bg-[#312e81]/60",
+      companyLogo: "code",
+      description: "Designed and delivered custom digital solutions for clients, leading projects from requirements gathering to deployment. Built scalable web applications, automated business workflows, and integrated third-party APIs to improve operational efficiency and strengthen clients' digital presence.",
+      stack: ["Next.js", "TypeScript", "React 19", "Node.js", "PostgreSQL", "Tailwind CSS", "Prisma ORM", "Docker"]
+    },
+    {
       period: "Oct. 2025 - Feb. 2026",
       role: "Full-Stack Developer",
-      company: "KJsolutions",
-      companyUrl: "https://kjsolutions.dev",
+      company: "WebMasterCR",
+      companyUrl: "https://webmastercr.com",
       companyColor: "bg-[#f3f3f3]/90 hover:bg-[#e4e4e7] border-black/5 text-[#111111] dark:bg-zinc-800/80 dark:border-zinc-700/50 dark:text-zinc-200 dark:hover:bg-zinc-700/80",
       companyLogo: "cal",
-      description: "Desarrollador Full-Stack en WebmasterCR, encargado del diseño, desarrollo e implementación de aplicaciones web completas, trabajando tanto en el frontend como en el backend. Participé en la creación de interfaces modernas, optimización de rendimiento y desarrollo de APIs, utilizando tecnologías actuales para ofrecer soluciones eficientes y escalables."
+      description: "Full-Stack Developer at WebmasterCR, responsible for designing, developing, and implementing end-to-end web applications across both frontend and backend. Participated in building modern user interfaces, optimizing performance, and developing REST APIs to deliver efficient, scalable digital solutions.",
+      stack: ["React", "TypeScript", "Node.js", "REST APIs", "Tailwind CSS"]
     },
     {
       period: "Jan. 2026 - Apr. 2026",
@@ -331,7 +354,8 @@ const en: typeof es = {
       companyUrl: "https://lebp.ed.cr",
       companyColor: "bg-[#ffebee]/90 hover:bg-[#ffcdd2] border-[#ffd0d6]/50 text-[#ff5a5f] dark:bg-[#3e1b1d] dark:border-[#5c2a2d] dark:text-[#ff8a8f] dark:hover:bg-[#4d2225]",
       companyLogo: "airbnb",
-      description: "Associated with Universidad Latina de Costa Rica. Designed and implemented a comprehensive full-stack system for academic management at Liceo Experimental Bilingüe Pococí (LEBP). The system centralizes student administration, enrollment, real-time attendance with email notifications, grades, and PDF/Excel reports. Built with Next.js (App Router), React 19, TypeScript, PostgreSQL, and Prisma ORM; featuring JWT authentication with Role-Based Access Control (RBAC) and a robust audit log system."
+      description: "Associated with Universidad Latina de Costa Rica. Designed and implemented a comprehensive full-stack system for academic management at Liceo Experimental Bilingüe Pococí (LEBP). The system centralizes student administration, enrollment, real-time attendance with email notifications, grades, and PDF/Excel reports. Built with Next.js (App Router), React 19, TypeScript, PostgreSQL, and Prisma ORM; featuring JWT authentication with Role-Based Access Control (RBAC) and a robust audit log system.",
+      stack: ["Next.js", "React 19", "TypeScript", "PostgreSQL", "Prisma ORM", "JWT / RBAC"]
     }
   ],
   skills: {
@@ -385,7 +409,7 @@ const en: typeof es = {
       "Expertise built on modern frameworks and core engineering principles.",
   },
   projects: {
-    title: "Projects",
+    title: "Featured Projects",
     subtitle: "Interactive Experience & Development",
     description:
       "A selection of projects where design, culture, and technology converge.",

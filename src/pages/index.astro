@@ -22,17 +22,14 @@ const data = dictionaries.EN;
     <div class="max-w-2xl mx-auto md:px-0 px-4 pt-28 pb-16 flex flex-col gap-14">
       <!-- Header / Identity -->
       <header class="flex flex-col gap-y-0">
-        <!-- Avatar + Name row -->
-        <div class="flex items-center gap-4 mb-1">
-          <DitheredAvatar src="/ProfileKirian.jpg" alt={data.name} />
-          <div>
-            <h1 class="text-grayscale-12 font-medium tracking-tight text-xl leading-tight">
-              {data.name}
-            </h1>
-            <p class="text-grayscale-10 tracking-tight text-sm mt-0.5">
-              {data.title}
-            </p>
-          </div>
+        <!-- Name & Title -->
+        <div>
+          <h1 class="text-grayscale-12 font-medium tracking-tight text-2xl leading-tight">
+            {data.name}
+          </h1>
+          <p class="text-grayscale-10 tracking-tight text-sm mt-0.5 font-mono">
+            {data.title}
+          </p>
         </div>
 
         <!-- Metadata row -->
@@ -76,7 +73,6 @@ const data = dictionaries.EN;
         <!-- Bio -->
         <section class="flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed">
           <p>{data.hero.desc}</p>
-          <p>Specializing in the <strong class="text-grayscale-12 font-medium">TypeScript</strong> ecosystem, crafting high-performance user interfaces and robust web applications.</p>
         </section>
 
         <!-- Social icons row -->

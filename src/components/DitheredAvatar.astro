@@ -1,18 +1,17 @@
 ---
 interface Props {
-  src: string;
-  alt: string;
+  src?: string;
+  alt?: string;
 }
 
-const { src, alt } = Astro.props;
+const { alt = "KL" } = Astro.props;
 ---
 
-<div class="relative w-15 h-15 sm:w-16 sm:h-16 shrink-0 select-none overflow-hidden rounded-xl">
-  <img 
-    src={src} 
-    alt={alt}
-    class="w-full h-full object-cover"
-    loading="eager"
-  />
+<div 
+  class="relative w-13 h-13 sm:w-14 sm:h-14 shrink-0 select-none overflow-hidden rounded-xl bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 flex items-center justify-center font-mono font-semibold text-lg sm:text-xl border border-black/10 dark:border-white/10 shadow-xs group"
+  aria-label={alt}
+>
+  <span class="tracking-tighter font-bold">KL</span>
 </div>
+
 
