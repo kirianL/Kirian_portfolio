@@ -75,8 +75,8 @@ if (blogMapping[pathname]) {
     <a
       href={homePath}
       data-cuelume-hover="tick"
-      data-cuelume-press
-      data-cuelume-release
+      data-cuelume-press="page"
+      data-cuelume-release="release"
       class="text-xs sm:text-sm font-semibold tracking-tight text-grayscale-12 hover:text-accent-9 transition-colors"
     >
       {navLabels.home}
@@ -90,17 +90,23 @@ if (blogMapping[pathname]) {
         <a
           href={`${localePrefix || ""}/projects/`}
           data-cuelume-hover="tick"
+          data-cuelume-press="page"
+          data-cuelume-release="release"
           class="hover:text-grayscale-12 transition-colors"
           >{navLabels.projects}</a
         >
         <a
           href={`${localePrefix || ""}/blog/`}
           data-cuelume-hover="tick"
+          data-cuelume-press="page"
+          data-cuelume-release="release"
           class="hover:text-grayscale-12 transition-colors">{navLabels.blog}</a
         >
         <a
           href={`${localePrefix || ""}/contact/`}
           data-cuelume-hover="tick"
+          data-cuelume-press="page"
+          data-cuelume-release="release"
           class="hover:text-grayscale-12 transition-colors"
           >{navLabels.contact}</a
         >
@@ -109,6 +115,7 @@ if (blogMapping[pathname]) {
           target="_blank"
           rel="noopener noreferrer"
           data-cuelume-hover="tick"
+          data-cuelume-press="scan"
           class="hover:text-grayscale-12 transition-colors flex items-center gap-0.5 group/agency"
         >
           {navLabels.agency}
@@ -134,6 +141,7 @@ if (blogMapping[pathname]) {
       >
         <a
           href={enPath}
+          data-cuelume-hover="tick"
           data-cuelume-toggle
           class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "en" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
         >
@@ -141,6 +149,7 @@ if (blogMapping[pathname]) {
         </a>
         <a
           href={esPath}
+          data-cuelume-hover="tick"
           data-cuelume-toggle
           class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "es" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
         >
