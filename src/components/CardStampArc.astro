@@ -49,10 +49,10 @@ const stampConfigs = stampsList.map((stamp, i) => {
   const targetY = Math.abs(norm) * yOffset;
 
   // Mobile fan positions
-  const mobileSpread = 92;
+  const mobileSpread = 100;
   const mobileRotate = norm * 12;
   const mobileX = norm * mobileSpread;
-  const mobileY = Math.abs(norm) * 6;
+  const mobileY = Math.abs(norm) * 5;
 
   const dist = Math.abs(i - centerIdx);
 
@@ -172,7 +172,6 @@ const stampConfigs = stampsList.map((stamp, i) => {
     .card-stamp-arc-root:hover .stamp-card-item:hover,
     .stamp-card-item.is-focused-card {
       transform: translate3d(var(--desktop-tx), calc(var(--desktop-ty) - 14px), 30px) rotate(0deg) scale(1.05) !important;
-      z-index: 50 !important;
       box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
     }
   }
@@ -184,8 +183,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
     }
 
     .stamp-card-item.is-focused-card {
-      transform: translate3d(var(--mobile-tx), calc(var(--mobile-ty) - 10px), 30px) rotate(0deg) scale(1.06) !important;
-      z-index: 50 !important;
+      transform: translate3d(var(--mobile-tx), calc(var(--mobile-ty) - 12px), 30px) rotate(0deg) scale(1.06) !important;
       box-shadow: 0 14px 28px -6px rgba(0, 0, 0, 0.16), 0 4px 10px rgba(0, 0, 0, 0.05) !important;
     }
   }
@@ -201,7 +199,15 @@ const stampConfigs = stampsList.map((stamp, i) => {
     will-change: transform, filter, opacity;
   }
 
-  .card-stamp-arc-root:hover .stamp-card-item:hover .stamp-tooltip,
+  @media (hover: hover) {
+    .card-stamp-arc-root:hover .stamp-card-item:hover .stamp-tooltip {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translate(-50%, 0px) scale(1);
+      transition-delay: 30ms;
+    }
+  }
+
   .stamp-card-item.is-focused-card .stamp-tooltip {
     opacity: 1;
     filter: blur(0px);
@@ -218,7 +224,8 @@ const stampConfigs = stampsList.map((stamp, i) => {
     roots.forEach((root) => {
       const items = root.querySelectorAll('.stamp-card-item');
 
-      let currentFocusIdx: number | null = null;
+      let lockedIdx: number | null = null;
+      let hoverIdx: number | null = null;
       let rafId: number | null = null;
       let leaveTimeout: ReturnType<typeof setTimeout> | null = null;
       let lastSoundTime = 0;
@@ -231,18 +238,34 @@ const stampConfigs = stampsList.map((stamp, i) => {
         }
       };
 
-      const setFocusInternal = (idx: number | null) => {
-        currentFocusIdx = idx;
+      const setFocusInternal = (targetIdx: number | null) => {
+        const total = items.length;
+        const centerIdx = (total - 1) / 2;
+
         items.forEach((item, i) => {
-          if (i === idx) {
-            item.classList.add('is-focused-card');
+          const cardEl = item as HTMLElement;
+          if (i === targetIdx) {
+            cardEl.classList.add('is-focused-card');
           } else {
-            item.classList.remove('is-focused-card');
+            cardEl.classList.remove('is-focused-card');
+          }
+
+          if (targetIdx !== null) {
+            const distFromFocused = Math.abs(i - targetIdx);
+            const dynamicZIndex = 50 - distFromFocused * 5;
+            cardEl.style.zIndex = `${dynamicZIndex}`;
+          } else {
+            const defaultZIndex = Math.round(10 - Math.abs(i - centerIdx));
+            cardEl.style.zIndex = `${defaultZIndex}`;
           }
         });
       };
 
-      const scheduleFocus = (idx: number | null) => {
+      const updateState = (newLocked: number | null, newHover: number | null) => {
+        lockedIdx = newLocked;
+        hoverIdx = newHover;
+        const activeIdx = hoverIdx !== null ? hoverIdx : lockedIdx;
+
         if (leaveTimeout) {
           clearTimeout(leaveTimeout);
           leaveTimeout = null;
@@ -253,7 +276,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
         }
 
         rafId = requestAnimationFrame(() => {
-          setFocusInternal(idx);
+          setFocusInternal(activeIdx);
           rafId = null;
         });
       };
@@ -261,42 +284,46 @@ const stampConfigs = stampsList.map((stamp, i) => {
       items.forEach((item, i) => {
         item.addEventListener('click', (e) => {
           e.stopPropagation();
-          const isFocused = currentFocusIdx === i;
+          const isCurrentlyLocked = lockedIdx === i;
           
-          if (!isFocused) {
-            scheduleFocus(i);
+          if (!isCurrentlyLocked) {
+            updateState(i, hoverIdx);
             play("pop");
           } else {
-            scheduleFocus(null);
+            updateState(null, hoverIdx);
             play("tick");
           }
         });
 
         item.addEventListener('mouseenter', () => {
-          if (currentFocusIdx !== i) {
-            scheduleFocus(i);
+          if (window.matchMedia('(hover: hover)').matches) {
+            updateState(lockedIdx, i);
             playTickDebounced();
           }
         });
       });
 
       root.addEventListener('mouseenter', () => {
-        if (leaveTimeout) {
-          clearTimeout(leaveTimeout);
-          leaveTimeout = null;
+        if (window.matchMedia('(hover: hover)').matches) {
+          if (leaveTimeout) {
+            clearTimeout(leaveTimeout);
+            leaveTimeout = null;
+          }
         }
       });
 
       root.addEventListener('mouseleave', () => {
-        if (leaveTimeout) clearTimeout(leaveTimeout);
-        leaveTimeout = setTimeout(() => {
-          scheduleFocus(null);
-        }, 120);
+        if (window.matchMedia('(hover: hover)').matches) {
+          if (leaveTimeout) clearTimeout(leaveTimeout);
+          leaveTimeout = setTimeout(() => {
+            updateState(lockedIdx, null);
+          }, 120);
+        }
       });
 
       document.addEventListener('click', (e) => {
         if (!root.contains(e.target as Node)) {
-          scheduleFocus(null);
+          updateState(null, null);
         }
       });
     });
