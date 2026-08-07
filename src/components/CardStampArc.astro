@@ -17,19 +17,19 @@ export interface Props {
 
 const {
   arc = 18,
-  spread = 195,
+  spread = 220,
   yOffset = 22,
-  duration = 0.45,
+  duration = 0.4,
   className = '',
   photos
 } = Astro.props;
 
 const defaultStamps: PhotoStamp[] = [
-  { id: 0, caption: 'Life & Moments', src: '/off-screen/photo1.jpg' },
-  { id: 1, caption: 'Travels & Places', src: '/off-screen/photo2.jpg' },
-  { id: 2, caption: 'Off screen', src: '/off-screen/photo3.jpg' },
-  { id: 3, caption: 'Costa Rica', src: '/off-screen/photo4.jpg' },
-  { id: 4, caption: 'Everyday Notes', src: '/off-screen/photo5.jpg' }
+  { id: 0, caption: 'Kenzo 🐾', src: '/off-screen/Kenzo.png' },
+  { id: 1, caption: 'Puerto Limón 🌴', src: '/off-screen/Limon.png' },
+  { id: 2, caption: 'Off screen 📸' },
+  { id: 3, caption: 'Costa Rica 🇨🇷' },
+  { id: 4, caption: 'Everyday Notes 📝' }
 ];
 
 const stampsList = photos && photos.length > 0 ? photos : defaultStamps;
@@ -39,22 +39,20 @@ const centerIdx = (count - 1) / 2; // 2 for 5 photos
 const stampConfigs = stampsList.map((stamp, i) => {
   const norm = centerIdx > 0 ? (i - centerIdx) / centerIdx : 0; // -1 to +1
 
-  // Desktop positions
+  // Desktop fan positions
   const idleRotate = norm * 6.5;
-  const idleX = norm * 38;
+  const idleX = norm * 42;
   const idleY = Math.abs(norm) * 4;
 
   const targetRotate = norm * arc;
   const targetX = norm * spread;
   const targetY = Math.abs(norm) * yOffset;
 
-  // Mobile positions
-  const mobileSpread = 80; 
-  const mobileIdleX = norm * 24;
-  const mobileIdleY = Math.abs(norm) * 3;
-  const mobileTargetX = norm * mobileSpread;
-  const mobileTargetY = Math.abs(norm) * (yOffset * 0.5);
-  const mobileTargetRotate = norm * 11;
+  // Mobile fan positions
+  const mobileSpread = 92;
+  const mobileRotate = norm * 12;
+  const mobileX = norm * mobileSpread;
+  const mobileY = Math.abs(norm) * 6;
 
   const dist = Math.abs(i - centerIdx);
 
@@ -67,44 +65,38 @@ const stampConfigs = stampsList.map((stamp, i) => {
     targetRotate,
     targetX,
     targetY,
-    mobileIdleX,
-    mobileIdleY,
-    mobileTargetX,
-    mobileTargetY,
-    mobileTargetRotate,
-    defaultZIndex: 10 - Math.round(dist)
+    mobileRotate,
+    mobileX,
+    mobileY,
+    defaultZIndex: Math.round(10 - dist)
   };
 });
 ---
 
 <div
-  class={`card-stamp-arc-root relative w-[6.2rem] h-[8.2rem] sm:w-[9rem] sm:h-[11.5rem] cursor-pointer flex items-center justify-center select-none touch-manipulation max-w-full overflow-visible ${className}`}
+  class={`card-stamp-arc-root relative w-[6.4rem] h-[8.6rem] sm:w-[9.2rem] sm:h-[11.8rem] cursor-pointer flex items-center justify-center select-none touch-manipulation max-w-full overflow-visible ${className}`}
   data-count={count}
-  data-active-index="2"
 >
   {stampConfigs.map((stamp, i) => (
     <div
-      class="stamp-card-item absolute inset-0 rounded-lg sm:rounded-xl p-1.5 pb-2.5 sm:p-2 sm:pb-3 flex flex-col bg-white text-zinc-800 border border-zinc-200/70 shadow-[0_2px_10px_rgba(0,0,0,0.05)] dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800/80 dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] transition-all ease-out"
+      class="stamp-card-item absolute inset-0 rounded-lg sm:rounded-xl p-1.5 pb-2.5 sm:p-2 sm:pb-3.5 flex flex-col bg-white text-zinc-800 border border-zinc-200/80 shadow-[0_4px_18px_rgba(0,0,0,0.06)] dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800/80 dark:shadow-[0_4px_22px_rgba(0,0,0,0.35)]"
       style={{
+        zIndex: stamp.defaultZIndex,
         transformOrigin: '50% 100%',
         transitionDuration: `${duration}s`,
         '--idle-tr': `${stamp.idleRotate}deg`,
         '--idle-tx': `${stamp.idleX}px`,
         '--idle-ty': `${stamp.idleY}px`,
-        '--mobile-idle-tr': `${stamp.idleRotate * 0.7}deg`,
-        '--mobile-idle-tx': `${stamp.mobileIdleX}px`,
-        '--mobile-idle-ty': `${stamp.mobileIdleY}px`,
         '--desktop-tr': `${stamp.targetRotate}deg`,
         '--desktop-tx': `${stamp.targetX}px`,
         '--desktop-ty': `${stamp.targetY}px`,
-        '--mobile-tr': `${stamp.mobileTargetRotate}deg`,
-        '--mobile-tx': `${stamp.mobileTargetX}px`,
-        '--mobile-ty': `${stamp.mobileTargetY}px`,
+        '--mobile-tr': `${stamp.mobileRotate}deg`,
+        '--mobile-tx': `${stamp.mobileX}px`,
+        '--mobile-ty': `${stamp.mobileY}px`,
         '--card-index': i
       }}
       data-card-index={i}
       data-card-id={stamp.id}
-      data-cuelume-hover="tick"
     >
       {/* BE UI Tooltip (@beui/tooltip) - Perfectly Centered */}
       {stamp.caption && (
@@ -116,26 +108,28 @@ const stampConfigs = stampsList.map((stamp, i) => {
       )}
 
       {/* Photo Frame Container (Pixel-perfect clean Polaroid) */}
-      <div class="relative w-full h-full rounded bg-zinc-100/90 dark:bg-zinc-800/60 overflow-hidden border border-zinc-200/40 dark:border-zinc-700/40 flex flex-col items-center justify-center">
+      <div class="relative w-full h-full rounded bg-zinc-100/90 dark:bg-zinc-800/60 overflow-hidden border border-zinc-200/40 dark:border-zinc-700/40 flex flex-col items-center justify-center pointer-events-none">
         {stamp.src ? (
           <img
             src={stamp.src}
             alt={stamp.alt || stamp.caption || `Photo ${stamp.id + 1}`}
-            class="w-full h-full object-cover"
+            class="w-full h-full object-cover transition-opacity duration-300"
             loading="lazy"
             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           />
         ) : null}
         
-        {/* Minimalist Clean Photo Placeholder Slot */}
+        {/* Minimalist Clean Photo Placeholder Canvas */}
         <div 
-          class="w-full h-full flex flex-col items-center justify-center p-2 text-center bg-zinc-50/80 dark:bg-zinc-800/30"
+          class="w-full h-full flex flex-col items-center justify-center p-2 text-center bg-gradient-to-b from-zinc-50 to-zinc-100/80 dark:from-zinc-800/40 dark:to-zinc-800/80"
           style={{ display: stamp.src ? 'none' : 'flex' }}
         >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-zinc-400/70 dark:text-zinc-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span class="text-[9px] font-mono text-zinc-400/80 dark:text-zinc-500">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-zinc-200/60 dark:bg-zinc-700/50 flex items-center justify-center mb-1">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-400 dark:text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <span class="text-[9px] font-mono font-medium text-zinc-400 dark:text-zinc-500">
             0{stamp.id + 1}
           </span>
         </div>
@@ -145,107 +139,65 @@ const stampConfigs = stampsList.map((stamp, i) => {
 </div>
 
 <style>
+  .card-stamp-arc-root {
+    perspective: 1000px;
+  }
+
   .card-stamp-arc-root,
   .stamp-card-item {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
 
-  /* Dynamic Z-Index Hierarchy based on active card index */
-  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="0"] { z-index: 100 !important; }
-  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="1"] { z-index: 49; }
-  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="2"] { z-index: 48; }
-  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="3"] { z-index: 47; }
-  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="4"] { z-index: 46; }
+  .stamp-card-item {
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                box-shadow 0.3s ease,
+                opacity 0.3s ease;
+  }
 
-  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="0"] { z-index: 50; }
-  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="1"] { z-index: 100 !important; }
-  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="2"] { z-index: 48; }
-  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="3"] { z-index: 47; }
-  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="4"] { z-index: 46; }
-
-  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="0"] { z-index: 50; }
-  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="1"] { z-index: 51; }
-  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="2"] { z-index: 100 !important; }
-  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="3"] { z-index: 47; }
-  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="4"] { z-index: 46; }
-
-  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="0"] { z-index: 50; }
-  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="1"] { z-index: 51; }
-  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="2"] { z-index: 52; }
-  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="3"] { z-index: 100 !important; }
-  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="4"] { z-index: 46; }
-
-  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="0"] { z-index: 50; }
-  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="1"] { z-index: 51; }
-  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="2"] { z-index: 52; }
-  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="3"] { z-index: 53; }
-  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="4"] { z-index: 100 !important; }
-
-  /* Idle state */
+  /* Desktop Fan Arc (>= 640px) */
   @media (min-width: 640px) {
     .stamp-card-item {
       transform: translate3d(var(--idle-tx), var(--idle-ty), 0) rotate(var(--idle-tr));
-      transition-property: transform, box-shadow, z-index, filter;
-      transition-duration: 0.45s;
-      transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     }
-  }
 
-  @media (max-width: 639px) {
-    .stamp-card-item {
-      transform: translate3d(var(--mobile-idle-tx), var(--mobile-idle-ty), 0) rotate(var(--mobile-idle-tr));
-      transition-property: transform, box-shadow, z-index, filter;
-      transition-duration: 0.45s;
-      transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    }
-  }
-
-  /* Desktop Arc Spread on Root Hover / Active */
-  @media (min-width: 640px) {
     .card-stamp-arc-root:hover .stamp-card-item,
     .card-stamp-arc-root.is-active .stamp-card-item {
       transform: translate3d(var(--desktop-tx), var(--desktop-ty), 0) rotate(var(--desktop-tr));
     }
+
+    .card-stamp-arc-root:hover .stamp-card-item:hover,
+    .stamp-card-item.is-focused-card {
+      transform: translate3d(var(--desktop-tx), calc(var(--desktop-ty) - 14px), 30px) rotate(0deg) scale(1.05) !important;
+      z-index: 50 !important;
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+    }
   }
 
-  /* Mobile Arc Spread */
+  /* Mobile Fan Arc (< 640px) */
   @media (max-width: 639px) {
-    .card-stamp-arc-root:hover .stamp-card-item,
-    .card-stamp-arc-root.is-active .stamp-card-item {
+    .stamp-card-item {
       transform: translate3d(var(--mobile-tx), var(--mobile-ty), 0) rotate(var(--mobile-tr));
     }
-  }
 
-  /* Individual Active Focused Card */
-  .card-stamp-arc-root:hover .stamp-card-item:hover,
-  .stamp-card-item.is-focused-card {
-    z-index: 100 !important;
-    box-shadow: 0 14px 30px -8px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.04) !important;
-  }
-
-  @media (min-width: 640px) {
-    .card-stamp-arc-root:hover .stamp-card-item:hover,
     .stamp-card-item.is-focused-card {
-      transform: translate3d(var(--desktop-tx), calc(var(--desktop-ty) - 12px), 0) rotate(0deg) scale(1.06) !important;
+      transform: translate3d(var(--mobile-tx), calc(var(--mobile-ty) - 10px), 30px) rotate(0deg) scale(1.06) !important;
+      z-index: 50 !important;
+      box-shadow: 0 14px 28px -6px rgba(0, 0, 0, 0.16), 0 4px 10px rgba(0, 0, 0, 0.05) !important;
     }
   }
 
-  @media (max-width: 639px) {
-    .card-stamp-arc-root:hover .stamp-card-item:hover,
-    .stamp-card-item.is-focused-card {
-      transform: translate3d(var(--mobile-tx), calc(var(--mobile-ty) - 8px), 0) rotate(0deg) scale(1.04) !important;
-    }
-  }
-
-  /* BE UI Tooltip (@beui/tooltip): Perfectly Centered Blur enter/exit & spring spawn */
+  /* BE UI Tooltip (@beui/tooltip): Blur enter/exit & spring spawn */
   .stamp-tooltip {
     opacity: 0;
-    filter: blur(5px);
-    transform: translate(-50%, 8px) scale(0.9);
-    transition: opacity 0.16s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.20s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: blur(4px);
+    transform: translate(-50%, 6px) scale(0.92);
+    transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform, filter, opacity;
   }
 
@@ -254,7 +206,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
     opacity: 1;
     filter: blur(0px);
     transform: translate(-50%, 0px) scale(1);
-    transition-delay: 60ms;
+    transition-delay: 30ms;
   }
 </style>
 
@@ -266,12 +218,21 @@ const stampConfigs = stampsList.map((stamp, i) => {
     roots.forEach((root) => {
       const items = root.querySelectorAll('.stamp-card-item');
 
-      const clearFocus = () => {
-        items.forEach(item => item.classList.remove('is-focused-card'));
+      let currentFocusIdx: number | null = null;
+      let rafId: number | null = null;
+      let leaveTimeout: ReturnType<typeof setTimeout> | null = null;
+      let lastSoundTime = 0;
+
+      const playTickDebounced = () => {
+        const now = Date.now();
+        if (now - lastSoundTime > 65) {
+          play("tick");
+          lastSoundTime = now;
+        }
       };
 
-      const setFocus = (idx: number) => {
-        root.setAttribute('data-active-index', String(idx));
+      const setFocusInternal = (idx: number | null) => {
+        currentFocusIdx = idx;
         items.forEach((item, i) => {
           if (i === idx) {
             item.classList.add('is-focused-card');
@@ -281,44 +242,61 @@ const stampConfigs = stampsList.map((stamp, i) => {
         });
       };
 
-      // Initial state: clear focus so no card is forced active on page load
-      root.setAttribute('data-active-index', '2');
-      clearFocus();
+      const scheduleFocus = (idx: number | null) => {
+        if (leaveTimeout) {
+          clearTimeout(leaveTimeout);
+          leaveTimeout = null;
+        }
+
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+
+        rafId = requestAnimationFrame(() => {
+          setFocusInternal(idx);
+          rafId = null;
+        });
+      };
 
       items.forEach((item, i) => {
         item.addEventListener('click', (e) => {
           e.stopPropagation();
-          const isCurrentFocused = item.classList.contains('is-focused-card');
-
-          if (!isCurrentFocused) {
-            setFocus(i);
-            root.classList.add('is-active');
+          const isFocused = currentFocusIdx === i;
+          
+          if (!isFocused) {
+            scheduleFocus(i);
             play("pop");
           } else {
-            clearFocus();
-            root.classList.remove('is-active');
-            root.setAttribute('data-active-index', '2');
+            scheduleFocus(null);
             play("tick");
           }
         });
 
         item.addEventListener('mouseenter', () => {
-          setFocus(i);
-          play("tick");
+          if (currentFocusIdx !== i) {
+            scheduleFocus(i);
+            playTickDebounced();
+          }
         });
       });
 
+      root.addEventListener('mouseenter', () => {
+        if (leaveTimeout) {
+          clearTimeout(leaveTimeout);
+          leaveTimeout = null;
+        }
+      });
+
       root.addEventListener('mouseleave', () => {
-        clearFocus();
-        root.classList.remove('is-active');
-        root.setAttribute('data-active-index', '2');
+        if (leaveTimeout) clearTimeout(leaveTimeout);
+        leaveTimeout = setTimeout(() => {
+          scheduleFocus(null);
+        }, 120);
       });
 
       document.addEventListener('click', (e) => {
         if (!root.contains(e.target as Node)) {
-          clearFocus();
-          root.classList.remove('is-active');
-          root.setAttribute('data-active-index', '2');
+          scheduleFocus(null);
         }
       });
     });
