@@ -211,6 +211,7 @@ const es = {
     email: "kirianluna.u@gmail.com",
     github: "https://github.com/kirianL",
     linkedin: "https://www.linkedin.com/in/kirianluna",
+    twitter: "https://x.com/kiriandev",
   },
   footer: {
     rights: "Todos los derechos reservados.",
@@ -449,6 +450,7 @@ const en: typeof es = {
     email: "kirianluna.u@gmail.com",
     github: "https://github.com/kirianL",
     linkedin: "https://www.linkedin.com/in/kirianluna",
+    twitter: "https://x.com/kiriandev",
   },
   footer: {
     rights: "All rights reserved.",
