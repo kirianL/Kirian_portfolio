@@ -53,11 +53,12 @@ const spanishURL = new URL(spanishPath, siteURL);
     <meta name="keywords" content="Kirian Luna Quirós, Kirian Luna, Full Stack Engineer, Software Engineer, Web Developer Costa Rica, Next.js, React, Astro, TypeScript, Product Designer, SorinLabs" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
-    <!-- Canonical & i18n Hreflang Tags (SEO / AEO) -->
+    <!-- Canonical & i18n Hreflang & RSS Feed (SEO / AEO) -->
     <link rel="canonical" href={canonicalURL} />
     <link rel="alternate" hreflang="en" href={englishURL} />
     <link rel="alternate" hreflang="es" href={spanishURL} />
     <link rel="alternate" hreflang="x-default" href={englishURL} />
+    <link rel="alternate" type="application/rss+xml" title="Kirian Luna Quirós Blog RSS" href={new URL(lang === 'es' ? '/es/rss.xml' : '/rss.xml', siteURL)} />
 
     <!-- Open Graph / Facebook (SEO / SXO) -->
     <meta property="og:type" content="website" />

@@ -231,7 +231,7 @@ const es = {
       title: "Este site",
       links: [
         { label: "Analíticas", href: "#" },
-        { label: "RSS", href: "#" },
+        { label: "RSS", href: "/es/rss.xml" },
         {
           label: "Código Fuente",
           href: "https://github.com/kirianL/Kirian_portfolio",
@@ -470,7 +470,7 @@ const en: typeof es = {
       title: "This site",
       links: [
         { label: "Analytics", href: "#" },
-        { label: "RSS", href: "#" },
+        { label: "RSS", href: "/rss.xml" },
         {
           label: "Source Code",
           href: "https://github.com/kirianL/Kirian_portfolio",
