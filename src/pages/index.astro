@@ -67,14 +67,12 @@ const data = dictionaries.EN;
             </span>
           </div>
 
-          <!-- Live Clocks: CR + US East -->
+          <!-- Live Clock: CR -->
           <div class="flex flex-col gap-1.5">
-            <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-10">Time Zones</span>
+            <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-10">Time Zone</span>
             <span class="text-grayscale-12 text-[12px] font-mono flex items-center gap-2 select-none">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
               <span id="cr-time">CR --:--</span>
-              <span class="text-grayscale-8">•</span>
-              <span id="us-time">US East --:--</span>
             </span>
           </div>
         </div>
@@ -268,18 +266,14 @@ const data = dictionaries.EN;
   import { play } from "cuelume";
 
   const setupInteractiveFeatures = () => {
-    // 1. Live Dual Clocks (Costa Rica + US East)
+    // 1. Live Clock (Costa Rica)
     const crEl = document.getElementById('cr-time');
-    const usEl = document.getElementById('us-time');
     
-    if (crEl && usEl) {
+    if (crEl) {
       const updateClocks = () => {
         const now = new Date();
         const crTime = now.toLocaleTimeString('en-US', { timeZone: 'America/Costa_Rica', hour: '2-digit', minute: '2-digit', hour12: false });
-        const usTime = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hour12: false });
-        
         crEl.textContent = `CR ${crTime} CST`;
-        usEl.textContent = `US East ${usTime} ET`;
       };
       updateClocks();
       setInterval(updateClocks, 1000);

@@ -231,11 +231,15 @@ const stampConfigs = stampsList.map((stamp, i) => {
       let leaveTimeout: ReturnType<typeof setTimeout> | null = null;
       let lastSoundTime = 0;
 
-      const playTickDebounced = () => {
-        const now = Date.now();
-        if (now - lastSoundTime > 65) {
-          play("tick");
-          lastSoundTime = now;
+      const playSound = (type: "tick" | "pop") => {
+        try {
+          const now = Date.now();
+          if (now - lastSoundTime > 65) {
+            play(type);
+            lastSoundTime = now;
+          }
+        } catch {
+          // ignore audio context policy restrictions before first gesture
         }
       };
 
@@ -295,17 +299,19 @@ const stampConfigs = stampsList.map((stamp, i) => {
           
           if (!isCurrentlyLocked) {
             updateState(i, hoverIdx);
-            play("pop");
+            playSound("pop");
           } else {
             updateState(null, hoverIdx);
-            play("tick");
+            playSound("tick");
           }
         });
 
         item.addEventListener('mouseenter', () => {
           if (window.matchMedia('(hover: hover)').matches) {
-            updateState(lockedIdx, i);
-            playTickDebounced();
+            if (hoverIdx !== i) {
+              updateState(lockedIdx, i);
+              playSound("tick");
+            }
           }
         });
       });
@@ -330,6 +336,9 @@ const stampConfigs = stampsList.map((stamp, i) => {
 
       document.addEventListener('click', (e) => {
         if (!root.contains(e.target as Node)) {
+          if (lockedIdx !== null) {
+            playSound("tick");
+          }
           updateState(null, null);
         }
       });
