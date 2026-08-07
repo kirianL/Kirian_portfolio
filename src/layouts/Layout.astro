@@ -64,8 +64,43 @@ const resolvedImageURL = new URL(image, Astro.site || Astro.url.origin);
     <!-- cuelume interaction sounds -->
     <script>
       import { bind } from "cuelume";
-      bind();
-      document.addEventListener("astro:after-swap", () => bind());
+
+      let isUnlocked = false;
+
+      const setupAudioUnlock = () => {
+        bind();
+        if (isUnlocked) return;
+
+        const unlockEvents = ["pointerdown", "touchstart", "keydown", "pointermove", "scroll"];
+        
+        const unlock = () => {
+          isUnlocked = true;
+          unlockEvents.forEach((evt) => window.removeEventListener(evt, unlock, true));
+
+          if (typeof window !== "undefined") {
+            const global = window as any;
+            const AudioCtx = global.AudioContext || global.webkitAudioContext;
+            if (AudioCtx) {
+              try {
+                const ctx = new AudioCtx();
+                if (ctx.state === "suspended") {
+                  ctx.resume();
+                }
+              } catch {}
+            }
+          }
+        };
+
+        unlockEvents.forEach((evt) => {
+          window.addEventListener(evt, unlock, { capture: true, once: true, passive: true });
+        });
+      };
+
+      setupAudioUnlock();
+      document.addEventListener("astro:after-swap", () => {
+        isUnlocked = false;
+        setupAudioUnlock();
+      });
     </script>
   </body>
 </html>
