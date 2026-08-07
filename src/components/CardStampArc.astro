@@ -165,6 +165,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
     }
 
     .card-stamp-arc-root:hover .stamp-card-item,
+    .card-stamp-arc-root.has-active-focus .stamp-card-item,
     .card-stamp-arc-root.is-active .stamp-card-item {
       transform: translate3d(var(--desktop-tx), var(--desktop-ty), 0) rotate(var(--desktop-tr));
     }
@@ -241,6 +242,12 @@ const stampConfigs = stampsList.map((stamp, i) => {
       const setFocusInternal = (targetIdx: number | null) => {
         const total = items.length;
         const centerIdx = (total - 1) / 2;
+
+        if (targetIdx !== null) {
+          root.classList.add('has-active-focus');
+        } else {
+          root.classList.remove('has-active-focus');
+        }
 
         items.forEach((item, i) => {
           const cardEl = item as HTMLElement;
