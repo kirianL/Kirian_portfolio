@@ -30,21 +30,21 @@ const posts = allPosts
 >
   <Navbar />
   
-  <main class="min-h-screen bg-grayscale-1 px-4 sm:px-0">
-    <div class="max-w-xl mx-auto md:px-0 px-4 pt-28 pb-16 flex flex-col gap-12">
+  <main class="max-w-xl mx-auto px-4 sm:px-0 pt-28 pb-16">
+    <div class="flex flex-col gap-10">
       
-      <!-- Page Header -->
-      <header class="flex flex-col gap-y-4">
-        <h1 class="text-grayscale-12 font-semibold tracking-tight text-xl">
-          {title}
+      <!-- Blog Header -->
+      <section class="flex flex-col gap-2 px-1">
+        <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+          blog.
         </h1>
-        <p class="text-grayscale-11 text-sm leading-relaxed max-w-md">
+        <p class="text-grayscale-11 text-xs leading-normal">
           {description}
         </p>
-      </header>
+      </section>
 
       <!-- Blog Posts List -->
-      <section class="flex flex-col gap-6">
+      <section class="flex flex-col gap-6 px-1">
         {posts.map((post) => (
           <a href={post.link} data-cuelume-hover="tick" data-cuelume-press data-cuelume-release class="group flex flex-col gap-3.5 p-3 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 transition-all duration-200 shadow-xs">
             <div class="w-full aspect-[16/9] overflow-hidden rounded-lg bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/50">
