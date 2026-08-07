@@ -1,0 +1,48 @@
+# Kirian Luna Quirós — Complete Developer & System Profile
+
+> Kirian Luna Quirós is a Full Stack Software Engineer and Product Designer based in Costa Rica (UTC-6). He focuses on building high-performance web systems, modern UI/UX product designs, full-stack enterprise applications, and accessible digital experiences.
+
+---
+
+## 1. Professional Overview & Contact
+- **Full Name**: Kirian Luna Quirós
+- **Primary Domain**: https://kirian.dev
+- **Email**: kirianluna.u@gmail.com
+- **GitHub**: https://github.com/kirianL
+- **LinkedIn**: https://linkedin.com/in/kirianluna
+- **Location**: Costa Rica (Central Standard Time / CST)
+- **Languages Spoken**: English (Professional), Spanish (Native)
+
+---
+
+## 2. Technical Stack & Core Competencies
+- **Frontend Architecture**: TypeScript, React 19, Next.js (App Router), Astro, TailwindCSS v4, HTML5, Web Audio API, Framer Motion, Responsive UX/UI.
+- **Backend & Database Systems**: Node.js, Express, PostgreSQL, Prisma ORM, RESTful API design, JWT Authentication, Role-Based Access Control (RBAC), Audit Logging.
+- **Tools & Infrastructure**: Git, GitHub Actions, Vercel, Vite, NPM, Web Performance Audit (Core Web Vitals, SXO, SEO, AEO).
+
+---
+
+## 3. Notable Projects & Case Studies
+
+### LEBP Academic Management System
+- **Associated Entity**: Universidad Latina de Costa Rica / Liceo Experimental Bilingüe Pococí (LEBP).
+- **Architecture**: Next.js 15 (App Router), TypeScript, PostgreSQL, Prisma ORM.
+- **Features**: Enterprise-grade academic administration platform. Manages student enrollment, real-time attendance tracking with automated email notifications, grade calculations, PDF/Excel report generation, JWT authentication with Role-Based Access Control (RBAC), and security audit logs.
+
+### Puerto Limón Cultural Platform
+- **Scope**: Digital platform preserving the cultural identity and Afro-Caribbean heritage of Limón, Costa Rica.
+- **Features**: Interactive historical archives, photograph collection, custom map overlays, and location story points.
+
+### Young Legends
+- **Scope**: Modern web application built for an athletic and streetwear brand.
+- **Features**: High-converting responsive landing pages, micro-animations, fast asset rendering.
+
+### UMP Music Platform
+- **Scope**: Interactive web music streaming and audio experience application.
+- **Features**: Custom Web Audio API implementation, interactive playback controls, audio visualizer feedback.
+
+---
+
+## 4. Writing & Knowledge Sharing
+Kirian writes articles on software engineering, web performance, and UX design at https://kirian.dev/blog/.
+- Topics include: Digitalizing cultural heritage, building responsive design systems, Web Audio API interactions, and full-stack architecture patterns.

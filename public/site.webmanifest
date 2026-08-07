@@ -1,0 +1,21 @@
+{
+  "name": "Kirian Luna Quirós — Full Stack Software Engineer",
+  "short_name": "Kirian.dev",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-180x180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#18181b",
+  "background_color": "#18181b",
+  "display": "standalone",
+  "start_url": "/",
+  "orientation": "portrait"
+}
