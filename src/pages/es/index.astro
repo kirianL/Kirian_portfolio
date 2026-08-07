@@ -6,6 +6,7 @@ import Projects from '../../components/Projects.astro';
 import WorkExperience from '../../components/WorkExperience.astro';
 import TechStack from '../../components/TechStack.astro';
 import Footer from '../../components/Footer.astro';
+import CardStampArc from '../../components/CardStampArc.astro';
 import { dictionaries } from '../../data/data';
 
 const data = dictionaries.ES;
@@ -183,6 +184,26 @@ const data = dictionaries.ES;
             <span class="text-grayscale-12 text-sm font-medium">Curriculum Vitae</span>
             <a href="/CVs/CV_KirianLuna_ES.pdf" target="_blank" rel="noopener noreferrer" data-cuelume-hover="tick" class="contact-link text-grayscale-11 hover:text-accent-9 text-sm font-mono transition-colors">CV_KirianLuna_ES.pdf</a>
           </div>
+        </div>
+      </section>
+
+      <!-- Off Screen Section -->
+      <section id="off-screen" class="flex flex-col gap-5 py-2">
+        <div class="px-1">
+          <h2 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+            off screen.
+          </h2>
+        </div>
+        <div class="w-full flex items-center justify-center py-12 px-4 overflow-visible min-h-[240px] sm:min-h-[280px]">
+          <CardStampArc 
+            photos={[
+              { id: 0, caption: 'Vida & Momentos' },
+              { id: 1, caption: 'Viajes & Lugares' },
+              { id: 2, caption: 'Off Screen' },
+              { id: 3, caption: 'Costa Rica' },
+              { id: 4, caption: 'Atardeceres & Mar' }
+            ]}
+          />
         </div>
       </section>
 

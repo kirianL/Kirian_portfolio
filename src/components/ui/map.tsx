@@ -62,7 +62,8 @@ import {
     WaypointsIcon,
 } from "lucide-react"
 import { useTheme } from "next-themes"
-import dynamic from "next/dynamic"
+import React from "react"
+const dynamic = (fn: any) => React.lazy(fn)
 import {
     createContext,
     useContext,

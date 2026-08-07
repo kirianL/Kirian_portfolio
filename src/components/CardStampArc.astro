@@ -1,0 +1,308 @@
+---
+export interface PhotoStamp {
+  id: number;
+  src?: string;
+  alt?: string;
+  caption?: string;
+}
+
+export interface Props {
+  arc?: number;
+  spread?: number;
+  yOffset?: number;
+  duration?: number;
+  className?: string;
+  photos?: PhotoStamp[];
+}
+
+const {
+  arc = 20,
+  spread = 230,
+  yOffset = 24,
+  duration = 0.45,
+  className = '',
+  photos
+} = Astro.props;
+
+const defaultStamps: PhotoStamp[] = [
+  { id: 0, caption: 'Life & Moments', src: '/off-screen/photo1.jpg' },
+  { id: 1, caption: 'Travels & Places', src: '/off-screen/photo2.jpg' },
+  { id: 2, caption: 'Off screen', src: '/off-screen/photo3.jpg' },
+  { id: 3, caption: 'Costa Rica', src: '/off-screen/photo4.jpg' },
+  { id: 4, caption: 'Everyday Notes', src: '/off-screen/photo5.jpg' }
+];
+
+const stampsList = photos && photos.length > 0 ? photos : defaultStamps;
+const count = stampsList.length;
+const centerIdx = (count - 1) / 2; // 2 for 5 photos
+
+const stampConfigs = stampsList.map((stamp, i) => {
+  const norm = centerIdx > 0 ? (i - centerIdx) / centerIdx : 0; // -1 to +1
+
+  // Idle positions (clean distinct spacing without heavy overlapping)
+  const idleRotate = norm * 7;
+  const idleX = norm * 42;
+  const idleY = Math.abs(norm) * 5;
+
+  // Desktop spread on hover
+  const targetRotate = norm * arc;
+  const targetX = norm * spread;
+  const targetY = Math.abs(norm) * yOffset;
+
+  // Mobile scaled spread
+  const mobileSpread = Math.min(spread, 130);
+  const mobileTargetX = norm * mobileSpread;
+  const mobileTargetY = Math.abs(norm) * (yOffset * 0.65);
+
+  const dist = Math.abs(i - centerIdx);
+
+  return {
+    ...stamp,
+    norm,
+    idleRotate,
+    idleX,
+    idleY,
+    targetRotate,
+    targetX,
+    targetY,
+    mobileTargetX,
+    mobileTargetY,
+    defaultZIndex: 10 - Math.round(dist)
+  };
+});
+---
+
+<div
+  class={`card-stamp-arc-root relative w-[7.2rem] h-[9.2rem] sm:w-[9rem] sm:h-[11.5rem] cursor-pointer flex items-center justify-center select-none touch-manipulation ${className}`}
+  data-count={count}
+  data-active-index="2"
+>
+  {stampConfigs.map((stamp, i) => (
+    <div
+      class="stamp-card-item absolute inset-0 rounded-lg sm:rounded-xl p-1.5 pb-2.5 sm:p-2 sm:pb-3 flex flex-col bg-white text-zinc-800 border border-zinc-200/70 shadow-[0_2px_10px_rgba(0,0,0,0.05)] dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800/80 dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)] transition-all ease-out"
+      style={{
+        transformOrigin: '50% 100%',
+        transitionDuration: `${duration}s`,
+        '--idle-tr': `${stamp.idleRotate}deg`,
+        '--idle-tx': `${stamp.idleX}px`,
+        '--idle-ty': `${stamp.idleY}px`,
+        '--desktop-tr': `${stamp.targetRotate}deg`,
+        '--desktop-tx': `${stamp.targetX}px`,
+        '--desktop-ty': `${stamp.targetY}px`,
+        '--mobile-tr': `${stamp.targetRotate * 0.75}deg`,
+        '--mobile-tx': `${stamp.mobileTargetX}px`,
+        '--mobile-ty': `${stamp.mobileTargetY}px`,
+        '--card-index': i
+      }}
+      data-card-index={i}
+      data-card-id={stamp.id}
+      data-cuelume-hover="tick"
+    >
+      {/* BE UI Tooltip (@beui/tooltip) - Perfectly Centered */}
+      {stamp.caption && (
+        <div class="stamp-tooltip absolute left-1/2 -top-10 pointer-events-none z-50 flex justify-center items-center w-max">
+          <span class="block whitespace-nowrap rounded-lg border border-zinc-200/80 bg-white/95 px-2.5 py-1 text-[11px] font-mono tracking-tight text-zinc-900 shadow-md dark:border-zinc-800 dark:bg-zinc-900/95 dark:text-zinc-100 backdrop-blur-md">
+            {stamp.caption}
+          </span>
+        </div>
+      )}
+
+      {/* Photo Frame Container (Pixel-perfect clean Polaroid) */}
+      <div class="relative w-full h-full rounded bg-zinc-100/90 dark:bg-zinc-800/60 overflow-hidden border border-zinc-200/40 dark:border-zinc-700/40 flex flex-col items-center justify-center">
+        {stamp.src ? (
+          <img
+            src={stamp.src}
+            alt={stamp.alt || stamp.caption || `Photo ${stamp.id + 1}`}
+            class="w-full h-full object-cover"
+            loading="lazy"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+        ) : null}
+        
+        {/* Minimalist Clean Photo Placeholder Slot */}
+        <div 
+          class="w-full h-full flex flex-col items-center justify-center p-2 text-center bg-zinc-50/80 dark:bg-zinc-800/30"
+          style={{ display: stamp.src ? 'none' : 'flex' }}
+        >
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-zinc-400/70 dark:text-zinc-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span class="text-[9px] font-mono text-zinc-400/80 dark:text-zinc-500">
+            0{stamp.id + 1}
+          </span>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .card-stamp-arc-root,
+  .stamp-card-item {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Default Z-Index Hierarchy based on active card index */
+  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="0"] { z-index: 100 !important; }
+  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="1"] { z-index: 49; }
+  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="2"] { z-index: 48; }
+  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="3"] { z-index: 47; }
+  .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="4"] { z-index: 46; }
+
+  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="0"] { z-index: 50; }
+  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="1"] { z-index: 100 !important; }
+  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="2"] { z-index: 48; }
+  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="3"] { z-index: 47; }
+  .card-stamp-arc-root[data-active-index="1"] .stamp-card-item[data-card-index="4"] { z-index: 46; }
+
+  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="0"] { z-index: 50; }
+  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="1"] { z-index: 51; }
+  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="2"] { z-index: 100 !important; }
+  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="3"] { z-index: 47; }
+  .card-stamp-arc-root[data-active-index="2"] .stamp-card-item[data-card-index="4"] { z-index: 46; }
+
+  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="0"] { z-index: 50; }
+  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="1"] { z-index: 51; }
+  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="2"] { z-index: 52; }
+  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="3"] { z-index: 100 !important; }
+  .card-stamp-arc-root[data-active-index="3"] .stamp-card-item[data-card-index="4"] { z-index: 46; }
+
+  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="0"] { z-index: 50; }
+  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="1"] { z-index: 51; }
+  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="2"] { z-index: 52; }
+  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="3"] { z-index: 53; }
+  .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="4"] { z-index: 100 !important; }
+
+  /* Idle state */
+  .stamp-card-item {
+    transform: translate3d(var(--idle-tx), var(--idle-ty), 0) rotate(var(--idle-tr));
+    transition-property: transform, box-shadow, z-index, filter;
+    transition-duration: 0.45s;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Desktop Arc Spread on Root Hover / Active */
+  @media (min-width: 640px) {
+    .card-stamp-arc-root:hover .stamp-card-item,
+    .card-stamp-arc-root.is-active .stamp-card-item {
+      transform: translate3d(var(--desktop-tx), var(--desktop-ty), 0) rotate(var(--desktop-tr));
+    }
+  }
+
+  /* Mobile Arc Spread */
+  @media (max-width: 639px) {
+    .card-stamp-arc-root:hover .stamp-card-item,
+    .card-stamp-arc-root.is-active .stamp-card-item {
+      transform: translate3d(var(--mobile-tx), var(--mobile-ty), 0) rotate(var(--mobile-tr));
+    }
+  }
+
+  /* Individual Active Focused Card */
+  .stamp-card-item.is-focused-card {
+    box-shadow: 0 14px 30px -8px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  @media (min-width: 640px) {
+    .stamp-card-item.is-focused-card {
+      transform: translate3d(var(--desktop-tx), calc(var(--desktop-ty) - 12px), 0) rotate(0deg) scale(1.06) !important;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .stamp-card-item.is-focused-card {
+      transform: translate3d(var(--mobile-tx), calc(var(--mobile-ty) - 10px), 0) rotate(0deg) scale(1.06) !important;
+    }
+  }
+
+  /* BE UI Tooltip (@beui/tooltip): Perfectly Centered Blur enter/exit & spring spawn */
+  .stamp-tooltip {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translate(-50%, 8px) scale(0.9);
+    transition: opacity 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.20s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform, filter, opacity;
+  }
+
+  .stamp-card-item.is-focused-card .stamp-tooltip {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translate(-50%, 0px) scale(1);
+    transition-delay: 80ms;
+  }
+</style>
+
+<script>
+  import { play } from "cuelume";
+
+  const setupStampArc = () => {
+    const roots = document.querySelectorAll('.card-stamp-arc-root');
+    roots.forEach((root) => {
+      const items = root.querySelectorAll('.stamp-card-item');
+
+      const setActiveCard = (idx: number) => {
+        root.setAttribute('data-active-index', String(idx));
+        items.forEach((item, i) => {
+          if (i === idx) {
+            item.classList.add('is-focused-card');
+          } else {
+            item.classList.remove('is-focused-card');
+          }
+        });
+      };
+
+      // Set initial active card (center)
+      setActiveCard(2);
+
+      items.forEach((item, i) => {
+        // Touch / Click event: smooth switching even when skipping cards (e.g. 0 to 2, 1 to 3)
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const currentActive = root.getAttribute('data-active-index');
+          
+          if (currentActive !== String(i)) {
+            setActiveCard(i);
+            root.classList.add('is-active');
+            play("pop");
+          } else {
+            // Toggle active state
+            if (root.classList.contains('is-active')) {
+              root.classList.remove('is-active');
+              play("tick");
+            } else {
+              root.classList.add('is-active');
+              play("pop");
+            }
+          }
+        });
+
+        // Hover event for desktop
+        item.addEventListener('mouseenter', () => {
+          setActiveCard(i);
+          play("tick");
+        });
+      });
+
+      // Reset when mouse leaves arc container
+      root.addEventListener('mouseleave', () => {
+        items.forEach(item => item.classList.remove('is-focused-card'));
+        root.classList.remove('is-active');
+        setActiveCard(2);
+      });
+
+      // Tap outside on mobile closes fan
+      document.addEventListener('click', (e) => {
+        if (!root.contains(e.target as Node)) {
+          root.classList.remove('is-active');
+          items.forEach(item => item.classList.remove('is-focused-card'));
+          setActiveCard(2);
+        }
+      });
+    });
+  };
+
+  setupStampArc();
+  document.addEventListener('astro:after-swap', setupStampArc);
+</script>
