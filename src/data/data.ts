@@ -212,6 +212,8 @@ const es = {
     github: "https://github.com/kirianL",
     linkedin: "https://www.linkedin.com/in/kirianluna",
     twitter: "https://x.com/kiriandev",
+    discord: "https://discord.com/users/Kiluzie",
+    discordUser: "@Kiluzie",
   },
   footer: {
     rights: "Todos los derechos reservados.",
@@ -451,6 +453,8 @@ const en: typeof es = {
     github: "https://github.com/kirianL",
     linkedin: "https://www.linkedin.com/in/kirianluna",
     twitter: "https://x.com/kiriandev",
+    discord: "https://discord.com/users/Kiluzie",
+    discordUser: "@Kiluzie",
   },
   footer: {
     rights: "All rights reserved.",
