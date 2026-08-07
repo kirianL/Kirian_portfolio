@@ -92,6 +92,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
             type="button"
             role="tab"
             aria-selected="true"
+            data-cuelume-toggle
             class="relative z-10 px-3.5 h-7 rounded-full flex items-center gap-1.5 cursor-pointer transition-colors duration-200 text-[12px] font-medium whitespace-nowrap"
           >
             <svg class="w-3.5 h-3.5 text-grayscale-11 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -106,6 +107,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
             type="button"
             role="tab"
             aria-selected="false"
+            data-cuelume-toggle
             class="relative z-10 px-3.5 h-7 rounded-full flex items-center gap-1.5 cursor-pointer transition-colors duration-200 text-[12px] font-medium whitespace-nowrap"
           >
             <svg viewBox="0 0 558.93 644.34" class="w-[13px] h-[13px] fill-current shrink-0 text-[#261cc1]">
@@ -125,6 +127,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
             type="button"
             role="tab"
             aria-selected="true"
+            data-cuelume-toggle
             class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
             title={currentLocale === 'ES' ? 'Vista de lista' : 'List view'}
           >
@@ -139,6 +142,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
             type="button"
             role="tab"
             aria-selected="false"
+            data-cuelume-toggle
             class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
             title={currentLocale === 'ES' ? 'Vista de cuadrícula' : 'Grid view'}
           >
@@ -177,6 +181,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
                       href={project.link}
                       target="_blank" 
                       rel="noopener noreferrer"
+                      data-cuelume-hover="tick"
                       class="project-row-link inline-flex items-center gap-1 text-[11px] font-mono text-grayscale-10 hover:text-accent-9 transition-colors select-none"
                     >
                       <span>{currentLocale === 'ES' ? 'Sitio Web' : 'Website'}</span>
@@ -188,6 +193,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
                       href={project.github}
                       target="_blank" 
                       rel="noopener noreferrer"
+                      data-cuelume-hover="tick"
                       class="project-row-link inline-flex items-center gap-1 text-[11px] font-mono text-grayscale-10 hover:text-accent-9 transition-colors select-none"
                     >
                       <span>GitHub</span>
@@ -219,6 +225,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
                 href={project.link} 
                 target="_blank" 
                 rel="noopener noreferrer" 
+                data-cuelume-hover="tick"
                 class="w-full aspect-[16/10] p-1.5 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 shrink-0 shadow-xs hover:border-grayscale-4 dark:hover:border-grayscale-4/50 transition-colors duration-200"
               >
                 <div class="w-full h-full overflow-hidden rounded-lg">
@@ -243,6 +250,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
                       href={project.link} 
                       target="_blank" 
                       rel="noopener noreferrer"
+                      data-cuelume-hover="tick"
                       class="text-grayscale-10 hover:text-accent-9 transition-colors"
                       title="Website"
                     >
@@ -279,6 +287,8 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
       <div class="flex justify-center w-full mt-7 px-1">
         <a
           href={currentLocale === 'ES' ? '/es/projects' : '/projects'}
+          data-cuelume-press
+          data-cuelume-release
           class="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-full bg-grayscale-2 hover:bg-grayscale-3 dark:bg-grayscale-3/40 dark:hover:bg-grayscale-3/70 text-grayscale-12 border border-grayscale-3/70 dark:border-grayscale-4/50 transition-all duration-200 shadow-3xs group select-none"
         >
           <span>{currentLocale === 'ES' ? 'Ver más proyectos' : 'View more projects'}</span>

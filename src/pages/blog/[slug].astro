@@ -33,7 +33,7 @@ const { Content } = await render(post);
     <div class="max-w-xl mx-auto md:px-0 px-4 pt-28 pb-16 flex flex-col gap-8">
       
       <!-- Back Link -->
-      <a href="/blog/" class="group flex items-center gap-1.5 text-xs text-grayscale-11 hover:text-accent-9 transition-colors w-fit font-mono">
+      <a href="/blog/" data-cuelume-press data-cuelume-release class="group flex items-center gap-1.5 text-xs text-grayscale-11 hover:text-accent-9 transition-colors w-fit font-mono">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-0.5 transition-transform"><path d="m15 18-6-6 6-6"/></svg>
         Back to blog
       </a>
@@ -81,6 +81,8 @@ const { Content } = await render(post);
           />
           <button 
             type="submit" 
+            data-cuelume-press
+            data-cuelume-release
             class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
           >
             Subscribe
@@ -90,6 +92,8 @@ const { Content } = await render(post);
       </section>
 
       <script>
+        import { play } from "cuelume";
+
         const form = document.getElementById('subscribe-form') as HTMLFormElement;
         const message = document.getElementById('subscribe-message') as HTMLParagraphElement;
 
@@ -112,16 +116,19 @@ const { Content } = await render(post);
             const data = await res.json();
             
             if (res.ok) {
+              play("success");
               message.textContent = '✓ Successfully subscribed!';
-              message.className = 'text-xs font-mono text-green-600';
+              message.className = 'text-xs font-mono text-green-600 block';
               form.reset();
             } else {
+              play("error");
               message.textContent = `✗ ${data.error || 'Something went wrong'}`;
-              message.className = 'text-xs font-mono text-red-600';
+              message.className = 'text-xs font-mono text-red-600 block';
             }
           } catch (err) {
+            play("error");
             message.textContent = '✗ Connection error. Please try again.';
-            message.className = 'text-xs font-mono text-red-600';
+            message.className = 'text-xs font-mono text-red-600 block';
           } finally {
             button.disabled = false;
             button.textContent = originalText;

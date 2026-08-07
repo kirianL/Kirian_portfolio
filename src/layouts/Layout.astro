@@ -60,5 +60,12 @@ const resolvedImageURL = new URL(image, Astro.site || Astro.url.origin);
   </head>
   <body class="antialiased selection:bg-accent-4/20 selection:text-accent-12 min-h-screen">
     <slot />
+
+    <!-- cuelume interaction sounds -->
+    <script>
+      import { bind } from "cuelume";
+      bind();
+      document.addEventListener("astro:after-swap", () => bind());
+    </script>
   </body>
 </html>

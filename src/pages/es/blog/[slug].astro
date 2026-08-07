@@ -34,6 +34,8 @@ const { Content } = await render(post);
       <!-- Back Link -->
       <a
         href="/es/blog/"
+        data-cuelume-press
+        data-cuelume-release
         class="group flex items-center gap-1.5 text-xs text-grayscale-11 hover:text-accent-9 transition-colors w-fit font-mono"
       >
         <svg
@@ -110,6 +112,8 @@ const { Content } = await render(post);
           />
           <button
             type="submit"
+            data-cuelume-press
+            data-cuelume-release
             class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
           >
             Suscribirse
@@ -119,6 +123,8 @@ const { Content } = await render(post);
       </section>
 
       <script>
+        import { play } from "cuelume";
+
         const form = document.getElementById(
           "subscribe-form",
         ) as HTMLFormElement;
@@ -147,17 +153,20 @@ const { Content } = await render(post);
             const data = await res.json();
 
             if (res.ok) {
+              play("success");
               message.textContent = "✓ ¡Suscrito con éxito!";
-              message.className = "text-xs font-mono text-green-600";
+              message.className = "text-xs font-mono text-green-600 block";
               form.reset();
             } else {
+              play("error");
               message.textContent = `✗ ${data.error || "Algo salió mal"}`;
-              message.className = "text-xs font-mono text-red-600";
+              message.className = "text-xs font-mono text-red-600 block";
             }
           } catch (err) {
+            play("error");
             message.textContent =
               "✗ Error de conexión. Por favor intenta de nuevo.";
-            message.className = "text-xs font-mono text-red-600";
+            message.className = "text-xs font-mono text-red-600 block";
           } finally {
             button.disabled = false;
             button.textContent = originalText;

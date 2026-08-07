@@ -68,6 +68,8 @@ const data = dictionaries[currentLocale];
             <button 
               type="submit" 
               id="submit-btn"
+              data-cuelume-press
+              data-cuelume-release
               class="px-4 py-2 bg-grayscale-12 dark:bg-grayscale-1 text-grayscale-1 dark:text-grayscale-12 text-xs font-semibold rounded-xl hover:opacity-90 active:scale-[0.98] transition-all cursor-pointer shadow-sm select-none"
             >
               Send message
@@ -94,6 +96,7 @@ const data = dictionaries[currentLocale];
             href={data.contact.github} 
             target="_blank" 
             rel="noopener noreferrer" 
+            data-cuelume-hover="tick"
             class="flex items-center gap-2.5 text-xs font-medium text-grayscale-11 hover:text-grayscale-12 transition-all w-fit group"
           >
             <div class="w-7 h-7 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/40 flex items-center justify-center shadow-3xs">
@@ -110,6 +113,7 @@ const data = dictionaries[currentLocale];
             href={data.contact.twitter} 
             target="_blank" 
             rel="noopener noreferrer" 
+            data-cuelume-hover="tick"
             class="flex items-center gap-2.5 text-xs font-medium text-grayscale-11 hover:text-grayscale-12 transition-all w-fit group"
           >
             <div class="w-7 h-7 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/40 flex items-center justify-center shadow-3xs">
@@ -126,6 +130,7 @@ const data = dictionaries[currentLocale];
             href={data.contact.linkedin} 
             target="_blank" 
             rel="noopener noreferrer" 
+            data-cuelume-hover="tick"
             class="flex items-center gap-2.5 text-xs font-medium text-grayscale-11 hover:text-grayscale-12 transition-all w-fit group"
           >
             <div class="w-7 h-7 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/40 flex items-center justify-center shadow-3xs">
@@ -140,6 +145,7 @@ const data = dictionaries[currentLocale];
           <!-- Email -->
           <a 
             href={`mailto:${data.contact.email}`} 
+            data-cuelume-hover="tick"
             class="flex items-center gap-2.5 text-xs font-medium text-grayscale-11 hover:text-grayscale-12 transition-all w-fit group"
           >
             <div class="w-7 h-7 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/40 flex items-center justify-center shadow-3xs">
@@ -156,6 +162,7 @@ const data = dictionaries[currentLocale];
             href="/CVs/CV_KirianLuna_EN.pdf" 
             target="_blank" 
             rel="noopener noreferrer" 
+            data-cuelume-hover="tick"
             class="flex items-center gap-2.5 text-xs font-medium text-grayscale-11 hover:text-grayscale-12 transition-all w-fit group"
           >
             <div class="w-7 h-7 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/40 flex items-center justify-center shadow-3xs">
@@ -177,6 +184,8 @@ const data = dictionaries[currentLocale];
 </Layout>
 
 <script>
+  import { play } from "cuelume";
+
   const setupContactForm = () => {
     const form = document.getElementById('contact-form') as HTMLFormElement | null;
     const status = document.getElementById('form-status');
@@ -202,6 +211,7 @@ const data = dictionaries[currentLocale];
         });
 
         if (response.ok) {
+          play("success");
           status.textContent = 'Message sent successfully!';
           status.classList.remove('hidden', 'text-red-600', 'dark:text-red-400');
           status.classList.add('text-emerald-600', 'dark:text-emerald-400');
@@ -210,6 +220,7 @@ const data = dictionaries[currentLocale];
           throw new Error('Form submission failed');
         }
       } catch (err) {
+        play("error");
         status.textContent = 'Oops! There was a problem sending your message.';
         status.classList.remove('hidden', 'text-emerald-600', 'dark:text-emerald-400');
         status.classList.add('text-red-600', 'dark:text-red-400');
