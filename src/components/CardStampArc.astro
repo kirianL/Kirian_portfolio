@@ -16,9 +16,9 @@ export interface Props {
 }
 
 const {
-  arc = 20,
-  spread = 230,
-  yOffset = 24,
+  arc = 18,
+  spread = 195,
+  yOffset = 22,
   duration = 0.45,
   className = '',
   photos
@@ -39,20 +39,22 @@ const centerIdx = (count - 1) / 2; // 2 for 5 photos
 const stampConfigs = stampsList.map((stamp, i) => {
   const norm = centerIdx > 0 ? (i - centerIdx) / centerIdx : 0; // -1 to +1
 
-  // Idle positions (clean distinct spacing without heavy overlapping)
-  const idleRotate = norm * 7;
-  const idleX = norm * 42;
-  const idleY = Math.abs(norm) * 5;
+  // Desktop positions (calibrated so corners are 100% visible and unclipped)
+  const idleRotate = norm * 6.5;
+  const idleX = norm * 38;
+  const idleY = Math.abs(norm) * 4;
 
-  // Desktop spread on hover
   const targetRotate = norm * arc;
   const targetX = norm * spread;
   const targetY = Math.abs(norm) * yOffset;
 
-  // Mobile scaled spread
-  const mobileSpread = Math.min(spread, 130);
+  // Mobile positions (unclipped 100% visible corners)
+  const mobileSpread = 80; 
+  const mobileIdleX = norm * 24;
+  const mobileIdleY = Math.abs(norm) * 3;
   const mobileTargetX = norm * mobileSpread;
-  const mobileTargetY = Math.abs(norm) * (yOffset * 0.65);
+  const mobileTargetY = Math.abs(norm) * (yOffset * 0.5);
+  const mobileTargetRotate = norm * 11;
 
   const dist = Math.abs(i - centerIdx);
 
@@ -65,15 +67,18 @@ const stampConfigs = stampsList.map((stamp, i) => {
     targetRotate,
     targetX,
     targetY,
+    mobileIdleX,
+    mobileIdleY,
     mobileTargetX,
     mobileTargetY,
+    mobileTargetRotate,
     defaultZIndex: 10 - Math.round(dist)
   };
 });
 ---
 
 <div
-  class={`card-stamp-arc-root relative w-[7.2rem] h-[9.2rem] sm:w-[9rem] sm:h-[11.5rem] cursor-pointer flex items-center justify-center select-none touch-manipulation ${className}`}
+  class={`card-stamp-arc-root relative w-[6.2rem] h-[8.2rem] sm:w-[9rem] sm:h-[11.5rem] cursor-pointer flex items-center justify-center select-none touch-manipulation max-w-full overflow-visible ${className}`}
   data-count={count}
   data-active-index="2"
 >
@@ -86,10 +91,13 @@ const stampConfigs = stampsList.map((stamp, i) => {
         '--idle-tr': `${stamp.idleRotate}deg`,
         '--idle-tx': `${stamp.idleX}px`,
         '--idle-ty': `${stamp.idleY}px`,
+        '--mobile-idle-tr': `${stamp.idleRotate * 0.7}deg`,
+        '--mobile-idle-tx': `${stamp.mobileIdleX}px`,
+        '--mobile-idle-ty': `${stamp.mobileIdleY}px`,
         '--desktop-tr': `${stamp.targetRotate}deg`,
         '--desktop-tx': `${stamp.targetX}px`,
         '--desktop-ty': `${stamp.targetY}px`,
-        '--mobile-tr': `${stamp.targetRotate * 0.75}deg`,
+        '--mobile-tr': `${stamp.mobileTargetRotate}deg`,
         '--mobile-tx': `${stamp.mobileTargetX}px`,
         '--mobile-ty': `${stamp.mobileTargetY}px`,
         '--card-index': i
@@ -101,7 +109,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
       {/* BE UI Tooltip (@beui/tooltip) - Perfectly Centered */}
       {stamp.caption && (
         <div class="stamp-tooltip absolute left-1/2 -top-10 pointer-events-none z-50 flex justify-center items-center w-max">
-          <span class="block whitespace-nowrap rounded-lg border border-zinc-200/80 bg-white/95 px-2.5 py-1 text-[11px] font-mono tracking-tight text-zinc-900 shadow-md dark:border-zinc-800 dark:bg-zinc-900/95 dark:text-zinc-100 backdrop-blur-md">
+          <span class="block whitespace-nowrap rounded-lg border border-zinc-200/80 bg-white/95 px-2.5 py-1 text-[10px] sm:text-[11px] font-mono tracking-tight text-zinc-900 shadow-md dark:border-zinc-800 dark:bg-zinc-900/95 dark:text-zinc-100 backdrop-blur-md">
             {stamp.caption}
           </span>
         </div>
@@ -143,7 +151,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
     touch-action: manipulation;
   }
 
-  /* Default Z-Index Hierarchy based on active card index */
+  /* Dynamic Z-Index Hierarchy based on active card index */
   .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="0"] { z-index: 100 !important; }
   .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="1"] { z-index: 49; }
   .card-stamp-arc-root[data-active-index="0"] .stamp-card-item[data-card-index="2"] { z-index: 48; }
@@ -175,11 +183,22 @@ const stampConfigs = stampsList.map((stamp, i) => {
   .card-stamp-arc-root[data-active-index="4"] .stamp-card-item[data-card-index="4"] { z-index: 100 !important; }
 
   /* Idle state */
-  .stamp-card-item {
-    transform: translate3d(var(--idle-tx), var(--idle-ty), 0) rotate(var(--idle-tr));
-    transition-property: transform, box-shadow, z-index, filter;
-    transition-duration: 0.45s;
-    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  @media (min-width: 640px) {
+    .stamp-card-item {
+      transform: translate3d(var(--idle-tx), var(--idle-ty), 0) rotate(var(--idle-tr));
+      transition-property: transform, box-shadow, z-index, filter;
+      transition-duration: 0.45s;
+      transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .stamp-card-item {
+      transform: translate3d(var(--mobile-idle-tx), var(--mobile-idle-ty), 0) rotate(var(--mobile-idle-tr));
+      transition-property: transform, box-shadow, z-index, filter;
+      transition-duration: 0.45s;
+      transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
   }
 
   /* Desktop Arc Spread on Root Hover / Active */
@@ -190,7 +209,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
     }
   }
 
-  /* Mobile Arc Spread */
+  /* Mobile Arc Spread (Strictly bounded so no card cuts off screen) */
   @media (max-width: 639px) {
     .card-stamp-arc-root:hover .stamp-card-item,
     .card-stamp-arc-root.is-active .stamp-card-item {
@@ -211,7 +230,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
 
   @media (max-width: 639px) {
     .stamp-card-item.is-focused-card {
-      transform: translate3d(var(--mobile-tx), calc(var(--mobile-ty) - 10px), 0) rotate(0deg) scale(1.06) !important;
+      transform: translate3d(var(--mobile-tx), calc(var(--mobile-ty) - 8px), 0) rotate(0deg) scale(1.04) !important;
     }
   }
 
@@ -257,7 +276,6 @@ const stampConfigs = stampsList.map((stamp, i) => {
       setActiveCard(2);
 
       items.forEach((item, i) => {
-        // Touch / Click event: smooth switching even when skipping cards (e.g. 0 to 2, 1 to 3)
         item.addEventListener('click', (e) => {
           e.stopPropagation();
           const currentActive = root.getAttribute('data-active-index');
@@ -267,7 +285,6 @@ const stampConfigs = stampsList.map((stamp, i) => {
             root.classList.add('is-active');
             play("pop");
           } else {
-            // Toggle active state
             if (root.classList.contains('is-active')) {
               root.classList.remove('is-active');
               play("tick");
@@ -278,7 +295,6 @@ const stampConfigs = stampsList.map((stamp, i) => {
           }
         });
 
-        // Hover event for desktop
         item.addEventListener('mouseenter', () => {
           setActiveCard(i);
           play("tick");
