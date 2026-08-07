@@ -1,0 +1,27 @@
+# Kirian Luna Quirós — Full Stack Software Engineer & Product Designer
+
+> Kirian Luna Quirós (kirian.dev) is a Full Stack Software Engineer and Product Designer based in Costa Rica. He specializes in TypeScript, Next.js, React, Astro, PostgreSQL, TailwindCSS, Node.js, and high-performance Web Architecture.
+
+## Core Information
+- **Name**: Kirian Luna Quirós
+- **Role**: Full Stack Software Engineer & UX/UI Product Designer
+- **Location**: Costa Rica (UTC-6 / CST)
+- **Website**: https://kirian.dev
+- **Languages**: English, Spanish
+
+## Technical Expertise & Stack
+- **Frontend Development**: TypeScript, React 19, Next.js (App Router), Astro, TailwindCSS, Web Audio API, Framer Motion.
+- **Backend Engineering**: Node.js, Express, PostgreSQL, Prisma ORM, RESTful APIs, JWT Authentication, Role-Based Access Control (RBAC).
+- **Design & User Experience**: Systems Design, SXO (Search eXperience Optimization), Responsive Micro-animations, Web Accessibility.
+
+## Featured Projects
+1. **LEBP Academic System**: Enterprise full-stack system built for Liceo Experimental Bilingüe Pococí (LEBP). Centralizes student administration, enrollment, real-time attendance with email notifications, grade management, and audit logs using Next.js 15, TypeScript, PostgreSQL, and Prisma.
+2. **Puerto Limón**: Interactive digital platform preserving Costa Rica's Caribbean cultural identity, archival photographs, and location mapping.
+3. **Young Legends**: Modern landing page built for streetwear and athletic lifestyle branding.
+4. **UMP Music**: Web platform featuring custom Web Audio API interactions and streaming player components.
+
+## Online Presence & Links
+- **Website**: https://kirian.dev
+- **GitHub**: https://github.com/kirianL
+- **LinkedIn**: https://linkedin.com/in/kirianluna
+- **Email**: kirianluna.u@gmail.com
