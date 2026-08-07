@@ -79,7 +79,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
 >
   {stampConfigs.map((stamp, i) => (
     <div
-      class="stamp-card-item absolute inset-0 rounded-lg sm:rounded-xl p-1.5 pb-2.5 sm:p-2 sm:pb-3.5 flex flex-col bg-white text-zinc-800 border border-zinc-200/80 shadow-[0_4px_18px_rgba(0,0,0,0.06)] dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800/80 dark:shadow-[0_4px_22px_rgba(0,0,0,0.35)]"
+      class="stamp-card-item absolute inset-0 rounded-lg sm:rounded-xl p-1 pb-1.5 sm:p-1.5 sm:pb-2.5 flex flex-col bg-white text-zinc-800 border border-zinc-200/60 shadow-[0_4px_18px_rgba(0,0,0,0.06)] dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800/60 dark:shadow-[0_4px_22px_rgba(0,0,0,0.35)]"
       style={{
         zIndex: stamp.defaultZIndex,
         transformOrigin: '50% 100%',
@@ -108,7 +108,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
       )}
 
       {/* Photo Frame Container (Pixel-perfect clean Polaroid) */}
-      <div class="relative w-full h-full rounded bg-zinc-100/90 dark:bg-zinc-800/60 overflow-hidden border border-zinc-200/40 dark:border-zinc-700/40 flex flex-col items-center justify-center pointer-events-none">
+      <div class="relative w-full h-full rounded bg-zinc-100/90 dark:bg-zinc-800/60 overflow-hidden border border-zinc-200/30 dark:border-zinc-700/30 flex flex-col items-center justify-center pointer-events-none">
         {stamp.src ? (
           <img
             src={stamp.src}
