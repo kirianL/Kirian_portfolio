@@ -39,7 +39,7 @@ const centerIdx = (count - 1) / 2; // 2 for 5 photos
 const stampConfigs = stampsList.map((stamp, i) => {
   const norm = centerIdx > 0 ? (i - centerIdx) / centerIdx : 0; // -1 to +1
 
-  // Desktop positions (calibrated so corners are 100% visible and unclipped)
+  // Desktop positions
   const idleRotate = norm * 6.5;
   const idleX = norm * 38;
   const idleY = Math.abs(norm) * 4;
@@ -48,7 +48,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
   const targetX = norm * spread;
   const targetY = Math.abs(norm) * yOffset;
 
-  // Mobile positions (unclipped 100% visible corners)
+  // Mobile positions
   const mobileSpread = 80; 
   const mobileIdleX = norm * 24;
   const mobileIdleY = Math.abs(norm) * 3;
@@ -209,7 +209,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
     }
   }
 
-  /* Mobile Arc Spread (Strictly bounded so no card cuts off screen) */
+  /* Mobile Arc Spread */
   @media (max-width: 639px) {
     .card-stamp-arc-root:hover .stamp-card-item,
     .card-stamp-arc-root.is-active .stamp-card-item {
@@ -218,17 +218,21 @@ const stampConfigs = stampsList.map((stamp, i) => {
   }
 
   /* Individual Active Focused Card */
+  .card-stamp-arc-root:hover .stamp-card-item:hover,
   .stamp-card-item.is-focused-card {
+    z-index: 100 !important;
     box-shadow: 0 14px 30px -8px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.04) !important;
   }
 
   @media (min-width: 640px) {
+    .card-stamp-arc-root:hover .stamp-card-item:hover,
     .stamp-card-item.is-focused-card {
       transform: translate3d(var(--desktop-tx), calc(var(--desktop-ty) - 12px), 0) rotate(0deg) scale(1.06) !important;
     }
   }
 
   @media (max-width: 639px) {
+    .card-stamp-arc-root:hover .stamp-card-item:hover,
     .stamp-card-item.is-focused-card {
       transform: translate3d(var(--mobile-tx), calc(var(--mobile-ty) - 8px), 0) rotate(0deg) scale(1.04) !important;
     }
@@ -245,11 +249,12 @@ const stampConfigs = stampsList.map((stamp, i) => {
     will-change: transform, filter, opacity;
   }
 
+  .card-stamp-arc-root:hover .stamp-card-item:hover .stamp-tooltip,
   .stamp-card-item.is-focused-card .stamp-tooltip {
     opacity: 1;
     filter: blur(0px);
     transform: translate(-50%, 0px) scale(1);
-    transition-delay: 80ms;
+    transition-delay: 60ms;
   }
 </style>
 
@@ -261,7 +266,11 @@ const stampConfigs = stampsList.map((stamp, i) => {
     roots.forEach((root) => {
       const items = root.querySelectorAll('.stamp-card-item');
 
-      const setActiveCard = (idx: number) => {
+      const clearFocus = () => {
+        items.forEach(item => item.classList.remove('is-focused-card'));
+      };
+
+      const setFocus = (idx: number) => {
         root.setAttribute('data-active-index', String(idx));
         items.forEach((item, i) => {
           if (i === idx) {
@@ -272,48 +281,44 @@ const stampConfigs = stampsList.map((stamp, i) => {
         });
       };
 
-      // Set initial active card (center)
-      setActiveCard(2);
+      // Initial state: clear focus so no card is forced active on page load
+      root.setAttribute('data-active-index', '2');
+      clearFocus();
 
       items.forEach((item, i) => {
         item.addEventListener('click', (e) => {
           e.stopPropagation();
-          const currentActive = root.getAttribute('data-active-index');
-          
-          if (currentActive !== String(i)) {
-            setActiveCard(i);
+          const isCurrentFocused = item.classList.contains('is-focused-card');
+
+          if (!isCurrentFocused) {
+            setFocus(i);
             root.classList.add('is-active');
             play("pop");
           } else {
-            if (root.classList.contains('is-active')) {
-              root.classList.remove('is-active');
-              play("tick");
-            } else {
-              root.classList.add('is-active');
-              play("pop");
-            }
+            clearFocus();
+            root.classList.remove('is-active');
+            root.setAttribute('data-active-index', '2');
+            play("tick");
           }
         });
 
         item.addEventListener('mouseenter', () => {
-          setActiveCard(i);
+          setFocus(i);
           play("tick");
         });
       });
 
-      // Reset when mouse leaves arc container
       root.addEventListener('mouseleave', () => {
-        items.forEach(item => item.classList.remove('is-focused-card'));
+        clearFocus();
         root.classList.remove('is-active');
-        setActiveCard(2);
+        root.setAttribute('data-active-index', '2');
       });
 
-      // Tap outside on mobile closes fan
       document.addEventListener('click', (e) => {
         if (!root.contains(e.target as Node)) {
+          clearFocus();
           root.classList.remove('is-active');
-          items.forEach(item => item.classList.remove('is-focused-card'));
-          setActiveCard(2);
+          root.setAttribute('data-active-index', '2');
         }
       });
     });
