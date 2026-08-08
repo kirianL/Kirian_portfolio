@@ -100,7 +100,7 @@ if (blogMapping[pathname]) {
           data-cuelume-hover="tick"
           data-cuelume-press="page"
           data-cuelume-release="release"
-          class={`hover:text-grayscale-12 transition-colors ${pathname.includes('/projects') ? 'text-grayscale-12 font-semibold' : ''}`}
+          class={`hover:text-grayscale-12 transition-colors ${pathname.includes("/projects") ? "text-grayscale-12 font-semibold" : ""}`}
           >{navLabels.projects}</a
         >
         <a
@@ -108,7 +108,7 @@ if (blogMapping[pathname]) {
           data-cuelume-hover="tick"
           data-cuelume-press="page"
           data-cuelume-release="release"
-          class={`hover:text-grayscale-12 transition-colors ${pathname.includes('/craft') ? 'text-grayscale-12 font-semibold' : ''}`}
+          class={`hover:text-grayscale-12 transition-colors ${pathname.includes("/craft") ? "text-grayscale-12 font-semibold" : ""}`}
           >{navLabels.craft}</a
         >
         <a
@@ -116,14 +116,15 @@ if (blogMapping[pathname]) {
           data-cuelume-hover="tick"
           data-cuelume-press="page"
           data-cuelume-release="release"
-          class={`hover:text-grayscale-12 transition-colors ${pathname.includes('/blog') ? 'text-grayscale-12 font-semibold' : ''}`}>{navLabels.blog}</a
+          class={`hover:text-grayscale-12 transition-colors ${pathname.includes("/blog") ? "text-grayscale-12 font-semibold" : ""}`}
+          >{navLabels.blog}</a
         >
         <a
           href={`${localePrefix || ""}/contact/`}
           data-cuelume-hover="tick"
           data-cuelume-press="page"
           data-cuelume-release="release"
-          class={`hover:text-grayscale-12 transition-colors ${pathname.includes('/contact') ? 'text-grayscale-12 font-semibold' : ''}`}
+          class={`hover:text-grayscale-12 transition-colors ${pathname.includes("/contact") ? "text-grayscale-12 font-semibold" : ""}`}
           >{navLabels.contact}</a
         >
         <a
