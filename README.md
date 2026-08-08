@@ -1,6 +1,6 @@
 # Portfolio Maestro - Kirian Luna Quirós
 
-Este es un portafolio personal ultra moderno, rápido y profesional construido para un Ingeniero en Sistemas.
+Este es un portafolio personal ultra moderno, rápido y profesional construido para un Ingeniero de Software.
 
 ## 🚀 Tecnologías
 

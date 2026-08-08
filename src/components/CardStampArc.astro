@@ -16,20 +16,20 @@ export interface Props {
 }
 
 const {
-  arc = 18,
-  spread = 220,
-  yOffset = 22,
+  arc = 16,
+  spread = 180,
+  yOffset = 20,
   duration = 0.4,
   className = '',
   photos
 } = Astro.props;
 
 const defaultStamps: PhotoStamp[] = [
-  { id: 0, caption: 'Kenzo 🐾', src: '/off-screen/Kenzo.png' },
-  { id: 1, caption: 'Puerto Limón 🌴', src: '/off-screen/Limon.png' },
-  { id: 2, caption: 'Off screen 📸' },
-  { id: 3, caption: 'Costa Rica 🇨🇷' },
-  { id: 4, caption: 'Everyday Notes 📝' }
+  { id: 0, caption: 'Kenzo', src: '/off-screen/Kenzo.png' },
+  { id: 1, caption: 'Puerto Limón', src: '/off-screen/Limon.png' },
+  { id: 2, caption: 'Off Screen' },
+  { id: 3, caption: 'Costa Rica' },
+  { id: 4, caption: 'Everyday Notes' }
 ];
 
 const stampsList = photos && photos.length > 0 ? photos : defaultStamps;
@@ -40,8 +40,8 @@ const stampConfigs = stampsList.map((stamp, i) => {
   const norm = centerIdx > 0 ? (i - centerIdx) / centerIdx : 0; // -1 to +1
 
   // Desktop fan positions
-  const idleRotate = norm * 6.5;
-  const idleX = norm * 42;
+  const idleRotate = norm * 6;
+  const idleX = norm * 36;
   const idleY = Math.abs(norm) * 4;
 
   const targetRotate = norm * arc;
@@ -49,10 +49,10 @@ const stampConfigs = stampsList.map((stamp, i) => {
   const targetY = Math.abs(norm) * yOffset;
 
   // Mobile fan positions
-  const mobileSpread = 100;
-  const mobileRotate = norm * 12;
+  const mobileSpread = 90;
+  const mobileRotate = norm * 10;
   const mobileX = norm * mobileSpread;
-  const mobileY = Math.abs(norm) * 5;
+  const mobileY = Math.abs(norm) * 4;
 
   const dist = Math.abs(i - centerIdx);
 
@@ -100,7 +100,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
     >
       {/* BE UI Tooltip (@beui/tooltip) - Perfectly Centered */}
       {stamp.caption && (
-        <div class="stamp-tooltip absolute left-1/2 -top-10 pointer-events-none z-50 flex justify-center items-center w-max">
+        <div class="stamp-tooltip absolute left-1/2 -top-7 pointer-events-none z-50 flex justify-center items-center w-max">
           <span class="block whitespace-nowrap rounded-lg border border-zinc-200/80 bg-white/95 px-2.5 py-1 text-[10px] sm:text-[11px] font-mono tracking-tight text-zinc-900 shadow-md dark:border-zinc-800 dark:bg-zinc-900/95 dark:text-zinc-100 backdrop-blur-md">
             {stamp.caption}
           </span>
@@ -231,7 +231,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
       let leaveTimeout: ReturnType<typeof setTimeout> | null = null;
       let lastSoundTime = 0;
 
-      const playSound = (type: "tick" | "pop") => {
+      const playSound = (type: "tick" | "toggle" | "chime") => {
         try {
           const now = Date.now();
           if (now - lastSoundTime > 65) {
@@ -299,7 +299,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
           
           if (!isCurrentlyLocked) {
             updateState(i, hoverIdx);
-            playSound("pop");
+            playSound("toggle");
           } else {
             updateState(null, hoverIdx);
             playSound("tick");

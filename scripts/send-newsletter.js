@@ -112,7 +112,7 @@ function renderEmail(post, unsubscribeUrl, isSpanish) {
                                     </td>
                                     <td>
                                       <div style="font-size: 15px; font-weight: 600; color: #0f172a; line-height: 1.2;">Kirian Luna</div>
-                                      <div style="font-size: 12px; font-weight: 500; color: #64748b; margin-top: 2px;">Systems Engineer</div>
+                                      <div style="font-size: 12px; font-weight: 500; color: #64748b; margin-top: 2px;">Software Engineer</div>
                                     </td>
                                   </tr>
                                 </tbody>

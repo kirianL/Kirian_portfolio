@@ -41,7 +41,7 @@ const es = {
   locationIcon: "",
   experience: "2+ Años",
   education: {
-    degree: "Ingeniería en Sistemas Computacionales",
+    degree: "Ingeniería de Software",
     institution: "Universidad Latina de Costa Rica",
     period: "2023–2026",
   },
@@ -75,7 +75,7 @@ const es = {
     intro:
       "Más que código, creo soluciones. Mi enfoque combina técnica sólida con diseño intuitivo.",
     bio: [
-      "Soy un apasionado Ingeniero en Sistemas enfocado en crear soluciones tecnológicas eficientes y escalables. Con 2 años de experiencia en el desarrollo de software, me especializo en construir experiencias de usuario fluidas y arquitecturas robustas.",
+      "Soy un apasionado Ingeniero de Software enfocado en crear soluciones tecnológicas eficientes y escalables. Con 2 años de experiencia en el desarrollo de software, me especializo en construir experiencias de usuario fluidas y arquitecturas robustas.",
       "Mi enfoque se centra en la limpieza del código, el rendimiento óptimo y el diseño centrado en el usuario. Siempre estoy en constante aprendizaje de las últimas tecnologías para ofrecer los mejores resultados en cada proyecto.",
     ],
     roleTitle: "El Desarrollador",
@@ -281,7 +281,7 @@ const en: typeof es = {
   locationIcon: "",
   experience: "2+ Years",
   education: {
-    degree: "Computer Systems Engineering",
+    degree: "Software Engineering",
     institution: "Universidad Latina de Costa Rica",
     period: "2023–2026",
   },
@@ -316,7 +316,7 @@ const en: typeof es = {
     intro:
       "More than code, I create solutions. My approach combines solid technique with intuitive design.",
     bio: [
-      "I am a passionate Systems Engineer focused on creating efficient and scalable technological solutions. With 2 years of software development experience, I specialize in building smooth user experiences and robust architectures.",
+      "I am a passionate Software Engineer focused on creating efficient and scalable technological solutions. With 2 years of software development experience, I specialize in building smooth user experiences and robust architectures.",
       "My focus is on clean code, optimal performance, and user-centered design. I am always learning the latest technologies to deliver the best results in every project.",
     ],
     roleTitle: "The Developer",

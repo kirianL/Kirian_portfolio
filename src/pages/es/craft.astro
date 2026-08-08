@@ -1,0 +1,353 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import CardStampArc from "../../components/CardStampArc.astro";
+import Footer from "../../components/Footer.astro";
+
+const astroCode = `---
+export interface PhotoStamp {
+  id: number;
+  src?: string;
+  alt?: string;
+  caption?: string;
+}
+
+export interface Props {
+  arc?: number;
+  spread?: number;
+  yOffset?: number;
+  duration?: number;
+  className?: string;
+  photos?: PhotoStamp[];
+}
+
+const {
+  arc = 18,
+  spread = 220,
+  yOffset = 22,
+  duration = 0.4,
+  className = '',
+  photos
+} = Astro.props;
+
+const stampsList = photos || [];
+const count = stampsList.length;
+const centerIdx = (count - 1) / 2;
+
+const stampConfigs = stampsList.map((stamp, i) => {
+  const norm = centerIdx > 0 ? (i - centerIdx) / centerIdx : 0;
+  return {
+    ...stamp,
+    idleRotate: norm * 6.5,
+    idleX: norm * 42,
+    idleY: Math.abs(norm) * 4,
+    targetRotate: norm * arc,
+    targetX: norm * spread,
+    targetY: Math.abs(norm) * yOffset,
+    mobileRotate: norm * 12,
+    mobileX: norm * 100,
+    mobileY: Math.abs(norm) * 5,
+    defaultZIndex: Math.round(10 - Math.abs(i - centerIdx))
+  };
+});
+---
+
+<div class={\`card-stamp-arc-root relative w-[6.4rem] h-[8.6rem] sm:w-[9.2rem] sm:h-[11.8rem] cursor-pointer flex items-center justify-center select-none touch-manipulation max-w-full overflow-visible \${className}\`}>
+  {stampConfigs.map((stamp, i) => (
+    <div
+      class="stamp-card-item absolute inset-0 rounded-lg sm:rounded-xl p-1 pb-1.5 sm:p-1.5 sm:pb-2.5 flex flex-col bg-white text-zinc-800 border border-zinc-200/60 shadow-md dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800/60"
+      style={{
+        zIndex: stamp.defaultZIndex,
+        transformOrigin: '50% 100%',
+        transitionDuration: \`\${duration}s\`,
+        '--idle-tr': \`\${stamp.idleRotate}deg\`,
+        '--idle-tx': \`\${stamp.idleX}px\`,
+        '--idle-ty': \`\${stamp.idleY}px\`,
+        '--desktop-tr': \`\${stamp.targetRotate}deg\`,
+        '--desktop-tx': \`\${stamp.targetX}px\`,
+        '--desktop-ty': \`\${stamp.targetY}px\`
+      }}
+    >
+      {stamp.caption && (
+        <div class="stamp-tooltip absolute left-1/2 -top-8 z-50 flex justify-center items-center w-max">
+          <span class="rounded-lg border border-zinc-200/80 bg-white/95 px-2.5 py-1 text-[11px] font-mono text-zinc-900 shadow-md dark:border-zinc-800 dark:bg-zinc-900/95 dark:text-zinc-100 backdrop-blur-md">
+            {stamp.caption}
+          </span>
+        </div>
+      )}
+      <div class="relative w-full h-full rounded bg-zinc-100/90 dark:bg-zinc-800/60 overflow-hidden">
+        {stamp.src && <img src={stamp.src} alt={stamp.caption || 'Foto'} class="w-full h-full object-cover" />}
+      </div>
+    </div>
+  ))}
+</div>`;
+
+const reactCode = `import React, { useState } from 'react';
+
+export interface PhotoStamp {
+  id: number;
+  src?: string;
+  caption?: string;
+}
+
+export interface CardStampArcProps {
+  arc?: number;
+  spread?: number;
+  yOffset?: number;
+  photos?: PhotoStamp[];
+}
+
+export default function CardStampArc({
+  arc = 25,
+  spread = 180,
+  yOffset = 40,
+  photos = []
+}: CardStampArcProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const count = photos.length;
+  const centerIdx = (count - 1) / 2;
+
+  return (
+    <div 
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="relative w-[7.5rem] h-[10.5rem] sm:w-[9.5rem] sm:h-[13rem] cursor-pointer flex items-center justify-center select-none"
+    >
+      {photos.map((stamp, i) => {
+        const dist = i - centerIdx;
+        const norm = centerIdx > 0 ? dist / centerIdx : 0;
+        const targetRotate = isHovered ? norm * arc : norm * 6;
+        const targetX = isHovered ? norm * spread : norm * 35;
+        const targetY = isHovered ? Math.abs(norm) * yOffset : Math.abs(norm) * 4;
+
+        return (
+          <div
+            key={stamp.id || i}
+            className="absolute inset-0 rounded-xl p-1.5 pb-2.5 flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-md transition-transform duration-500 ease-out"
+            style={{
+              transform: \`translate3d(\${targetX}px, \${targetY}px, 0) rotate(\${targetRotate}deg)\`,
+              transformOrigin: '50% 100%',
+              zIndex: Math.round(10 - Math.abs(dist))
+            }}
+          >
+            {stamp.src && <img src={stamp.src} alt={stamp.caption || 'Foto'} className="w-full h-full object-cover rounded" />}
+          </div>
+        );
+      })}
+    </div>
+  );
+}`;
+
+const usageCode = `<CardStampArc 
+  photos={[
+    { id: 0, caption: 'Kenzo', src: '/off-screen/Kenzo.png' },
+    { id: 1, caption: 'Puerto Limón', src: '/off-screen/Limon.png' },
+    { id: 2, caption: 'Off Screen', src: '/off-screen/photo3.jpg' },
+    { id: 3, caption: 'Costa Rica', src: '/off-screen/photo4.jpg' },
+    { id: 4, caption: 'Everyday Notes', src: '/off-screen/photo5.jpg' }
+  ]}
+/>`;
+---
+
+<Layout
+  title="Craft | Kirian Luna Quirós"
+  description="Componentes de UI interactivos, microinteracciones y experimentos visuales creados por Kirian Luna Quirós."
+  lang="es"
+>
+  <Navbar />
+
+  <main class="max-w-2xl mx-auto px-4 sm:px-0 pt-28 pb-16">
+    <div class="flex flex-col gap-10">
+      
+      <!-- Craft Header -->
+      <section class="flex flex-col gap-3 px-1">
+        <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+          craft.
+        </h1>
+        <p class="text-grayscale-11 text-xs leading-normal">
+          Componentes interactivos, microinteracciones y experimentos de diseño visual.
+        </p>
+      </section>
+
+      <!-- Craft Showcase Grid -->
+      <section class="flex flex-col gap-8 px-1">
+        <!-- Craft Item 1: Card Stamp Arc -->
+        <article class="group rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 overflow-hidden transition-all duration-300 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 shadow-xs">
+          <!-- Component Preview Canvas (Shifted card down with mt-10 to guarantee zero tooltip clipping) -->
+          <div class="relative w-full pt-20 pb-12 sm:pt-24 sm:pb-14 px-4 flex items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-visible min-h-[360px] sm:min-h-[400px]">
+            <!-- Subtle background grid -->
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#8881_1px,transparent_1px),linear-gradient(to_bottom,#8881_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40"></div>
+            
+            <CardStampArc 
+              className="mt-8 sm:mt-10"
+              photos={[
+                { id: 0, caption: 'Kenzo', src: '/off-screen/Kenzo.png' },
+                { id: 1, caption: 'Puerto Limón', src: '/off-screen/Limon.png' },
+                { id: 2, caption: 'Off Screen', src: '/off-screen/photo3.jpg' },
+                { id: 3, caption: 'Costa Rica', src: '/off-screen/photo4.jpg' },
+                { id: 4, caption: 'Everyday Notes', src: '/off-screen/photo5.jpg' }
+              ]}
+            />
+          </div>
+
+          <!-- Component Details & Copy Options -->
+          <div class="p-5 sm:p-6 flex flex-col gap-4">
+            <div class="flex flex-col gap-1">
+              <h2 class="text-sm font-semibold text-grayscale-12 tracking-tight">
+                Card Stamp Arc
+              </h2>
+              <p class="text-xs text-grayscale-11 leading-relaxed">
+                Abanico interactivo de tarjetas estilo sello/polaroid con física de rotación dinámica al pasar el cursor o pulsar, desfasado y efectos de sonido.
+              </p>
+            </div>
+
+            <!-- Tech Badges -->
+            <div class="flex items-center gap-1.5 font-mono text-[10px] text-grayscale-10 flex-wrap">
+              <span class="px-2 py-0.5 rounded-md bg-grayscale-2 dark:bg-grayscale-3/50 border border-grayscale-3 dark:border-grayscale-4/30">Astro & React</span>
+              <span class="px-2 py-0.5 rounded-md bg-grayscale-2 dark:bg-grayscale-3/50 border border-grayscale-3 dark:border-grayscale-4/30">Transformaciones CSS</span>
+              <span class="px-2 py-0.5 rounded-md bg-grayscale-2 dark:bg-grayscale-3/50 border border-grayscale-3 dark:border-grayscale-4/30">Microinteracciones</span>
+            </div>
+
+            <!-- Copy Action Bar -->
+            <div class="pt-1 flex items-center gap-2 flex-wrap text-xs">
+              <button
+                type="button"
+                class="copy-btn px-3 py-1.5 rounded-lg bg-grayscale-12 dark:bg-grayscale-1 text-grayscale-1 dark:text-grayscale-12 font-medium flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-[0.98]"
+                data-copy={usageCode}
+                data-label="Uso del componente"
+              >
+                <svg class="w-3.5 h-3.5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span>Copiar Uso</span>
+              </button>
+
+              <button
+                type="button"
+                class="copy-btn px-3 py-1.5 rounded-lg bg-grayscale-2 dark:bg-grayscale-3/50 hover:bg-grayscale-3 text-grayscale-12 font-medium flex items-center gap-1.5 border border-grayscale-3 dark:border-grayscale-4/40 transition-all cursor-pointer"
+                data-copy={astroCode}
+                data-label="Componente Astro"
+              >
+                <svg class="w-3.5 h-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span>Copiar Astro</span>
+              </button>
+
+              <button
+                type="button"
+                class="copy-btn px-3 py-1.5 rounded-lg bg-grayscale-2 dark:bg-grayscale-3/50 hover:bg-grayscale-3 text-grayscale-12 font-medium flex items-center gap-1.5 border border-grayscale-3 dark:border-grayscale-4/40 transition-all cursor-pointer"
+                data-copy={reactCode}
+                data-label="Componente React"
+              >
+                <svg class="w-3.5 h-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span>Copiar React</span>
+              </button>
+
+              <button
+                type="button"
+                id="toggle-code-btn"
+                class="ml-auto px-3 py-1.5 rounded-lg bg-grayscale-2 dark:bg-grayscale-3/30 hover:bg-grayscale-3 text-grayscale-11 hover:text-grayscale-12 text-xs font-mono flex items-center gap-1 border border-grayscale-3 dark:border-grayscale-4/40 transition-all cursor-pointer"
+              >
+                <svg class="w-3.5 h-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                <span id="toggle-code-label">Ver Código</span>
+              </button>
+            </div>
+
+            <!-- Code Viewer Drawer (Collapsible) -->
+            <div id="code-drawer" class="hidden mt-2 rounded-xl border border-grayscale-3 dark:border-grayscale-4/40 bg-zinc-950 text-zinc-100 overflow-hidden font-mono text-[11px]">
+              <div class="px-4 py-2.5 bg-zinc-900/90 border-b border-zinc-800/80 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                  <span class="ml-2 text-xs text-zinc-400 font-sans font-medium">CardStampArc.astro</span>
+                </div>
+                <button
+                  type="button"
+                  class="copy-btn text-xs text-zinc-400 hover:text-zinc-100 flex items-center gap-1 cursor-pointer transition-colors"
+                  data-copy={astroCode}
+                  data-label="Código completo"
+                >
+                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <span>Copiar</span>
+                </button>
+              </div>
+              <pre class="p-4 overflow-x-auto text-zinc-300 max-h-72 leading-relaxed selection:bg-accent-9/30"><code>{astroCode}</code></pre>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Footer -->
+      <Footer />
+    </div>
+
+    <!-- Floating Toast Notification -->
+    <div
+      id="copy-toast"
+      class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300 ease-out flex items-center gap-2 px-3.5 py-2 rounded-full bg-zinc-900 text-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 text-xs font-medium shadow-lg border border-white/10 dark:border-black/10 select-none"
+    >
+      <svg class="w-3.5 h-3.5 text-emerald-400 dark:text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+      <span id="copy-toast-text">¡Copiado al portapapeles!</span>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Copy functionality with interactive toast feedback
+  const toast = document.getElementById("copy-toast");
+  const toastText = document.getElementById("copy-toast-text");
+  let toastTimeout: any;
+
+  function showToast(message: string) {
+    if (!toast || !toastText) return;
+    toastText.textContent = message;
+    toast.classList.remove("opacity-0", "translate-y-3", "pointer-events-none");
+    toast.classList.add("opacity-100", "translate-y-0");
+
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.classList.remove("opacity-100", "translate-y-0");
+      toast.classList.add("opacity-0", "translate-y-3", "pointer-events-none");
+    }, 2200);
+  }
+
+  document.querySelectorAll(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const code = btn.getAttribute("data-copy");
+      const label = btn.getAttribute("data-label") || "Código";
+      if (!code) return;
+
+      navigator.clipboard.writeText(code).then(() => {
+        showToast(`¡${label} copiado al portapapeles!`);
+      });
+    });
+  });
+
+  // Toggle code drawer
+  const toggleBtn = document.getElementById("toggle-code-btn");
+  const toggleLabel = document.getElementById("toggle-code-label");
+  const codeDrawer = document.getElementById("code-drawer");
+
+  if (toggleBtn && codeDrawer && toggleLabel) {
+    toggleBtn.addEventListener("click", () => {
+      const isHidden = codeDrawer.classList.contains("hidden");
+      if (isHidden) {
+        codeDrawer.classList.remove("hidden");
+        toggleLabel.textContent = "Ocultar Código";
+      } else {
+        codeDrawer.classList.add("hidden");
+        toggleLabel.textContent = "Ver Código";
+      }
+    });
+  }
+</script>
