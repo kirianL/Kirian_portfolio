@@ -342,18 +342,6 @@ const stampConfigs = stampsList.map((stamp, i) => {
           updateState(null, null);
         }
       });
-
-      window.addEventListener('card-stamp-arc-params-change', (e: any) => {
-        const { spread, arc } = e.detail || {};
-        items.forEach((item, i) => {
-          const cardEl = item as HTMLElement;
-          const total = items.length;
-          const centerIdx = (total - 1) / 2;
-          const norm = centerIdx > 0 ? (i - centerIdx) / centerIdx : 0;
-          if (spread !== undefined) cardEl.style.setProperty('--desktop-tx', `${norm * spread}px`);
-          if (arc !== undefined) cardEl.style.setProperty('--desktop-tr', `${norm * arc}deg`);
-        });
-      });
     });
   };
 
