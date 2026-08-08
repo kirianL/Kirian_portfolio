@@ -140,11 +140,11 @@ export default function CardStampArc({
 
 const usageCode = `<CardStampArc 
   photos={[
-    { id: 0, caption: 'Kenzo', src: '/off-screen/Kenzo.png' },
-    { id: 1, caption: 'Puerto Limón', src: '/off-screen/Limon.png' },
-    { id: 2, caption: 'Off Screen', src: '/off-screen/photo3.jpg' },
-    { id: 3, caption: 'Costa Rica', src: '/off-screen/photo4.jpg' },
-    { id: 4, caption: 'Everyday Notes', src: '/off-screen/photo5.jpg' }
+    { id: 0, caption: 'Architecture', src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop' },
+    { id: 1, caption: 'Mountains', src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop' },
+    { id: 2, caption: 'Ocean View', src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop' },
+    { id: 3, caption: 'Creative Studio', src: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop' },
+    { id: 4, caption: 'Portrait', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop' }
   ]}
 />`;
 ---
@@ -173,7 +173,7 @@ const usageCode = `<CardStampArc
       <section class="flex flex-col gap-8 px-1">
         <!-- Craft Item 1: Card Stamp Arc -->
         <article class="group rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 overflow-hidden transition-all duration-300 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 shadow-xs">
-          <!-- Component Preview Canvas (Abundant padding and mt-14 to ensure zero clipping on top or sides) -->
+          <!-- Component Preview Canvas -->
           <div class="relative w-full pt-28 pb-10 sm:pt-32 sm:pb-12 px-6 flex items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-hidden min-h-[380px] sm:min-h-[420px]">
             <!-- Subtle background grid -->
             <div class="absolute inset-0 bg-[linear-gradient(to_right,#8881_1px,transparent_1px),linear-gradient(to_bottom,#8881_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40"></div>
@@ -181,11 +181,11 @@ const usageCode = `<CardStampArc
             <CardStampArc 
               className="mt-12 sm:mt-14"
               photos={[
-                { id: 0, caption: 'Kenzo', src: '/off-screen/Kenzo.png' },
-                { id: 1, caption: 'Puerto Limón', src: '/off-screen/Limon.png' },
-                { id: 2, caption: 'Off Screen', src: '/off-screen/photo3.jpg' },
-                { id: 3, caption: 'Costa Rica', src: '/off-screen/photo4.jpg' },
-                { id: 4, caption: 'Everyday Notes', src: '/off-screen/photo5.jpg' }
+                { id: 0, caption: 'Architecture', src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop&q=80' },
+                { id: 1, caption: 'Mountains', src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop&q=80' },
+                { id: 2, caption: 'Ocean View', src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80' },
+                { id: 3, caption: 'Creative Studio', src: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=80' },
+                { id: 4, caption: 'Portrait', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80' }
               ]}
             />
           </div>

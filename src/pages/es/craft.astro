@@ -22,9 +22,9 @@ export interface Props {
 }
 
 const {
-  arc = 18,
-  spread = 220,
-  yOffset = 22,
+  arc = 16,
+  spread = 180,
+  yOffset = 20,
   duration = 0.4,
   className = '',
   photos
@@ -38,15 +38,15 @@ const stampConfigs = stampsList.map((stamp, i) => {
   const norm = centerIdx > 0 ? (i - centerIdx) / centerIdx : 0;
   return {
     ...stamp,
-    idleRotate: norm * 6.5,
-    idleX: norm * 42,
+    idleRotate: norm * 6,
+    idleX: norm * 36,
     idleY: Math.abs(norm) * 4,
     targetRotate: norm * arc,
     targetX: norm * spread,
     targetY: Math.abs(norm) * yOffset,
-    mobileRotate: norm * 12,
-    mobileX: norm * 100,
-    mobileY: Math.abs(norm) * 5,
+    mobileRotate: norm * 10,
+    mobileX: norm * 90,
+    mobileY: Math.abs(norm) * 4,
     defaultZIndex: Math.round(10 - Math.abs(i - centerIdx))
   };
 });
@@ -69,7 +69,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
       }}
     >
       {stamp.caption && (
-        <div class="stamp-tooltip absolute left-1/2 -top-8 z-50 flex justify-center items-center w-max">
+        <div class="stamp-tooltip absolute left-1/2 -top-7 z-50 flex justify-center items-center w-max">
           <span class="rounded-lg border border-zinc-200/80 bg-white/95 px-2.5 py-1 text-[11px] font-mono text-zinc-900 shadow-md dark:border-zinc-800 dark:bg-zinc-900/95 dark:text-zinc-100 backdrop-blur-md">
             {stamp.caption}
           </span>
@@ -98,9 +98,9 @@ export interface CardStampArcProps {
 }
 
 export default function CardStampArc({
-  arc = 25,
-  spread = 180,
-  yOffset = 40,
+  arc = 20,
+  spread = 160,
+  yOffset = 30,
   photos = []
 }: CardStampArcProps) {
   const [isHovered, setIsHovered] = useState(false);
@@ -140,11 +140,11 @@ export default function CardStampArc({
 
 const usageCode = `<CardStampArc 
   photos={[
-    { id: 0, caption: 'Kenzo', src: '/off-screen/Kenzo.png' },
-    { id: 1, caption: 'Puerto Limón', src: '/off-screen/Limon.png' },
-    { id: 2, caption: 'Off Screen', src: '/off-screen/photo3.jpg' },
-    { id: 3, caption: 'Costa Rica', src: '/off-screen/photo4.jpg' },
-    { id: 4, caption: 'Everyday Notes', src: '/off-screen/photo5.jpg' }
+    { id: 0, caption: 'Arquitectura', src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop' },
+    { id: 1, caption: 'Montañas', src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop' },
+    { id: 2, caption: 'Vista al Mar', src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop' },
+    { id: 3, caption: 'Estudio Creativo', src: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop' },
+    { id: 4, caption: 'Retrato', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop' }
   ]}
 />`;
 ---
@@ -173,19 +173,19 @@ const usageCode = `<CardStampArc
       <section class="flex flex-col gap-8 px-1">
         <!-- Craft Item 1: Card Stamp Arc -->
         <article class="group rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 overflow-hidden transition-all duration-300 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 shadow-xs">
-          <!-- Component Preview Canvas (Shifted card down with mt-10 to guarantee zero tooltip clipping) -->
-          <div class="relative w-full pt-20 pb-12 sm:pt-24 sm:pb-14 px-4 flex items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-visible min-h-[360px] sm:min-h-[400px]">
+          <!-- Component Preview Canvas -->
+          <div class="relative w-full pt-28 pb-10 sm:pt-32 sm:pb-12 px-6 flex items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-hidden min-h-[380px] sm:min-h-[420px]">
             <!-- Subtle background grid -->
             <div class="absolute inset-0 bg-[linear-gradient(to_right,#8881_1px,transparent_1px),linear-gradient(to_bottom,#8881_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40"></div>
             
             <CardStampArc 
-              className="mt-8 sm:mt-10"
+              className="mt-12 sm:mt-14"
               photos={[
-                { id: 0, caption: 'Kenzo', src: '/off-screen/Kenzo.png' },
-                { id: 1, caption: 'Puerto Limón', src: '/off-screen/Limon.png' },
-                { id: 2, caption: 'Off Screen', src: '/off-screen/photo3.jpg' },
-                { id: 3, caption: 'Costa Rica', src: '/off-screen/photo4.jpg' },
-                { id: 4, caption: 'Everyday Notes', src: '/off-screen/photo5.jpg' }
+                { id: 0, caption: 'Arquitectura', src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop&q=80' },
+                { id: 1, caption: 'Montañas', src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop&q=80' },
+                { id: 2, caption: 'Vista al Mar', src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80' },
+                { id: 3, caption: 'Estudio Creativo', src: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=80' },
+                { id: 4, caption: 'Retrato', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80' }
               ]}
             />
           </div>
@@ -241,7 +241,7 @@ const usageCode = `<CardStampArc
                 data-label="Componente React"
               >
                 <svg class="w-3.5 h-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
                 <span>Copiar React</span>
               </button>
