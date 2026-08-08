@@ -173,13 +173,13 @@ const usageCode = `<CardStampArc
       <section class="flex flex-col gap-8 px-1">
         <!-- Craft Item 1: Card Stamp Arc -->
         <article class="group rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 overflow-hidden transition-all duration-300 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 shadow-xs">
-          <!-- Component Preview Canvas -->
-          <div class="relative w-full pt-28 pb-10 sm:pt-32 sm:pb-12 px-6 flex items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-hidden min-h-[380px] sm:min-h-[420px]">
+          <!-- Component Preview Canvas (Tight, balanced padding for mobile & desktop) -->
+          <div class="relative w-full pt-10 pb-6 sm:pt-16 sm:pb-10 px-4 sm:px-6 flex items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-hidden min-h-[220px] sm:min-h-[320px]">
             <!-- Subtle background grid -->
             <div class="absolute inset-0 bg-[linear-gradient(to_right,#8881_1px,transparent_1px),linear-gradient(to_bottom,#8881_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40"></div>
             
             <CardStampArc 
-              className="mt-12 sm:mt-14"
+              className="mt-3 sm:mt-5"
               photos={[
                 { id: 0, caption: 'Arquitectura', src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop&q=80' },
                 { id: 1, caption: 'Montañas', src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop&q=80' },

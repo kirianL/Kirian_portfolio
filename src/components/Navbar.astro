@@ -91,9 +91,9 @@ if (blogMapping[pathname]) {
     </a>
 
     <!-- Nav Links + Language Selector -->
-    <div class="flex items-center gap-2.5 sm:gap-5">
+    <div class="flex items-center gap-1.5 sm:gap-5">
       <div
-        class="flex items-center gap-2.5 sm:gap-4 text-[11px] sm:text-[12.5px] font-medium text-grayscale-11"
+        class="flex items-center gap-2 sm:gap-4 text-[11px] sm:text-[12.5px] font-medium text-grayscale-11 shrink-0"
       >
         <a
           href={`${localePrefix || ""}/projects/`}
@@ -132,7 +132,7 @@ if (blogMapping[pathname]) {
           rel="noopener noreferrer"
           data-cuelume-hover="tick"
           data-cuelume-press="scan"
-          class="hover:text-grayscale-12 transition-colors flex items-center gap-0.5 group/agency"
+          class="hover:text-grayscale-12 transition-colors hidden sm:flex items-center gap-0.5 group/agency"
         >
           {navLabels.agency}
           <svg
