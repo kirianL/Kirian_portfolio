@@ -164,7 +164,6 @@ const stampConfigs = stampsList.map((stamp, i) => {
     document.querySelectorAll('.card-stamp-arc-root').forEach((root) => {
       const items = root.querySelectorAll('.stamp-card-item');
       let lockedIdx: number | null = null;
-      let hoverIdx: number | null = null;
 
       const setFocus = (targetIdx: number | null) => {
         items.forEach((item, i) => {
@@ -180,15 +179,9 @@ const stampConfigs = stampsList.map((stamp, i) => {
           lockedIdx = lockedIdx === i ? null : i;
           setFocus(lockedIdx);
         });
-        item.addEventListener('mouseenter', () => {
-          hoverIdx = i;
-          setFocus(i);
-        });
+        item.addEventListener('mouseenter', () => setFocus(i));
       });
-      root.addEventListener('mouseleave', () => {
-        hoverIdx = null;
-        setFocus(lockedIdx);
-      });
+      root.addEventListener('mouseleave', () => setFocus(lockedIdx));
     });
   };
   setupStampArc();
@@ -213,6 +206,14 @@ export interface CardStampArcProps {
   className?: string;
 }
 
+const defaultStamps: PhotoStamp[] = [
+  { id: 0, caption: 'Arquitectura', src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop' },
+  { id: 1, caption: 'Montañas', src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop' },
+  { id: 2, caption: 'Vista al Mar', src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop' },
+  { id: 3, caption: 'Estudio Creativo', src: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop' },
+  { id: 4, caption: 'Retrato', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop' }
+];
+
 export default function CardStampArc({
   arc = 20,
   spread = 160,
@@ -231,7 +232,8 @@ export default function CardStampArc({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const count = photos.length;
+  const stampsList = photos && photos.length > 0 ? photos : defaultStamps;
+  const count = stampsList.length;
   const centerIdx = (count - 1) / 2;
   const effectiveSpread = isMobile ? Math.min(spread, 100) : spread;
   const effectiveYOffset = isMobile ? yOffset * 0.65 : yOffset;
@@ -244,7 +246,7 @@ export default function CardStampArc({
       onClick={() => setIsHovered(prev => !prev)}
       className={\`relative w-[6.4rem] h-[8.6rem] sm:w-[9.2rem] sm:h-[11.8rem] cursor-pointer flex items-center justify-center select-none \${className}\`}
     >
-      {photos.map((stamp, i) => {
+      {stampsList.map((stamp, i) => {
         const dist = i - centerIdx;
         const norm = centerIdx > 0 ? dist / centerIdx : 0;
         
@@ -416,20 +418,20 @@ const usageCode = `<CardStampArc
               </button>
             </div>
 
-            <!-- Code Viewer Drawer (Collapsible) -->
+            <!-- Code Viewer Drawer (Collapsible & Tabbed) -->
             <div id="code-drawer" class="hidden mt-2 rounded-xl border border-grayscale-3 dark:border-grayscale-4/40 bg-zinc-950 text-zinc-100 overflow-hidden font-mono text-[11px]">
-              <div class="px-4 py-2.5 bg-zinc-900/90 border-b border-zinc-800/80 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
-                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
-                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
-                  <span class="ml-2 text-xs text-zinc-400 font-sans font-medium">CardStampArc.astro</span>
+              <div class="px-4 py-2 bg-zinc-900/90 border-b border-zinc-800/80 flex items-center justify-between flex-wrap gap-2">
+                <!-- Code Tabs -->
+                <div class="flex items-center gap-1 font-sans text-xs">
+                  <button type="button" class="code-tab-btn px-2.5 py-1 rounded-md text-zinc-100 bg-zinc-800 font-medium cursor-pointer" data-tab="astro">CardStampArc.astro</button>
+                  <button type="button" class="code-tab-btn px-2.5 py-1 rounded-md text-zinc-400 hover:text-zinc-200 cursor-pointer" data-tab="react">CardStampArc.tsx</button>
+                  <button type="button" class="code-tab-btn px-2.5 py-1 rounded-md text-zinc-400 hover:text-zinc-200 cursor-pointer" data-tab="usage">Uso.astro</button>
                 </div>
+                <!-- Copy Active Code Button -->
                 <button
                   type="button"
-                  class="copy-btn text-xs text-zinc-400 hover:text-zinc-100 flex items-center gap-1 cursor-pointer transition-colors"
-                  data-copy={astroCode}
-                  data-label="Código completo"
+                  id="drawer-copy-active"
+                  class="text-xs text-zinc-400 hover:text-zinc-100 flex items-center gap-1 cursor-pointer transition-colors"
                 >
                   <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -437,7 +439,7 @@ const usageCode = `<CardStampArc
                   <span>Copiar</span>
                 </button>
               </div>
-              <pre class="p-4 overflow-x-auto text-zinc-300 max-h-72 leading-relaxed selection:bg-accent-9/30"><code>{astroCode}</code></pre>
+              <pre class="p-4 overflow-x-auto text-zinc-300 max-h-80 leading-relaxed selection:bg-accent-9/30"><code id="code-display">{astroCode}</code></pre>
             </div>
           </div>
         </article>
@@ -470,52 +472,94 @@ const usageCode = `<CardStampArc
   </main>
 </Layout>
 
+<script is:inline>
+  const snippets = {
+    astro: `{astroCode}`,
+    react: `{reactCode}`,
+    usage: `{usageCode}`
+  };
+</script>
+
 <script>
-  // Copy functionality with interactive toast feedback
-  const toast = document.getElementById("copy-toast");
-  const toastText = document.getElementById("copy-toast-text");
-  let toastTimeout: any;
+  declare const snippets: { astro: string; react: string; usage: string };
+
+  let activeTab = 'astro';
 
   function showToast(message: string) {
+    const toast = document.getElementById("copy-toast");
+    const toastText = document.getElementById("copy-toast-text");
     if (!toast || !toastText) return;
     toastText.textContent = message;
     toast.classList.remove("opacity-0", "translate-y-3", "pointer-events-none");
     toast.classList.add("opacity-100", "translate-y-0");
 
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => {
+    setTimeout(() => {
       toast.classList.remove("opacity-100", "translate-y-0");
       toast.classList.add("opacity-0", "translate-y-3", "pointer-events-none");
     }, 2200);
   }
 
-  document.querySelectorAll(".copy-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const code = btn.getAttribute("data-copy");
-      const label = btn.getAttribute("data-label") || "Código";
-      if (!code) return;
+  function initCraftPage() {
+    document.querySelectorAll(".copy-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const code = btn.getAttribute("data-copy");
+        const label = btn.getAttribute("data-label") || "Código";
+        if (!code) return;
 
-      navigator.clipboard.writeText(code).then(() => {
-        showToast(`¡${label} copiado al portapapeles!`);
+        navigator.clipboard.writeText(code).then(() => {
+          showToast(`¡${label} copiado al portapapeles!`);
+        });
       });
     });
-  });
 
-  // Toggle code drawer
-  const toggleBtn = document.getElementById("toggle-code-btn");
-  const toggleLabel = document.getElementById("toggle-code-label");
-  const codeDrawer = document.getElementById("code-drawer");
+    const toggleBtn = document.getElementById("toggle-code-btn");
+    const toggleLabel = document.getElementById("toggle-code-label");
+    const codeDrawer = document.getElementById("code-drawer");
+    const codeDisplay = document.getElementById("code-display");
+    const drawerCopy = document.getElementById("drawer-copy-active");
 
-  if (toggleBtn && codeDrawer && toggleLabel) {
-    toggleBtn.addEventListener("click", () => {
-      const isHidden = codeDrawer.classList.contains("hidden");
-      if (isHidden) {
-        codeDrawer.classList.remove("hidden");
-        toggleLabel.textContent = "Ocultar Código";
-      } else {
-        codeDrawer.classList.add("hidden");
-        toggleLabel.textContent = "Ver Código";
-      }
+    if (toggleBtn && codeDrawer && toggleLabel) {
+      toggleBtn.addEventListener("click", () => {
+        const isHidden = codeDrawer.classList.contains("hidden");
+        if (isHidden) {
+          codeDrawer.classList.remove("hidden");
+          toggleLabel.textContent = "Ocultar Código";
+        } else {
+          codeDrawer.classList.add("hidden");
+          toggleLabel.textContent = "Ver Código";
+        }
+      });
+    }
+
+    // Code drawer tabs switching
+    document.querySelectorAll(".code-tab-btn").forEach((tabBtn) => {
+      tabBtn.addEventListener("click", () => {
+        const tab = tabBtn.getAttribute("data-tab");
+        if (!tab || !snippets[tab as keyof typeof snippets] || !codeDisplay) return;
+        activeTab = tab;
+
+        document.querySelectorAll(".code-tab-btn").forEach((b) => {
+          b.classList.remove("bg-zinc-800", "text-zinc-100", "font-medium");
+          b.classList.add("text-zinc-400");
+        });
+        tabBtn.classList.add("bg-zinc-800", "text-zinc-100", "font-medium");
+        tabBtn.classList.remove("text-zinc-400");
+
+        codeDisplay.textContent = snippets[tab as keyof typeof snippets];
+      });
     });
+
+    if (drawerCopy && codeDisplay) {
+      drawerCopy.addEventListener("click", () => {
+        const currentCode = snippets[activeTab as keyof typeof snippets] || codeDisplay.textContent;
+        if (!currentCode) return;
+        navigator.clipboard.writeText(currentCode).then(() => {
+          showToast("¡Código copiado al portapapeles!");
+        });
+      });
+    }
   }
+
+  initCraftPage();
+  document.addEventListener('astro:after-swap', initCraftPage);
 </script>
