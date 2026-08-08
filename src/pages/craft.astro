@@ -331,7 +331,46 @@ const usageCode = `<CardStampArc
       <section class="flex flex-col gap-8 px-1">
         <!-- Craft Item 1: Card Stamp Arc -->
         <article class="group rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 overflow-hidden transition-all duration-300 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 shadow-xs">
-          <!-- Component Preview Canvas (Clean, uncluttered, ample top space for tooltips) -->
+          <!-- Top Row Strip: Interactive Controls (Above Canvas) -->
+          <div class="px-4 sm:px-5 py-2.5 bg-grayscale-2/60 dark:bg-grayscale-3/30 border-b border-grayscale-3/40 flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-grayscale-10"></span>
+              <span class="text-xs font-medium font-sans text-grayscale-12 tracking-tight">Interactive Controls</span>
+            </div>
+
+            <!-- Integrated Parameter Controls -->
+            <div class="flex items-center gap-3 text-[10px] text-grayscale-11">
+              <div class="flex items-center gap-1.5">
+                <span class="text-grayscale-10">Spread</span>
+                <input
+                  type="range"
+                  id="slider-spread"
+                  min="120"
+                  max="220"
+                  value="180"
+                  class="w-14 sm:w-16 accent-grayscale-12 cursor-pointer"
+                />
+                <span id="val-spread" class="w-7 text-right font-bold text-grayscale-12">180px</span>
+              </div>
+
+              <div class="h-3 w-px bg-grayscale-3 dark:bg-grayscale-4/40"></div>
+
+              <div class="flex items-center gap-1.5">
+                <span class="text-grayscale-10">Arc</span>
+                <input
+                  type="range"
+                  id="slider-arc"
+                  min="8"
+                  max="28"
+                  value="16"
+                  class="w-12 sm:w-14 accent-grayscale-12 cursor-pointer"
+                />
+                <span id="val-arc" class="w-5 text-right font-bold text-grayscale-12">16°</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Component Preview Canvas (Clean, uncluttered, ample space for tooltips) -->
           <div class="relative w-full pt-10 pb-8 sm:pt-14 sm:pb-12 px-4 sm:px-6 flex items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-hidden min-h-[220px] sm:min-h-[300px]">
             <!-- Subtle background grid -->
             <div class="absolute inset-0 bg-[linear-gradient(to_right,#8881_1px,transparent_1px),linear-gradient(to_bottom,#8881_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40"></div>
@@ -349,45 +388,10 @@ const usageCode = `<CardStampArc
 
           <!-- Component Details & Copy Options -->
           <div class="p-5 sm:p-6 flex flex-col gap-4">
-            <div class="flex flex-col gap-2">
-              <!-- Title + Integrated Controls Row -->
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                <h2 class="text-sm font-semibold text-grayscale-12 tracking-tight">
-                  Card Stamp Arc
-                </h2>
-
-                <!-- Integrated Parameter Controls (Inline, NOT floating) -->
-                <div class="flex items-center gap-2.5 px-2.5 py-1 rounded-lg bg-grayscale-2/80 dark:bg-grayscale-3/40 border border-grayscale-3/60 dark:border-grayscale-4/30 text-[10px] font-mono text-grayscale-11 shrink-0 self-start sm:self-auto">
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-grayscale-10">Spread</span>
-                    <input
-                      type="range"
-                      id="slider-spread"
-                      min="120"
-                      max="220"
-                      value="180"
-                      class="w-14 sm:w-16 accent-grayscale-12 cursor-pointer"
-                    />
-                    <span id="val-spread" class="w-7 text-right font-bold text-grayscale-12">180px</span>
-                  </div>
-
-                  <div class="h-3 w-px bg-grayscale-3 dark:bg-grayscale-4/40"></div>
-
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-grayscale-10">Arc</span>
-                    <input
-                      type="range"
-                      id="slider-arc"
-                      min="8"
-                      max="28"
-                      value="16"
-                      class="w-12 sm:w-14 accent-grayscale-12 cursor-pointer"
-                    />
-                    <span id="val-arc" class="w-5 text-right font-bold text-grayscale-12">16°</span>
-                  </div>
-                </div>
-              </div>
-
+            <div class="flex flex-col gap-1">
+              <h2 class="text-sm font-semibold text-grayscale-12 tracking-tight">
+                Card Stamp Arc
+              </h2>
               <p class="text-xs text-grayscale-11 leading-relaxed">
                 Interactive polaroid stamp arc with dynamic fan-out physics on hover, staggered rotation offsets, smooth spring transitions, and sound feedback.
               </p>
