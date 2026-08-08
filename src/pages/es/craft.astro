@@ -332,43 +332,11 @@ const usageCode = `<CardStampArc
         <!-- Craft Item 1: Card Stamp Arc -->
         <article class="group rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 overflow-hidden transition-all duration-300 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 shadow-xs">
           <!-- Component Preview Canvas -->
-          <div class="relative w-full pt-10 pb-6 sm:pt-16 sm:pb-10 px-4 sm:px-6 flex flex-col items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-hidden min-h-[260px] sm:min-h-[340px]">
+          <div class="relative w-full pt-14 pb-14 sm:pt-18 sm:pb-16 px-4 sm:px-6 flex items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-hidden min-h-[260px] sm:min-h-[340px]">
             <!-- Subtle background grid -->
             <div class="absolute inset-0 bg-[linear-gradient(to_right,#8881_1px,transparent_1px),linear-gradient(to_bottom,#8881_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40"></div>
 
-            <!-- Real-time Interactive Sliders Control Bar -->
-            <div class="w-full max-w-sm mb-4 z-10 flex items-center justify-between gap-3 px-3 py-1.5 rounded-full bg-white/80 dark:bg-grayscale-2/80 border border-grayscale-3/50 dark:border-grayscale-3/30 backdrop-blur-md text-[10px] font-mono text-grayscale-11 shadow-2xs">
-              <div class="flex items-center gap-2">
-                <span>Distancia</span>
-                <input
-                  type="range"
-                  id="slider-spread"
-                  min="120"
-                  max="220"
-                  value="180"
-                  class="w-16 sm:w-20 accent-grayscale-12 cursor-pointer"
-                />
-                <span id="val-spread" class="w-7 text-right font-bold text-grayscale-12">180px</span>
-              </div>
-
-              <div class="h-3 w-px bg-grayscale-3 dark:bg-grayscale-4/40"></div>
-
-              <div class="flex items-center gap-2">
-                <span>Ángulo</span>
-                <input
-                  type="range"
-                  id="slider-arc"
-                  min="8"
-                  max="28"
-                  value="16"
-                  class="w-14 sm:w-16 accent-grayscale-12 cursor-pointer"
-                />
-                <span id="val-arc" class="w-5 text-right font-bold text-grayscale-12">16°</span>
-              </div>
-            </div>
-
             <CardStampArc 
-              className="mt-2 sm:mt-4"
               photos={[
                 { id: 0, caption: 'Arquitectura', src: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop&q=80' },
                 { id: 1, caption: 'Montañas', src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop&q=80' },
@@ -377,6 +345,37 @@ const usageCode = `<CardStampArc
                 { id: 4, caption: 'Retrato', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80' }
               ]}
             />
+
+            <!-- Real-time Interactive Sliders Control Bar (Integrated at Bottom) -->
+            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center justify-between gap-3 px-3 py-1.5 rounded-full bg-white/90 dark:bg-zinc-900/90 border border-grayscale-3/60 dark:border-grayscale-4/40 backdrop-blur-md text-[10px] font-mono text-grayscale-11 shadow-xs max-w-[90%] overflow-x-auto">
+              <div class="flex items-center gap-2 shrink-0">
+                <span>Distancia</span>
+                <input
+                  type="range"
+                  id="slider-spread"
+                  min="120"
+                  max="220"
+                  value="180"
+                  class="w-14 sm:w-20 accent-grayscale-12 cursor-pointer"
+                />
+                <span id="val-spread" class="w-7 text-right font-bold text-grayscale-12">180px</span>
+              </div>
+
+              <div class="h-3 w-px bg-grayscale-3 dark:bg-grayscale-4/40 shrink-0"></div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                <span>Ángulo</span>
+                <input
+                  type="range"
+                  id="slider-arc"
+                  min="8"
+                  max="28"
+                  value="16"
+                  class="w-12 sm:w-16 accent-grayscale-12 cursor-pointer"
+                />
+                <span id="val-arc" class="w-5 text-right font-bold text-grayscale-12">16°</span>
+              </div>
+            </div>
           </div>
 
           <!-- Component Details & Copy Options -->
