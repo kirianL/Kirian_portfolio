@@ -365,9 +365,40 @@ const usageCode = `<CardStampArc
                   class="w-12 sm:w-14 accent-grayscale-12 cursor-pointer"
                 />
                 <span id="val-arc" class="w-5 text-right font-bold text-grayscale-12">16°</span>
-              </div>
             </div>
           </div>
+
+          <script is:inline>
+            (function initLiveSliders() {
+              function onSliderInput(e) {
+                var t = e.target;
+                if (!t) return;
+                if (t.id === 'slider-spread') {
+                  var v = document.getElementById('val-spread');
+                  if (v) v.textContent = t.value + 'px';
+                  emitParams();
+                } else if (t.id === 'slider-arc') {
+                  var v = document.getElementById('val-arc');
+                  if (v) v.textContent = t.value + '°';
+                  emitParams();
+                }
+              }
+
+              function emitParams() {
+                var s = document.getElementById('slider-spread');
+                var a = document.getElementById('slider-arc');
+                if (!s || !a) return;
+                window.dispatchEvent(
+                  new CustomEvent('card-stamp-arc-params-change', {
+                    detail: { spread: parseInt(s.value, 10), arc: parseInt(a.value, 10) }
+                  })
+                );
+              }
+
+              document.addEventListener('input', onSliderInput, true);
+              document.addEventListener('change', onSliderInput, true);
+            })();
+          </script>
 
           <!-- Component Preview Canvas (Clean, uncluttered, ample space for tooltips) -->
           <div class="relative w-full pt-10 pb-8 sm:pt-14 sm:pb-12 px-4 sm:px-6 flex items-center justify-center bg-gradient-to-b from-grayscale-1/50 to-grayscale-2/80 dark:from-grayscale-1/20 dark:to-grayscale-3/20 border-b border-grayscale-3/40 overflow-hidden min-h-[220px] sm:min-h-[300px]">
@@ -553,37 +584,6 @@ const usageCode = `<CardStampArc
       });
     });
   });
-
-  // Slider controls for live preview (Real-time numbers update)
-  const setupSliders = () => {
-    const sliderSpread = document.getElementById("slider-spread") as HTMLInputElement;
-    const sliderArc = document.getElementById("slider-arc") as HTMLInputElement;
-    const valSpread = document.getElementById("val-spread");
-    const valArc = document.getElementById("val-arc");
-
-    if (!sliderSpread || !sliderArc) return;
-
-    const updatePreview = () => {
-      const spread = parseInt(sliderSpread.value, 10);
-      const arc = parseInt(sliderArc.value, 10);
-      if (valSpread) valSpread.textContent = `${spread}px`;
-      if (valArc) valArc.textContent = `${arc}°`;
-
-      window.dispatchEvent(
-        new CustomEvent("card-stamp-arc-params-change", {
-          detail: { spread, arc }
-        })
-      );
-    };
-
-    sliderSpread.addEventListener("input", updatePreview);
-    sliderArc.addEventListener("input", updatePreview);
-    sliderSpread.addEventListener("change", updatePreview);
-    sliderArc.addEventListener("change", updatePreview);
-  };
-
-  setupSliders();
-  document.addEventListener("astro:after-swap", setupSliders);
 
   // Drawer & Tabbed Code Switcher
   const toggleBtn = document.getElementById("toggle-code-btn");
