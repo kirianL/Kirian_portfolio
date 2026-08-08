@@ -145,7 +145,7 @@ export default function CardStampArc({
               {isHovered && isThisCardHovered && stamp.caption && (
                 <motion.div
                   initial={{ opacity: 0, y: 6, scale: 0.9 }}
-                  animate={{ opacity: 1, y: -34, scale: 1 }}
+                  animate={{ opacity: 1, y: -38, scale: 1 }}
                   exit={{ opacity: 0, y: 4, scale: 0.9 }}
                   transition={{ duration: 0.18 }}
                   className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none z-30"
