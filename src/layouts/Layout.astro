@@ -9,7 +9,7 @@ interface Props {
   image?: string;
 }
 
-const { title, description, lang = 'es', image = '/OG/Kirian open graphic.jpg' } = Astro.props;
+const { title, description, lang = 'es', image = '/OG/KirianLunaOG.png' } = Astro.props;
 
 const siteURL = Astro.site || new URL(Astro.url.origin);
 const canonicalURL = new URL(Astro.url.pathname, siteURL);
