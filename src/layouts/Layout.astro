@@ -9,11 +9,12 @@ interface Props {
   image?: string;
 }
 
-const { title, description, lang = 'es', image = '/OG/Kirian open graphic.png' } = Astro.props;
+const { title, description, lang = 'es', image = '/OG/Kirian open graphic.jpg' } = Astro.props;
 
 const siteURL = Astro.site || new URL(Astro.url.origin);
 const canonicalURL = new URL(Astro.url.pathname, siteURL);
 const resolvedImageURL = new URL(image, siteURL);
+const imageType = image.endsWith('.jpg') || image.endsWith('.jpeg') ? 'image/jpeg' : image.endsWith('.webp') ? 'image/webp' : 'image/png';
 
 // Dynamic i18n hreflang URLs
 const currentPath = Astro.url.pathname;
@@ -41,6 +42,36 @@ const spanishURL = new URL(spanishPath, siteURL);
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#18181b" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Immediate Zero-FOUC Dark Mode Initializer -->
+    <script is:inline>
+      (function () {
+        const theme = localStorage.getItem("theme");
+        if (
+          theme === "dark" ||
+          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+    <script>
+      const syncTheme = () => {
+        const theme = localStorage.getItem("theme");
+        if (
+          theme === "dark" ||
+          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      };
+
+      document.addEventListener("astro:after-swap", syncTheme);
+    </script>
 
     <!-- Performance & Preconnect (SXO) -->
     <link rel="dns-prefetch" href="https://cloud.umami.is" />
@@ -70,7 +101,7 @@ const spanishURL = new URL(spanishPath, siteURL);
     <meta property="og:description" content={description} />
     <meta property="og:image" content={resolvedImageURL} />
     <meta property="og:image:secure_url" content={resolvedImageURL} />
-    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:type" content={imageType} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title} />
@@ -158,7 +189,7 @@ const spanishURL = new URL(spanishPath, siteURL);
     <!-- Umami Analytics -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="427114d6-abc8-410e-adb2-98cc7571b5d3"></script>
   </head>
-  <body class="antialiased selection:bg-accent-4/20 selection:text-accent-12 min-h-screen">
+  <body class="antialiased selection:bg-accent-4/20 selection:text-accent-12 min-h-screen bg-grayscale-1 text-grayscale-12">
     <slot />
 
     <!-- cuelume interaction sounds & audio unlocker -->
