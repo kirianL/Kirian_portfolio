@@ -17,8 +17,8 @@ export interface Props {
 
 const {
   arc = 16,
-  spread = 180,
-  yOffset = 20,
+  spread = 140,
+  yOffset = 18,
   duration = 0.4,
   className = '',
   photos
@@ -41,7 +41,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
 
   // Desktop fan positions
   const idleRotate = norm * 6;
-  const idleX = norm * 36;
+  const idleX = norm * 26;
   const idleY = Math.abs(norm) * 4;
 
   const targetRotate = norm * arc;
@@ -49,7 +49,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
   const targetY = Math.abs(norm) * yOffset;
 
   // Mobile fan positions
-  const mobileSpread = 90;
+  const mobileSpread = 70;
   const mobileRotate = norm * 10;
   const mobileX = norm * mobileSpread;
   const mobileY = Math.abs(norm) * 4;
@@ -74,7 +74,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
 ---
 
 <div
-  class={`card-stamp-arc-root relative w-[6.4rem] h-[8.6rem] sm:w-[9.2rem] sm:h-[11.8rem] cursor-pointer flex items-center justify-center select-none touch-manipulation max-w-full overflow-visible ${className}`}
+  class={`card-stamp-arc-root relative w-[5.4rem] h-[7.2rem] sm:w-[7.2rem] sm:h-[9.6rem] cursor-pointer flex items-center justify-center select-none touch-manipulation max-w-full overflow-visible ${className}`}
   data-count={count}
 >
   {stampConfigs.map((stamp, i) => (
@@ -100,7 +100,7 @@ const stampConfigs = stampsList.map((stamp, i) => {
     >
       {/* BE UI Tooltip (@beui/tooltip) - Elevated Above Card Frame */}
       {stamp.caption && (
-        <div class="stamp-tooltip absolute left-1/2 -top-7 sm:-top-9 pointer-events-none z-50 flex justify-center items-center w-max">
+        <div class="stamp-tooltip absolute left-1/2 -top-6 sm:-top-8 pointer-events-none z-50 flex justify-center items-center w-max">
           <span class="block whitespace-nowrap rounded-lg border border-zinc-200/80 bg-white/95 px-2.5 py-1 text-[10px] sm:text-[11px] font-mono tracking-tight text-zinc-900 shadow-md dark:border-zinc-800 dark:bg-zinc-900/95 dark:text-zinc-100 backdrop-blur-md">
             {stamp.caption}
           </span>
