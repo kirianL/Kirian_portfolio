@@ -1,12 +1,33 @@
 ---
+import { execSync } from "node:child_process";
+
 const currentLocale = Astro.currentLocale || "en";
-const text = currentLocale === "es" ? "Hecho con <3" : "Made with <3";
+
+let lastUpdateDate = "";
+try {
+  const gitIso = execSync("git log -1 --format=%cI", { encoding: "utf-8" }).trim();
+  const date = new Date(gitIso);
+  lastUpdateDate = date.toLocaleDateString(currentLocale === "es" ? "es-CR" : "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+} catch {
+  lastUpdateDate = new Date().toLocaleDateString(currentLocale === "es" ? "es-CR" : "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+const updateLabel = currentLocale === "es" ? "Última actualización" : "Last update";
 ---
 
 <footer
   class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8"
 >
-  {text}<span id="umami-stats" class="opacity-0 transition-opacity duration-300"></span>
+  <span>{updateLabel}: {lastUpdateDate}</span>
+  <span id="umami-stats" class="opacity-0 transition-opacity duration-300"></span>
 </footer>
 
 <script>

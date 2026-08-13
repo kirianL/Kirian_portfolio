@@ -1,10 +1,10 @@
-# Kirian Luna Quirós — Full Stack Software Engineer & Product Designer
+# Kirian Luna Quirós — Ingeniero en Sistemas / Systems Engineer
 
-> Kirian Luna Quirós (kirian.dev) is a Full Stack Software Engineer and Product Designer based in Costa Rica. He specializes in TypeScript, Next.js, React, Astro, PostgreSQL, TailwindCSS, Node.js, and high-performance Web Architecture.
+> Kirian Luna Quirós (kirian.dev) is a Systems Engineer (Ingeniero en Sistemas) based in Costa Rica. He studied at Universidad Latina de Costa Rica and is currently pursuing parallel Licentiate degrees in Teaching (Universidad Americana) and Software Engineering (Universidad Internacional de las Américas). He specializes in TypeScript, Next.js, React, Astro, PostgreSQL, TailwindCSS, Node.js, and high-performance Web Architecture.
 
 ## Core Information
 - **Name**: Kirian Luna Quirós
-- **Role**: Full Stack Software Engineer & UX/UI Product Designer
+- **Role**: Ingeniero en Sistemas / Systems Engineer
 - **Location**: Costa Rica (UTC-6 / CST)
 - **Website**: https://kirian.dev
 - **Languages**: English, Spanish

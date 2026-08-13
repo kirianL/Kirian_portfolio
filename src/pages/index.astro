@@ -13,8 +13,8 @@ const data = dictionaries.EN;
 ---
 
 <Layout
-  title="Kirian Luna Quirós | Software Engineer"
-  description="Professional portfolio of Kirian Luna Quirós, Software Engineer based in Costa Rica."
+  title="Kirian Luna Quirós | Systems Engineer"
+  description="Professional portfolio of Kirian Luna Quirós, Systems Engineer based in Costa Rica."
   lang="en"
 >
   <Navbar />
@@ -82,7 +82,7 @@ const data = dictionaries.EN;
 
         <!-- Bio -->
         <section class="flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed">
-          <p>{data.hero.desc}</p>
+          <p set:html={data.hero.desc} />
         </section>
 
         <!-- Social icons row -->
