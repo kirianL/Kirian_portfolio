@@ -352,26 +352,14 @@ const initialStatsText = initialViews > 0
     }, speed);
   }
 
-  async function checkDiscordGameActivity() {
+  // Fast fetch helper with strict AbortController timeout for mobile
+  async function fetchWithTimeout(url: string, timeoutMs = 3500) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
-      if (res.ok) {
-        const json = await res.json();
-        if (json.success && json.data) {
-          const activities = json.data.activities || [];
-          // Activity type 0 = Game, type 1 = Streaming, type 5 = Competing
-          const game = activities.find(
-            (a: any) => (a.type === 0 || a.type === 1 || a.type === 5) && a.name !== "Spotify"
-          );
-          if (game && game.name) {
-            return {
-              isPlaying: true,
-              gameName: game.name,
-              details: game.details || game.state || "",
-            };
-          }
-        }
-      }
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timer);
+      if (res.ok) return await res.json();
     } catch {}
     return null;
   }
@@ -565,20 +553,52 @@ const initialStatsText = initialViews > 0
     }
   }
 
-  async function loadSpotify() {
-    try {
-      let data = null;
-      try {
-        const res = await fetch("/api/spotify.json");
-        if (res.ok) data = await res.json();
-      } catch {}
+  let isUpdating = false;
 
-      if (!data) {
-        try {
-          const res = await fetch("/api/spotify");
-          if (res.ok) data = await res.json();
-        } catch {}
+  async function loadSpotify() {
+    if (isUpdating) return;
+    isUpdating = true;
+
+    try {
+      // Run parallel lightweight requests for instant mobile latency
+      const [spotifyRes, lanyardRes] = await Promise.allSettled([
+        fetchWithTimeout("/api/spotify.json", 3500),
+        fetchWithTimeout(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`, 3500),
+      ]);
+
+      const spotifyData = spotifyRes.status === "fulfilled" ? spotifyRes.value : null;
+      const lanyardData = lanyardRes.status === "fulfilled" && lanyardRes.value?.success ? lanyardRes.value.data : null;
+
+      // Extract Game Activity
+      let game: { isPlaying: boolean; gameName: string; details?: string } | null = null;
+      if (lanyardData?.activities) {
+        const g = lanyardData.activities.find(
+          (a: any) => (a.type === 0 || a.type === 1 || a.type === 5) && a.name !== "Spotify"
+        );
+        if (g && g.name) {
+          game = {
+            isPlaying: true,
+            gameName: g.name,
+            details: g.details || g.state || "",
+          };
+        }
       }
+
+      // Check Spotify State (Fallback to Lanyard Spotify if local API is cooling down)
+      let isSpotifyPlaying = !!(spotifyData && spotifyData.isPlaying && spotifyData.title);
+      let activeTrack = spotifyData;
+
+      if (!isSpotifyPlaying && lanyardData?.listening_to_spotify && lanyardData.spotify) {
+        isSpotifyPlaying = true;
+        activeTrack = {
+          title: lanyardData.spotify.song,
+          artist: lanyardData.spotify.artist,
+          albumImageUrl: lanyardData.spotify.album_art_url,
+          songUrl: `https://open.spotify.com/track/${lanyardData.spotify.track_id}`,
+        };
+      }
+
+      const isGamePlaying = !!(game && game.isPlaying && game.gameName);
 
       const spotifyWidget = document.getElementById("spotify-widget");
       const gameWidget = document.getElementById("game-widget");
@@ -600,30 +620,26 @@ const initialStatsText = initialViews > 0
       const devSprite = document.getElementById("dev-status-sprite");
       const devDialogue = document.getElementById("dev-status-dialogue");
 
-      const isSpotifyPlaying = !!(data && data.isPlaying && data.title);
-      const game = await checkDiscordGameActivity();
-      const isGamePlaying = !!(game && game.isPlaying && game.gameName);
-
       // 1. SPOTIFY WIDGET STATE
-      if (isSpotifyPlaying) {
+      if (isSpotifyPlaying && activeTrack) {
         if (spotifyWidget) {
           spotifyWidget.classList.remove("hidden");
           spotifyWidget.classList.add("flex");
         }
 
-        if (data.albumImageUrl) {
-          if (albumImg) albumImg.src = data.albumImageUrl;
-          if (vinylImg) vinylImg.src = data.albumImageUrl;
+        if (activeTrack.albumImageUrl) {
+          if (albumImg && albumImg.src !== activeTrack.albumImageUrl) albumImg.src = activeTrack.albumImageUrl;
+          if (vinylImg && vinylImg.src !== activeTrack.albumImageUrl) vinylImg.src = activeTrack.albumImageUrl;
         }
 
-        if (songEl && songEl.textContent !== data.title) {
-          decryptMotion(songEl, data.title, 18);
+        if (songEl && songEl.textContent !== activeTrack.title) {
+          decryptMotion(songEl, activeTrack.title, 18);
         }
-        if (artistEl && artistEl.textContent !== data.artist) {
-          decryptMotion(artistEl, data.artist || "", 20);
+        if (artistEl && artistEl.textContent !== activeTrack.artist) {
+          decryptMotion(artistEl, activeTrack.artist || "", 20);
         }
         if (sepEl) sepEl.classList.remove("hidden");
-        if (linkEl && data.songUrl) linkEl.href = data.songUrl;
+        if (linkEl && activeTrack.songUrl) linkEl.href = activeTrack.songUrl;
 
         if (eqEl) {
           eqEl.classList.remove("hidden");
@@ -688,7 +704,9 @@ const initialStatsText = initialViews > 0
         }
       }
     } catch (e) {
-      // Fallback
+      // Silent error protection
+    } finally {
+      isUpdating = false;
     }
   }
 
@@ -763,41 +781,43 @@ const initialStatsText = initialViews > 0
     loadStats();
   }
 
-  // Load on initial load
+  // Load immediately on page initialization and view transitions
   init();
-  // Support Astro view transitions
   document.addEventListener("astro:page-load", init);
 
-  // Poll Spotify and Discord live state every 5s when active + refresh on focus and hover
+  // High-performance Mobile & Desktop Revalidation System
   if (typeof window !== "undefined") {
-    let lastFetchTime = 0;
-    const throttledLoad = () => {
+    let lastPoll = 0;
+    const triggerRevalidation = () => {
       const now = Date.now();
-      if (now - lastFetchTime > 3000) {
-        lastFetchTime = now;
+      if (now - lastPoll > 2500) {
+        lastPoll = now;
         loadSpotify();
       }
     };
 
+    // 1. Regular 4s Polling when active
     setInterval(() => {
       if (!document.hidden) {
         loadSpotify();
       }
-    }, 5000);
+    }, 4000);
 
+    // 2. Mobile Instant Wakeup (Tab switch, App switch, Screen unlock, Page show)
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
-        loadSpotify();
+        triggerRevalidation();
       }
     });
 
-    window.addEventListener("focus", () => {
-      loadSpotify();
-    });
+    window.addEventListener("pageshow", triggerRevalidation);
+    window.addEventListener("focus", triggerRevalidation);
 
-    const link = document.getElementById("spotify-link");
-    if (link) {
-      link.addEventListener("mouseenter", throttledLoad);
+    // 3. Mobile touch or desktop hover instant revalidation
+    const footerWrapper = document.getElementById("footer-status-wrapper");
+    if (footerWrapper) {
+      footerWrapper.addEventListener("touchstart", triggerRevalidation, { passive: true });
+      footerWrapper.addEventListener("mouseenter", triggerRevalidation, { passive: true });
     }
   }
 </script>
