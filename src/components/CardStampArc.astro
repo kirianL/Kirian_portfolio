@@ -98,9 +98,9 @@ const stampConfigs = stampsList.map((stamp, i) => {
       data-card-index={i}
       data-card-id={stamp.id}
     >
-      {/* BE UI Tooltip (@beui/tooltip) - Elevated Above Card Frame */}
+      {/* BE UI Tooltip (@beui/tooltip) - Floating Space Above Card Frame */}
       {stamp.caption && (
-        <div class="stamp-tooltip absolute left-1/2 -top-6 sm:-top-8 pointer-events-none z-50 flex justify-center items-center w-max">
+        <div class="stamp-tooltip absolute pointer-events-none z-50 flex justify-center items-center w-max" style="bottom: calc(100% + 12px); left: 50%;">
           <span class="block whitespace-nowrap rounded-lg border border-zinc-200/80 bg-white/95 px-2.5 py-1 text-[10px] sm:text-[11px] font-mono tracking-tight text-zinc-900 shadow-md dark:border-zinc-800 dark:bg-zinc-900/95 dark:text-zinc-100 backdrop-blur-md">
             {stamp.caption}
           </span>

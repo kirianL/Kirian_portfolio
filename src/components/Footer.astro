@@ -23,14 +23,6 @@ try {
 const updateLabel = currentLocale === "es" ? "Última actualización" : "Last update";
 const listeningLabel = currentLocale === "es" ? "Escuchando ahora" : "Currently listening";
 
-// Default Spotify track for instant render
-const defaultTrack = {
-  isPlaying: true,
-  title: "Die With A Smile",
-  artist: "Lady Gaga, Bruno Mars",
-  songUrl: "https://open.spotify.com/track/2plbrEY59IikOBgBGLjaoe",
-};
-
 // Fetch initial stats at build time for instant rendering without adblocker interference
 let initialViews = 0;
 let initialVisitors = 0;
@@ -74,13 +66,13 @@ const initialStatsText = initialViews > 0
 <footer
   class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8 flex flex-col items-center justify-center gap-1.5"
 >
-  <!-- Pure Minimalist Inline Spotify Row (No Badge) -->
+  <!-- Pure Minimalist Inline Spotify Row (Procedural Decryption Motion) -->
   <div
     id="spotify-widget"
-    class="flex items-center justify-center gap-2 text-xs max-w-full truncate leading-relaxed py-0.5"
+    class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed py-0.5 px-3 max-w-full"
   >
     <!-- Minimalist Spotify Icon -->
-    <svg class="w-3.5 h-3.5 text-[#1DB954] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+    <svg class="w-3.5 h-3.5 text-[#1DB954] shrink-0 inline-block align-middle" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
     </svg>
 
@@ -88,18 +80,18 @@ const initialStatsText = initialViews > 0
 
     <a
       id="spotify-link"
-      href={defaultTrack.songUrl}
+      href="https://open.spotify.com"
       target="_blank"
       rel="noopener noreferrer"
       data-cuelume-hover="tick"
-      class="text-[#1DB954] dark:text-[#1ED760] no-underline hover:opacity-85 font-medium truncate inline-flex items-center gap-1.5 transition-opacity"
+      class="text-[#1DB954] dark:text-[#1ED760] no-underline hover:opacity-85 font-medium inline-flex flex-wrap items-center justify-center gap-1.5 transition-opacity"
     >
-      <span id="spotify-song" class="truncate max-w-[150px] sm:max-w-[220px]">{defaultTrack.title}</span>
-      <span class="text-grayscale-10 font-normal shrink-0">—</span>
-      <span id="spotify-artist" class="text-grayscale-11 dark:text-grayscale-10 font-normal truncate max-w-[120px] sm:max-w-[180px]">{defaultTrack.artist}</span>
+      <span id="spotify-song" class="font-mono tracking-tight text-[#1DB954] dark:text-[#1ED760]">_decrypting...</span>
+      <span id="spotify-separator" class="text-grayscale-10 font-normal shrink-0 hidden">—</span>
+      <span id="spotify-artist" class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono"></span>
 
       <!-- Mini animated equalizer bars -->
-      <span id="spotify-equalizer" class="inline-flex items-end gap-[1.5px] h-2.5 w-2.5 shrink-0 ml-0.5">
+      <span id="spotify-equalizer" class="hidden items-end gap-[1.5px] h-2.5 w-2.5 shrink-0 ml-0.5">
         <span class="w-[1.5px] h-full bg-[#1DB954] rounded-full animate-music-bar-1"></span>
         <span class="w-[1.5px] h-2/3 bg-[#1DB954] rounded-full animate-music-bar-2"></span>
         <span class="w-[1.5px] h-4/5 bg-[#1DB954] rounded-full animate-music-bar-3"></span>
@@ -141,26 +133,102 @@ const initialStatsText = initialViews > 0
 </style>
 
 <script>
+  const GLYPHS = "01!@#$%^&*~_+-=<>?/\\[]{}AaBbCcDdEeFfGgHh";
+
+  function decryptMotion(element: HTMLElement, targetText: string, speed = 25) {
+    if (!element) return;
+    if (element.dataset.resolvedText === targetText && element.textContent === targetText) return;
+    element.dataset.resolvedText = targetText;
+
+    const length = targetText.length;
+    let iteration = 0;
+    const maxIterations = length + 8;
+
+    if ((element as any)._decryptTimer) {
+      clearInterval((element as any)._decryptTimer);
+    }
+
+    (element as any)._decryptTimer = setInterval(() => {
+      element.textContent = targetText
+        .split("")
+        .map((char, index) => {
+          if (char === " ") return " ";
+          if (index < iteration) {
+            return targetText[index];
+          }
+          return GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        })
+        .join("");
+
+      iteration += 1 / 1.5;
+
+      if (iteration >= maxIterations) {
+        clearInterval((element as any)._decryptTimer);
+        element.textContent = targetText;
+      }
+    }, speed);
+  }
+
   async function loadSpotify() {
     try {
-      const res = await fetch("/api/spotify.json");
-      if (!res.ok) return;
-      const data = await res.json();
+      let data = null;
+      try {
+        const res = await fetch("/api/spotify.json");
+        if (res.ok) data = await res.json();
+      } catch {}
+
+      if (!data) {
+        try {
+          const res = await fetch("/api/spotify");
+          if (res.ok) data = await res.json();
+        } catch {}
+      }
+
       if (!data) return;
+
+      const isEs =
+        document.documentElement.lang === "es" ||
+        window.location.pathname.includes("/es/") ||
+        window.location.pathname === "/es";
 
       const songEl = document.getElementById("spotify-song");
       const artistEl = document.getElementById("spotify-artist");
+      const sepEl = document.getElementById("spotify-separator");
       const linkEl = document.getElementById("spotify-link") as HTMLAnchorElement | null;
       const eqEl = document.getElementById("spotify-equalizer");
 
-      if (songEl && data.title) songEl.textContent = data.title;
-      if (artistEl && data.artist) artistEl.textContent = data.artist;
-      if (linkEl && data.songUrl) linkEl.href = data.songUrl;
-      if (eqEl) {
-        eqEl.style.display = data.isPlaying ? "inline-flex" : "none";
+      if (data.isPlaying && data.title) {
+        if (songEl) decryptMotion(songEl, data.title, 22);
+        if (artistEl) decryptMotion(artistEl, data.artist || "", 25);
+        if (sepEl) sepEl.classList.remove("hidden");
+        if (linkEl && data.songUrl) linkEl.href = data.songUrl;
+        if (eqEl) {
+          eqEl.classList.remove("hidden");
+          eqEl.classList.add("inline-flex");
+        }
+      } else if (data.title) {
+        // Has a track
+        if (songEl) decryptMotion(songEl, data.title, 22);
+        if (artistEl) decryptMotion(artistEl, data.artist || "", 25);
+        if (sepEl) sepEl.classList.remove("hidden");
+        if (linkEl && data.songUrl) linkEl.href = data.songUrl;
+        if (eqEl) {
+          eqEl.classList.add("hidden");
+          eqEl.classList.remove("inline-flex");
+        }
+      } else {
+        // Idle/Offline
+        const idleText = isEs ? "Pausado en Spotify" : "Idle on Spotify";
+        if (songEl) decryptMotion(songEl, idleText, 25);
+        if (artistEl) artistEl.textContent = "";
+        if (sepEl) sepEl.classList.add("hidden");
+        if (eqEl) {
+          eqEl.classList.add("hidden");
+          eqEl.classList.remove("inline-flex");
+        }
       }
     } catch (e) {
-      // Keep initial render
+      // Fallback
     }
   }
 
@@ -239,4 +307,18 @@ const initialStatsText = initialViews > 0
   init();
   // Support Astro view transitions
   document.addEventListener("astro:page-load", init);
+
+  // Poll Spotify live state every 12s when active
+  if (typeof window !== "undefined") {
+    setInterval(() => {
+      if (!document.hidden) {
+        loadSpotify();
+      }
+    }, 12000);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        loadSpotify();
+      }
+    });
+  }
 </script>
