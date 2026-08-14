@@ -73,58 +73,95 @@ const initialStatsText = initialViews > 0
 <footer
   class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8 flex flex-col items-center justify-center gap-1.5"
 >
-  <!-- Pure Minimalist Inline Spotify Row -->
-  <div
-    id="spotify-widget"
-    class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed py-0.5 px-3 max-w-full"
-  >
-    <!-- Minimalist Spotify Icon -->
-    <svg class="w-3.5 h-3.5 text-[#1DB954] shrink-0 inline-block align-middle" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-    </svg>
-
-    <span class="text-grayscale-10 shrink-0">{listeningLabel}:</span>
-
-    <!-- Hover Track Link -->
-    <a
-      id="spotify-link"
-      href={defaultTrack.songUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      data-cuelume-hover="tick"
-      class="spotify-track-container text-[#1DB954] dark:text-[#1ED760] no-underline font-medium inline-flex items-center gap-1.5 cursor-pointer text-center relative"
+  <!-- Active State Container (Spotify Live vs Retro RPG Pixel-Sprite Box) -->
+  <div id="footer-status-wrapper" class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed py-0.5 px-3 max-w-full">
+    <!-- 1. SPOTIFY LIVE ROW -->
+    <div
+      id="spotify-widget"
+      class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed max-w-full"
     >
-      <!-- Song Title with Centered Tooltip Origin -->
-      <span class="relative inline-flex items-center">
-        <span id="spotify-song" class="font-mono tracking-tight text-[#1DB954] dark:text-[#1ED760]">{defaultTrack.title}</span>
+      <!-- Minimalist Spotify Icon -->
+      <svg class="w-3.5 h-3.5 text-[#1DB954] shrink-0 inline-block align-middle" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+      </svg>
 
-        <!-- Pure Floating Square Album Cover (No Crop, Clean Dark Shadow) -->
-        <div
-          id="spotify-album-preview"
-          class="spotify-preview-card pointer-events-none flex flex-col items-center justify-center"
-        >
-          <div class="w-20 h-20 sm:w-24 sm:h-24 aspect-square shrink-0 rounded-xl overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.4)] ring-1 ring-black/15 dark:ring-white/20 bg-zinc-950">
-            <img
-              id="spotify-album-img"
-              src={defaultTrack.albumImageUrl}
-              alt="Album Cover"
-              class="w-full h-full aspect-square object-contain block"
-              loading="lazy"
-            />
+      <span class="text-grayscale-10 shrink-0">{listeningLabel}:</span>
+
+      <!-- Hover Track Link -->
+      <a
+        id="spotify-link"
+        href={defaultTrack.songUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cuelume-hover="tick"
+        class="spotify-track-container text-[#1DB954] dark:text-[#1ED760] no-underline font-medium inline-flex items-center gap-1.5 cursor-pointer text-center relative"
+      >
+        <!-- Song Title with Centered Tooltip Origin -->
+        <span class="relative inline-flex items-center">
+          <span id="spotify-song" class="font-mono tracking-tight text-[#1DB954] dark:text-[#1ED760]">{defaultTrack.title}</span>
+
+          <!-- Floating Spinning Vinyl & Sleeve Popover -->
+          <div
+            id="spotify-album-preview"
+            class="spotify-preview-card pointer-events-none flex flex-col items-center justify-center"
+          >
+            <div class="vinyl-preview-wrapper relative flex items-center justify-center">
+              <!-- Spinning Vinyl Disc (Pure CSS Grooves, 0KB network overhead) -->
+              <div class="vinyl-disc absolute w-[4.6rem] h-[4.6rem] sm:w-[5.2rem] sm:h-[5.2rem] rounded-full flex items-center justify-center">
+                <!-- Center Album Mini Label -->
+                <div class="relative w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden border border-black/50 shadow-inner flex items-center justify-center bg-zinc-950">
+                  <img
+                    id="spotify-vinyl-img"
+                    src={defaultTrack.albumImageUrl}
+                    alt=""
+                    class="w-full h-full object-cover block"
+                    loading="lazy"
+                  />
+                  <div class="absolute w-1.5 h-1.5 rounded-full bg-zinc-950 border border-white/40"></div>
+                </div>
+              </div>
+
+              <!-- Square Album Cover Sleeve (Front Layer) -->
+              <div class="vinyl-sleeve relative z-10 w-20 h-20 sm:w-22 sm:h-22 aspect-square shrink-0 rounded-xl overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.4)] ring-1 ring-black/15 dark:ring-white/20 bg-zinc-950">
+                <img
+                  id="spotify-album-img"
+                  src={defaultTrack.albumImageUrl}
+                  alt="Album Cover"
+                  class="w-full h-full aspect-square object-contain block"
+                  loading="lazy"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </span>
+        </span>
 
-      <span id="spotify-separator" class="text-grayscale-10 font-normal shrink-0">—</span>
-      <span id="spotify-artist" class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono">{defaultTrack.artist}</span>
+        <span id="spotify-separator" class="text-grayscale-10 font-normal shrink-0">—</span>
+        <span id="spotify-artist" class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono">{defaultTrack.artist}</span>
 
-      <!-- Mini animated equalizer bars -->
-      <span id="spotify-equalizer" class="hidden items-end gap-[1.5px] h-2.5 w-2.5 shrink-0 ml-0.5">
-        <span class="w-[1.5px] h-full bg-[#1DB954] rounded-full animate-music-bar-1"></span>
-        <span class="w-[1.5px] h-2/3 bg-[#1DB954] rounded-full animate-music-bar-2"></span>
-        <span class="w-[1.5px] h-4/5 bg-[#1DB954] rounded-full animate-music-bar-3"></span>
-      </span>
-    </a>
+        <!-- Mini animated equalizer bars -->
+        <span id="spotify-equalizer" class="hidden items-end gap-[1.5px] h-2.5 w-2.5 shrink-0 ml-0.5">
+          <span class="w-[1.5px] h-full bg-[#1DB954] rounded-full animate-music-bar-1"></span>
+          <span class="w-[1.5px] h-2/3 bg-[#1DB954] rounded-full animate-music-bar-2"></span>
+          <span class="w-[1.5px] h-4/5 bg-[#1DB954] rounded-full animate-music-bar-3"></span>
+        </span>
+      </a>
+    </div>
+
+    <!-- 2. RETRO PIXEL-SPRITE DEV STATUS (Pure Minimalist Inline - Production Live Mode) -->
+    <div
+      id="dev-status-widget"
+      class="hidden flex-col sm:flex-row items-center justify-center gap-x-1.5 gap-y-0.5 text-[11px] sm:text-xs text-center leading-relaxed max-w-full select-none px-2"
+    >
+      <!-- Title & Sprite Group -->
+      <div class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0">
+        <span id="dev-status-sprite" class="w-4.5 h-4.5 sm:w-5 sm:h-5 shrink-0 inline-flex items-center justify-center animate-pixel-idle"></span>
+        <span id="dev-status-badge" class="font-mono text-zinc-900 dark:text-zinc-100 font-semibold whitespace-nowrap"></span>
+        <span class="text-grayscale-10 font-mono hidden sm:inline shrink-0">›</span>
+      </div>
+
+      <!-- Dialogue text -->
+      <span id="dev-status-dialogue" class="font-mono text-grayscale-11 dark:text-grayscale-10 italic text-center max-w-xs sm:max-w-none text-balance sm:whitespace-nowrap"></span>
+    </div>
   </div>
 
   <p>{updateLabel}: {lastUpdateDate}</p>
@@ -139,7 +176,7 @@ const initialStatsText = initialViews > 0
 <style is:global>
   .spotify-preview-card {
     position: absolute;
-    bottom: calc(100% + 12px);
+    bottom: calc(100% + 14px);
     left: 50%;
     transform: translate(-50%, 6px) scale(0.94);
     opacity: 0;
@@ -157,6 +194,65 @@ const initialStatsText = initialViews > 0
     visibility: visible !important;
     transform: translate(-50%, 0px) scale(1) !important;
     filter: blur(0px) !important;
+  }
+
+  /* Ultra-Fast Pure CSS Vinyl Disc */
+  .vinyl-disc {
+    background: radial-gradient(
+      circle,
+      #18181b 0%,
+      #18181b 26%,
+      #09090b 29%,
+      #27272a 32%,
+      #09090b 37%,
+      #27272a 43%,
+      #09090b 50%,
+      #27272a 58%,
+      #09090b 68%,
+      #18181b 80%,
+      #09090b 92%,
+      #000000 100%
+    );
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.5);
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+    z-index: 1;
+  }
+
+  .vinyl-sleeve {
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  /* Hover Reveal: Sleeve shifts left, Vinyl slides right and spins continuously */
+  .spotify-track-container:hover .vinyl-sleeve {
+    transform: translate3d(-14px, 0, 0);
+  }
+
+  .spotify-track-container:hover .vinyl-disc {
+    transform: translate3d(22px, 0, 0) rotate(360deg);
+    animation: vinyl-spin 3s linear infinite;
+    animation-delay: 0.22s;
+  }
+
+  @keyframes vinyl-spin {
+    from {
+      transform: translate3d(22px, 0, 0) rotate(0deg);
+    }
+    to {
+      transform: translate3d(22px, 0, 0) rotate(360deg);
+    }
+  }
+
+  /* Retro Sprite Idle Bobbing */
+  @keyframes pixel-bob {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-1.5px); }
+  }
+  .animate-pixel-idle {
+    animation: pixel-bob 2s ease-in-out infinite;
   }
 
   @keyframes music-bar-1 {
@@ -184,6 +280,14 @@ const initialStatsText = initialViews > 0
 
 <script>
   const GLYPHS = "01!@#$%^&*~_+-=<>?/\\[]{}AaBbCcDdEeFfGgHh";
+
+  const PIXEL_SPRITES: Record<string, string> = {
+    pc: `<svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="2" y="2" width="20" height="15" fill="#71717a"/><rect x="4" y="4" width="16" height="11" fill="#09090b"/><rect x="6" y="6" width="6" height="2" fill="#22c55e"/><rect x="6" y="9" width="10" height="2" fill="#4ade80"/><rect x="6" y="12" width="4" height="2" fill="#86efac"/><rect x="10" y="17" width="4" height="3" fill="#71717a"/><rect x="6" y="20" width="12" height="2" fill="#a1a1aa"/></svg>`,
+    palm: `<svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="9" y="2" width="6" height="3" fill="#10b981"/><rect x="4" y="4" width="5" height="3" fill="#059669"/><rect x="15" y="4" width="5" height="3" fill="#059669"/><rect x="2" y="7" width="4" height="3" fill="#047857"/><rect x="18" y="7" width="4" height="3" fill="#047857"/><rect x="9" y="6" width="3" height="3" fill="#78350f"/><rect x="12" y="7" width="3" height="3" fill="#92400e"/><rect x="11" y="9" width="3" height="3" fill="#b45309"/><rect x="10" y="12" width="3" height="4" fill="#92400e"/><rect x="11" y="16" width="3" height="5" fill="#78350f"/><rect x="5" y="21" width="14" height="2" fill="#f59e0b"/></svg>`,
+    drum: `<svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="6" y="2" width="12" height="3" fill="#fde047"/><rect x="4" y="5" width="16" height="2" fill="#ca8a04"/><rect x="5" y="7" width="14" height="3" fill="#ef4444"/><rect x="5" y="10" width="14" height="3" fill="#f59e0b"/><rect x="6" y="13" width="12" height="3" fill="#10b981"/><rect x="7" y="16" width="10" height="4" fill="#854d0e"/><rect x="6" y="20" width="12" height="2" fill="#ca8a04"/></svg>`,
+    moon: `<svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="4" y="3" width="6" height="3" fill="#facc15"/><rect x="2" y="6" width="5" height="11" fill="#facc15"/><rect x="4" y="17" width="6" height="3" fill="#facc15"/><rect x="7" y="9" width="3" height="5" fill="#facc15"/><rect x="14" y="3" width="4" height="2" fill="#60a5fa"/><rect x="16" y="5" width="2" height="2" fill="#60a5fa"/><rect x="14" y="7" width="4" height="2" fill="#60a5fa"/><rect x="18" y="10" width="4" height="2" fill="#93c5fd"/><rect x="20" y="12" width="2" height="2" fill="#93c5fd"/><rect x="18" y="14" width="4" height="2" fill="#93c5fd"/></svg>`,
+    gamepad: `<svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="3" y="6" width="18" height="11" fill="#475569"/><rect x="5" y="10" width="5" height="2" fill="#0f172a"/><rect x="6" y="8" width="2" height="6" fill="#0f172a"/><rect x="16" y="9" width="2" height="2" fill="#ef4444"/><rect x="18" y="11" width="2" height="2" fill="#3b82f6"/><rect x="14" y="11" width="2" height="2" fill="#eab308"/><rect x="16" y="13" width="2" height="2" fill="#22c55e"/></svg>`,
+  };
 
   function decryptMotion(element: HTMLElement, targetText: string, speed = 20) {
     if (!element) return;
@@ -219,6 +323,195 @@ const initialStatsText = initialViews > 0
     }, speed);
   }
 
+  function getDevStatusDialogue() {
+    const isEs =
+      document.documentElement.lang === "es" ||
+      window.location.pathname.includes("/es/") ||
+      window.location.pathname === "/es";
+
+    // Costa Rica Time (UTC-6)
+    const now = new Date();
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    const crDate = new Date(utc + 3600000 * -6);
+
+    const month = crDate.getMonth() + 1; // 1-12
+    const date = crDate.getDate(); // 1-31
+    const hours = crDate.getHours();
+    const day = crDate.getDay(); // 0 = Sun, 6 = Sat
+
+    // 1. Costa Rica & Limón Special Cultural Dates & National Holidays
+    const holidays: Record<string, { badgeEs: string; badgeEn: string; textEs: string; textEn: string; sprite: string }> = {
+      "8-31": {
+        badgeEs: "[Kirian: Cultura Afrocaribeña]",
+        badgeEn: "[Kirian: Afro-Caribbean Culture]",
+        textEs: `"31 Ago: Celebrando la Cultura Afrocostarricense en Limón."`,
+        textEn: `"Aug 31: Celebrating Afro-Costa Rican Culture in Limón."`,
+        sprite: "drum",
+      },
+      "8-2": {
+        badgeEs: "[Kirian: Feriado Nacional]",
+        badgeEn: "[Kirian: National Holiday]",
+        textEs: `"2 Ago: Tradición de la Romería hacia Cartago."`,
+        textEn: `"Aug 2: Cartago pilgrimage tradition."`,
+        sprite: "palm",
+      },
+      "8-15": {
+        badgeEs: "[Kirian: Día de la Madre]",
+        badgeEn: "[Kirian: Mother's Day]",
+        textEs: `"15 Ago: Día de la Madre en Costa Rica."`,
+        textEn: `"Aug 15: Mother's Day in Costa Rica."`,
+        sprite: "palm",
+      },
+      "9-15": {
+        badgeEs: "[Kirian: Independencia CR]",
+        badgeEn: "[Kirian: CR Independence]",
+        textEs: `"15 Set: Día de la Independencia de Costa Rica."`,
+        textEn: `"Sep 15: Costa Rica Independence Day."`,
+        sprite: "palm",
+      },
+      "7-25": {
+        badgeEs: "[Kirian: Anexión de Nicoya]",
+        badgeEn: "[Kirian: Nicoya Annexation]",
+        textEs: `"25 Jul: Anexión del Partido de Nicoya a Costa Rica."`,
+        textEn: `"Jul 25: Annexation of Nicoya to Costa Rica."`,
+        sprite: "palm",
+      },
+      "4-11": {
+        badgeEs: "[Kirian: Gesta Heroica]",
+        badgeEn: "[Kirian: Heroic Deed]",
+        textEs: `"11 Abr: Homenaje a la gesta de Juan Santamaría."`,
+        textEn: `"Apr 11: Tribute to Juan Santamaría's deed."`,
+        sprite: "pc",
+      },
+      "5-1": {
+        badgeEs: "[Kirian: Día del Trabajo]",
+        badgeEn: "[Kirian: Workers' Day]",
+        textEs: `"1 May: Día del Trabajo. Modo descanso activo."`,
+        textEn: `"May 1: Workers' Day. Active rest mode."`,
+        sprite: "gamepad",
+      },
+      "10-12": {
+        badgeEs: "[Kirian: Culturas de Limón]",
+        badgeEn: "[Kirian: Limón Cultures]",
+        textEs: `"12 Oct: Día de las Culturas y herencia caribeña."`,
+        textEn: `"Oct 12: Day of Cultures & Caribbean heritage."`,
+        sprite: "drum",
+      },
+      "12-1": {
+        badgeEs: "[Kirian: Abolición del Ejército]",
+        badgeEn: "[Kirian: Army Abolition]",
+        textEs: `"1 Dic: Abolición del ejército en Costa Rica (1948)."`,
+        textEn: `"Dec 1: Abolition of the military in Costa Rica."`,
+        sprite: "palm",
+      },
+      "12-25": {
+        badgeEs: "[Kirian: Fiestas Navideñas]",
+        badgeEn: "[Kirian: Holiday Season]",
+        textEs: `"25 Dic: ¡Feliz Navidad y felices fiestas!"`,
+        textEn: `"Dec 25: Merry Christmas & happy holidays!"`,
+        sprite: "palm",
+      },
+      "1-1": {
+        badgeEs: "[Kirian: Año Nuevo]",
+        badgeEn: "[Kirian: New Year]",
+        textEs: `"1 Ene: ¡Feliz Año Nuevo! Iniciando con código limpio."`,
+        textEn: `"Jan 1: Happy New Year! Starting with clean code."`,
+        sprite: "pc",
+      },
+    };
+
+    const todayKey = `${month}-${date}`;
+    if (holidays[todayKey]) {
+      const h = holidays[todayKey];
+      return {
+        badge: isEs ? h.badgeEs : h.badgeEn,
+        text: isEs ? h.textEs : h.textEn,
+        sprite: h.sprite,
+      };
+    }
+
+    const isWeekend = day === 0 || day === 6;
+    const isWorkHours = !isWeekend && hours >= 9 && hours < 18;
+    const isLateNight = hours >= 22 || hours < 6;
+
+    if (isWorkHours) {
+      const phrasesEs = [
+        `"Compilando nuevas ideas y puliendo interfaces."`,
+        `"Enfocado en código. Modo concentración."`,
+        `"Cazando bugs en el sistema con café en mano."`,
+        `"Diseñando la próxima versión."`,
+      ];
+      const phrasesEn = [
+        `"Compiling new ideas and polishing interfaces."`,
+        `"Deep in the code. Deep focus mode."`,
+        `"Hunting system bugs with coffee in hand."`,
+        `"Crafting the next release."`,
+      ];
+      const idx = Math.floor(Math.random() * phrasesEs.length);
+      return {
+        badge: "[Kirian: Online]",
+        text: isEs ? phrasesEs[idx] : phrasesEn[idx],
+        sprite: "pc",
+      };
+    } else if (isLateNight) {
+      const phrasesEs = [
+        `"En modo reposo. Recargando batería para mañana."`,
+        `"Kirian está descansando. Vuelve con el sol."`,
+        `"Servidores estables. Nos vemos en el próximo commit."`,
+      ];
+      const phrasesEn = [
+        `"In rest mode. Recharging battery for tomorrow."`,
+        `"Kirian is resting. Come back at sunrise."`,
+        `"Servers stable. See you at the next commit."`,
+      ];
+      const idx = Math.floor(Math.random() * phrasesEs.length);
+      return {
+        badge: "[Kirian: AFK / Zzz]",
+        text: isEs ? phrasesEs[idx] : phrasesEn[idx],
+        sprite: "moon",
+      };
+    } else if (isWeekend) {
+      const phrasesEs = [
+        `"Limón: Cahuita protege el arrecife vivo más biodiverso."`,
+        `"Limón: El Calypso es patrimonio inmaterial de Costa Rica."`,
+        `"Limón: Concentra más del 4% de la biodiversidad mundial."`,
+        `"Limón: Refugio costero de manatíes y delfines tucuxi."`,
+        `"Limón: Auténtico rice and beans con leche de coco."`,
+      ];
+      const phrasesEn = [
+        `"Limón: Cahuita protects Costa Rica's live coral reef."`,
+        `"Limón: Calypso music is Costa Rican Cultural Heritage."`,
+        `"Limón: Hosts over 4% of the planet's biodiversity."`,
+        `"Limón: Coastal refuge for manatees & tucuxi dolphins."`,
+        `"Limón: Authentic coconut rice & beans Caribbean craft."`,
+      ];
+      const idx = Math.floor(Math.random() * phrasesEs.length);
+      return {
+        badge: "[Kirian: Off Duty]",
+        text: isEs ? phrasesEs[idx] : phrasesEn[idx],
+        sprite: "palm",
+      };
+    } else {
+      // Evening / Leisure
+      const phrasesEs = [
+        `"Fuera de horario laboral. Descansando la mente."`,
+        `"Lejos de la pantalla. Nos vemos pronto."`,
+        `"Tomando un respiro antes del próximo sprint."`,
+      ];
+      const phrasesEn = [
+        `"Off work hours. Resting the mind."`,
+        `"Away from the screen. Catch you soon."`,
+        `"Taking a breather before the next sprint."`,
+      ];
+      const idx = Math.floor(Math.random() * phrasesEs.length);
+      return {
+        badge: "[Kirian: AFK]",
+        text: isEs ? phrasesEs[idx] : phrasesEn[idx],
+        sprite: "gamepad",
+      };
+    }
+  }
+
   async function loadSpotify() {
     try {
       let data = null;
@@ -234,7 +527,11 @@ const initialStatsText = initialViews > 0
         } catch {}
       }
 
-      if (!data) return;
+      const spotifyWidget = document.getElementById("spotify-widget");
+      const devWidget = document.getElementById("dev-status-widget");
+      const devBadge = document.getElementById("dev-status-badge");
+      const devSprite = document.getElementById("dev-status-sprite");
+      const devDialogue = document.getElementById("dev-status-dialogue");
 
       const songEl = document.getElementById("spotify-song");
       const artistEl = document.getElementById("spotify-artist");
@@ -242,12 +539,24 @@ const initialStatsText = initialViews > 0
       const linkEl = document.getElementById("spotify-link") as HTMLAnchorElement | null;
       const eqEl = document.getElementById("spotify-equalizer");
       const albumImg = document.getElementById("spotify-album-img") as HTMLImageElement | null;
+      const vinylImg = document.getElementById("spotify-vinyl-img") as HTMLImageElement | null;
 
-      if (data.albumImageUrl && albumImg) {
-        albumImg.src = data.albumImageUrl;
-      }
+      // 1. User IS listening to a track live
+      if (data && data.isPlaying && data.title) {
+        if (devWidget) {
+          devWidget.classList.add("hidden");
+          devWidget.classList.remove("flex");
+        }
+        if (spotifyWidget) {
+          spotifyWidget.classList.remove("hidden");
+          spotifyWidget.classList.add("flex");
+        }
 
-      if (data.title) {
+        if (data.albumImageUrl) {
+          if (albumImg) albumImg.src = data.albumImageUrl;
+          if (vinylImg) vinylImg.src = data.albumImageUrl;
+        }
+
         if (songEl && songEl.textContent !== data.title) {
           decryptMotion(songEl, data.title, 18);
         }
@@ -258,13 +567,28 @@ const initialStatsText = initialViews > 0
         if (linkEl && data.songUrl) linkEl.href = data.songUrl;
 
         if (eqEl) {
-          if (data.isPlaying) {
-            eqEl.classList.remove("hidden");
-            eqEl.classList.add("inline-flex");
-          } else {
-            eqEl.classList.add("hidden");
-            eqEl.classList.remove("inline-flex");
-          }
+          eqEl.classList.remove("hidden");
+          eqEl.classList.add("inline-flex");
+        }
+      } else {
+        // 2. User is NOT listening: Show Retro Pixel Sprite Dev Status Dialogue
+        if (spotifyWidget) {
+          spotifyWidget.classList.add("hidden");
+          spotifyWidget.classList.remove("flex");
+        }
+        if (devWidget) {
+          devWidget.classList.remove("hidden");
+          devWidget.classList.add("flex");
+        }
+
+        const devInfo = getDevStatusDialogue();
+        if (devBadge) devBadge.textContent = devInfo.badge;
+        if (devSprite && devInfo.sprite && PIXEL_SPRITES[devInfo.sprite]) {
+          devSprite.innerHTML = PIXEL_SPRITES[devInfo.sprite];
+        }
+        if (devDialogue) {
+          devDialogue.title = devInfo.text;
+          decryptMotion(devDialogue, devInfo.text, 18);
         }
       }
     } catch (e) {
@@ -348,17 +672,36 @@ const initialStatsText = initialViews > 0
   // Support Astro view transitions
   document.addEventListener("astro:page-load", init);
 
-  // Poll Spotify live state every 12s when active
+  // Poll Spotify live state every 5s when active + refresh on focus and hover
   if (typeof window !== "undefined") {
+    let lastFetchTime = 0;
+    const throttledLoad = () => {
+      const now = Date.now();
+      if (now - lastFetchTime > 3000) {
+        lastFetchTime = now;
+        loadSpotify();
+      }
+    };
+
     setInterval(() => {
       if (!document.hidden) {
         loadSpotify();
       }
-    }, 12000);
+    }, 5000);
+
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
         loadSpotify();
       }
     });
+
+    window.addEventListener("focus", () => {
+      loadSpotify();
+    });
+
+    const link = document.getElementById("spotify-link");
+    if (link) {
+      link.addEventListener("mouseenter", throttledLoad);
+    }
   }
 </script>
