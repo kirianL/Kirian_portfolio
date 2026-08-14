@@ -1,0 +1,365 @@
+---
+interface Props {
+  slug: string;
+  lang?: "en" | "es";
+}
+
+const { slug, lang = "en" } = Astro.props;
+
+// 4 exact pixel-art hand SVGs starting at 0
+const reactions = [
+  {
+    id: "pinch",
+    label: lang === "es" ? "Excelente" : "Chef's Kiss",
+    viewBox: "0 0 20 20",
+    color: "#B06749",
+    hoverColor: "#e06c4b",
+    defaultCount: 0,
+    rects: [
+      { x: 13, y: 0, w: 1, h: 1 }, { x: 13, y: 1, w: 2, h: 1 }, { x: 15, y: 3, w: 2, h: 1 },
+      { x: 15, y: 4, w: 2, h: 1 }, { x: 10, y: 5, w: 2, h: 1 }, { x: 15, y: 5, w: 5, h: 1 },
+      { x: 10, y: 6, w: 2, h: 1 }, { x: 15, y: 6, w: 5, h: 1 }, { x: 10, y: 7, w: 2, h: 1 },
+      { x: 17, y: 7, w: 3, h: 1 }, { x: 10, y: 8, w: 2, h: 1 }, { x: 18, y: 8, w: 2, h: 1 },
+      { x: 10, y: 9, w: 2, h: 1 }, { x: 18, y: 9, w: 2, h: 1 }, { x: 8, y: 10, w: 4, h: 1 },
+      { x: 15, y: 10, w: 5, h: 1 }, { x: 8, y: 11, w: 4, h: 1 }, { x: 15, y: 11, w: 5, h: 1 },
+      { x: 8, y: 12, w: 5, h: 1 }, { x: 15, y: 12, w: 5, h: 1 }, { x: 8, y: 13, w: 12, h: 1 },
+      { x: 8, y: 14, w: 11, h: 1 }, { x: 1, y: 15, w: 16, h: 1 }, { x: 1, y: 16, w: 16, h: 1 },
+      { x: 1, y: 17, w: 14, h: 1 }, { x: 0, y: 18, w: 15, h: 1 }, { x: 3, y: 19, w: 3, h: 1 },
+      { x: 7, y: 19, w: 7, h: 1 },
+    ],
+  },
+  {
+    id: "thumb",
+    label: lang === "es" ? "Me gusta" : "Thumbs Up",
+    viewBox: "0 0 20 20",
+    color: "#8C7347",
+    hoverColor: "#d4a373",
+    defaultCount: 0,
+    rects: [
+      { x: 5, y: 0, w: 2, h: 1 }, { x: 5, y: 1, w: 2, h: 1 }, { x: 5, y: 2, w: 2, h: 1 },
+      { x: 5, y: 3, w: 2, h: 1 }, { x: 5, y: 4, w: 2, h: 1 }, { x: 5, y: 5, w: 2, h: 1 },
+      { x: 5, y: 6, w: 2, h: 1 }, { x: 5, y: 7, w: 3, h: 1 }, { x: 5, y: 8, w: 10, h: 1 },
+      { x: 5, y: 9, w: 10, h: 1 }, { x: 0, y: 10, w: 2, h: 1 }, { x: 5, y: 10, w: 7, h: 1 },
+      { x: 0, y: 11, w: 2, h: 1 }, { x: 5, y: 11, w: 7, h: 1 }, { x: 0, y: 12, w: 2, h: 1 },
+      { x: 5, y: 12, w: 8, h: 1 }, { x: 0, y: 13, w: 2, h: 1 }, { x: 5, y: 13, w: 10, h: 1 },
+      { x: 0, y: 14, w: 2, h: 1 }, { x: 5, y: 14, w: 10, h: 1 }, { x: 0, y: 15, w: 2, h: 1 },
+      { x: 5, y: 15, w: 7, h: 1 }, { x: 0, y: 16, w: 2, h: 1 }, { x: 5, y: 16, w: 7, h: 1 },
+      { x: 0, y: 17, w: 2, h: 1 }, { x: 5, y: 17, w: 8, h: 1 }, { x: 0, y: 18, w: 2, h: 1 },
+      { x: 5, y: 18, w: 15, h: 1 }, { x: 0, y: 19, w: 2, h: 1 }, { x: 5, y: 19, w: 15, h: 1 },
+    ],
+  },
+  {
+    id: "clap",
+    label: lang === "es" ? "Aplausos" : "Clap",
+    viewBox: "0 0 20 20",
+    color: "#515972",
+    hoverColor: "#818cf8",
+    defaultCount: 0,
+    rects: [
+      { x: 3, y: 0, w: 4, h: 1 }, { x: 13, y: 0, w: 4, h: 1 }, { x: 3, y: 1, w: 4, h: 1 },
+      { x: 13, y: 1, w: 4, h: 1 }, { x: 0, y: 3, w: 2, h: 1 }, { x: 8, y: 3, w: 2, h: 1 },
+      { x: 18, y: 3, w: 2, h: 1 }, { x: 0, y: 4, w: 2, h: 1 }, { x: 8, y: 4, w: 2, h: 1 },
+      { x: 18, y: 4, w: 2, h: 1 }, { x: 3, y: 5, w: 4, h: 1 }, { x: 13, y: 5, w: 4, h: 1 },
+      { x: 3, y: 6, w: 4, h: 1 }, { x: 13, y: 6, w: 4, h: 1 }, { x: 2, y: 7, w: 6, h: 1 },
+      { x: 13, y: 7, w: 5, h: 1 }, { x: 0, y: 8, w: 10, h: 1 }, { x: 13, y: 8, w: 7, h: 1 },
+      { x: 0, y: 9, w: 10, h: 1 }, { x: 13, y: 9, w: 7, h: 1 }, { x: 3, y: 10, w: 7, h: 1 },
+      { x: 15, y: 10, w: 5, h: 1 }, { x: 3, y: 11, w: 7, h: 1 }, { x: 15, y: 11, w: 5, h: 1 },
+      { x: 3, y: 12, w: 7, h: 1 }, { x: 15, y: 12, w: 5, h: 1 }, { x: 3, y: 13, w: 7, h: 1 },
+      { x: 15, y: 13, w: 5, h: 1 }, { x: 3, y: 14, w: 7, h: 1 }, { x: 15, y: 14, w: 5, h: 1 },
+      { x: 0, y: 15, w: 10, h: 1 }, { x: 13, y: 15, w: 7, h: 1 }, { x: 0, y: 16, w: 10, h: 1 },
+      { x: 13, y: 16, w: 7, h: 1 }, { x: 2, y: 17, w: 6, h: 1 }, { x: 13, y: 17, w: 5, h: 1 },
+      { x: 3, y: 18, w: 4, h: 1 }, { x: 13, y: 18, w: 4, h: 1 }, { x: 3, y: 19, w: 4, h: 1 },
+      { x: 13, y: 19, w: 4, h: 1 },
+    ],
+  },
+  {
+    id: "ok",
+    label: lang === "es" ? "Perfecto" : "OK",
+    viewBox: "0 0 20 20",
+    color: "#5E6850",
+    hoverColor: "#86af7e",
+    defaultCount: 0,
+    rects: [
+      { x: 13, y: 0, w: 2, h: 1 }, { x: 13, y: 1, w: 2, h: 1 }, { x: 13, y: 2, w: 2, h: 1 },
+      { x: 13, y: 3, w: 2, h: 1 }, { x: 18, y: 3, w: 1, h: 1 }, { x: 13, y: 4, w: 2, h: 1 },
+      { x: 18, y: 4, w: 1, h: 1 }, { x: 3, y: 5, w: 4, h: 1 }, { x: 13, y: 5, w: 2, h: 1 },
+      { x: 18, y: 5, w: 1, h: 1 }, { x: 3, y: 6, w: 4, h: 1 }, { x: 13, y: 6, w: 2, h: 1 },
+      { x: 18, y: 6, w: 1, h: 1 }, { x: 13, y: 7, w: 2, h: 1 }, { x: 18, y: 7, w: 1, h: 1 },
+      { x: 8, y: 8, w: 2, h: 1 }, { x: 13, y: 8, w: 2, h: 1 }, { x: 18, y: 8, w: 1, h: 1 },
+      { x: 7, y: 9, w: 3, h: 1 }, { x: 13, y: 9, w: 2, h: 1 }, { x: 18, y: 9, w: 1, h: 1 },
+      { x: 0, y: 10, w: 2, h: 1 }, { x: 8, y: 10, w: 11, h: 1 }, { x: 0, y: 11, w: 2, h: 1 },
+      { x: 8, y: 11, w: 11, h: 1 }, { x: 0, y: 12, w: 2, h: 1 }, { x: 8, y: 12, w: 11, h: 1 },
+      { x: 0, y: 13, w: 2, h: 1 }, { x: 8, y: 13, w: 11, h: 1 }, { x: 0, y: 14, w: 2, h: 1 },
+      { x: 8, y: 14, w: 11, h: 1 }, { x: 3, y: 15, w: 16, h: 1 }, { x: 3, y: 16, w: 16, h: 1 },
+      { x: 7, y: 17, w: 11, h: 1 }, { x: 8, y: 18, w: 9, h: 1 }, { x: 8, y: 19, w: 9, h: 1 },
+    ],
+  },
+];
+---
+
+<div
+  class="blog-reactions-container flex items-center select-none py-1"
+  data-post-slug={slug}
+>
+  <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
+    {reactions.map((r) => (
+      <button
+        type="button"
+        data-reaction-id={r.id}
+        data-default-count={r.defaultCount}
+        class="reaction-btn group relative flex flex-col items-center justify-center p-1.5 cursor-pointer bg-transparent border-0 outline-none select-none transition-all duration-150 active:scale-90"
+        style={`--reaction-color: ${r.color}; --reaction-hover-color: ${r.hoverColor};`}
+        title={r.label}
+        aria-label={`React with ${r.label}`}
+      >
+        <!-- Floating +1 Particle on click -->
+        <span class="reaction-plus-one absolute -top-4 font-mono text-[10px] font-bold text-[var(--reaction-color)] pointer-events-none opacity-0 select-none">
+          +1
+        </span>
+
+        <!-- Pixel Sparks Container -->
+        <div class="pixel-sparks-container absolute inset-0 pointer-events-none overflow-visible"></div>
+
+        <!-- Pixel-Art SVG with crisp 1:1 square pixel rendering -->
+        <span class="reaction-icon-wrapper relative flex items-center justify-center text-[var(--reaction-color)] opacity-70 group-hover:opacity-100 group-hover:text-[var(--reaction-hover-color)] transition-all duration-200">
+          <svg
+            fill="currentColor"
+            viewBox={r.viewBox}
+            shape-rendering="crispEdges"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            class="reaction-svg size-5 aspect-square shrink-0 transition-transform duration-200 group-hover:scale-115"
+            style="image-rendering: pixelated; shape-rendering: crispEdges;"
+          >
+            <g fill="currentColor">
+              {r.rects.map((rect) => (
+                <rect x={rect.x} y={rect.y} width={rect.w} height={rect.h} />
+              ))}
+            </g>
+          </svg>
+        </span>
+
+        <!-- Number Count with dynamic bounce -->
+        <span class="reaction-count mt-1 font-mono text-[11px] text-[var(--reaction-color)] opacity-75 group-hover:opacity-100 tabular-nums font-medium transition-all duration-150">
+          {r.defaultCount}
+        </span>
+
+        <!-- Pixel Dashed Bottom Line -->
+        <div class="reaction-dashed-line w-full flex items-center justify-center gap-0.5 mt-1 overflow-hidden opacity-50 group-hover:opacity-100 transition-all duration-150">
+          <span class="h-[1.5px] w-1.5 bg-[var(--reaction-color)] rounded-[0.5px] transition-transform duration-150 group-hover:scale-y-125"></span>
+          <span class="h-[1.5px] w-1.5 bg-[var(--reaction-color)] rounded-[0.5px] transition-transform duration-150 group-hover:scale-y-125"></span>
+          <span class="h-[1.5px] w-1.5 bg-[var(--reaction-color)] rounded-[0.5px] transition-transform duration-150 group-hover:scale-y-125"></span>
+          <span class="h-[1.5px] w-1.5 bg-[var(--reaction-color)] rounded-[0.5px] transition-transform duration-150 group-hover:scale-y-125"></span>
+        </div>
+      </button>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  @keyframes reactionPop {
+    0% { transform: scale(1) rotate(0deg); }
+    20% { transform: scale(0.75) rotate(-10deg); }
+    45% { transform: scale(1.45) rotate(8deg); }
+    70% { transform: scale(0.9) rotate(-4deg); }
+    85% { transform: scale(1.1) rotate(2deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+
+  @keyframes floatUpFade {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    25% { transform: translateY(-8px) scale(1.3); opacity: 1; }
+    60% { transform: translateY(-20px) scale(1.05); opacity: 0.95; }
+    100% { transform: translateY(-32px) scale(0.85); opacity: 0; }
+  }
+
+  @keyframes numberBump {
+    0% { transform: translateY(0) scale(1); }
+    40% { transform: translateY(-3px) scale(1.25); }
+    100% { transform: translateY(0) scale(1); }
+  }
+
+  @keyframes sparkFly {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+  }
+
+  .reaction-btn.animate-pop .reaction-svg {
+    animation: reactionPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .reaction-btn.animate-pop .reaction-count {
+    animation: numberBump 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reaction-btn.animate-pop .reaction-plus-one {
+    animation: floatUpFade 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .pixel-spark {
+    position: absolute;
+    width: 2.5px;
+    height: 2.5px;
+    border-radius: 0.5px;
+    background-color: var(--spark-color);
+    animation: sparkFly 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .reaction-btn.has-reacted .reaction-icon-wrapper,
+  .reaction-btn.has-reacted .reaction-count {
+    opacity: 1 !important;
+    filter: drop-shadow(0 0 5px var(--reaction-color));
+  }
+
+  .reaction-btn.has-reacted .reaction-dashed-line {
+    opacity: 1 !important;
+    filter: drop-shadow(0 0 3px var(--reaction-color));
+  }
+
+  .reaction-btn.has-reacted {
+    cursor: default;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  import { play } from "cuelume";
+
+  const triggerSparks = (btn: HTMLElement, color: string) => {
+    const container = btn.querySelector(".pixel-sparks-container");
+    if (!container) return;
+
+    container.innerHTML = "";
+    const angles = [
+      { x: -14, y: -16 },
+      { x: 14, y: -16 },
+      { x: -18, y: 4 },
+      { x: 18, y: 4 },
+      { x: 0, y: -22 },
+    ];
+
+    angles.forEach(({ x, y }) => {
+      const spark = document.createElement("span");
+      spark.className = "pixel-spark";
+      spark.style.setProperty("--spark-color", color);
+      spark.style.setProperty("--tx", `${x}px`);
+      spark.style.setProperty("--ty", `${y}px`);
+      spark.style.left = "50%";
+      spark.style.top = "35%";
+      container.appendChild(spark);
+    });
+
+    setTimeout(() => {
+      container.innerHTML = "";
+    }, 600);
+  };
+
+  const setupReactions = async () => {
+    const containers = document.querySelectorAll(".blog-reactions-container");
+
+    containers.forEach(async (container) => {
+      const slug = container.getAttribute("data-post-slug");
+      if (!slug) return;
+
+      const buttons = container.querySelectorAll(".reaction-btn");
+
+      // 1. Initial Local State
+      buttons.forEach((btn) => {
+        const reactionId = btn.getAttribute("data-reaction-id") || "";
+        const storageKey = `portfolio_reaction_${slug}_${reactionId}`;
+        const hasReacted = localStorage.getItem(storageKey) === "true";
+        const countEl = btn.querySelector(".reaction-count");
+
+        if (hasReacted) {
+          btn.classList.add("has-reacted");
+        }
+      });
+
+      // 2. Fetch live counts from Redis API
+      try {
+        const res = await fetch(`/api/reactions?slug=${encodeURIComponent(slug)}`);
+        if (res.ok) {
+          const data = await res.json();
+          const counts = data.counts || {};
+
+          buttons.forEach((btn) => {
+            const reactionId = btn.getAttribute("data-reaction-id") || "";
+            const countEl = btn.querySelector(".reaction-count");
+            const serverCount = counts[reactionId];
+
+            if (countEl && typeof serverCount === "number") {
+              countEl.textContent = new Intl.NumberFormat().format(serverCount);
+            }
+          });
+        }
+      } catch (err) {
+        console.warn("Reactions sync:", err);
+      }
+
+      // 3. Click handler — one reaction per type per visitor
+      buttons.forEach((btn) => {
+        if (btn.hasAttribute("data-bound")) return;
+        btn.setAttribute("data-bound", "true");
+
+        btn.addEventListener("click", async () => {
+          const reactionId = btn.getAttribute("data-reaction-id") || "";
+          const storageKey = `portfolio_reaction_${slug}_${reactionId}`;
+          const hasReacted = localStorage.getItem(storageKey) === "true";
+
+          if (hasReacted) return;
+
+          const countEl = btn.querySelector(".reaction-count");
+          const currentCount = parseInt(countEl?.textContent?.replace(/,/g, "") || "0", 10);
+
+          localStorage.setItem(storageKey, "true");
+
+          if (countEl) {
+            countEl.textContent = new Intl.NumberFormat().format(currentCount + 1);
+          }
+
+          btn.classList.remove("animate-pop");
+          void btn.offsetWidth;
+          btn.classList.add("animate-pop");
+          btn.classList.add("has-reacted");
+
+          const color = btn.style.getPropertyValue("--reaction-hover-color") || "#f97316";
+          triggerSparks(btn as HTMLElement, color);
+          try { play("pop"); } catch {}
+
+          try {
+            const postRes = await fetch("/api/reactions", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ slug, type: reactionId }),
+            });
+
+            if (postRes.ok) {
+              const data = await postRes.json();
+              if (data.counts && typeof data.counts[reactionId] === "number" && countEl) {
+                countEl.textContent = new Intl.NumberFormat().format(data.counts[reactionId]);
+              }
+            } else {
+              localStorage.removeItem(storageKey);
+              btn.classList.remove("has-reacted");
+              if (countEl) {
+                countEl.textContent = new Intl.NumberFormat().format(currentCount);
+              }
+              console.warn("Reaction failed:", await postRes.text());
+            }
+          } catch (err) {
+            localStorage.removeItem(storageKey);
+            btn.classList.remove("has-reacted");
+            if (countEl) {
+              countEl.textContent = new Intl.NumberFormat().format(currentCount);
+            }
+            console.warn("Redis reaction update:", err);
+          }
+        });
+      });
+    });
+  };
+
+  setupReactions();
+  document.addEventListener("astro:page-load", setupReactions);
+  document.addEventListener("astro:after-swap", setupReactions);
+</script>

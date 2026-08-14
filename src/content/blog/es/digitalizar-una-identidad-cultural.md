@@ -38,29 +38,29 @@ Además, de acuerdo con datos del [Programa de las Naciones Unidas para el Desar
 | Población afrodescendiente | 23%                |
 | Cantones                   | 6                  |
 
-<div class="my-6 p-6 rounded-[14px] border border-border bg-card-surface flex flex-col gap-6 max-w-md mx-auto">
-  <div class="text-xs font-semibold tracking-wider text-primary-text uppercase font-mono border-b border-border pb-2">Representación étnica de la provincia</div>
-  <div class="flex flex-col gap-5">
-    <div class="flex items-center gap-4">
-      <div class="text-3xl font-bold font-mono text-blue-500 w-16 text-right">23%</div>
-      <div class="flex-1 flex flex-col gap-1.5">
-        <span class="text-xs font-medium text-primary-text">Afrodescendientes o mulatas</span>
-        <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-          <div class="bg-blue-500 h-full rounded-full" style="width: 23%"></div>
+<div class="my-6 p-5 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white/60 dark:bg-grayscale-2/60 backdrop-blur-xs flex flex-col gap-4 max-w-md mx-auto shadow-xs">
+  <div class="text-[11px] font-semibold tracking-wider text-grayscale-11 uppercase font-mono border-b border-grayscale-3/60 dark:border-grayscale-3/30 pb-2">Representación étnica de la provincia</div>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-3">
+      <div class="text-2xl font-bold font-mono text-accent-9 w-14 text-right">23%</div>
+      <div class="flex-1 flex flex-col gap-1">
+        <span class="text-xs font-medium text-grayscale-12">Afrodescendientes o mulatas</span>
+        <div class="w-full h-2 bg-grayscale-3 dark:bg-grayscale-3/60 rounded-full overflow-hidden">
+          <div class="bg-accent-9 h-full rounded-full" style="width: 23%"></div>
         </div>
       </div>
     </div>
-    <div class="flex items-center gap-4">
-      <div class="text-3xl font-bold font-mono text-primary w-16 text-right">77%</div>
-      <div class="flex-1 flex flex-col gap-1.5">
-        <span class="text-xs font-medium text-primary-text">Resto de la población</span>
-        <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-          <div class="bg-primary h-full rounded-full" style="width: 77%"></div>
+    <div class="flex items-center gap-3">
+      <div class="text-2xl font-bold font-mono text-grayscale-11 w-14 text-right">77%</div>
+      <div class="flex-1 flex flex-col gap-1">
+        <span class="text-xs font-medium text-grayscale-12">Resto de la población</span>
+        <div class="w-full h-2 bg-grayscale-3 dark:bg-grayscale-3/60 rounded-full overflow-hidden">
+          <div class="bg-grayscale-9 dark:bg-grayscale-11 h-full rounded-full" style="width: 77%"></div>
         </div>
       </div>
     </div>
   </div>
-  <div class="text-[9px] text-muted-text font-mono pt-1">Fuente: INEC y PNUD</div>
+  <div class="text-[9px] text-grayscale-10 font-mono pt-1">Fuente: INEC y PNUD</div>
 </div>
 
 Sin embargo, al comparar estas cifras con la cantidad de proyectos digitales dedicados a documentar la identidad limonense, el contraste es evidente.
@@ -187,29 +187,29 @@ Tenía relación con desigualdad.
 
 Según información recopilada por el [PNUD](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf?utm_source=chatgpt.com) a partir de datos censales, aproximadamente una tercera parte de los hogares limonenses se encontraba en condición de pobreza.
 
-<div class="my-6 p-6 rounded-[14px] border border-border bg-card-surface flex flex-col gap-6 max-w-md mx-auto">
-  <div class="text-xs font-semibold tracking-wider text-primary-text uppercase font-mono border-b border-border pb-2">Hogares en condición de pobreza (Limón)</div>
-  <div class="flex flex-col gap-5">
-    <div class="flex items-center gap-4">
-      <div class="text-3xl font-bold font-mono text-red-500 w-16 text-right">31%</div>
-      <div class="flex-1 flex flex-col gap-1.5">
-        <span class="text-xs font-medium text-primary-text">Hogares en pobreza</span>
-        <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+<div class="my-6 p-5 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white/60 dark:bg-grayscale-2/60 backdrop-blur-xs flex flex-col gap-4 max-w-md mx-auto shadow-xs">
+  <div class="text-[11px] font-semibold tracking-wider text-grayscale-11 uppercase font-mono border-b border-grayscale-3/60 dark:border-grayscale-3/30 pb-2">Hogares en condición de pobreza (Limón)</div>
+  <div class="flex flex-col gap-4">
+    <div class="flex items-center gap-3">
+      <div class="text-2xl font-bold font-mono text-red-500 w-14 text-right">31%</div>
+      <div class="flex-1 flex flex-col gap-1">
+        <span class="text-xs font-medium text-grayscale-12">Hogares en pobreza</span>
+        <div class="w-full h-2 bg-grayscale-3 dark:bg-grayscale-3/60 rounded-full overflow-hidden">
           <div class="bg-red-500 h-full rounded-full" style="width: 31%"></div>
         </div>
       </div>
     </div>
-    <div class="flex items-center gap-4">
-      <div class="text-3xl font-bold font-mono text-primary w-16 text-right">69%</div>
-      <div class="flex-1 flex flex-col gap-1.5">
-        <span class="text-xs font-medium text-primary-text">Otros hogares</span>
-        <div class="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-          <div class="bg-primary h-full rounded-full" style="width: 69%"></div>
+    <div class="flex items-center gap-3">
+      <div class="text-2xl font-bold font-mono text-grayscale-11 w-14 text-right">69%</div>
+      <div class="flex-1 flex flex-col gap-1">
+        <span class="text-xs font-medium text-grayscale-12">Otros hogares</span>
+        <div class="w-full h-2 bg-grayscale-3 dark:bg-grayscale-3/60 rounded-full overflow-hidden">
+          <div class="bg-grayscale-9 dark:bg-grayscale-11 h-full rounded-full" style="width: 69%"></div>
         </div>
       </div>
     </div>
   </div>
-  <div class="text-[9px] text-muted-text font-mono pt-1">Fuente: PNUD - Indicadores sociales de Limón</div>
+  <div class="text-[9px] text-grayscale-10 font-mono pt-1">Fuente: PNUD - Indicadores sociales de Limón</div>
 </div>
 
 Este dato cambió mi forma de entender el proyecto.

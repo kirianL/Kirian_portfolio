@@ -1,0 +1,67 @@
+---
+// Minimalist vertical scroll percentage & tick marks ruler
+---
+
+<div id="scroll-ruler-container" class="hidden xl:flex fixed right-6 top-1/2 -translate-y-1/2 flex-col items-center gap-2 z-30 pointer-events-none select-none">
+  <!-- Percentage text -->
+  <span id="scroll-percentage" class="font-mono text-[10px] text-accent-9 font-medium tracking-tighter">
+    0%
+  </span>
+
+  <!-- Tick ruler marks -->
+  <div class="flex flex-col items-center gap-1.5 py-1">
+    {Array.from({ length: 18 }).map((_, i) => (
+      <span
+        class="scroll-tick w-2.5 h-[1px] bg-grayscale-4 transition-colors duration-150 rounded-full"
+        data-tick-index={i}
+      />
+    ))}
+  </div>
+</div>
+
+<script>
+  const setupScrollRuler = () => {
+    const percentageEl = document.getElementById("scroll-percentage");
+    const ticks = document.querySelectorAll(".scroll-tick");
+
+    if (!percentageEl || ticks.length === 0) return;
+
+    let ticking = false;
+
+    const updateProgress = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      
+      const progress = docHeight > 0 ? Math.min(100, Math.max(0, Math.round((scrollTop / docHeight) * 100))) : 0;
+
+      percentageEl.textContent = `${progress}%`;
+
+      const activeTicksCount = Math.round((progress / 100) * ticks.length);
+
+      ticks.forEach((tick, idx) => {
+        if (idx < activeTicksCount) {
+          tick.classList.remove("bg-grayscale-4");
+          tick.classList.add("bg-accent-9", "w-3.5");
+        } else {
+          tick.classList.remove("bg-accent-9", "w-3.5");
+          tick.classList.add("bg-grayscale-4");
+        }
+      });
+
+      ticking = false;
+    };
+
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateProgress);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    updateProgress();
+  };
+
+  setupScrollRuler();
+  document.addEventListener("astro:page-load", setupScrollRuler);
+  document.addEventListener("astro:after-swap", setupScrollRuler);
+</script>

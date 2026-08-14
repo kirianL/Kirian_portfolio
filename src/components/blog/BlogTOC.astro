@@ -1,0 +1,229 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings?: Heading[];
+  lang?: "en" | "es";
+}
+
+const { headings = [], lang = "en" } = Astro.props;
+const backToTopText = lang === "es" ? "↑ volver arriba" : "↑ back to top";
+
+// Only main chapters (h2) for a clean, non-cluttered editorial index
+const tocHeadings = headings.filter((h) => h.depth === 2);
+---
+
+<nav id="blog-toc-nav" class="flex flex-col gap-3 select-none w-full" aria-label="Table of contents">
+  <!-- Back to Top Link -->
+  <button
+    id="toc-back-to-top"
+    type="button"
+    data-cuelume-hover="tick"
+    class="text-xs font-mono text-grayscale-10 hover:text-accent-9 transition-colors cursor-pointer text-left w-fit flex items-center gap-1.5 group mb-1"
+  >
+    <span class="group-hover:-translate-y-0.5 transition-transform duration-200">{backToTopText}</span>
+  </button>
+
+  {tocHeadings.length > 0 && (
+    <ul id="toc-list" class="flex flex-col gap-2 text-xs font-mono">
+      {tocHeadings.map((h, index) => {
+        const num = String(index + 1).padStart(2, "0");
+        return (
+          <li class="flex items-start">
+            <a
+              href={`#${h.slug}`}
+              data-toc-target={h.slug}
+              class="toc-item-link text-grayscale-10 hover:text-grayscale-12 leading-relaxed cursor-pointer transition-all duration-150 py-0.5"
+            >
+              <span class="opacity-40 mr-1.5 shrink-0 font-mono text-[10px]">{num}.</span>
+              <span class="toc-item-text">{h.text}</span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  )}
+</nav>
+
+<style is:global>
+  .toc-item-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .toc-item-text {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Strikethrough on passed sections (Tachado en tiempo real) */
+  .toc-item-link.is-passed,
+  .toc-item-link.is-passed .toc-item-text {
+    opacity: 0.35 !important;
+    text-decoration: line-through !important;
+    text-decoration-color: var(--color-grayscale-10, #71717a) !important;
+    text-decoration-thickness: 1.5px !important;
+  }
+
+  .toc-item-link.is-passed:hover,
+  .toc-item-link.is-passed:hover .toc-item-text {
+    opacity: 0.85 !important;
+  }
+
+  /* Active reading section */
+  .toc-item-link.is-active,
+  .toc-item-link.is-active .toc-item-text {
+    color: var(--color-grayscale-12, #ffffff) !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+    text-decoration: none !important;
+  }
+</style>
+
+<script>
+  import { play } from "cuelume";
+
+  let abortController: AbortController | null = null;
+
+  const setupTOC = () => {
+    if (abortController) {
+      abortController.abort();
+    }
+    abortController = new AbortController();
+    const { signal } = abortController;
+
+    const backBtn = document.getElementById("toc-back-to-top");
+    if (backBtn) {
+      backBtn.onclick = (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+    }
+
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>(".toc-item-link"));
+    if (links.length === 0) return;
+
+    let retries = 0;
+    const maxRetries = 30;
+
+    const findAndBind = () => {
+      if (signal.aborted) return;
+
+      const article = document.querySelector("article.prose") || document.querySelector("article");
+      const articleHeadings = article ? Array.from(article.querySelectorAll<HTMLElement>("h2")) : [];
+
+      const items: { el: HTMLElement; link: HTMLAnchorElement; passed: boolean }[] = [];
+
+      links.forEach((link, idx) => {
+        const slug = link.getAttribute("data-toc-target");
+        let el = slug ? document.getElementById(slug) : null;
+        if (!el && articleHeadings[idx]) {
+          el = articleHeadings[idx];
+          if (slug && !el.id) el.id = slug;
+        }
+        if (el) {
+          items.push({ el, link, passed: false });
+        }
+      });
+
+      if (items.length === 0 && retries < maxRetries) {
+        retries++;
+        requestAnimationFrame(findAndBind);
+        return;
+      }
+
+      if (items.length === 0) return;
+
+      // Smooth click handling
+      links.forEach((link, idx) => {
+        link.onclick = (e) => {
+          e.preventDefault();
+          const targetSlug = link.getAttribute("data-toc-target");
+          const targetEl = (targetSlug ? document.getElementById(targetSlug) : null) || articleHeadings[idx];
+          if (targetEl) {
+            const y = targetEl.getBoundingClientRect().top + window.scrollY - 90;
+            window.scrollTo({ top: y, behavior: "smooth" });
+          }
+        };
+      });
+
+      let lastTick = 0;
+      let ticking = false;
+
+      const checkScroll = () => {
+        if (signal.aborted) return;
+        const scrollY = window.scrollY;
+        const triggerY = 120; // 120px threshold from top of viewport
+        const docHeight = document.documentElement.scrollHeight;
+        const isAtBottom = scrollY + window.innerHeight >= docHeight - 40;
+        const now = Date.now();
+
+        items.forEach((item, i) => {
+          const rect = item.el.getBoundingClientRect();
+          const next = items[i + 1];
+          const nextRect = next ? next.el.getBoundingClientRect() : null;
+
+          if (isAtBottom) {
+            if (i === items.length - 1) {
+              item.link.classList.remove("is-passed");
+              item.link.classList.add("is-active");
+              item.passed = false;
+            } else {
+              item.link.classList.add("is-passed");
+              item.link.classList.remove("is-active");
+              item.passed = true;
+            }
+          } else if (nextRect && nextRect.top <= triggerY) {
+            // Passed completely into the next section -> Strikethrough
+            item.link.classList.add("is-passed");
+            item.link.classList.remove("is-active");
+            if (!item.passed) {
+              item.passed = true;
+              if (now - lastTick > 150) {
+                lastTick = now;
+                try { play("tick"); } catch {}
+              }
+            }
+          } else if (rect.top <= triggerY) {
+            // Currently active reading section
+            item.link.classList.remove("is-passed");
+            item.link.classList.add("is-active");
+            item.passed = false;
+          } else {
+            // Upcoming section
+            item.link.classList.remove("is-passed", "is-active");
+            item.passed = false;
+          }
+        });
+      };
+
+      const onScroll = () => {
+        if (!ticking && !signal.aborted) {
+          window.requestAnimationFrame(() => {
+            checkScroll();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+
+      window.addEventListener("scroll", onScroll, { passive: true, signal });
+      window.addEventListener("resize", onScroll, { passive: true, signal });
+
+      // Run immediately
+      checkScroll();
+    };
+
+    findAndBind();
+  };
+
+  setupTOC();
+  document.addEventListener("astro:page-load", setupTOC);
+  document.addEventListener("astro:after-swap", setupTOC);
+</script>

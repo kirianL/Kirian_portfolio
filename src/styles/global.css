@@ -55,6 +55,49 @@ body {
   font-style: italic;
 }
 
+/* Atmospheric Editorial Blog Vignettes */
+.blog-vignette-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 7rem;
+  pointer-events: none;
+  z-index: 20;
+  background: linear-gradient(
+    to bottom,
+    var(--color-grayscale-1) 0%,
+    color-mix(in srgb, var(--color-grayscale-1) 85%, transparent) 40%,
+    color-mix(in srgb, var(--color-grayscale-1) 35%, transparent) 75%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(to bottom, black 45%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 45%, transparent 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.blog-vignette-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 7rem;
+  pointer-events: none;
+  z-index: 20;
+  background: linear-gradient(
+    to top,
+    var(--color-grayscale-1) 0%,
+    color-mix(in srgb, var(--color-grayscale-1) 85%, transparent) 40%,
+    color-mix(in srgb, var(--color-grayscale-1) 35%, transparent) 75%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(to top, black 45%, transparent 100%);
+  mask-image: linear-gradient(to top, black 45%, transparent 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 @layer base {
   html {
     scroll-padding-top: 80px;
