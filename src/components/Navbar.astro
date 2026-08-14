@@ -41,35 +41,26 @@ const blogMapping: Record<string, string> = {
     "/blog/digitalizing-a-cultural-identity/",
 };
 
+const cleanCurrent = pathname.replace(/\/$/, "");
 let enPath = "/";
 let esPath = "/es/";
 
-if (blogMapping[pathname]) {
+if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
+  const match = blogMapping[pathname] || blogMapping[`${pathname}/`];
   if (currentLocale === "en") {
     enPath = pathname;
-    esPath = blogMapping[pathname];
+    esPath = match;
   } else {
     esPath = pathname;
-    enPath = blogMapping[pathname];
+    enPath = match;
   }
-} else if (pathname === "/blog" || pathname === "/blog/") {
-  enPath = "/blog/";
-  esPath = "/es/blog/";
-} else if (pathname === "/es/blog" || pathname === "/es/blog/") {
-  enPath = "/blog/";
-  esPath = "/es/blog/";
-} else if (pathname === "/craft" || pathname === "/craft/") {
-  enPath = "/craft/";
-  esPath = "/es/craft/";
-} else if (pathname === "/es/craft" || pathname === "/es/craft/") {
-  enPath = "/craft/";
-  esPath = "/es/craft/";
-} else if (pathname.startsWith("/es/")) {
-  enPath = pathname.replace(/^\/es/, "") || "/";
-  esPath = pathname;
-} else if (pathname !== "/") {
-  enPath = pathname;
-  esPath = `/es${pathname}`;
+} else if (cleanCurrent.startsWith("/es")) {
+  const base = cleanCurrent.replace(/^\/es/, "") || "";
+  enPath = base ? `${base}/` : "/";
+  esPath = `${cleanCurrent}/`;
+} else {
+  enPath = cleanCurrent ? `${cleanCurrent}/` : "/";
+  esPath = cleanCurrent ? `/es${cleanCurrent}/` : "/es/";
 }
 ---
 
@@ -213,6 +204,7 @@ if (blogMapping[pathname]) {
         >
           <a
             href={enPath}
+            data-lang-switch
             data-cuelume-hover="tick"
             data-cuelume-toggle
             class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "en" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
@@ -221,6 +213,7 @@ if (blogMapping[pathname]) {
           </a>
           <a
             href={esPath}
+            data-lang-switch
             data-cuelume-hover="tick"
             data-cuelume-toggle
             class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "es" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
@@ -234,43 +227,77 @@ if (blogMapping[pathname]) {
 </nav>
 
 <script>
-  const initThemeToggle = () => {
+  const initNavbarInteractions = () => {
+    // 1. Theme Toggle Button
     const toggleBtn = document.getElementById("theme-toggle");
-    if (!toggleBtn) return;
+    if (toggleBtn) {
+      toggleBtn.onclick = (e) => {
+        e.preventDefault();
 
-    toggleBtn.onclick = (e) => {
-      e.preventDefault();
+        // Trigger fluid spring spin animation on the icon
+        toggleBtn.classList.remove("animate-theme-spin");
+        void toggleBtn.offsetWidth;
+        toggleBtn.classList.add("animate-theme-spin");
+        setTimeout(() => toggleBtn.classList.remove("animate-theme-spin"), 450);
 
-      // Trigger fluid spring spin animation on the icon
-      toggleBtn.classList.remove("animate-theme-spin");
-      void toggleBtn.offsetWidth;
-      toggleBtn.classList.add("animate-theme-spin");
-      setTimeout(() => toggleBtn.classList.remove("animate-theme-spin"), 450);
+        // Temporarily disable transitions for 100% instant theme switching across all elements
+        document.documentElement.classList.add("disable-transitions");
 
-      // Temporarily disable transitions for 100% instant theme switching across all elements
-      document.documentElement.classList.add("disable-transitions");
+        const isDark = document.documentElement.classList.contains("dark");
+        if (isDark) {
+          document.documentElement.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+        } else {
+          document.documentElement.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+        }
 
-      const isDark = document.documentElement.classList.contains("dark");
-      if (isDark) {
-        document.documentElement.classList.remove("dark");
-        localStorage.setItem("theme", "light");
-      } else {
-        document.documentElement.classList.add("dark");
-        localStorage.setItem("theme", "dark");
-      }
+        // Force synchronous style recalculation flush
+        window.getComputedStyle(document.documentElement).opacity;
 
-      // Force synchronous style recalculation flush
-      window.getComputedStyle(document.documentElement).opacity;
-
-      // Re-enable normal transitions after layout paint
-      requestAnimationFrame(() => {
+        // Re-enable normal transitions after layout paint
         requestAnimationFrame(() => {
-          document.documentElement.classList.remove("disable-transitions");
+          requestAnimationFrame(() => {
+            document.documentElement.classList.remove("disable-transitions");
+          });
         });
+      };
+    }
+
+    // 2. Language Switch Scroll Preservation (Keep exact scroll position when toggling ES/EN)
+    const langLinks = document.querySelectorAll("[data-lang-switch]");
+    langLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+        sessionStorage.setItem("portfolio_lang_scroll", scrollY.toString());
       });
-    };
+    });
   };
 
-  initThemeToggle();
-  document.addEventListener("astro:after-swap", initThemeToggle);
+  const restoreLangScroll = () => {
+    const savedScroll = sessionStorage.getItem("portfolio_lang_scroll");
+    if (savedScroll !== null) {
+      const targetY = parseInt(savedScroll, 10);
+      window.scrollTo({ top: targetY, behavior: "instant" });
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: targetY, behavior: "instant" });
+        sessionStorage.removeItem("portfolio_lang_scroll");
+      });
+    }
+  };
+
+  initNavbarInteractions();
+  restoreLangScroll();
+
+  document.addEventListener("astro:page-load", () => {
+    initNavbarInteractions();
+    restoreLangScroll();
+  });
+
+  document.addEventListener("astro:before-swap", (e: any) => {
+    const savedScroll = sessionStorage.getItem("portfolio_lang_scroll");
+    if (savedScroll !== null && e.newDocument) {
+      e.newDocument.documentElement.scrollTop = parseInt(savedScroll, 10);
+    }
+  });
 </script>

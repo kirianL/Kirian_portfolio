@@ -271,6 +271,8 @@ const data = dictionaries.EN;
 <script>
   import { play } from "cuelume";
 
+  let clockInterval: any = null;
+
   const setupInteractiveFeatures = () => {
     // 1. Live Clock (Costa Rica)
     const crEl = document.getElementById('cr-time');
@@ -282,7 +284,8 @@ const data = dictionaries.EN;
         crEl.textContent = `CR ${crTime} CST`;
       };
       updateClocks();
-      setInterval(updateClocks, 1000);
+      if (clockInterval) clearInterval(clockInterval);
+      clockInterval = setInterval(updateClocks, 1000);
     }
 
     // 2. Email Copy Toast + Cuelume Sound
@@ -312,5 +315,5 @@ const data = dictionaries.EN;
   };
 
   setupInteractiveFeatures();
-  document.addEventListener('astro:after-swap', setupInteractiveFeatures);
+  document.addEventListener('astro:page-load', setupInteractiveFeatures);
 </script>

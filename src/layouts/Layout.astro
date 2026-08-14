@@ -43,6 +43,8 @@ const spanishURL = new URL(spanishPath, siteURL);
     <meta name="theme-color" content="#18181b" />
     <meta name="generator" content={Astro.generator} />
 
+    <ClientRouter />
+
     <!-- Immediate Zero-FOUC Dark Mode Initializer -->
     <script is:inline>
       (function () {
@@ -193,46 +195,68 @@ const spanishURL = new URL(spanishPath, siteURL);
   <body class="antialiased selection:bg-accent-4/20 selection:text-accent-12 min-h-screen bg-grayscale-1 text-grayscale-12">
     <slot />
 
-    <!-- cuelume interaction sounds & audio unlocker -->
+    <!-- cuelume interaction sounds & audio engine -->
     <script>
-      import { bind } from "cuelume";
+      import { bind, play, setVolume } from "cuelume";
 
-      let isUnlocked = false;
+      // Boost volume so subtle ticks and clicks are clearly audible
+      try {
+        setVolume(1.8);
+      } catch {}
 
-      const setupAudioUnlock = () => {
-        bind();
-        if (isUnlocked) return;
-
-        const unlockEvents = ["pointerdown", "touchstart", "keydown", "pointermove", "scroll"];
-        
-        const unlock = () => {
-          isUnlocked = true;
-          unlockEvents.forEach((evt) => window.removeEventListener(evt, unlock, true));
-
-          if (typeof window !== "undefined") {
-            const global = window as any;
-            const AudioCtx = global.AudioContext || global.webkitAudioContext;
-            if (AudioCtx) {
-              try {
-                const ctx = new AudioCtx();
-                if (ctx.state === "suspended") {
-                  ctx.resume();
-                }
-              } catch {}
+      const unlockAudio = () => {
+        if (typeof window !== "undefined") {
+          const global = window as any;
+          const AudioCtx = global.AudioContext || global.webkitAudioContext;
+          if (AudioCtx) {
+            if (!global.__portfolioAudioCtx) {
+              global.__portfolioAudioCtx = new AudioCtx();
+            }
+            if (global.__portfolioAudioCtx.state === "suspended") {
+              global.__portfolioAudioCtx.resume();
             }
           }
-        };
-
-        unlockEvents.forEach((evt) => {
-          window.addEventListener(evt, unlock, { capture: true, once: true, passive: true });
-        });
+        }
       };
 
-      setupAudioUnlock();
-      document.addEventListener("astro:after-swap", () => {
-        isUnlocked = false;
-        setupAudioUnlock();
-      });
+      let lastHover = 0;
+      const handlePointerEnter = (e: PointerEvent) => {
+        const target = (e.target as Element)?.closest?.("[data-cuelume-hover]");
+        if (!target) return;
+        const now = Date.now();
+        if (now - lastHover < 100) return;
+        lastHover = now;
+        unlockAudio();
+        const sound = target.getAttribute("data-cuelume-hover") || "tick";
+        try {
+          play(sound as any);
+        } catch {}
+      };
+
+      const handlePointerDown = (e: PointerEvent) => {
+        unlockAudio();
+        const target = (e.target as Element)?.closest?.("[data-cuelume-press], [data-cuelume-toggle]");
+        if (!target) return;
+        const sound = target.getAttribute("data-cuelume-press") || target.getAttribute("data-cuelume-toggle") || "pop";
+        try {
+          play((sound === "" || sound === "true" ? "pop" : sound) as any);
+        } catch {}
+      };
+
+      const initAudio = () => {
+        try {
+          bind();
+        } catch {}
+
+        document.removeEventListener("pointerenter", handlePointerEnter, true);
+        document.addEventListener("pointerenter", handlePointerEnter, true);
+
+        document.removeEventListener("pointerdown", handlePointerDown, true);
+        document.addEventListener("pointerdown", handlePointerDown, true);
+      };
+
+      initAudio();
+      document.addEventListener("astro:page-load", initAudio);
     </script>
   </body>
 </html>
