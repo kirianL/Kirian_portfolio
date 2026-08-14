@@ -1,11 +1,11 @@
-# Kirian Luna Quirós — Complete Developer & Systems Engineer Profile
+# Kirian Luna — Complete Developer & Systems Engineer Profile
 
-> Kirian Luna Quirós is an Ingeniero en Sistemas (Systems Engineer) based in Costa Rica (UTC-6). He studied at Universidad Latina de Costa Rica and is currently pursuing parallel Licentiate degrees in Teaching at Universidad Americana and Software Engineering at Universidad Internacional de las Américas. He focuses on building high-performance web systems, modern UI/UX product designs, full-stack enterprise applications, and accessible digital experiences.
+> Kirian Luna is an Ingeniero en Sistemas (Systems Engineer) based in Costa Rica (UTC-6). He studied at Universidad Latina de Costa Rica and is currently pursuing parallel Licentiate degrees in Teaching at Universidad Americana and Software Engineering at Universidad Internacional de las Américas. He focuses on building high-performance web systems, modern UI/UX product designs, full-stack enterprise applications, and accessible digital experiences.
 
 ---
 
 ## 1. Professional Overview & Contact
-- **Full Name**: Kirian Luna Quirós
+- **Full Name**: Kirian Luna
 - **Primary Domain**: https://kirian.dev
 - **Email**: kirianluna.u@gmail.com
 - **GitHub**: https://github.com/kirianL

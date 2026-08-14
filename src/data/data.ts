@@ -35,7 +35,7 @@ export interface Project {
 }
 
 const es = {
-  name: "Kirian Luna Quirós",
+  name: "Kirian Luna",
   title: "Ingeniero en Sistemas",
   location: "Costa Rica",
   locationIcon: "",
@@ -214,7 +214,7 @@ const es = {
   },
   footer: {
     rights: "Todos los derechos reservados.",
-    brandName: "Kirian Luna Quirós",
+    brandName: "Kirian Luna",
     connectedLabel: "Conectado",
     directLabel: "Directo",
     bio: "Un solucionador de problemas dedicado que prospera aprendiendo y construyendo.",
@@ -272,7 +272,7 @@ const es = {
 };
 
 const en: typeof es = {
-  name: "Kirian Luna Quirós",
+  name: "Kirian Luna",
   title: "Systems Engineer",
   location: "Costa Rica",
   locationIcon: "",
@@ -452,7 +452,7 @@ const en: typeof es = {
   },
   footer: {
     rights: "All rights reserved.",
-    brandName: "Kirian Luna Quirós",
+    brandName: "Kirian Luna",
     connectedLabel: "Connected",
     directLabel: "Direct",
     bio: "A dedicated problem-solver who thrives on learning and building.",

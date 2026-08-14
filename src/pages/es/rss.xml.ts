@@ -6,7 +6,7 @@ export async function GET(context: any) {
   const posts = blog.filter(post => post.id.startsWith('es/'));
 
   return rss({
-    title: 'Kirian Luna Quirós — Blog (Español)',
+    title: 'Kirian Luna — Blog (Español)',
     description: 'Pensamientos sobre ingeniería de software, diseño UX/UI y rendimiento web.',
     site: context.site || 'https://kirian.dev',
     items: posts.map((post) => ({

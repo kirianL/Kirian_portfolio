@@ -81,9 +81,9 @@ const spanishURL = new URL(spanishPath, siteURL);
     <!-- Core SEO Meta Tags -->
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="author" content="Kirian Luna Quirós" />
-    <meta name="publisher" content="Kirian Luna Quirós" />
-    <meta name="keywords" content="Kirian Luna Quirós, Kirian Luna, Ingeniero en Sistemas, Systems Engineer, Software Engineer, Web Developer Costa Rica, Next.js, React, Astro, TypeScript, Product Designer, SorinLabs" />
+    <meta name="author" content="Kirian Luna" />
+    <meta name="publisher" content="Kirian Luna" />
+    <meta name="keywords" content="Kirian Luna, Kirian Luna, Ingeniero en Sistemas, Systems Engineer, Software Engineer, Web Developer Costa Rica, Next.js, React, Astro, TypeScript, Product Designer, SorinLabs" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
     <!-- Canonical & i18n Hreflang & RSS Feed (SEO / AEO) -->
@@ -91,11 +91,11 @@ const spanishURL = new URL(spanishPath, siteURL);
     <link rel="alternate" hreflang="en" href={englishURL} />
     <link rel="alternate" hreflang="es" href={spanishURL} />
     <link rel="alternate" hreflang="x-default" href={englishURL} />
-    <link rel="alternate" type="application/rss+xml" title="Kirian Luna Quirós Blog RSS" href={new URL(lang === 'es' ? '/es/rss.xml' : '/rss.xml', siteURL)} />
+    <link rel="alternate" type="application/rss+xml" title="Kirian Luna Blog RSS" href={new URL(lang === 'es' ? '/es/rss.xml' : '/rss.xml', siteURL)} />
 
     <!-- Open Graph / Facebook (SEO / SXO) -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Kirian Luna Quirós" />
+    <meta property="og:site_name" content="Kirian Luna" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -122,9 +122,9 @@ const spanishURL = new URL(spanishPath, siteURL);
         "@context": "https://schema.org",
         "@type": "Person",
         "@id": "https://kirian.dev/#person",
-        "name": "Kirian Luna Quirós",
+        "name": "Kirian Luna",
         "givenName": "Kirian",
-        "familyName": "Luna Quirós",
+        "familyName": "Luna",
         "url": "https://kirian.dev",
         "image": new URL('/ProfileKirian.jpg', siteURL).href,
         "jobTitle": "Ingeniero en Sistemas & Systems Engineer",
@@ -161,8 +161,8 @@ const spanishURL = new URL(spanishPath, siteURL);
         "@type": "WebSite",
         "@id": "https://kirian.dev/#website",
         "url": "https://kirian.dev",
-        "name": "Kirian Luna Quirós Portfolio",
-        "description": "Official portfolio of Kirian Luna Quirós, Ingeniero en Sistemas / Systems Engineer based in Costa Rica.",
+        "name": "Kirian Luna Portfolio",
+        "description": "Official portfolio of Kirian Luna, Ingeniero en Sistemas / Systems Engineer based in Costa Rica.",
         "publisher": {
           "@id": "https://kirian.dev/#person"
         },

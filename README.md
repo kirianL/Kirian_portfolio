@@ -1,4 +1,4 @@
-# Portfolio Maestro - Kirian Luna Quirós
+# Portfolio Maestro - Kirian Luna
 
 Este es un portafolio personal ultra moderno, rápido y profesional construido para un Ingeniero de Software.
 
