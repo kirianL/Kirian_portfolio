@@ -60,6 +60,26 @@ body {
 @layer base {
   html {
     scroll-padding-top: 80px;
+    font-size: 16px;
+  }
+
+  /* Fine-tuned proportional scaling for high-resolution screens */
+  @media (min-width: 1536px) {
+    html {
+      font-size: 16.5px;
+    }
+  }
+
+  @media (min-width: 1920px) {
+    html {
+      font-size: 17.5px;
+    }
+  }
+
+  @media (min-width: 2400px) {
+    html {
+      font-size: 18.5px;
+    }
   }
   
   body {
