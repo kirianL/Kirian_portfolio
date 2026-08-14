@@ -577,7 +577,7 @@ const initialStatsText = initialViews > 0
       const devSprite = document.getElementById("dev-status-sprite");
       const devDialogue = document.getElementById("dev-status-dialogue");
 
-      // 1. Spotify state directly from live Discord presence
+      // 1. Spotify state directly from live Discord presence OR direct Spotify API
       let isSpotifyPlaying = false;
       let activeTrack: any = null;
 
@@ -588,6 +588,14 @@ const initialStatsText = initialViews > 0
           artist: lanyardData.spotify.artist,
           albumImageUrl: lanyardData.spotify.album_art_url,
           songUrl: `https://open.spotify.com/track/${lanyardData.spotify.track_id}`,
+        };
+      } else if (lastDirectSpotifyState && lastDirectSpotifyState.isPlaying) {
+        isSpotifyPlaying = true;
+        activeTrack = {
+          title: lastDirectSpotifyState.title,
+          artist: lastDirectSpotifyState.artist,
+          albumImageUrl: lastDirectSpotifyState.albumImageUrl,
+          songUrl: lastDirectSpotifyState.songUrl,
         };
       }
 
@@ -694,18 +702,43 @@ const initialStatsText = initialViews > 0
   }
 
   let isUpdating = false;
+  let lastDirectSpotifyState: any = null;
+
+  async function checkDirectSpotify() {
+    try {
+      const spotifyRes = await fetchWithTimeout("/api/spotify.json", 3000);
+      if (spotifyRes && spotifyRes.isPlaying) {
+        lastDirectSpotifyState = spotifyRes;
+      } else {
+        lastDirectSpotifyState = null;
+      }
+    } catch {
+      lastDirectSpotifyState = null;
+    }
+    return lastDirectSpotifyState;
+  }
 
   async function loadSpotify() {
     if (isUpdating) return;
     isUpdating = true;
 
     try {
-      const lanyardRes = await fetchWithTimeout(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`, 3500);
-      if (lanyardRes && lanyardRes.success && lanyardRes.data) {
-        applyPresence(lanyardRes.data);
+      // 1. Check Lanyard Discord presence
+      const lanyardRes = await fetchWithTimeout(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`, 3000);
+      const lanyardData = lanyardRes && lanyardRes.success && lanyardRes.data ? lanyardRes.data : null;
+
+      // 2. If Discord is not reporting Spotify (e.g. Discord closed/offline), check Spotify Web API directly
+      if (!lanyardData?.listening_to_spotify) {
+        await checkDirectSpotify();
+      } else {
+        lastDirectSpotifyState = null;
       }
+
+      applyPresence(lanyardData || {});
     } catch {
-      // Silent fallback
+      // Fallback: check direct Spotify
+      await checkDirectSpotify();
+      applyPresence({});
     } finally {
       isUpdating = false;
     }
@@ -750,7 +783,14 @@ const initialStatsText = initialViews > 0
           } else if (op === 0) {
             // Event packet (INIT_STATE or PRESENCE_UPDATE)
             if (t === "INIT_STATE" || t === "PRESENCE_UPDATE") {
-              if (d) applyPresence(d);
+              if (d) {
+                if (!d.listening_to_spotify) {
+                  checkDirectSpotify().then(() => applyPresence(d));
+                } else {
+                  lastDirectSpotifyState = null;
+                  applyPresence(d);
+                }
+              }
             }
           }
         } catch {}

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=Instrument+Serif:ital@0;1&display=swap');
 @import "tailwindcss";
 @import "./theme.css";
 
@@ -46,7 +46,13 @@ body {
   --font-sans: "Inter", sans-serif;
   --font-mono: "GeistMono", monospace;
   --font-chillax: "Chillax", sans-serif;
-  --font-figgle: "Chillax", sans-serif;
+  --font-serif: "Newsreader", "Instrument Serif", Georgia, serif;
+  --font-figgle: "Newsreader", "Instrument Serif", Georgia, serif;
+}
+
+.font-figgle {
+  font-family: var(--font-figgle);
+  font-style: italic;
 }
 
 @layer base {
