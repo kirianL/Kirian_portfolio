@@ -21,55 +21,122 @@ try {
 }
 
 const updateLabel = currentLocale === "es" ? "Última actualización" : "Last update";
+
+// Fetch initial stats at build time for instant rendering without adblocker interference
+let initialViews = 0;
+let initialVisitors = 0;
+try {
+  const authRes = await fetch("https://cloud.umami.is/analytics/us/api/share/IKILGPgXIuMcSBcX");
+  if (authRes.ok) {
+    const { token, websiteId } = await authRes.json();
+    if (token && websiteId) {
+      const startAt = new Date("2024-01-01").getTime();
+      const endAt = Date.now();
+      const statsRes = await fetch(
+        `https://cloud.umami.is/analytics/us/api/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`,
+        {
+          headers: {
+            "x-umami-share-token": token,
+            "x-umami-share-context": "share",
+          },
+        }
+      );
+      if (statsRes.ok) {
+        const stats = await statsRes.json();
+        initialViews = stats.pageviews || 0;
+        initialVisitors = stats.visitors || 0;
+      }
+    }
+  }
+} catch (e) {
+  // Silent fallback
+}
+
+const formattedViews = initialViews > 0 ? new Intl.NumberFormat().format(initialViews) : "";
+const formattedVisitors = initialVisitors > 0 ? new Intl.NumberFormat().format(initialVisitors) : "";
+
+const initialStatsText = initialViews > 0
+  ? currentLocale === "es"
+    ? `${formattedViews} vistas • Visitante #${formattedVisitors}`
+    : `${formattedViews} views • Visitor #${formattedVisitors}`
+  : "";
 ---
 
 <footer
-  class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8"
+  class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8 flex flex-col items-center justify-center gap-1.5"
 >
-  <span>{updateLabel}: {lastUpdateDate}</span>
-  <span id="umami-stats" class="opacity-0 transition-opacity duration-300"></span>
+  <p>{updateLabel}: {lastUpdateDate}</p>
+  <p
+    id="umami-stats"
+    class={`transition-opacity duration-300 ${initialStatsText ? "opacity-100" : "opacity-0"}`}
+  >
+    {initialStatsText}
+  </p>
 </footer>
 
 <script>
   async function loadStats() {
-    const container = document.getElementById('umami-stats');
+    const container = document.getElementById("umami-stats");
     if (!container) return;
-    
-    const shareToken = import.meta.env.PUBLIC_UMAMI_SHARE_TOKEN || "IKILGPgXIuMcSBcX";
-    
-    try {
-      // 1. Get the JWT token and metadata from the share endpoint
-      const authRes = await fetch(`https://cloud.umami.is/analytics/us/api/share/${shareToken}`);
-      if (!authRes.ok) return;
-      const authData = await authRes.json();
-      const token = authData.token;
-      const websiteId = authData.websiteId;
-      if (!token || !websiteId) return;
 
-      // 2. Fetch stats using the shared token headers
-      const startAt = new Date('2024-01-01').getTime();
-      const endAt = Date.now();
-      const statsRes = await fetch(`https://cloud.umami.is/analytics/us/api/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`, {
-        headers: {
-          'x-umami-share-token': token,
-          'x-umami-share-context': 'share'
+    const isEs =
+      document.documentElement.lang === "es" ||
+      window.location.pathname.includes("/es/") ||
+      window.location.pathname === "/es";
+
+    try {
+      // 1. Try local same-origin stats endpoint first (immune to adblockers)
+      let views = 0;
+      let visitors = 0;
+
+      try {
+        const localRes = await fetch("/api/stats.json");
+        if (localRes.ok) {
+          const localData = await localRes.json();
+          views = localData.pageviews || 0;
+          visitors = localData.visitors || 0;
         }
-      });
-      
-      if (statsRes.ok) {
-        const data = await statsRes.json();
-        const views = data.pageviews || 0;
-        const visitors = data.visitors || 0;
-        if (views > 0) {
-          const formattedViews = new Intl.NumberFormat().format(views);
-          const formattedVisitors = new Intl.NumberFormat().format(visitors);
-          const isEs = document.documentElement.lang === 'es' || window.location.pathname.includes('/es/');
-          
-          container.textContent = isEs 
-            ? ` • ${formattedViews} vistas • Visitante #${formattedVisitors}` 
-            : ` • ${formattedViews} views • Visitor #${formattedVisitors}`;
-          container.classList.remove('opacity-0');
+      } catch {
+        // Fallback to direct cloud if needed
+      }
+
+      // 2. If local didn't get stats, try direct Umami cloud
+      if (!views) {
+        const shareToken = "IKILGPgXIuMcSBcX";
+        const authRes = await fetch(`https://cloud.umami.is/analytics/us/api/share/${shareToken}`);
+        if (authRes.ok) {
+          const authData = await authRes.json();
+          const token = authData.token;
+          const websiteId = authData.websiteId;
+          if (token && websiteId) {
+            const startAt = new Date("2024-01-01").getTime();
+            const endAt = Date.now();
+            const statsRes = await fetch(
+              `https://cloud.umami.is/analytics/us/api/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`,
+              {
+                headers: {
+                  "x-umami-share-token": token,
+                  "x-umami-share-context": "share",
+                },
+              }
+            );
+            if (statsRes.ok) {
+              const data = await statsRes.json();
+              views = data.pageviews || 0;
+              visitors = data.visitors || 0;
+            }
+          }
         }
+      }
+
+      if (views > 0) {
+        const fViews = new Intl.NumberFormat().format(views);
+        const fVisitors = new Intl.NumberFormat().format(visitors);
+        container.textContent = isEs
+          ? `${fViews} vistas • Visitante #${fVisitors}`
+          : `${fViews} views • Visitor #${fVisitors}`;
+        container.classList.remove("opacity-0");
+        container.classList.add("opacity-100");
       }
     } catch (e) {
       console.warn("Could not load Umami stats:", e);
@@ -79,5 +146,5 @@ const updateLabel = currentLocale === "es" ? "Última actualización" : "Last up
   // Load on initial load
   loadStats();
   // Support Astro view transitions
-  document.addEventListener('astro:page-load', loadStats);
+  document.addEventListener("astro:page-load", loadStats);
 </script>
