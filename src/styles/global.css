@@ -3,14 +3,6 @@
 @import "./theme.css";
 
 @font-face {
-  font-family: "DxFiggle";
-  src: url("../assets/fonts/Dx Figgle.otf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Chillax";
   src:
     url("../assets/fonts/fonts/Chillax-Variable.woff2") format("woff2"),
@@ -54,7 +46,7 @@ body {
   --font-sans: "Inter", sans-serif;
   --font-mono: "GeistMono", monospace;
   --font-chillax: "Chillax", sans-serif;
-  --font-figgle: "DxFiggle", serif;
+  --font-figgle: "Chillax", sans-serif;
 }
 
 @layer base {
