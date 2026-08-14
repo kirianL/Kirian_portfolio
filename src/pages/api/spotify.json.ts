@@ -5,11 +5,11 @@ const client_secret = import.meta.env.SPOTIFY_CLIENT_SECRET || process.env.SPOTI
 const refresh_token = import.meta.env.SPOTIFY_REFRESH_TOKEN || process.env.SPOTIFY_REFRESH_TOKEN;
 
 const DEFAULT_TRACK = {
-  isPlaying: true,
+  isPlaying: false,
   title: "Die With A Smile",
   artist: "Lady Gaga, Bruno Mars",
   songUrl: "https://open.spotify.com/track/2plbrEY59IikOBgBGLjaoe",
-  albumImageUrl: "",
+  albumImageUrl: "https://i.scdn.co/image/ab67616d0000b2738278b782cba5a98e47f55b93",
 };
 
 const getAccessToken = async () => {

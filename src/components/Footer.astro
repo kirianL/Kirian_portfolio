@@ -23,6 +23,13 @@ try {
 const updateLabel = currentLocale === "es" ? "Última actualización" : "Last update";
 const listeningLabel = currentLocale === "es" ? "Escuchando ahora" : "Currently listening";
 
+const defaultTrack = {
+  title: "Die With A Smile",
+  artist: "Lady Gaga, Bruno Mars",
+  songUrl: "https://open.spotify.com/track/2plbrEY59IikOBgBGLjaoe",
+  albumImageUrl: "https://i.scdn.co/image/ab67616d0000b2738278b782cba5a98e47f55b93",
+};
+
 // Fetch initial stats at build time for instant rendering without adblocker interference
 let initialViews = 0;
 let initialVisitors = 0;
@@ -66,7 +73,7 @@ const initialStatsText = initialViews > 0
 <footer
   class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8 flex flex-col items-center justify-center gap-1.5"
 >
-  <!-- Pure Minimalist Inline Spotify Row (Procedural Decryption Motion) -->
+  <!-- Pure Minimalist Inline Spotify Row -->
   <div
     id="spotify-widget"
     class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed py-0.5 px-3 max-w-full"
@@ -78,17 +85,38 @@ const initialStatsText = initialViews > 0
 
     <span class="text-grayscale-10 shrink-0">{listeningLabel}:</span>
 
+    <!-- Hover Track Link -->
     <a
       id="spotify-link"
-      href="https://open.spotify.com"
+      href={defaultTrack.songUrl}
       target="_blank"
       rel="noopener noreferrer"
       data-cuelume-hover="tick"
-      class="text-[#1DB954] dark:text-[#1ED760] no-underline hover:opacity-85 font-medium inline-flex flex-wrap items-center justify-center gap-1.5 transition-opacity"
+      class="spotify-track-container text-[#1DB954] dark:text-[#1ED760] no-underline font-medium inline-flex items-center gap-1.5 cursor-pointer text-center relative"
     >
-      <span id="spotify-song" class="font-mono tracking-tight text-[#1DB954] dark:text-[#1ED760]">_decrypting...</span>
-      <span id="spotify-separator" class="text-grayscale-10 font-normal shrink-0 hidden">—</span>
-      <span id="spotify-artist" class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono"></span>
+      <!-- Song Title with Centered Tooltip Origin -->
+      <span class="relative inline-flex items-center">
+        <span id="spotify-song" class="font-mono tracking-tight text-[#1DB954] dark:text-[#1ED760]">{defaultTrack.title}</span>
+
+        <!-- Pure Floating Square Album Cover (No Crop, Clean Dark Shadow) -->
+        <div
+          id="spotify-album-preview"
+          class="spotify-preview-card pointer-events-none flex flex-col items-center justify-center"
+        >
+          <div class="w-20 h-20 sm:w-24 sm:h-24 aspect-square shrink-0 rounded-xl overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.4)] ring-1 ring-black/15 dark:ring-white/20 bg-zinc-950">
+            <img
+              id="spotify-album-img"
+              src={defaultTrack.albumImageUrl}
+              alt="Album Cover"
+              class="w-full h-full aspect-square object-contain block"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </span>
+
+      <span id="spotify-separator" class="text-grayscale-10 font-normal shrink-0">—</span>
+      <span id="spotify-artist" class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono">{defaultTrack.artist}</span>
 
       <!-- Mini animated equalizer bars -->
       <span id="spotify-equalizer" class="hidden items-end gap-[1.5px] h-2.5 w-2.5 shrink-0 ml-0.5">
@@ -109,6 +137,28 @@ const initialStatsText = initialViews > 0
 </footer>
 
 <style is:global>
+  .spotify-preview-card {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translate(-50%, 6px) scale(0.94);
+    opacity: 0;
+    visibility: hidden;
+    filter: blur(4px);
+    transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity, filter;
+    z-index: 50;
+  }
+
+  .spotify-track-container:hover .spotify-preview-card {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translate(-50%, 0px) scale(1) !important;
+    filter: blur(0px) !important;
+  }
+
   @keyframes music-bar-1 {
     0%, 100% { height: 25%; }
     50% { height: 100%; }
@@ -135,14 +185,14 @@ const initialStatsText = initialViews > 0
 <script>
   const GLYPHS = "01!@#$%^&*~_+-=<>?/\\[]{}AaBbCcDdEeFfGgHh";
 
-  function decryptMotion(element: HTMLElement, targetText: string, speed = 25) {
+  function decryptMotion(element: HTMLElement, targetText: string, speed = 20) {
     if (!element) return;
     if (element.dataset.resolvedText === targetText && element.textContent === targetText) return;
     element.dataset.resolvedText = targetText;
 
     const length = targetText.length;
     let iteration = 0;
-    const maxIterations = length + 8;
+    const maxIterations = length + 6;
 
     if ((element as any)._decryptTimer) {
       clearInterval((element as any)._decryptTimer);
@@ -160,7 +210,7 @@ const initialStatsText = initialViews > 0
         })
         .join("");
 
-      iteration += 1 / 1.5;
+      iteration += 1 / 1.4;
 
       if (iteration >= maxIterations) {
         clearInterval((element as any)._decryptTimer);
@@ -186,45 +236,35 @@ const initialStatsText = initialViews > 0
 
       if (!data) return;
 
-      const isEs =
-        document.documentElement.lang === "es" ||
-        window.location.pathname.includes("/es/") ||
-        window.location.pathname === "/es";
-
       const songEl = document.getElementById("spotify-song");
       const artistEl = document.getElementById("spotify-artist");
       const sepEl = document.getElementById("spotify-separator");
       const linkEl = document.getElementById("spotify-link") as HTMLAnchorElement | null;
       const eqEl = document.getElementById("spotify-equalizer");
+      const albumImg = document.getElementById("spotify-album-img") as HTMLImageElement | null;
 
-      if (data.isPlaying && data.title) {
-        if (songEl) decryptMotion(songEl, data.title, 22);
-        if (artistEl) decryptMotion(artistEl, data.artist || "", 25);
+      if (data.albumImageUrl && albumImg) {
+        albumImg.src = data.albumImageUrl;
+      }
+
+      if (data.title) {
+        if (songEl && songEl.textContent !== data.title) {
+          decryptMotion(songEl, data.title, 18);
+        }
+        if (artistEl && artistEl.textContent !== data.artist) {
+          decryptMotion(artistEl, data.artist || "", 20);
+        }
         if (sepEl) sepEl.classList.remove("hidden");
         if (linkEl && data.songUrl) linkEl.href = data.songUrl;
+
         if (eqEl) {
-          eqEl.classList.remove("hidden");
-          eqEl.classList.add("inline-flex");
-        }
-      } else if (data.title) {
-        // Has a track
-        if (songEl) decryptMotion(songEl, data.title, 22);
-        if (artistEl) decryptMotion(artistEl, data.artist || "", 25);
-        if (sepEl) sepEl.classList.remove("hidden");
-        if (linkEl && data.songUrl) linkEl.href = data.songUrl;
-        if (eqEl) {
-          eqEl.classList.add("hidden");
-          eqEl.classList.remove("inline-flex");
-        }
-      } else {
-        // Idle/Offline
-        const idleText = isEs ? "Pausado en Spotify" : "Idle on Spotify";
-        if (songEl) decryptMotion(songEl, idleText, 25);
-        if (artistEl) artistEl.textContent = "";
-        if (sepEl) sepEl.classList.add("hidden");
-        if (eqEl) {
-          eqEl.classList.add("hidden");
-          eqEl.classList.remove("inline-flex");
+          if (data.isPlaying) {
+            eqEl.classList.remove("hidden");
+            eqEl.classList.add("inline-flex");
+          } else {
+            eqEl.classList.add("hidden");
+            eqEl.classList.remove("inline-flex");
+          }
         }
       }
     } catch (e) {
