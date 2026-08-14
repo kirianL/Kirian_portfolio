@@ -37,10 +37,13 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
             <a
               href={`#${h.slug}`}
               data-toc-target={h.slug}
-              class="toc-item-link text-grayscale-10 hover:text-grayscale-12 leading-relaxed cursor-pointer transition-all duration-150 py-0.5"
+              class="toc-item-link text-grayscale-10 hover:text-grayscale-12 leading-relaxed cursor-pointer py-0.5"
             >
-              <span class="opacity-40 mr-1.5 shrink-0 font-mono text-[10px]">{num}.</span>
-              <span class="toc-item-text">{h.text}</span>
+              <span class="toc-item-num opacity-40 mr-1.5 shrink-0 font-mono text-[10px]">{num}.</span>
+              <span class="toc-item-text">
+                {h.text}
+                <span class="toc-strike-line" aria-hidden="true"></span>
+              </span>
             </a>
           </li>
         );
@@ -54,7 +57,14 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
     position: relative;
     display: inline-flex;
     align-items: center;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: left center;
+  }
+
+  .toc-item-num {
+    transition: opacity 0.3s ease, color 0.3s ease, font-weight 0.3s ease;
   }
 
   .toc-item-text {
@@ -62,27 +72,58 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
     display: inline-block;
   }
 
-  /* Strikethrough on passed sections (Tachado en tiempo real) */
-  .toc-item-link.is-passed,
-  .toc-item-link.is-passed .toc-item-text {
-    opacity: 0.35 !important;
-    text-decoration: line-through !important;
-    text-decoration-color: var(--color-grayscale-10, #71717a) !important;
-    text-decoration-thickness: 1.5px !important;
+  /* Fluid animated ink strikethrough line */
+  .toc-strike-line {
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 50%;
+    height: 1.5px;
+    background: currentColor;
+    border-radius: 1px;
+    transform-origin: left center;
+    transform: scaleX(0);
+    opacity: 0.85;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.3s ease;
+    pointer-events: none;
   }
 
-  .toc-item-link.is-passed:hover,
-  .toc-item-link.is-passed:hover .toc-item-text {
-    opacity: 0.85 !important;
+  /* Passed / Strikethrough state (Tachado fluido) */
+  .toc-item-link.is-passed {
+    opacity: 0.35;
+    transform: translateX(0);
   }
 
-  /* Active reading section */
-  .toc-item-link.is-active,
-  .toc-item-link.is-active .toc-item-text {
-    color: var(--color-grayscale-12, #ffffff) !important;
-    font-weight: 600 !important;
-    opacity: 1 !important;
-    text-decoration: none !important;
+  .toc-item-link.is-passed:hover {
+    opacity: 0.85;
+  }
+
+  .toc-item-link.is-passed .toc-strike-line {
+    transform: scaleX(1);
+    opacity: 0.7;
+  }
+
+  .toc-item-link.is-passed .toc-item-num {
+    opacity: 0.25;
+  }
+
+  /* Active / Currently reading state */
+  .toc-item-link.is-active {
+    color: var(--color-grayscale-12, #ffffff);
+    font-weight: 600;
+    opacity: 1;
+    transform: translateX(3.5px);
+  }
+
+  .toc-item-link.is-active .toc-item-num {
+    color: var(--color-accent-9, #f97316);
+    opacity: 1;
+    font-weight: 700;
+  }
+
+  .toc-item-link.is-active .toc-strike-line {
+    transform: scaleX(0);
   }
 </style>
 
@@ -180,7 +221,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
               item.passed = true;
             }
           } else if (nextRect && nextRect.top <= triggerY) {
-            // Passed completely into the next section -> Strikethrough
+            // Passed completely into the next section -> Strikethrough with smooth sweep
             item.link.classList.add("is-passed");
             item.link.classList.remove("is-active");
             if (!item.passed) {
