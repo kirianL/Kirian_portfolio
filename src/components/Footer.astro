@@ -22,6 +22,7 @@ try {
 
 const updateLabel = currentLocale === "es" ? "Última actualización" : "Last update";
 const listeningLabel = currentLocale === "es" ? "Escuchando ahora" : "Currently listening";
+const playingLabel = currentLocale === "es" ? "Jugando ahora" : "Currently playing";
 
 const defaultTrack = {
   title: "Die With A Smile",
@@ -73,12 +74,12 @@ const initialStatsText = initialViews > 0
 <footer
   class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8 flex flex-col items-center justify-center gap-1.5"
 >
-  <!-- Active State Container (Spotify Live vs Retro RPG Pixel-Sprite Box) -->
-  <div id="footer-status-wrapper" class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed py-0.5 px-3 max-w-full">
+  <!-- Active State Container (Fluid Dual Activity Stacking for Spotify & Gaming) -->
+  <div id="footer-status-wrapper" class="flex flex-col items-center justify-center gap-y-1.5 text-xs text-center leading-relaxed py-0.5 px-3 max-w-full transition-all duration-300">
     <!-- 1. SPOTIFY LIVE ROW -->
     <div
       id="spotify-widget"
-      class="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed max-w-full"
+      class="hidden transition-all duration-300 flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed max-w-full"
     >
       <!-- Minimalist Spotify Icon -->
       <svg class="w-3.5 h-3.5 text-[#1DB954] shrink-0 inline-block align-middle" viewBox="0 0 24 24" fill="currentColor">
@@ -147,10 +148,37 @@ const initialStatsText = initialViews > 0
       </a>
     </div>
 
-    <!-- 2. RETRO PIXEL-SPRITE DEV STATUS (Pure Minimalist Inline - Production Live Mode) -->
+    <!-- 2. GAMING LIVE ROW (Clean Minimalist Design) -->
+    <div
+      id="game-widget"
+      class="hidden transition-all duration-300 flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed max-w-full"
+    >
+      <!-- Gamepad Icon in Navy / Sky Blue -->
+      <span class="w-3.5 h-3.5 shrink-0 inline-flex items-center justify-center animate-pixel-idle">
+        <svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="3" y="6" width="18" height="11" fill="#0284c7"/><rect x="5" y="10" width="5" height="2" fill="#0f172a"/><rect x="6" y="8" width="2" height="6" fill="#0f172a"/><rect x="16" y="9" width="2" height="2" fill="#ef4444"/><rect x="18" y="11" width="2" height="2" fill="#38bdf8"/><rect x="14" y="11" width="2" height="2" fill="#eab308"/><rect x="16" y="13" width="2" height="2" fill="#22c55e"/></svg>
+      </span>
+
+      <span class="text-grayscale-10 shrink-0">{playingLabel}:</span>
+
+      <!-- Game Name & Details in Navy Blue -->
+      <span
+        id="game-container"
+        data-cuelume-hover="tick"
+        data-cuelume-press
+        data-cuelume-release
+        class="game-track-container text-sky-700 dark:text-sky-400 no-underline font-medium inline-flex items-center gap-1.5 cursor-default text-center"
+      >
+        <span id="game-name" class="font-mono tracking-tight text-sky-700 dark:text-sky-400 font-semibold"></span>
+        <span id="game-separator" class="text-grayscale-10 font-normal shrink-0 hidden">—</span>
+        <span id="game-details" class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono hidden"></span>
+      </span>
+    </div>
+
+    <!-- 3. RETRO PIXEL-SPRITE DEV STATUS (Active When Idle) -->
     <div
       id="dev-status-widget"
-      class="hidden flex-col sm:flex-row items-center justify-center gap-x-1.5 gap-y-0.5 text-[11px] sm:text-xs text-center leading-relaxed max-w-full select-none px-2"
+      data-cuelume-hover="tick"
+      class="hidden transition-all duration-300 flex-col sm:flex-row items-center justify-center gap-x-1.5 gap-y-0.5 text-[11px] sm:text-xs text-center leading-relaxed max-w-full select-none px-2"
     >
       <!-- Title & Sprite Group -->
       <div class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0">
@@ -160,7 +188,7 @@ const initialStatsText = initialViews > 0
       </div>
 
       <!-- Dialogue text -->
-      <span id="dev-status-dialogue" class="font-mono text-grayscale-11 dark:text-grayscale-10 italic text-center max-w-xs sm:max-w-none text-balance sm:whitespace-nowrap"></span>
+      <span id="dev-status-dialogue" class="font-mono text-grayscale-11 dark:text-grayscale-10 italic text-center max-w-xs sm:max-w-none text-balance sm:whitespace-nowrap inline-flex items-center justify-center"></span>
     </div>
   </div>
 
@@ -280,6 +308,7 @@ const initialStatsText = initialViews > 0
 
 <script>
   const GLYPHS = "01!@#$%^&*~_+-=<>?/\\[]{}AaBbCcDdEeFfGgHh";
+  const DISCORD_USER_ID = "609201692935847978";
 
   const PIXEL_SPRITES: Record<string, string> = {
     pc: `<svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="2" y="2" width="20" height="15" fill="#71717a"/><rect x="4" y="4" width="16" height="11" fill="#09090b"/><rect x="6" y="6" width="6" height="2" fill="#22c55e"/><rect x="6" y="9" width="10" height="2" fill="#4ade80"/><rect x="6" y="12" width="4" height="2" fill="#86efac"/><rect x="10" y="17" width="4" height="3" fill="#71717a"/><rect x="6" y="20" width="12" height="2" fill="#a1a1aa"/></svg>`,
@@ -321,6 +350,30 @@ const initialStatsText = initialViews > 0
         element.textContent = targetText;
       }
     }, speed);
+  }
+
+  async function checkDiscordGameActivity() {
+    try {
+      const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const activities = json.data.activities || [];
+          // Activity type 0 = Game, type 1 = Streaming, type 5 = Competing
+          const game = activities.find(
+            (a: any) => (a.type === 0 || a.type === 1 || a.type === 5) && a.name !== "Spotify"
+          );
+          if (game && game.name) {
+            return {
+              isPlaying: true,
+              gameName: game.name,
+              details: game.details || game.state || "",
+            };
+          }
+        }
+      }
+    } catch {}
+    return null;
   }
 
   function getDevStatusDialogue() {
@@ -528,10 +581,8 @@ const initialStatsText = initialViews > 0
       }
 
       const spotifyWidget = document.getElementById("spotify-widget");
+      const gameWidget = document.getElementById("game-widget");
       const devWidget = document.getElementById("dev-status-widget");
-      const devBadge = document.getElementById("dev-status-badge");
-      const devSprite = document.getElementById("dev-status-sprite");
-      const devDialogue = document.getElementById("dev-status-dialogue");
 
       const songEl = document.getElementById("spotify-song");
       const artistEl = document.getElementById("spotify-artist");
@@ -541,12 +592,20 @@ const initialStatsText = initialViews > 0
       const albumImg = document.getElementById("spotify-album-img") as HTMLImageElement | null;
       const vinylImg = document.getElementById("spotify-vinyl-img") as HTMLImageElement | null;
 
-      // 1. User IS listening to a track live
-      if (data && data.isPlaying && data.title) {
-        if (devWidget) {
-          devWidget.classList.add("hidden");
-          devWidget.classList.remove("flex");
-        }
+      const gameNameEl = document.getElementById("game-name");
+      const gameDetailsEl = document.getElementById("game-details");
+      const gameSepEl = document.getElementById("game-separator");
+
+      const devBadge = document.getElementById("dev-status-badge");
+      const devSprite = document.getElementById("dev-status-sprite");
+      const devDialogue = document.getElementById("dev-status-dialogue");
+
+      const isSpotifyPlaying = !!(data && data.isPlaying && data.title);
+      const game = await checkDiscordGameActivity();
+      const isGamePlaying = !!(game && game.isPlaying && game.gameName);
+
+      // 1. SPOTIFY WIDGET STATE
+      if (isSpotifyPlaying) {
         if (spotifyWidget) {
           spotifyWidget.classList.remove("hidden");
           spotifyWidget.classList.add("flex");
@@ -571,11 +630,42 @@ const initialStatsText = initialViews > 0
           eqEl.classList.add("inline-flex");
         }
       } else {
-        // 2. User is NOT listening: Show Retro Pixel Sprite Dev Status Dialogue
         if (spotifyWidget) {
           spotifyWidget.classList.add("hidden");
           spotifyWidget.classList.remove("flex");
         }
+      }
+
+      // 2. GAMING WIDGET STATE (Clean Minimalist Design)
+      if (isGamePlaying && game) {
+        if (gameWidget) {
+          gameWidget.classList.remove("hidden");
+          gameWidget.classList.add("flex");
+        }
+
+        if (gameNameEl && gameNameEl.textContent !== game.gameName) {
+          decryptMotion(gameNameEl, game.gameName, 18);
+        }
+
+        if (game.details) {
+          if (gameDetailsEl) {
+            gameDetailsEl.textContent = game.details;
+            gameDetailsEl.classList.remove("hidden");
+          }
+          if (gameSepEl) gameSepEl.classList.remove("hidden");
+        } else {
+          if (gameDetailsEl) gameDetailsEl.classList.add("hidden");
+          if (gameSepEl) gameSepEl.classList.add("hidden");
+        }
+      } else {
+        if (gameWidget) {
+          gameWidget.classList.add("hidden");
+          gameWidget.classList.remove("flex");
+        }
+      }
+
+      // 3. RETRO DEV STATUS DIALOGUE (Only when NEITHER Spotify NOR Game is active)
+      if (!isSpotifyPlaying && !isGamePlaying) {
         if (devWidget) {
           devWidget.classList.remove("hidden");
           devWidget.classList.add("flex");
@@ -586,9 +676,15 @@ const initialStatsText = initialViews > 0
         if (devSprite && devInfo.sprite && PIXEL_SPRITES[devInfo.sprite]) {
           devSprite.innerHTML = PIXEL_SPRITES[devInfo.sprite];
         }
-        if (devDialogue) {
+        if (devDialogue && devDialogue.dataset.renderedText !== devInfo.text) {
+          devDialogue.dataset.renderedText = devInfo.text;
           devDialogue.title = devInfo.text;
           decryptMotion(devDialogue, devInfo.text, 18);
+        }
+      } else {
+        if (devWidget) {
+          devWidget.classList.add("hidden");
+          devWidget.classList.remove("flex");
         }
       }
     } catch (e) {
@@ -672,7 +768,7 @@ const initialStatsText = initialViews > 0
   // Support Astro view transitions
   document.addEventListener("astro:page-load", init);
 
-  // Poll Spotify live state every 5s when active + refresh on focus and hover
+  // Poll Spotify and Discord live state every 5s when active + refresh on focus and hover
   if (typeof window !== "undefined") {
     let lastFetchTime = 0;
     const throttledLoad = () => {
