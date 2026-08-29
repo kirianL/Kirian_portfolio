@@ -267,21 +267,24 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   Cohesive Page View Transitions (Zero-Jitter Pure Silky Cross-Fade)
+   Cohesive Page View Transitions (Seamless Simultaneous Cross-Fade)
    ========================================================================== */
-::view-transition-group(root) {
-  animation-duration: 150ms;
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 160ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  mix-blend-mode: normal;
 }
 
 ::view-transition-old(root) {
-  animation: 90ms cubic-bezier(0.4, 0, 1, 1) both astroPageFadeOut;
+  animation-name: astroFadeOut;
 }
 
 ::view-transition-new(root) {
-  animation: 150ms cubic-bezier(0.16, 1, 0.3, 1) both astroPageFadeIn;
+  animation-name: astroFadeIn;
 }
 
-@keyframes astroPageFadeOut {
+@keyframes astroFadeOut {
   from {
     opacity: 1;
   }
@@ -290,7 +293,7 @@ html.lenis body {
   }
 }
 
-@keyframes astroPageFadeIn {
+@keyframes astroFadeIn {
   from {
     opacity: 0;
   }
