@@ -64,6 +64,18 @@ const spanishURL = new URL(spanishPath, siteURL);
         // Apply immediately
         applyTheme(document);
 
+        // Re-apply if page transitions from hidden to visible (X/Instagram in-app background pre-rendering)
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "visible") {
+            applyTheme(document);
+          }
+        });
+
+        // Re-apply if restored from bfcache
+        window.addEventListener("pageshow", function (event) {
+          if (event.persisted) applyTheme(document);
+        });
+
         // Apply on incoming document before swap
         document.addEventListener("astro:before-swap", function (e) {
           if (e.newDocument) {
