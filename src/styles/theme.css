@@ -2,10 +2,12 @@
 
 :root {
   color-scheme: light;
+  background-color: #ffffff;
 }
 
 .dark {
   color-scheme: dark;
+  background-color: #111113;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

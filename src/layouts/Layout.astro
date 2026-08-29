@@ -55,6 +55,7 @@ const spanishURL = new URL(spanishPath, siteURL);
             doc.documentElement.classList.add("light");
           }
           doc.documentElement.style.colorScheme = isDark ? "dark" : "light";
+          doc.documentElement.style.backgroundColor = isDark ? "#111113" : "#ffffff";
 
           // Sync theme-color metas if user selected an explicit manual theme
           var stored = localStorage.getItem("theme");

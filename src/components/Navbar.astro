@@ -263,6 +263,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
         }
 
         document.documentElement.style.colorScheme = nextIsDark ? "dark" : "light";
+        document.documentElement.style.backgroundColor = nextColor;
 
         // Instantly update all theme-color meta tags for iOS Safari status bar
         const nextColor = nextIsDark ? "#111113" : "#ffffff";
