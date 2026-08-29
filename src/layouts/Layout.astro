@@ -90,14 +90,14 @@ const spanishURL = new URL(spanishPath, siteURL);
     <meta name="keywords" content="Kirian Luna, Kirian Luna, Ingeniero en Sistemas, Systems Engineer, Software Engineer, Web Developer Costa Rica, Next.js, React, Astro, TypeScript, Product Designer, SorinLabs" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
-    <!-- Canonical & i18n Hreflang & RSS Feed (SEO / AEO) -->
+    <!-- Canonical & i18n Hreflang & RSS Feed -->
     <link rel="canonical" href={canonicalURL} />
     <link rel="alternate" hreflang="en" href={englishURL} />
     <link rel="alternate" hreflang="es" href={spanishURL} />
     <link rel="alternate" hreflang="x-default" href={englishURL} />
     <link rel="alternate" type="application/rss+xml" title="Kirian Luna Blog RSS" href={new URL(lang === 'es' ? '/es/rss.xml' : '/rss.xml', siteURL)} />
 
-    <!-- Open Graph / Facebook (SEO / SXO) -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Kirian Luna" />
     <meta property="og:url" content={canonicalURL} />
@@ -111,7 +111,7 @@ const spanishURL = new URL(spanishPath, siteURL);
     <meta property="og:image:alt" content={title} />
     <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
 
-    <!-- Twitter / X Cards (SEO / GEO) -->
+    <!-- Twitter / X Cards -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={canonicalURL} />
     <meta name="twitter:title" content={title} />
@@ -120,7 +120,7 @@ const spanishURL = new URL(spanishPath, siteURL);
     <meta name="twitter:image:alt" content={title} />
     <meta name="twitter:creator" content="@kirianluna" />
 
-    <!-- Structured Data JSON-LD Schemas (AEO / GEO / AIO / Entity Graph) -->
+    <!-- Structured Data JSON-LD Schemas -->
     <script type="application/ld+json" set:html={JSON.stringify([
       {
         "@context": "https://schema.org",

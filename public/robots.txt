@@ -2,24 +2,6 @@
 User-agent: *
 Allow: /
 
-# LLM & AI Search Engine Crawlers (AEO / GEO / AIO)
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
 # Sitemap Location
 Sitemap: https://kirian.dev/sitemap-index.xml
+

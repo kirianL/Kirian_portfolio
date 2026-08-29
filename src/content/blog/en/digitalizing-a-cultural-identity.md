@@ -22,9 +22,9 @@ If someone searches for information about Limonense culture today, they will lik
 
 This is paradoxical considering the province's historical and cultural relevance.
 
-According to the [National Institute of Statistics and Censuses (INEC)](https://admin.inec.cr/sites/default/files/2023-07/INFOGRAFIA_ESTIM_POB_VIV_2022_LIMON.pdf?utm_source=chatgpt.com), Limón has an estimated population of 470,383 inhabitants for 2022.
+According to the [National Institute of Statistics and Censuses (INEC)](https://admin.inec.cr/sites/default/files/2023-07/INFOGRAFIA_ESTIM_POB_VIV_2022_LIMON.pdf), Limón has an estimated population of 470,383 inhabitants for 2022.
 
-Furthermore, according to data from the [United Nations Development Programme (UNDP)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf?utm_source=chatgpt.com), Limón concentrates the highest percentage of the country's Afro-descendant population, with approximately 23% of people identifying as Afro-descendant or Mulatto.
+Furthermore, according to data from the [United Nations Development Programme (UNDP)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf), Limón concentrates the highest percentage of the country's Afro-descendant population, with approximately 23% of people identifying as Afro-descendant or Mulatto.
 
 ### Limón in Figures
 
@@ -69,9 +69,9 @@ However, when comparing these figures with the number of digital projects dedica
 
 During my research, I discovered that the problem is not that no one has tried to digitally preserve Limón's culture. In fact, there are significant efforts from academia and research.
 
-One of the most interesting is the project on [intangible cultural heritage](https://orion.tec.ac.cr/en/publications/patrimonio-inmaterial-recursos-del-patrimonio-inmaterial-lim%C3%B3n-co/?utm_source=chatgpt.com) developed by researchers from the Instituto Tecnológico de Costa Rica (TEC), focused on documenting and visualizing the province's heritage resources.
+One of the most interesting is the project on [intangible cultural heritage](https://orion.tec.ac.cr/en/publications/patrimonio-inmaterial-recursos-del-patrimonio-inmaterial-lim%C3%B3n-co/) developed by researchers from the Instituto Tecnológico de Costa Rica (TEC), focused on documenting and visualizing the province's heritage resources.
 
-I also found the interactive project [... and Anancy arrived with them...](https://tecdigital.tec.ac.cr/servicios/cv-recursos/html/anancy/?utm_source=chatgpt.com), an educational initiative by TEC that allows users to explore aspects of Costa Rican Afro-Caribbean culture through an immersive digital experience.
+I also found the interactive project [... and Anancy arrived with them...](https://tecdigital.tec.ac.cr/servicios/cv-recursos/html/anancy/), an educational initiative by TEC that allows users to explore aspects of Costa Rican Afro-Caribbean culture through an immersive digital experience.
 
 The interesting thing about this project is that it is not limited to displaying information.
 
@@ -116,7 +116,7 @@ An important part of the research did not come solely from official documents or
 
 It also emerged from conversations, historical photographs, and stories shared by people who lived through different stages of the province.
 
-One of the most valuable spaces for understanding this collective memory was the Facebook group [Mi Limón de Ayer](https://www.facebook.com/share/g/1CeUp5KFKT/?utm_source=chatgpt.com) (My Limón of Yesterday).
+One of the most valuable spaces for understanding this collective memory was the Facebook group [Mi Limón de Ayer](https://www.facebook.com/share/g/1CeUp5KFKT/) (My Limón of Yesterday).
 
 Beyond functioning as a digital community, this group acts as a living archive where hundreds of people share:
 
@@ -176,7 +176,7 @@ Because before being a tourist destination, Limón is a living cultural identity
 
 It was related to inequality.
 
-According to data compiled by the [UNDP (PNUD)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf?utm_source=chatgpt.com) from census records, approximately one-third of Limonense households lived in poverty.
+According to data compiled by the [UNDP (PNUD)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf) from census records, approximately one-third of Limonense households lived in poverty.
 
 <div class="my-6 p-5 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white/60 dark:bg-grayscale-2/60 backdrop-blur-xs flex flex-col gap-4 max-w-md mx-auto shadow-xs">
   <div class="text-[11px] font-semibold tracking-wider text-grayscale-11 uppercase font-mono border-b border-grayscale-3/60 dark:border-grayscale-3/30 pb-2">Households in poverty conditions (Limón)</div>
@@ -291,15 +291,15 @@ Because if one thing became clear during this process, it is that the best way t
 ## Credits and Visual Inspiration
 
 * Documentary inspiration and photography (most photos on the website): [Xaxier Sandi Castillo](https://www.instagram.com/amkras_/)
-* Community archive and historical memory: [Mi Limón of Yesterday](https://www.facebook.com/share/g/1CeUp5KFKT/?utm_source=chatgpt.com)
+* Community archive and historical memory: [Mi Limón of Yesterday](https://www.facebook.com/share/g/1CeUp5KFKT/)
 
 ---
 
 ## References
 
-* [National Institute of Statistics and Censuses (INEC) - Limón in figures 2022](https://admin.inec.cr/sites/default/files/2023-07/INFOGRAFIA_ESTIM_POB_VIV_2022_LIMON.pdf?utm_source=chatgpt.com)
-* [United Nations Development Programme (UNDP) - Ficha Técnica Provincia de Limón](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf?utm_source=chatgpt.com)
-* [Anancy Project - Tecnológico de Costa Rica](https://tecdigital.tec.ac.cr/servicios/cv-recursos/html/anancy/?utm_source=chatgpt.com)
-* [New website on Afro-Caribbean culture - TEC](https://www.tec.ac.cr/hoyeneltec/2019/07/22/nuevo-sitio-web-le-permite-conocer-cultura-afrocaribena-costa-rica?utm_source=chatgpt.com)
-* [Intangible Cultural Heritage of Limón - Tecnológico de Costa Rica](https://orion.tec.ac.cr/en/publications/patrimonio-inmaterial-recursos-del-patrimonio-inmaterial-lim%C3%B3n-co/?utm_source=chatgpt.com)
-* [Mi Limón of Yesterday - Digital community archive](https://www.facebook.com/share/g/1CeUp5KFKT/?utm_source=chatgpt.com)
+* [National Institute of Statistics and Censuses (INEC) - Limón in figures 2022](https://admin.inec.cr/sites/default/files/2023-07/INFOGRAFIA_ESTIM_POB_VIV_2022_LIMON.pdf)
+* [United Nations Development Programme (UNDP) - Ficha Técnica Provincia de Limón](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf)
+* [Anancy Project - Tecnológico de Costa Rica](https://tecdigital.tec.ac.cr/servicios/cv-recursos/html/anancy/)
+* [New website on Afro-Caribbean culture - TEC](https://www.tec.ac.cr/hoyeneltec/2019/07/22/nuevo-sitio-web-le-permite-conocer-cultura-afrocaribena-costa-rica)
+* [Intangible Cultural Heritage of Limón - Tecnológico de Costa Rica](https://orion.tec.ac.cr/en/publications/patrimonio-inmaterial-recursos-del-patrimonio-inmaterial-lim%C3%B3n-co/)
+* [Mi Limón of Yesterday - Digital community archive](https://www.facebook.com/share/g/1CeUp5KFKT/)

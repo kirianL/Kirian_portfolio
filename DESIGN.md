@@ -360,18 +360,3 @@ Guardrails protect Core token rhythm without adding unsupported visual claims.
 | ------------ | ------- | -------------------------------- |
 | Breakpoint 1 | Unknown | (prefers-reduced-motion: reduce) |
 
-## Agent Prompt Guide
-
-### Example Component Prompts
-
-- Create Author Identity Block variant that preserves Avatar with dithered/halftone treatment alongside name and role title.
-- Create Category Badge variant that preserves Pill-shaped dark badge used to categorize resources (AI, Tool).
-- Create Navigation Bar variant that preserves Fixed top navigation with semi-transparent frosted background and text links.
-
-### Iteration Guide
-
-1. Start with extracted palette and typography roles only.
-2. Map spacing and radius directly from token tables before visual polish.
-3. Apply component patterns one section at a time and compare against source intent.
-4. Keep elevation claims tied to explicit evidence in output.
-5. Iterate with smallest diffs and re-check section hierarchy after each change.

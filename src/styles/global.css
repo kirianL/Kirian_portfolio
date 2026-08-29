@@ -13,6 +13,16 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Insomnyacs";
+  src:
+    url("/fonts/Insomnyacs.otf") format("opentype"),
+    url("/fonts/Insomnyacs.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   position: relative;
   background-color: var(--color-grayscale-1);
@@ -46,8 +56,15 @@ body {
   --font-sans: "Inter", sans-serif;
   --font-mono: "GeistMono", monospace;
   --font-chillax: "Chillax", sans-serif;
+  --font-insomnyacs: "Insomnyacs", sans-serif;
   --font-serif: "Newsreader", "Instrument Serif", Georgia, serif;
   --font-figgle: "Newsreader", "Instrument Serif", Georgia, serif;
+}
+
+.font-name {
+  font-family: var(--font-insomnyacs), sans-serif;
+  letter-spacing: 0.08em;
+  word-spacing: 0.12em;
 }
 
 .font-figgle {
