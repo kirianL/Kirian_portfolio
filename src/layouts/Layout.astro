@@ -36,32 +36,22 @@ const spanishURL = new URL(spanishPath, siteURL);
     <script is:inline>
       (function () {
         function getTheme() {
-          const stored = localStorage.getItem("theme");
-          if (stored) return stored;
-          return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          var stored = localStorage.getItem("theme");
+          return stored || "light";
         }
 
         function applyTheme(doc) {
           if (!doc || !doc.documentElement) return;
-          const isDark = getTheme() === "dark";
+          var theme = getTheme();
+          var isDark = theme === "dark";
           if (isDark) {
             doc.documentElement.classList.add("dark");
+            doc.documentElement.classList.remove("light");
           } else {
             doc.documentElement.classList.remove("dark");
+            doc.documentElement.classList.add("light");
           }
-          const themeColor = isDark ? "#111113" : "#fcfcfd";
           doc.documentElement.style.colorScheme = isDark ? "dark" : "light";
-          doc.documentElement.style.backgroundColor = themeColor;
-
-          var meta = doc.querySelector('meta[name="theme-color"]');
-          if (!meta && doc.head) {
-            meta = doc.createElement('meta');
-            meta.setAttribute('name', 'theme-color');
-            doc.head.appendChild(meta);
-          }
-          if (meta) {
-            meta.setAttribute('content', themeColor);
-          }
         }
 
         // Apply immediately
