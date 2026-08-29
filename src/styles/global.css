@@ -175,8 +175,13 @@ html.lenis body {
   html {
     scroll-padding-top: 80px;
     font-size: 16px;
-    scrollbar-gutter: stable;
-    overflow-y: scroll;
+  }
+
+  /* Stabilize scrollbar width on desktop only (mobile has overlay scrollbars) */
+  @media (hover: hover) and (pointer: fine) {
+    html {
+      scrollbar-gutter: stable;
+    }
   }
 
   /* Fine-tuned proportional scaling for high-resolution screens */
@@ -269,44 +274,16 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   Cohesive Page View Transitions (Ultra-fast, Non-disappearing Cross-Fade)
+   Page Transitions — Instant Swap (Zero pop-in, zero content delay)
+   iOS Safari defers painting below-fold content during view-transition
+   animations, causing sections like "experience." to flash in late.
+   An instant swap eliminates this entirely for a native-app feel.
    ========================================================================== */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 90ms;
-  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
-  mix-blend-mode: normal;
-}
-
 ::view-transition-old(root) {
-  animation-name: astroFadeOut;
+  animation: none !important;
+  display: none !important;
 }
 
 ::view-transition-new(root) {
-  animation-name: astroFadeIn;
-}
-
-@keyframes astroFadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes astroFadeIn {
-  from {
-    opacity: 0.75;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: 0.01ms !important;
-  }
+  animation: none !important;
 }
