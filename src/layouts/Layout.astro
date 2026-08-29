@@ -65,10 +65,12 @@ const spanishURL = new URL(spanishPath, siteURL);
           } else {
             doc.documentElement.classList.remove("dark");
           }
-          // Force ALL theme-color metas to the active color so iOS status bar
-          // updates instantly on manual toggle (overrides media-query matching)
+          // Sync color-scheme on <html> — this is the PRIMARY signal iOS Safari
+          // uses to paint the status bar. Meta tags are secondary/slower.
+          doc.documentElement.style.colorScheme = isDark ? "dark" : "light";
+          // Also sync meta tags for other browsers
           const themeColor = isDark ? "#111113" : "#ffffff";
-          const metas = doc.querySelectorAll('meta[name="theme-color"]');
+          var metas = doc.querySelectorAll('meta[name="theme-color"]');
           metas.forEach(function (m) {
             m.setAttribute("content", themeColor);
           });

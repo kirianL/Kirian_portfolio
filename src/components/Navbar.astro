@@ -260,7 +260,10 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           localStorage.setItem("theme", "dark");
         }
 
-        // Instantly sync iPhone notch / browser status bar theme-color
+        // Sync color-scheme on <html> — iOS Safari's PRIMARY status bar signal
+        document.documentElement.style.colorScheme = nextIsDark ? "dark" : "light";
+
+        // Also sync meta tags for other browsers
         const nextColor = nextIsDark ? "#111113" : "#ffffff";
         document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
           m.setAttribute("content", nextColor);
