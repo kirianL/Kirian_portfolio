@@ -260,9 +260,20 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           localStorage.setItem("theme", "dark");
         }
 
-        // Sync color-scheme and background directly on <html> — iOS Safari's PRIMARY status bar signal
+        // Sync color-scheme, background, and theme-color meta directly — iOS Safari's status bar signals
+        const nextColor = nextIsDark ? "#111113" : "#fcfcfd";
         document.documentElement.style.colorScheme = nextIsDark ? "dark" : "light";
-        document.documentElement.style.backgroundColor = nextIsDark ? "#111113" : "#fcfcfd";
+        document.documentElement.style.backgroundColor = nextColor;
+
+        let meta = document.querySelector('meta[name="theme-color"]');
+        if (!meta && document.head) {
+          meta = document.createElement('meta');
+          meta.setAttribute('name', 'theme-color');
+          document.head.appendChild(meta);
+        }
+        if (meta) {
+          meta.setAttribute('content', nextColor);
+        }
 
         // Force synchronous style recalculation flush
         window.getComputedStyle(document.documentElement).opacity;

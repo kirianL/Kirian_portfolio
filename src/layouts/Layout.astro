@@ -30,7 +30,7 @@ const spanishURL = new URL(spanishPath, siteURL);
 <html lang={lang} data-grayscale="slate" data-accent="violet">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     
     <!-- Immediate Theme & iOS Status Bar Initializer (Runs before render) -->
     <script is:inline>
@@ -49,8 +49,19 @@ const spanishURL = new URL(spanishPath, siteURL);
           } else {
             doc.documentElement.classList.remove("dark");
           }
+          const themeColor = isDark ? "#111113" : "#fcfcfd";
           doc.documentElement.style.colorScheme = isDark ? "dark" : "light";
-          doc.documentElement.style.backgroundColor = isDark ? "#111113" : "#fcfcfd";
+          doc.documentElement.style.backgroundColor = themeColor;
+
+          var meta = doc.querySelector('meta[name="theme-color"]');
+          if (!meta && doc.head) {
+            meta = doc.createElement('meta');
+            meta.setAttribute('name', 'theme-color');
+            doc.head.appendChild(meta);
+          }
+          if (meta) {
+            meta.setAttribute('content', themeColor);
+          }
         }
 
         // Apply immediately
