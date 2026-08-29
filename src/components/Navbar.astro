@@ -252,24 +252,21 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
 
         const isDark = document.documentElement.classList.contains("dark");
         const nextIsDark = !isDark;
-        if (isDark) {
-          document.documentElement.classList.remove("dark");
-          document.documentElement.classList.add("light");
-          localStorage.setItem("theme", "light");
-        } else {
-          document.documentElement.classList.add("dark");
-          document.documentElement.classList.remove("light");
-          localStorage.setItem("theme", "dark");
-        }
+        const nextColor = nextIsDark ? "#111113" : "#ffffff";
 
+        document.documentElement.classList.toggle("dark", nextIsDark);
         document.documentElement.style.colorScheme = nextIsDark ? "dark" : "light";
         document.documentElement.style.backgroundColor = nextColor;
+        localStorage.setItem("theme", nextIsDark ? "dark" : "light");
 
-        // Instantly update all theme-color meta tags for iOS Safari status bar
-        const nextColor = nextIsDark ? "#111113" : "#ffffff";
-        document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
-          m.setAttribute("content", nextColor);
-        });
+        // Force Safari WebKit status bar repaint by replacing the meta node
+        const oldMeta = document.getElementById("theme-color-meta") || document.querySelector('meta[name="theme-color"]');
+        if (oldMeta) oldMeta.remove();
+        const newMeta = document.createElement("meta");
+        newMeta.setAttribute("name", "theme-color");
+        newMeta.setAttribute("content", nextColor);
+        newMeta.id = "theme-color-meta";
+        document.head.appendChild(newMeta);
 
         // Force synchronous style recalculation flush
         window.getComputedStyle(document.documentElement).opacity;

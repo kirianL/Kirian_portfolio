@@ -31,41 +31,33 @@ const spanishURL = new URL(spanishPath, siteURL);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <!-- Native iOS Safari Status Bar / Theme Colors -->
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)" />
+    <!-- Single Theme Color Meta without Media Queries (Controlled purely via JS) -->
+    <meta name="theme-color" content="#ffffff" id="theme-color-meta" />
 
-    <!-- Immediate Theme & iOS Status Bar Initializer (Runs before render) -->
+    <!-- Immediate Zero-FOUC Theme & iOS Status Bar Initializer (Runs before render) -->
     <script is:inline>
       (function () {
-        function getTheme() {
-          var stored = localStorage.getItem("theme");
-          return stored || "light";
+        function setThemeColorMeta(doc, color) {
+          if (!doc || !doc.head) return;
+          var old = doc.getElementById("theme-color-meta") || doc.querySelector('meta[name="theme-color"]');
+          if (old) old.remove();
+
+          var meta = doc.createElement("meta");
+          meta.setAttribute("name", "theme-color");
+          meta.setAttribute("content", color);
+          meta.id = "theme-color-meta";
+          doc.head.appendChild(meta);
         }
 
         function applyTheme(doc) {
           if (!doc || !doc.documentElement) return;
-          var theme = getTheme();
-          var isDark = theme === "dark";
-          if (isDark) {
-            doc.documentElement.classList.add("dark");
-            doc.documentElement.classList.remove("light");
-          } else {
-            doc.documentElement.classList.remove("dark");
-            doc.documentElement.classList.add("light");
-          }
+          var saved = localStorage.getItem("theme");
+          var isDark = saved === "dark";
+          doc.documentElement.classList.toggle("dark", isDark);
           doc.documentElement.style.colorScheme = isDark ? "dark" : "light";
           doc.documentElement.style.backgroundColor = isDark ? "#111113" : "#ffffff";
-
-          // Sync theme-color metas if user selected an explicit manual theme
-          var stored = localStorage.getItem("theme");
-          if (stored) {
-            var forcedColor = stored === "dark" ? "#111113" : "#ffffff";
-            var metas = doc.querySelectorAll('meta[name="theme-color"]');
-            metas.forEach(function (m) {
-              m.setAttribute("content", forcedColor);
-            });
-          }
+          
+          setThemeColorMeta(doc, isDark ? "#111113" : "#ffffff");
         }
 
         // Apply immediately
