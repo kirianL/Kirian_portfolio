@@ -11,7 +11,7 @@ export default defineConfig({
   integrations: [sitemap()],
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: 'hover'
+    defaultStrategy: 'viewport'
   },
   i18n: {
     defaultLocale: 'en',

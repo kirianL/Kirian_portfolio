@@ -34,6 +34,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Mobile Touch Responsiveness (Eliminates 300ms mobile tap delay) */
+a, button, [role="button"], input, select, textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Lenis Smooth Scroll Recommended CSS */
 html.lenis,
 html.lenis body {
@@ -261,24 +267,18 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   Cohesive Page View Transitions (Ultra-responsive, buttery-smooth cross-flow)
+   Cohesive Page View Transitions (Zero-Jitter Pure Silky Cross-Fade)
    ========================================================================== */
-::view-transition-group(main-navbar) {
-  animation-duration: 200ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 100;
-}
-
 ::view-transition-group(root) {
-  animation-duration: 180ms;
+  animation-duration: 150ms;
 }
 
 ::view-transition-old(root) {
-  animation: 100ms cubic-bezier(0.4, 0, 1, 1) both astroPageFadeOut;
+  animation: 90ms cubic-bezier(0.4, 0, 1, 1) both astroPageFadeOut;
 }
 
 ::view-transition-new(root) {
-  animation: 180ms cubic-bezier(0.16, 1, 0.3, 1) both astroPageFadeIn;
+  animation: 150ms cubic-bezier(0.16, 1, 0.3, 1) both astroPageFadeIn;
 }
 
 @keyframes astroPageFadeOut {
@@ -293,18 +293,15 @@ html.lenis body {
 @keyframes astroPageFadeIn {
   from {
     opacity: 0;
-    transform: translateY(3px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
-  ::view-transition-new(root),
-  ::view-transition-group(main-navbar) {
+  ::view-transition-new(root) {
     animation-duration: 0.01ms !important;
   }
 }
