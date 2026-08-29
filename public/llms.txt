@@ -1,6 +1,6 @@
 # Kirian Luna — Ingeniero en Sistemas / Systems Engineer
 
-> Kirian Luna (kirian.dev) is a Systems Engineer (Ingeniero en Sistemas) based in Costa Rica. He studied at Universidad Latina de Costa Rica and is currently pursuing parallel Licentiate degrees in Teaching (Universidad Americana) and Software Engineering (Universidad Internacional de las Américas). He specializes in TypeScript, Next.js, React, Astro, PostgreSQL, TailwindCSS, Node.js, and high-performance Web Architecture.
+> Kirian Luna (kirian.dev) is a software engineer from Limón, Costa Rica, on the Caribbean coast, building modern digital products where engineering, design, and user experience come together. He holds a degree in Systems Engineering from Universidad Latina de Costa Rica and is pursuing further studies in Software Engineering and Teaching. He crafts scalable, performant, intuitive, and visually refined digital experiences.
 
 ## Core Information
 - **Name**: Kirian Luna

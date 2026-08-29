@@ -34,7 +34,7 @@ const data = dictionaries.EN;
         </div>
 
         <!-- Metadata row -->
-        <div class="flex items-start gap-8 mt-6 flex-wrap">
+        <div class="grid grid-cols-2 sm:flex sm:items-start gap-x-6 gap-y-4 sm:gap-8 mt-6">
           <!-- Location -->
           <div class="flex flex-col gap-1.5">
             <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-10">Location</span>
@@ -70,9 +70,9 @@ const data = dictionaries.EN;
           <!-- Live Clock: CR -->
           <div class="flex flex-col gap-1.5">
             <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-10">Time Zone</span>
-            <span class="text-grayscale-12 text-[12px] font-mono flex items-center gap-2 select-none">
+            <span class="text-grayscale-12 text-sm flex items-center gap-1.5 select-none">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-              <span id="cr-time">CR --:--</span>
+              <span id="cr-time">--:--</span>
             </span>
           </div>
         </div>
@@ -82,7 +82,7 @@ const data = dictionaries.EN;
 
         <!-- Bio -->
         <section class="flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed">
-          <p set:html={data.hero.desc} />
+          <div class="flex flex-col gap-3.5" set:html={data.hero.desc} />
         </section>
 
         <!-- Social icons row -->
@@ -281,7 +281,7 @@ const data = dictionaries.EN;
       const updateClocks = () => {
         const now = new Date();
         const crTime = now.toLocaleTimeString('en-US', { timeZone: 'America/Costa_Rica', hour: '2-digit', minute: '2-digit', hour12: false });
-        crEl.textContent = `CR ${crTime} CST`;
+        crEl.textContent = `${crTime} CST`;
       };
       updateClocks();
       if (clockInterval) clearInterval(clockInterval);

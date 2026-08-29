@@ -35,6 +35,35 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Minimalist Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-grayscale-4);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-grayscale-6);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Standard scrollbar for Firefox & modern browsers */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-grayscale-4) transparent;
+}
+
 .root {
   isolation: isolate;
 }

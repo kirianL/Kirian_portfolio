@@ -1,6 +1,6 @@
 # Kirian Luna — Complete Developer & Systems Engineer Profile
 
-> Kirian Luna is an Ingeniero en Sistemas (Systems Engineer) based in Costa Rica (UTC-6). He studied at Universidad Latina de Costa Rica and is currently pursuing parallel Licentiate degrees in Teaching at Universidad Americana and Software Engineering at Universidad Internacional de las Américas. He focuses on building high-performance web systems, modern UI/UX product designs, full-stack enterprise applications, and accessible digital experiences.
+> Kirian Luna is a software engineer from Limón, Costa Rica (UTC-6), on the Caribbean coast, building modern digital products where strong engineering, thoughtful design, and a product mindset come together. He holds a degree in Systems Engineering from Universidad Latina de Costa Rica and is pursuing further studies in Software Engineering and Teaching. He crafts scalable, performant, intuitive, and visually refined digital experiences.
 
 ---
 
