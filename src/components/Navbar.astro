@@ -264,14 +264,6 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
 
         document.documentElement.style.colorScheme = nextIsDark ? "dark" : "light";
 
-        const targetColor = nextIsDark ? "#111113" : "#ffffff";
-        const oldMetas = document.querySelectorAll('meta[name="theme-color"]');
-        oldMetas.forEach((m) => m.remove());
-        const newMeta = document.createElement("meta");
-        newMeta.setAttribute("name", "theme-color");
-        newMeta.setAttribute("content", targetColor);
-        document.head.appendChild(newMeta);
-
         // Force synchronous style recalculation flush
         window.getComputedStyle(document.documentElement).opacity;
 

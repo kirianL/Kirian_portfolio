@@ -31,8 +31,6 @@ const spanishURL = new URL(spanishPath, siteURL);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#ffffff" />
-    
     <!-- Immediate Theme & iOS Status Bar Initializer (Runs before render) -->
     <script is:inline>
       (function () {
@@ -53,18 +51,6 @@ const spanishURL = new URL(spanishPath, siteURL);
             doc.documentElement.classList.add("light");
           }
           doc.documentElement.style.colorScheme = isDark ? "dark" : "light";
-
-          var targetColor = isDark ? "#111113" : "#ffffff";
-          if (doc.head) {
-            var oldMetas = doc.querySelectorAll('meta[name="theme-color"]');
-            oldMetas.forEach(function (m) {
-              m.remove();
-            });
-            var newMeta = doc.createElement("meta");
-            newMeta.setAttribute("name", "theme-color");
-            newMeta.setAttribute("content", targetColor);
-            doc.head.appendChild(newMeta);
-          }
         }
 
         // Apply immediately
