@@ -23,6 +23,7 @@
   font-display: swap;
 }
 
+html,
 body {
   position: relative;
   background-color: var(--color-grayscale-1);
@@ -175,6 +176,8 @@ html.lenis body {
   html {
     scroll-padding-top: 80px;
     font-size: 16px;
+    background-color: var(--color-grayscale-1);
+    color: var(--color-grayscale-12);
   }
 
   /* Stabilize scrollbar width on desktop only (mobile has overlay scrollbars) */

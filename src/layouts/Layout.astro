@@ -32,23 +32,7 @@ const spanishURL = new URL(spanishPath, siteURL);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- Favicons & Manifest -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="generator" content={Astro.generator} />
-
-    <ClientRouter />
-
-    <!-- Immediate Zero-FOUC & Zero-Flash Dark Mode & iOS Status Bar Initializer -->
+    <!-- Immediate Theme & iOS Status Bar Initializer (Runs before render) -->
     <script is:inline>
       (function () {
         function getTheme() {
@@ -65,28 +49,18 @@ const spanishURL = new URL(spanishPath, siteURL);
           } else {
             doc.documentElement.classList.remove("dark");
           }
-          // Sync color-scheme on <html> — this is the PRIMARY signal iOS Safari
-          // uses to paint the status bar. Meta tags are secondary/slower.
           doc.documentElement.style.colorScheme = isDark ? "dark" : "light";
-          // Also sync meta tags for other browsers
-          const themeColor = isDark ? "#111113" : "#ffffff";
-          var metas = doc.querySelectorAll('meta[name="theme-color"]');
-          metas.forEach(function (m) {
-            m.setAttribute("content", themeColor);
-          });
+          doc.documentElement.style.backgroundColor = isDark ? "#111113" : "#fcfcfd";
         }
 
-        // Apply on initial document load
+        // Apply immediately
         applyTheme(document);
 
-        // Apply on incoming document BEFORE swap (prevents white navbar flash during page transition)
+        // Apply on incoming document before swap
         document.addEventListener("astro:before-swap", function (e) {
           if (e.newDocument) {
             applyTheme(e.newDocument);
           }
-          // Skip the View Transition visual layer entirely.
-          // iOS Safari defers painting below-fold content during VT animations,
-          // causing sections to pop-in late. This makes the swap 100% instant.
           try {
             if (e.viewTransition && e.viewTransition.skipTransition) {
               e.viewTransition.skipTransition();
@@ -100,6 +74,18 @@ const spanishURL = new URL(spanishPath, siteURL);
         });
       })();
     </script>
+
+    <!-- Favicons & Manifest -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="generator" content={Astro.generator} />
+
+    <ClientRouter />
 
     <!-- Performance & Preconnect (SXO) -->
     <link rel="dns-prefetch" href="https://cloud.umami.is" />
