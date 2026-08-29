@@ -251,6 +251,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
         document.documentElement.classList.add("disable-transitions");
 
         const isDark = document.documentElement.classList.contains("dark");
+        const nextIsDark = !isDark;
         if (isDark) {
           document.documentElement.classList.remove("dark");
           localStorage.setItem("theme", "light");
@@ -258,6 +259,12 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           document.documentElement.classList.add("dark");
           localStorage.setItem("theme", "dark");
         }
+
+        // Instantly sync iPhone notch / browser status bar theme-color
+        const nextColor = nextIsDark ? "#111113" : "#ffffff";
+        document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
+          m.setAttribute("content", nextColor);
+        });
 
         // Force synchronous style recalculation flush
         window.getComputedStyle(document.documentElement).opacity;

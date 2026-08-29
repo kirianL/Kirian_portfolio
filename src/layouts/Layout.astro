@@ -40,39 +40,52 @@ const spanishURL = new URL(spanishPath, siteURL);
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#18181b" />
+    <meta name="theme-color" content="#111113" id="meta-theme-color" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="generator" content={Astro.generator} />
 
     <ClientRouter />
 
-    <!-- Immediate Zero-FOUC Dark Mode Initializer -->
+    <!-- Immediate Zero-FOUC & Zero-Flash Dark Mode & iOS Status Bar Initializer -->
     <script is:inline>
       (function () {
-        const theme = localStorage.getItem("theme");
-        if (
-          theme === "dark" ||
-          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
+        function getTheme() {
+          const stored = localStorage.getItem("theme");
+          if (stored) return stored;
+          return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         }
-      })();
-    </script>
-    <script>
-      const syncTheme = () => {
-        const theme = localStorage.getItem("theme");
-        if (
-          theme === "dark" ||
-          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      };
 
-      document.addEventListener("astro:after-swap", syncTheme);
+        function applyTheme(doc) {
+          if (!doc || !doc.documentElement) return;
+          const isDark = getTheme() === "dark";
+          if (isDark) {
+            doc.documentElement.classList.add("dark");
+          } else {
+            doc.documentElement.classList.remove("dark");
+          }
+          const themeColor = isDark ? "#111113" : "#ffffff";
+          const metas = doc.querySelectorAll('meta[name="theme-color"]');
+          metas.forEach(function (m) {
+            m.setAttribute("content", themeColor);
+          });
+        }
+
+        // Apply on initial document load
+        applyTheme(document);
+
+        // Apply on incoming document BEFORE swap (prevents white navbar flash during page transition)
+        document.addEventListener("astro:before-swap", function (e) {
+          if (e.newDocument) {
+            applyTheme(e.newDocument);
+          }
+        });
+
+        // Sync again after swap
+        document.addEventListener("astro:after-swap", function () {
+          applyTheme(document);
+        });
+      })();
     </script>
 
     <!-- Performance & Preconnect (SXO) -->
