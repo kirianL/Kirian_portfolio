@@ -261,37 +261,39 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   Cohesive Page View Transitions (Unified subtle vertical fade & elevation)
+   Cohesive Page View Transitions (Ultra-responsive, buttery-smooth cross-flow)
    ========================================================================== */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 220ms;
+::view-transition-group(main-navbar) {
+  animation-duration: 200ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 100;
+}
+
+::view-transition-group(root) {
+  animation-duration: 180ms;
 }
 
 ::view-transition-old(root) {
-  animation-name: astroPageFadeOut;
+  animation: 100ms cubic-bezier(0.4, 0, 1, 1) both astroPageFadeOut;
 }
 
 ::view-transition-new(root) {
-  animation-name: astroPageFadeIn;
+  animation: 180ms cubic-bezier(0.16, 1, 0.3, 1) both astroPageFadeIn;
 }
 
 @keyframes astroPageFadeOut {
   from {
     opacity: 1;
-    transform: translateY(0);
   }
   to {
     opacity: 0;
-    transform: translateY(-4px);
   }
 }
 
 @keyframes astroPageFadeIn {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(3px);
   }
   to {
     opacity: 1;
@@ -301,7 +303,8 @@ html.lenis body {
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
-  ::view-transition-new(root) {
+  ::view-transition-new(root),
+  ::view-transition-group(main-navbar) {
     animation-duration: 0.01ms !important;
   }
 }

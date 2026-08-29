@@ -9,6 +9,10 @@ export default defineConfig({
   adapter: vercel(),
   output: 'static',
   integrations: [sitemap()],
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover'
+  },
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'es'],
