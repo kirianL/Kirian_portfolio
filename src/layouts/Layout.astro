@@ -40,9 +40,10 @@ const spanishURL = new URL(spanishPath, siteURL);
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#111113" id="meta-theme-color" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="generator" content={Astro.generator} />
 
     <ClientRouter />
@@ -64,6 +65,8 @@ const spanishURL = new URL(spanishPath, siteURL);
           } else {
             doc.documentElement.classList.remove("dark");
           }
+          // Force ALL theme-color metas to the active color so iOS status bar
+          // updates instantly on manual toggle (overrides media-query matching)
           const themeColor = isDark ? "#111113" : "#ffffff";
           const metas = doc.querySelectorAll('meta[name="theme-color"]');
           metas.forEach(function (m) {
@@ -79,6 +82,14 @@ const spanishURL = new URL(spanishPath, siteURL);
           if (e.newDocument) {
             applyTheme(e.newDocument);
           }
+          // Skip the View Transition visual layer entirely.
+          // iOS Safari defers painting below-fold content during VT animations,
+          // causing sections to pop-in late. This makes the swap 100% instant.
+          try {
+            if (e.viewTransition && e.viewTransition.skipTransition) {
+              e.viewTransition.skipTransition();
+            }
+          } catch (_) {}
         });
 
         // Sync again after swap

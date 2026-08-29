@@ -437,12 +437,9 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
       filterPersonalBtn.addEventListener('click', () => applyFilter('Personal'));
       filterSorinBtn.addEventListener('click', () => applyFilter('SorinLabs'));
 
-      // Apply initial state
+      // Apply initial state synchronously (no delay = no pop-in)
       const savedFilter = (localStorage.getItem('projects-filter') as 'Personal' | 'SorinLabs') || 'Personal';
-      // Wait for layout/DOM measuring to ensure accurate offsetWidth/offsetLeft
-      requestAnimationFrame(() => {
-        setTimeout(() => applyFilter(savedFilter), 50);
-      });
+      applyFilter(savedFilter);
     }
   };
 

@@ -275,7 +275,7 @@ const skills = data.skills.list || [];
 
     const savedView =
       (localStorage.getItem("tech-stack-view") as "list" | "grid") || "list";
-    requestAnimationFrame(() => setView(savedView));
+    setView(savedView);
 
     listBtn.addEventListener("click", () => setView("list"));
     gridBtn.addEventListener("click", () => setView("grid"));
