@@ -31,6 +31,10 @@ const spanishURL = new URL(spanishPath, siteURL);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- Native iOS Safari Status Bar / Theme Colors -->
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)" />
+
     <!-- Immediate Theme & iOS Status Bar Initializer (Runs before render) -->
     <script is:inline>
       (function () {
@@ -51,6 +55,16 @@ const spanishURL = new URL(spanishPath, siteURL);
             doc.documentElement.classList.add("light");
           }
           doc.documentElement.style.colorScheme = isDark ? "dark" : "light";
+
+          // Sync theme-color metas if user selected an explicit manual theme
+          var stored = localStorage.getItem("theme");
+          if (stored) {
+            var forcedColor = stored === "dark" ? "#111113" : "#ffffff";
+            var metas = doc.querySelectorAll('meta[name="theme-color"]');
+            metas.forEach(function (m) {
+              m.setAttribute("content", forcedColor);
+            });
+          }
         }
 
         // Apply immediately
