@@ -214,7 +214,6 @@ const skills = data.skills.list || [];
   /* View toggle animations */
   .tech-stack-section.view-list .list-container {
     display: grid !important;
-    animation: stackSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
   }
   .tech-stack-section.view-list .grid-container {
     display: none !important;
@@ -224,24 +223,12 @@ const skills = data.skills.list || [];
   }
   .tech-stack-section.view-grid .grid-container {
     display: block !important;
-    animation: stackSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
   }
 
   /* Mobile: list view is block, not grid */
   @media (max-width: 639px) {
     .tech-stack-section.view-list .list-container {
       display: block !important;
-    }
-  }
-
-  @keyframes stackSlideIn {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
     }
   }
 </style>

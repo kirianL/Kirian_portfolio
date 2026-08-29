@@ -161,7 +161,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
     <div class="flex flex-col">
       
       <!-- === LIST VIEW === -->
-      <div id="projects-list-container" class="projects-list-view flex flex-col w-full opacity-0">
+      <div id="projects-list-container" class="projects-list-view flex flex-col w-full">
         {categorizedProjects.map((project) => {
           const isInitiallyFilteredOut = project.category !== "Personal";
           return (
@@ -212,7 +212,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
       </div>
 
       <!-- === GRID VIEW === -->
-      <div id="projects-grid-container" class="projects-grid-view hidden grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8 w-full opacity-0">
+      <div id="projects-grid-container" class="projects-grid-view hidden grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8 w-full">
         {categorizedProjects.map((project) => {
           const isInitiallyFilteredOut = project.category !== "Personal";
           return (
@@ -324,7 +324,6 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
   /* Show / Hide layouts */
   .projects-section.view-list .projects-list-view {
     display: flex !important;
-    animation: projectsSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
   }
   .projects-section.view-list .projects-grid-view {
     display: none !important;
@@ -334,18 +333,6 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
   }
   .projects-section.view-grid .projects-grid-view {
     display: grid !important;
-    animation: projectsSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
-  }
-
-  @keyframes projectsSlideIn {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   /* Fade out animation on filter toggle */
@@ -429,73 +416,19 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
         filterPersonalBtn.style.color = isPersonal ? 'var(--color-grayscale-12)' : 'var(--color-grayscale-10)';
         filterSorinBtn.style.color = !isPersonal ? 'var(--color-grayscale-12)' : 'var(--color-grayscale-10)';
 
-        // Fade out the list and grid containers first to prevent layout jumps
-        const listContainer = document.getElementById('projects-list-container');
-        const gridContainer = document.getElementById('projects-grid-container');
+        // Instant synchronous filter update
+        const listRows = document.querySelectorAll('.project-list-row');
+        const gridRows = document.querySelectorAll('.project-grid-row-wrapper');
 
-        if (listContainer && gridContainer) {
-          const isInitialLoad = listContainer.classList.contains('opacity-0') || gridContainer.classList.contains('opacity-0');
-          
-          if (isInitialLoad) {
-            // Apply filter immediately while invisible to prevent flash
-            const listRows = document.querySelectorAll('.project-list-row');
-            const gridRows = document.querySelectorAll('.project-grid-row-wrapper');
-
-            const filterItems = (rows: NodeListOf<Element>) => {
-              rows.forEach(row => {
-                const val = row.getAttribute('data-company');
-                row.classList.toggle('filtered-out', val !== category);
-              });
-            };
-
-            filterItems(listRows);
-            filterItems(gridRows);
-
-            // Remove opacity-0 class to trigger layout transition fade-in
-            listContainer.classList.remove('opacity-0');
-            gridContainer.classList.remove('opacity-0');
-            
-            // Set opacity to 1
-            requestAnimationFrame(() => {
-              listContainer.style.opacity = '1';
-              gridContainer.style.opacity = '1';
-            });
-          } else {
-            // Standard filter switch animation
-            listContainer.style.opacity = '0';
-            gridContainer.style.opacity = '0';
-            
-            setTimeout(() => {
-              const listRows = document.querySelectorAll('.project-list-row');
-              const gridRows = document.querySelectorAll('.project-grid-row-wrapper');
-
-              const filterItems = (rows: NodeListOf<Element>) => {
-                rows.forEach(row => {
-                  const val = row.getAttribute('data-company');
-                  row.classList.toggle('filtered-out', val !== category);
-                });
-              };
-
-              filterItems(listRows);
-              filterItems(gridRows);
-
-              listContainer.style.opacity = '1';
-              gridContainer.style.opacity = '1';
-            }, 150);
-          }
-        } else {
-          // Fallback if elements aren't ready
-          const listRows = document.querySelectorAll('.project-list-row');
-          const gridRows = document.querySelectorAll('.project-grid-row-wrapper');
-          listRows.forEach(row => {
+        const filterItems = (rows: NodeListOf<Element>) => {
+          rows.forEach(row => {
             const val = row.getAttribute('data-company');
             row.classList.toggle('filtered-out', val !== category);
           });
-          gridRows.forEach(row => {
-            const val = row.getAttribute('data-company');
-            row.classList.toggle('filtered-out', val !== category);
-          });
-        }
+        };
+
+        filterItems(listRows);
+        filterItems(gridRows);
 
         localStorage.setItem('projects-filter', category);
       };
