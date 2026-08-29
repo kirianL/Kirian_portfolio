@@ -259,15 +259,6 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
         document.documentElement.style.backgroundColor = nextColor;
         localStorage.setItem("theme", nextIsDark ? "dark" : "light");
 
-        // Force Safari WebKit status bar repaint by replacing the meta node
-        const oldMeta = document.getElementById("theme-color-meta") || document.querySelector('meta[name="theme-color"]');
-        if (oldMeta) oldMeta.remove();
-        const newMeta = document.createElement("meta");
-        newMeta.setAttribute("name", "theme-color");
-        newMeta.setAttribute("content", nextColor);
-        newMeta.id = "theme-color-meta";
-        document.head.appendChild(newMeta);
-
         // Force synchronous style recalculation flush
         window.getComputedStyle(document.documentElement).opacity;
 
