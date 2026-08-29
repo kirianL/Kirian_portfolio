@@ -269,11 +269,11 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   Cohesive Page View Transitions (Seamless Simultaneous Cross-Fade)
+   Cohesive Page View Transitions (Ultra-fast, Non-disappearing Cross-Fade)
    ========================================================================== */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 160ms;
+  animation-duration: 90ms;
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
   mix-blend-mode: normal;
 }
@@ -297,7 +297,7 @@ html.lenis body {
 
 @keyframes astroFadeIn {
   from {
-    opacity: 0;
+    opacity: 0.75;
   }
   to {
     opacity: 1;

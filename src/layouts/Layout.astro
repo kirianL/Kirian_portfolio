@@ -209,11 +209,11 @@ const spanishURL = new URL(spanishPath, siteURL);
 
     <!-- cuelume interaction sounds & audio engine -->
     <script>
-      import { bind, play, setVolume } from "cuelume";
+      import { play, setVolume } from "cuelume";
 
       // Boost volume so subtle ticks and clicks are clearly audible
       try {
-        setVolume(1.8);
+        setVolume(1.4);
       } catch {}
 
       const unlockAudio = () => {
@@ -231,13 +231,33 @@ const spanishURL = new URL(spanishPath, siteURL);
         }
       };
 
-      let lastHover = 0;
-      const handlePointerEnter = (e: PointerEvent) => {
+      // Track currently hovered element to prevent child traversal re-triggering & double sounds
+      let currentHoveredElement: Element | null = null;
+      let lastSoundTime = 0;
+
+      const handlePointerOver = (e: MouseEvent) => {
+        // Skip touch events to avoid doubling on mobile taps
+        if ((e as any).pointerType === "touch") return;
+
         const target = (e.target as Element)?.closest?.("[data-cuelume-hover]");
-        if (!target) return;
-        const now = Date.now();
-        if (now - lastHover < 100) return;
-        lastHover = now;
+
+        // If we moved off any hovered element
+        if (!target) {
+          currentHoveredElement = null;
+          return;
+        }
+
+        // If mouse is moving between child nodes within the SAME element, do NOT re-trigger sound
+        if (target === currentHoveredElement) {
+          return;
+        }
+
+        // Entered a new interactive element
+        currentHoveredElement = target;
+        const now = performance.now();
+        if (now - lastSoundTime < 40) return; // Prevent audio clipping
+        lastSoundTime = now;
+
         unlockAudio();
         const sound = target.getAttribute("data-cuelume-hover") || "tick";
         try {
@@ -245,7 +265,14 @@ const spanishURL = new URL(spanishPath, siteURL);
         } catch {}
       };
 
-      const handlePointerDown = (e: PointerEvent) => {
+      const handlePointerOut = (e: MouseEvent) => {
+        const related = e.relatedTarget as Element | null;
+        if (!related || !currentHoveredElement || !currentHoveredElement.contains(related)) {
+          currentHoveredElement = null;
+        }
+      };
+
+      const handlePointerDown = (e: MouseEvent) => {
         unlockAudio();
         const target = (e.target as Element)?.closest?.("[data-cuelume-press], [data-cuelume-toggle]");
         if (!target) return;
@@ -255,20 +282,13 @@ const spanishURL = new URL(spanishPath, siteURL);
         } catch {}
       };
 
-      const initAudio = () => {
-        try {
-          bind();
-        } catch {}
-
-        document.removeEventListener("pointerenter", handlePointerEnter, true);
-        document.addEventListener("pointerenter", handlePointerEnter, true);
-
-        document.removeEventListener("pointerdown", handlePointerDown, true);
-        document.addEventListener("pointerdown", handlePointerDown, true);
-      };
-
-      initAudio();
-      document.addEventListener("astro:page-load", initAudio);
+      // Attach global listeners ONCE (prevents duplicate listeners on page transitions)
+      if (typeof window !== "undefined" && !(window as any).__cuelumeListenersAttached) {
+        (window as any).__cuelumeListenersAttached = true;
+        document.addEventListener("mouseover", handlePointerOver, { passive: true });
+        document.addEventListener("mouseout", handlePointerOut, { passive: true });
+        document.addEventListener("pointerdown", handlePointerDown, { passive: true });
+      }
     </script>
 
     <!-- Lenis Smooth Scroll Engine -->
