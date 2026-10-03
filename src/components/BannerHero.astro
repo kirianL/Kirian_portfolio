@@ -1,0 +1,591 @@
+---
+interface Props {
+  name: string;
+  title: string;
+}
+
+const { name, title } = Astro.props;
+---
+
+<div class="banner-hero relative h-44 w-full sm:h-48">
+  <div class="js-liquid-frame absolute inset-0 z-[1] overflow-hidden bg-[#F4F5F8] transition-colors duration-[780ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none dark:bg-[#16171D]">
+    <canvas
+      class="js-liquid-banner absolute inset-0 block h-full w-full cursor-default opacity-0 transition-opacity duration-200 motion-reduce:transition-none"
+      aria-hidden="true"
+    ></canvas>
+  </div>
+
+  <div class="banner-hero-id">
+    <h1 class="text-grayscale-12 font-display text-lg leading-none font-medium tracking-tight sm:text-xl">
+      {name}
+    </h1>
+    <p class="text-grayscale-10 mt-1.5 font-mono text-[11px] leading-none sm:text-xs">
+      {title}
+    </p>
+  </div>
+
+  <svg class="pointer-events-none absolute inset-0 z-[3] h-full w-full" aria-hidden="true">
+    <path class="js-banner-gutter" fill-rule="evenodd" />
+    <path class="js-banner-rim" />
+  </svg>
+</div>
+
+<style>
+  .banner-hero {
+    contain: layout style;
+  }
+
+  .js-liquid-frame {
+    transform: translateZ(0);
+  }
+
+  .banner-hero-id {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
+    max-width: calc(100% - 1.5rem);
+    padding: 1.05rem 1.6rem 0.95rem 0.15rem;
+  }
+
+  .js-banner-gutter {
+    fill: #ffffff;
+  }
+
+  .js-banner-rim {
+    fill: none;
+    stroke: #d0d0d6;
+    stroke-width: 1;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  :global(html.dark) .js-banner-gutter {
+    fill: #8a8b94;
+  }
+
+  :global(html.dark) .js-banner-rim {
+    stroke: #8a8b94;
+  }
+</style>
+
+<script>
+  const VS = `#version 300 es
+  in vec2 aPosition;
+  out vec2 vUV;
+  void main() {
+    vUV = aPosition * 0.5 + 0.5;
+    gl_Position = vec4(aPosition, 0.0, 1.0);
+  }`;
+
+  const FS = `#version 300 es
+  precision mediump float;
+
+  in vec2 vUV;
+  out vec4 finalColor;
+
+  uniform float uTime;
+  uniform vec2 uResolution;
+  uniform vec4 uColor1;
+  uniform vec4 uColor2;
+  uniform float uSpeed;
+  uniform float uScale;
+  uniform float uFrequency;
+  uniform float uRefraction;
+  uniform float uBlur;
+  uniform vec2 uRenderResolution;
+
+  vec2 distort(vec2 point, float time) {
+    point.x += 0.30 * sin(2.8 * point.y + time);
+    point.y += 0.30 * cos(2.8 * point.x + time);
+    point.x += 0.15 * sin(5.6 * point.y + time);
+    point.y += 0.15 * cos(5.6 * point.x + time);
+    point.x += 0.10 * sin(8.4 * point.y + time);
+    point.y += 0.10 * cos(8.4 * point.x + time);
+    return point;
+  }
+
+  vec3 swirl(vec2 uv, float time) {
+    float t = time * 0.5;
+    vec2 d = uv + vec2(
+      sin(uv.y * 7.14 + t * 0.8) * 0.12 + cos(uv.x * 3.78 - t * 0.5) * 0.05,
+      cos(uv.x * 5.46 - t * 0.6) * 0.12 + sin(uv.y * 4.62 + t * 0.7) * 0.05
+    );
+    float p1 = sin(d.x * 8.82 + d.y * 7.56 + t * 0.4);
+    d += vec2(
+      cos(d.y * 11.34 - t * 0.45) * 0.07,
+      sin(d.x * 9.66 + t * 0.65) * 0.07
+    );
+    float p2 = cos(d.x * 5.88 - d.y * 7.98 + t * 0.35);
+    return mix(uColor2.rgb, uColor1.rgb, smoothstep(0.3, 0.7, p1 * 0.45 + p2 * 0.35 + 0.308));
+  }
+
+  vec3 blurredSwirl(vec2 uv, float time) {
+    vec2 pixel = (40.0 * uBlur) / max(uRenderResolution, vec2(1.0));
+    vec3 acc = swirl(uv, time);
+    acc += swirl(uv + pixel * vec2(-0.737, 0.675), time);
+    acc += swirl(uv + pixel * vec2(0.608, 0.794), time);
+    acc += swirl(uv + pixel * vec2(-0.985, -0.174), time);
+    acc += swirl(uv + pixel * vec2(0.844, -0.537), time);
+    return acc * 0.2;
+  }
+
+  float glassDepthField(vec2 point, float time) {
+    float wave = sin(distort(point, time).x * uFrequency) * 0.5 + 0.5;
+    return -pow(wave, 1.1) * 0.3;
+  }
+
+  void main() {
+    vec2 fragCoord = vUV * uResolution;
+    float minResolution = min(uResolution.x, uResolution.y);
+    vec2 point = (fragCoord * 2.0 - uResolution) / (minResolution * max(uScale, 0.001));
+    float time = uTime * uSpeed;
+    float surfaceDepth = glassDepthField(point, time);
+    float epsilon = 0.004;
+    float gradX = (glassDepthField(point + vec2(epsilon, 0.0), time) - surfaceDepth) / epsilon;
+    float gradY = (glassDepthField(point + vec2(0.0, epsilon), time) - surfaceDepth) / epsilon;
+    float depthNorm = clamp(-surfaceDepth * 3.333, 0.0, 1.0);
+    float refractionStrength = (1.0 - depthNorm);
+    refractionStrength *= refractionStrength;
+    float aspect = uResolution.x / uResolution.y;
+    vec2 offset = vec2(-gradX / aspect, -gradY) * 0.2355 * refractionStrength * uRefraction;
+    vec3 color = clamp(blurredSwirl(fragCoord / uResolution + offset, time), 0.0, 1.0);
+    finalColor = vec4(pow(color, vec3(0.454545)), 1.0);
+  }`;
+
+  type RGB = [number, number, number];
+
+  const PALETTES = {
+    dark: { accent: "#4470FF", base: "#16171D" },
+    light: { accent: "#3554E0", base: "#F4F5F8" },
+  } as const;
+
+  const THEME_BLEND_MS = 780;
+
+  function srgbToLinear(channel: number) {
+    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+  }
+
+  function hexToSrgb(hex: string): RGB {
+    const value = hex.replace("#", "");
+    return [
+      Number.parseInt(value.slice(0, 2), 16) / 255,
+      Number.parseInt(value.slice(2, 4), 16) / 255,
+      Number.parseInt(value.slice(4, 6), 16) / 255,
+    ];
+  }
+
+  function toLinear(rgb: RGB): RGB {
+    return [srgbToLinear(rgb[0]), srgbToLinear(rgb[1]), srgbToLinear(rgb[2])];
+  }
+
+  function linearToOklab(rgb: RGB): RGB {
+    const l = Math.cbrt(0.4122214708 * rgb[0] + 0.5363325363 * rgb[1] + 0.0514459929 * rgb[2]);
+    const m = Math.cbrt(0.2119034982 * rgb[0] + 0.6806995451 * rgb[1] + 0.1073969566 * rgb[2]);
+    const s = Math.cbrt(0.0883024619 * rgb[0] + 0.2817188376 * rgb[1] + 0.6299787005 * rgb[2]);
+    return [
+      0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+      1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+      0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+    ];
+  }
+
+  function oklabToLinear(lab: RGB): RGB {
+    const l = lab[0] + 0.3963377774 * lab[1] + 0.2158037573 * lab[2];
+    const m = lab[0] - 0.1055613458 * lab[1] - 0.0638541728 * lab[2];
+    const s = lab[0] - 0.0897129288 * lab[1] - 1.2914855480 * lab[2];
+    const l3 = l * l * l;
+    const m3 = m * m * m;
+    const s3 = s * s * s;
+    return [
+      4.0767416621 * l3 - 3.3077115913 * m3 + 0.2309699292 * s3,
+      -1.2684380046 * l3 + 2.6097574011 * m3 - 0.3413193965 * s3,
+      -0.0041960863 * l3 - 0.7034186147 * m3 + 1.7076147010 * s3,
+    ];
+  }
+
+  function mixRgb(from: RGB, to: RGB, t: number): RGB {
+    return [
+      from[0] + (to[0] - from[0]) * t,
+      from[1] + (to[1] - from[1]) * t,
+      from[2] + (to[2] - from[2]) * t,
+    ];
+  }
+
+  function easeOutCubic(t: number) {
+    return 1 - (1 - t) ** 3;
+  }
+
+  function blendProgress(age: number) {
+    return easeOutCubic(Math.min(1, age / (THEME_BLEND_MS / 1000)));
+  }
+
+  function isDarkTheme() {
+    return document.documentElement.classList.contains("dark");
+  }
+
+  function themeColors() {
+    const palette = isDarkTheme() ? PALETTES.dark : PALETTES.light;
+    return {
+      accent: linearToOklab(toLinear(hexToSrgb(palette.accent))),
+      base: linearToOklab(toLinear(hexToSrgb(palette.base))),
+    };
+  }
+
+  function compile(gl: WebGL2RenderingContext, type: number, source: string) {
+    const shader = gl.createShader(type);
+    if (!shader) return null;
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.warn("[LiquidBanner] shader compile failed");
+      gl.deleteShader(shader);
+      return null;
+    }
+    return shader;
+  }
+
+  function mountBanner(canvas: HTMLCanvasElement) {
+    if (canvas.dataset.liquidReady === "1") return;
+
+    const gl = canvas.getContext("webgl2", {
+      alpha: false,
+      antialias: false,
+      powerPreference: "low-power",
+      preserveDrawingBuffer: false,
+      desynchronized: true,
+    });
+
+    if (!gl) return;
+
+    const vs = compile(gl, gl.VERTEX_SHADER, VS);
+    const fs = compile(gl, gl.FRAGMENT_SHADER, FS);
+    if (!vs || !fs) return;
+
+    const program = gl.createProgram();
+    if (!program) return;
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.deleteShader(vs);
+    gl.deleteShader(fs);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      gl.deleteProgram(program);
+      return;
+    }
+
+    canvas.dataset.liquidReady = "1";
+    gl.useProgram(program);
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+
+    const loc = gl.getAttribLocation(program, "aPosition");
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    const uTime = gl.getUniformLocation(program, "uTime");
+    const uResolution = gl.getUniformLocation(program, "uResolution");
+    const uRenderResolution = gl.getUniformLocation(program, "uRenderResolution");
+    const uColor1 = gl.getUniformLocation(program, "uColor1");
+    const uColor2 = gl.getUniformLocation(program, "uColor2");
+    const uSpeed = gl.getUniformLocation(program, "uSpeed");
+    const uScale = gl.getUniformLocation(program, "uScale");
+    const uFrequency = gl.getUniformLocation(program, "uFrequency");
+    const uRefraction = gl.getUniformLocation(program, "uRefraction");
+    const uBlur = gl.getUniformLocation(program, "uBlur");
+
+    gl.uniform1f(uSpeed, 0.1);
+    gl.uniform1f(uScale, 2.5);
+    gl.uniform1f(uFrequency, 8);
+    gl.uniform1f(uRefraction, 2);
+    gl.uniform1f(uBlur, 0.45);
+
+    let colors = themeColors();
+    let fromColors = colors;
+    let target = colors;
+    let blendAge = 0;
+    let blending = false;
+
+    const pushColors = (next = colors) => {
+      const accent = oklabToLinear(next.accent);
+      const base = oklabToLinear(next.base);
+      gl.uniform4f(uColor1, accent[0], accent[1], accent[2], 1);
+      gl.uniform4f(uColor2, base[0], base[1], base[2], 1);
+    };
+    pushColors();
+
+    const sampleColors = (t: number) => ({
+      accent: mixRgb(fromColors.accent, target.accent, t),
+      base: mixRgb(fromColors.base, target.base, t),
+    });
+
+    const stepBlend = (dt: number) => {
+      if (!blending) return;
+      blendAge += dt;
+      const t = blendProgress(blendAge);
+      colors = sampleColors(t);
+      pushColors(colors);
+      if (t >= 1) {
+        colors = target;
+        pushColors(colors);
+        blending = false;
+      }
+    };
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dpr = 1;
+    let visible = true;
+    let pageVisible = document.visibilityState !== "hidden";
+    let animId = 0;
+    let last = performance.now();
+    let lastDraw = 0;
+    let elapsed = 0;
+    let resizeRaf = 0;
+
+    const draw = () => {
+      gl.uniform1f(uTime, elapsed);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    };
+
+    const resize = () => {
+      const width = Math.max(1, canvas.clientWidth);
+      const height = Math.max(1, canvas.clientHeight);
+      const renderW = Math.max(1, Math.round(width * dpr));
+      const renderH = Math.max(1, Math.round(height * dpr));
+
+      if (canvas.width !== renderW || canvas.height !== renderH) {
+        canvas.width = renderW;
+        canvas.height = renderH;
+        gl.viewport(0, 0, renderW, renderH);
+        gl.uniform2f(uResolution, width, height);
+        gl.uniform2f(uRenderResolution, renderW, renderH);
+      }
+    };
+
+    const scheduleResize = () => {
+      if (resizeRaf) return;
+      resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = 0;
+        resize();
+        draw();
+      });
+    };
+
+    const loop = (now: number) => {
+      if (!visible || !pageVisible || reduceMotion) {
+        animId = 0;
+        return;
+      }
+      const dt = Math.min(Math.max((now - last) / 1000, 0), 0.1);
+      last = now;
+      elapsed += dt;
+      stepBlend(dt);
+      if (blending || now - lastDraw >= 33) {
+        lastDraw = now;
+        draw();
+      }
+      animId = requestAnimationFrame(loop);
+    };
+
+    const play = () => {
+      if (reduceMotion || animId || !visible || !pageVisible) return;
+      last = performance.now();
+      animId = requestAnimationFrame(loop);
+    };
+
+    let lastDark = isDarkTheme();
+    const syncTheme = () => {
+      const nextDark = isDarkTheme();
+      if (nextDark === lastDark) return;
+      lastDark = nextDark;
+      const next = themeColors();
+      if (reduceMotion) {
+        colors = next;
+        target = next;
+        blending = false;
+        pushColors(colors);
+        draw();
+        return;
+      }
+      fromColors = blending ? sampleColors(blendProgress(blendAge)) : colors;
+      colors = fromColors;
+      target = next;
+      blendAge = 0;
+      blending = true;
+      play();
+    };
+
+    resize();
+    draw();
+    canvas.classList.remove("opacity-0");
+    play();
+
+    queueMicrotask(() => {
+      const nextDark = isDarkTheme();
+      if (nextDark === lastDark) return;
+      lastDark = nextDark;
+      colors = themeColors();
+      target = colors;
+      blending = false;
+      pushColors(colors);
+      draw();
+    });
+
+    const themeObserver = new MutationObserver(syncTheme);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    const ro = new ResizeObserver(scheduleResize);
+    ro.observe(canvas);
+
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) play();
+      else if (animId) {
+        cancelAnimationFrame(animId);
+        animId = 0;
+      }
+    }, { rootMargin: "80px" });
+    io.observe(canvas);
+
+    const onVisibility = () => {
+      pageVisible = document.visibilityState !== "hidden";
+      if (pageVisible) play();
+      else if (animId) {
+        cancelAnimationFrame(animId);
+        animId = 0;
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    const onLost = (event: Event) => {
+      event.preventDefault();
+      cancelAnimationFrame(animId);
+      animId = 0;
+      canvas.dataset.liquidReady = "0";
+    };
+    canvas.addEventListener("webglcontextlost", onLost, { once: true });
+
+    const dispose = () => {
+      cancelAnimationFrame(animId);
+      cancelAnimationFrame(resizeRaf);
+      themeObserver.disconnect();
+      ro.disconnect();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      canvas.removeEventListener("webglcontextlost", onLost);
+      if (!gl.isContextLost()) {
+        gl.deleteBuffer(buffer);
+        gl.deleteProgram(program);
+        gl.getExtension("WEBGL_lose_context")?.loseContext();
+      }
+      canvas.dataset.liquidReady = "0";
+    };
+
+    document.addEventListener("astro:before-swap", dispose, { once: true });
+  }
+
+  function cutPath(w: number, h: number, cutW: number, cutH: number, inset: number) {
+    const radius = 18;
+    const r = Math.max(8, radius - inset);
+    const c = radius + inset;
+    const x0 = inset;
+    const y0 = inset;
+    const x1 = w - inset;
+    const y1 = h - inset;
+    const cutX = Math.min(Math.max(cutW + inset, x0 + r + c), x1 - r * 2);
+    const cutY = Math.max(Math.min(h - cutH - inset, y1 - r - c), y0 + r + c);
+
+    return [
+      `M ${x0 + r} ${y0}`,
+      `H ${x1 - r}`,
+      `A ${r} ${r} 0 0 1 ${x1} ${y0 + r}`,
+      `V ${y1 - r}`,
+      `A ${r} ${r} 0 0 1 ${x1 - r} ${y1}`,
+      `H ${cutX + r}`,
+      `A ${r} ${r} 0 0 1 ${cutX} ${y1 - r}`,
+      `V ${cutY + c}`,
+      `A ${c} ${c} 0 0 0 ${cutX - c} ${cutY}`,
+      `H ${x0 + r}`,
+      `A ${r} ${r} 0 0 1 ${x0} ${cutY - r}`,
+      `V ${y0 + r}`,
+      `A ${r} ${r} 0 0 1 ${x0 + r} ${y0}`,
+      `Z`,
+    ].join(" ");
+  }
+
+  function ringPath(w: number, h: number, cutW: number, cutH: number, outer: number, inner: number) {
+    return `${cutPath(w, h, cutW, cutH, outer)} ${cutPath(w, h, cutW, cutH, inner)}`;
+  }
+
+  function mountCut(banner: HTMLElement) {
+    if (banner.dataset.cutReady === "1") return;
+
+    const frame = banner.querySelector<HTMLElement>(".js-liquid-frame");
+    const gutter = banner.querySelector<SVGPathElement>(".js-banner-gutter");
+    const rim = banner.querySelector<SVGPathElement>(".js-banner-rim");
+    const id = banner.querySelector<HTMLElement>(".banner-hero-id");
+    if (!frame || !gutter || !rim || !id) return;
+
+    banner.dataset.cutReady = "1";
+    let lastKey = "";
+    let raf = 0;
+
+    const apply = () => {
+      const w = banner.clientWidth;
+      const h = banner.clientHeight;
+      const cutW = id.offsetWidth;
+      const cutH = id.offsetHeight;
+      if (w < 80 || h < 80 || cutW < 48 || cutH < 48) return;
+
+      const dark = document.documentElement.classList.contains("dark");
+      const key = `${w}|${h}|${cutW}|${cutH}|${dark ? 1 : 0}`;
+      if (key === lastKey) return;
+      lastKey = key;
+
+      const inset = dark ? 2 : 4;
+      const liquid = cutPath(w, h, cutW, cutH, inset);
+      gutter.setAttribute("d", ringPath(w, h, cutW, cutH, 0, inset));
+      rim.setAttribute("d", cutPath(w, h, cutW, cutH, 1));
+      frame.style.clipPath = `path("${liquid}")`;
+    };
+
+    const schedule = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        apply();
+      });
+    };
+
+    apply();
+    const ro = new ResizeObserver(schedule);
+    ro.observe(banner);
+    ro.observe(id);
+    const themeObserver = new MutationObserver(schedule);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    document.addEventListener("astro:before-swap", () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      themeObserver.disconnect();
+      banner.dataset.cutReady = "0";
+    }, { once: true });
+  }
+
+  function initLiquidBanners() {
+    document.querySelectorAll<HTMLElement>(".banner-hero").forEach(mountCut);
+    document.querySelectorAll<HTMLCanvasElement>("canvas.js-liquid-banner").forEach(mountBanner);
+  }
+
+  initLiquidBanners();
+  document.addEventListener("astro:page-load", initLiquidBanners);
+</script>
