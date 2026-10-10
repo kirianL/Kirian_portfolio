@@ -61,11 +61,10 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST || "https://us.i.posthog
         window.posthog.init(posthogKey, {
           api_host: posthogHost,
           person_profiles: "identified_only",
-          capture_pageview: false,
-          capture_pageleave: true,
         });
 
-        document.addEventListener("astro:page-load", function () {
+        // Capture pageviews on Astro client-side navigation (View Transitions)
+        document.addEventListener("astro:after-swap", function () {
           if (window.posthog) {
             window.posthog.capture("$pageview");
           }
