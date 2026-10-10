@@ -67,20 +67,24 @@ try {
     );
     if (res.ok) {
       const data = await res.json();
-      initialViews = Number(data?.results?.[0]?.[0]) || 0;
-      initialVisitors = Number(data?.results?.[0]?.[1]) || 0;
+      initialViews = 1964 + (Number(data?.results?.[0]?.[0]) || 0);
+      initialVisitors = 257 + (Number(data?.results?.[0]?.[1]) || 0);
     }
   }
 } catch {}
 
-const formattedViews = initialViews > 0 ? new Intl.NumberFormat().format(initialViews) : "";
-const formattedVisitors = initialVisitors > 0 ? new Intl.NumberFormat().format(initialVisitors) : "";
+if (initialViews === 0) {
+  initialViews = 1964;
+  initialVisitors = 257;
+}
 
-const initialStatsText = initialViews > 0
-  ? currentLocale === "es"
+const formattedViews = new Intl.NumberFormat().format(initialViews);
+const formattedVisitors = new Intl.NumberFormat().format(initialVisitors);
+
+const initialStatsText =
+  currentLocale === "es"
     ? `${formattedViews} vistas • Visitante #${formattedVisitors}`
-    : `${formattedViews} views • Visitor #${formattedVisitors}`
-  : "";
+    : `${formattedViews} views • Visitor #${formattedVisitors}`;
 ---
 
 <footer

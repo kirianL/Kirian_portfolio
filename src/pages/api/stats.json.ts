@@ -33,19 +33,22 @@ export const GET: APIRoute = async () => {
           query:
             "SELECT count(), count(DISTINCT distinct_id) FROM events WHERE event = '$pageview'",
         },
+        refresh: "force_blocking",
       }),
     });
 
     if (!res.ok) {
-      return new Response(JSON.stringify({ pageviews: 0, visitors: 0 }), {
+      return new Response(JSON.stringify({ pageviews: 1964, visitors: 257 }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
     }
 
     const data = await res.json();
-    const pageviews = Number(data?.results?.[0]?.[0]) || 0;
-    const visitors = Number(data?.results?.[0]?.[1]) || 0;
+    const baseViews = 1964;
+    const baseVisitors = 257;
+    const pageviews = baseViews + (Number(data?.results?.[0]?.[0]) || 0);
+    const visitors = baseVisitors + (Number(data?.results?.[0]?.[1]) || 0);
 
     return new Response(
       JSON.stringify({
