@@ -83,8 +83,8 @@ const formattedVisitors = new Intl.NumberFormat().format(initialVisitors);
 
 const initialStatsText =
   currentLocale === "es"
-    ? `${formattedViews} vistas • Visitante #${formattedVisitors}`
-    : `${formattedViews} views • Visitor #${formattedVisitors}`;
+    ? `${formattedViews} vistas | Visitante #${formattedVisitors}`
+    : `${formattedViews} views | Visitor #${formattedVisitors}`;
 ---
 
 <footer
@@ -843,8 +843,8 @@ const initialStatsText =
           const fViews = new Intl.NumberFormat().format(views);
           const fVisitors = new Intl.NumberFormat().format(visitors);
           container.textContent = isEs
-            ? `${fViews} vistas • Visitante #${fVisitors}`
-            : `${fViews} views • Visitor #${fVisitors}`;
+            ? `${fViews} vistas | Visitante #${fVisitors}`
+            : `${fViews} views | Visitor #${fVisitors}`;
           container.classList.remove("opacity-0");
           container.classList.add("opacity-100");
         }
