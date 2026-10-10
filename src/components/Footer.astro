@@ -81,10 +81,8 @@ if (initialViews === 0) {
 const formattedViews = new Intl.NumberFormat().format(initialViews);
 const formattedVisitors = new Intl.NumberFormat().format(initialVisitors);
 
-const initialStatsText =
-  currentLocale === "es"
-    ? `${formattedViews} vistas | Visitante #${formattedVisitors}`
-    : `${formattedViews} views | Visitor #${formattedVisitors}`;
+const viewsLabel = currentLocale === "es" ? "vistas" : "views";
+const visitorLabel = currentLocale === "es" ? "Visitante" : "Visitor";
 ---
 
 <footer
@@ -211,9 +209,24 @@ const initialStatsText =
   <p>{updateLabel}: {lastUpdateDate}</p>
   <p
     id="posthog-stats"
-    class={`transition-opacity duration-300 ${initialStatsText ? "opacity-100" : "opacity-0"}`}
+    class="transition-opacity duration-300 opacity-100 select-none inline-flex items-center justify-center gap-1.5"
   >
-    {initialStatsText}
+    <span id="posthog-views-text">{formattedViews} {viewsLabel}</span>
+    <span class="text-grayscale-6 select-none">|</span>
+    <span
+      id="visitor-scramble-wrapper"
+      class="group/visitor inline-flex items-center gap-1 cursor-pointer font-mono hover:text-grayscale-12 transition-colors py-0.5"
+      data-cuelume-hover="tick"
+      data-cuelume-press
+      title={currentLocale === "es" ? "Haz clic para re-descifrar" : "Click to decrypt"}
+    >
+      <span id="visitor-label-text">{visitorLabel}</span>
+      <span
+        id="visitor-number"
+        class="font-semibold text-grayscale-12 font-mono tracking-wider inline-block transition-transform duration-150 group-active/visitor:scale-95 group-hover/visitor:text-violet-500 dark:group-hover/visitor:text-violet-400"
+        data-value={`#${formattedVisitors}`}
+      >#{formattedVisitors}</span>
+    </span>
   </p>
 </footer>
 
@@ -823,6 +836,59 @@ const initialStatsText =
     } catch {}
   }
 
+  const scrambleChars = "0123456789!<>_/$#";
+
+  function runNumberScramble(el: HTMLElement) {
+    const target = el.dataset.value || el.textContent || "";
+    if (!target) return;
+
+    let frame = 0;
+    const maxFrames = 15;
+    if ((el as any)._scrambleTimer) clearInterval((el as any)._scrambleTimer);
+
+    (el as any)._scrambleTimer = setInterval(() => {
+      const progress = frame / maxFrames;
+      const lockedLength = Math.floor(progress * target.length);
+
+      let text = "";
+      for (let i = 0; i < target.length; i++) {
+        if (i < lockedLength) {
+          text += target[i];
+        } else if (i === 0 && target[0] === "#") {
+          text += "#";
+        } else {
+          text += scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+        }
+      }
+
+      el.textContent = text;
+      frame++;
+
+      if (frame > maxFrames) {
+        clearInterval((el as any)._scrambleTimer);
+        el.textContent = target;
+        (el as any)._scrambleTimer = null;
+      }
+    }, 28);
+  }
+
+  function setupVisitorScramble() {
+    const wrapper = document.getElementById("visitor-scramble-wrapper");
+    const numEl = document.getElementById("visitor-number");
+    if (!wrapper || !numEl || wrapper.dataset.hasScrambleListener) return;
+
+    wrapper.dataset.hasScrambleListener = "true";
+
+    wrapper.addEventListener("mouseenter", () => {
+      runNumberScramble(numEl);
+    });
+
+    wrapper.addEventListener("click", (e) => {
+      e.preventDefault();
+      runNumberScramble(numEl);
+    });
+  }
+
   async function loadPostHogStats() {
     const container = document.getElementById("posthog-stats");
     if (!container) return;
@@ -842,11 +908,27 @@ const initialStatsText =
         if (views > 0 || visitors > 0) {
           const fViews = new Intl.NumberFormat().format(views);
           const fVisitors = new Intl.NumberFormat().format(visitors);
-          container.textContent = isEs
-            ? `${fViews} vistas | Visitante #${fVisitors}`
-            : `${fViews} views | Visitor #${fVisitors}`;
+
+          const viewsTextEl = document.getElementById("posthog-views-text");
+          if (viewsTextEl) {
+            viewsTextEl.textContent = isEs ? `${fViews} vistas` : `${fViews} views`;
+          }
+
+          const visitorLabelEl = document.getElementById("visitor-label-text");
+          if (visitorLabelEl) {
+            visitorLabelEl.textContent = isEs ? "Visitante" : "Visitor";
+          }
+
+          const numEl = document.getElementById("visitor-number");
+          if (numEl) {
+            numEl.dataset.value = `#${fVisitors}`;
+            numEl.textContent = `#${fVisitors}`;
+            runNumberScramble(numEl);
+          }
+
           container.classList.remove("opacity-0");
           container.classList.add("opacity-100");
+          setupVisitorScramble();
         }
       }
     } catch {}
@@ -856,6 +938,7 @@ const initialStatsText =
     loadSpotify();
     connectLanyardSocket();
     loadPostHogStats();
+    setupVisitorScramble();
   }
 
   // Load immediately on page initialization and view transitions
