@@ -31,6 +31,56 @@ const defaultTrack = {
   albumImageUrl: "https://i.scdn.co/image/ab67616d0000b2738278b782cba5a98e47f55b93",
 };
 
+// Fetch initial stats from PostHog at build time
+let initialViews = 0;
+let initialVisitors = 0;
+try {
+  const posthogApiKey =
+    process.env.POSTHOG_PERSONAL_API_KEY ||
+    import.meta.env.POSTHOG_PERSONAL_API_KEY;
+  const posthogProjectId =
+    process.env.POSTHOG_PROJECT_ID ||
+    import.meta.env.POSTHOG_PROJECT_ID ||
+    "657608";
+  const posthogHost =
+    process.env.PUBLIC_POSTHOG_HOST ||
+    import.meta.env.PUBLIC_POSTHOG_HOST ||
+    "https://us.i.posthog.com";
+
+  if (posthogApiKey) {
+    const res = await fetch(
+      `${posthogHost}/api/projects/${posthogProjectId}/query/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${posthogApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: {
+            kind: "HogQLQuery",
+            query:
+              "SELECT count(), count(DISTINCT distinct_id) FROM events WHERE event = '$pageview'",
+          },
+        }),
+      }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      initialViews = Number(data?.results?.[0]?.[0]) || 0;
+      initialVisitors = Number(data?.results?.[0]?.[1]) || 0;
+    }
+  }
+} catch {}
+
+const formattedViews = initialViews > 0 ? new Intl.NumberFormat().format(initialViews) : "";
+const formattedVisitors = initialVisitors > 0 ? new Intl.NumberFormat().format(initialVisitors) : "";
+
+const initialStatsText = initialViews > 0
+  ? currentLocale === "es"
+    ? `${formattedViews} vistas • Visitante #${formattedVisitors}`
+    : `${formattedViews} views • Visitor #${formattedVisitors}`
+  : "";
 ---
 
 <footer
@@ -155,6 +205,12 @@ const defaultTrack = {
   </div>
 
   <p>{updateLabel}: {lastUpdateDate}</p>
+  <p
+    id="posthog-stats"
+    class={`transition-opacity duration-300 ${initialStatsText ? "opacity-100" : "opacity-0"}`}
+  >
+    {initialStatsText}
+  </p>
 </footer>
 
 <style is:global>
@@ -763,9 +819,39 @@ const defaultTrack = {
     } catch {}
   }
 
+  async function loadPostHogStats() {
+    const container = document.getElementById("posthog-stats");
+    if (!container) return;
+
+    const isEs =
+      document.documentElement.lang === "es" ||
+      window.location.pathname.includes("/es/") ||
+      window.location.pathname === "/es";
+
+    try {
+      const res = await fetch("/api/stats.json");
+      if (res.ok) {
+        const data = await res.json();
+        const views = data.pageviews || 0;
+        const visitors = data.visitors || 0;
+
+        if (views > 0 || visitors > 0) {
+          const fViews = new Intl.NumberFormat().format(views);
+          const fVisitors = new Intl.NumberFormat().format(visitors);
+          container.textContent = isEs
+            ? `${fViews} vistas • Visitante #${fVisitors}`
+            : `${fViews} views • Visitor #${fVisitors}`;
+          container.classList.remove("opacity-0");
+          container.classList.add("opacity-100");
+        }
+      }
+    } catch {}
+  }
+
   function init() {
     loadSpotify();
     connectLanyardSocket();
+    loadPostHogStats();
   }
 
   // Load immediately on page initialization and view transitions
