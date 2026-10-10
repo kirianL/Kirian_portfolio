@@ -89,6 +89,7 @@ const es = {
   },
   experienceList: [
     {
+      year: "2026",
       period: "ene. 2026 – presente",
       role: "Ingeniero en Sistemas",
       company: "Ultimate Media Productions",
@@ -99,6 +100,7 @@ const es = {
       stack: ["Next.js", "TypeScript", "React 19", "Node.js", "PostgreSQL", "Tailwind CSS", "Prisma ORM", "Docker"]
     },
     {
+      year: "2025",
       period: "oct. 2025 - feb. 2026",
       role: "Desarrollador full-stack",
       company: "WebMasterCR",
@@ -109,6 +111,7 @@ const es = {
       stack: ["React", "TypeScript", "Node.js", "REST APIs", "Tailwind CSS"]
     },
     {
+      year: "2026",
       period: "ene. 2026 – abr. 2026",
       role: "Práctica Profesional: Sistema de Gestión Académica",
       company: "Liceo Experimental Bilingüe de Pococí",
@@ -325,6 +328,7 @@ const en: typeof es = {
   },
   experienceList: [
     {
+      year: "2026",
       period: "Jan. 2026 – Present",
       role: "Systems Engineer",
       company: "Ultimate Media Productions",
@@ -335,6 +339,7 @@ const en: typeof es = {
       stack: ["Next.js", "TypeScript", "React 19", "Node.js", "PostgreSQL", "Tailwind CSS", "Prisma ORM", "Docker"]
     },
     {
+      year: "2025",
       period: "Oct. 2025 - Feb. 2026",
       role: "Full-Stack Developer",
       company: "WebMasterCR",
@@ -345,6 +350,7 @@ const en: typeof es = {
       stack: ["React", "TypeScript", "Node.js", "REST APIs", "Tailwind CSS"]
     },
     {
+      year: "2026",
       period: "Jan. 2026 - Apr. 2026",
       role: "Professional Internship: Academic Management System",
       company: "Liceo Experimental Bilingüe de Pococí",
