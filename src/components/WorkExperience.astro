@@ -77,7 +77,6 @@ const defaultFolderStyle = {
       data-text-expand={isEs ? 'expandir todas' : 'expand all'}
       data-text-collapse={isEs ? 'colapsar todas' : 'collapse all'}
     >
-      <span class="opacity-60 group-hover:opacity-100 transition-opacity">/</span>
       <span id="folder-deck-toggle-text">
         {isEs ? 'expandir todas' : 'expand all'}
       </span>
@@ -87,10 +86,10 @@ const defaultFolderStyle = {
   <!-- Folders List -->
   <div class="flex flex-col divide-y divide-grayscale-3/60 dark:divide-grayscale-3/30 border-y border-grayscale-3/60 dark:border-grayscale-3/30" id="experience-folders-container">
     {
-      sortedYears.map((year, yearIndex) => {
+      sortedYears.map((year) => {
         const style = folderStyles[year] || defaultFolderStyle;
         const exps = experiencesByYear[year];
-        const isInitiallyOpen = yearIndex === 0;
+        const isInitiallyOpen = false;
 
         return (
           <div

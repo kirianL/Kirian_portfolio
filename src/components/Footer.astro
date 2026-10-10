@@ -31,44 +31,6 @@ const defaultTrack = {
   albumImageUrl: "https://i.scdn.co/image/ab67616d0000b2738278b782cba5a98e47f55b93",
 };
 
-// Fetch initial stats at build time for instant rendering without adblocker interference
-let initialViews = 0;
-let initialVisitors = 0;
-try {
-  const authRes = await fetch("https://cloud.umami.is/analytics/us/api/share/IKILGPgXIuMcSBcX");
-  if (authRes.ok) {
-    const { token, websiteId } = await authRes.json();
-    if (token && websiteId) {
-      const startAt = new Date("2024-01-01").getTime();
-      const endAt = Date.now();
-      const statsRes = await fetch(
-        `https://cloud.umami.is/analytics/us/api/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`,
-        {
-          headers: {
-            "x-umami-share-token": token,
-            "x-umami-share-context": "share",
-          },
-        }
-      );
-      if (statsRes.ok) {
-        const stats = await statsRes.json();
-        initialViews = stats.pageviews || 0;
-        initialVisitors = stats.visitors || 0;
-      }
-    }
-  }
-} catch (e) {
-  // Silent fallback
-}
-
-const formattedViews = initialViews > 0 ? new Intl.NumberFormat().format(initialViews) : "";
-const formattedVisitors = initialVisitors > 0 ? new Intl.NumberFormat().format(initialVisitors) : "";
-
-const initialStatsText = initialViews > 0
-  ? currentLocale === "es"
-    ? `${formattedViews} vistas • Visitante #${formattedVisitors}`
-    : `${formattedViews} views • Visitor #${formattedVisitors}`
-  : "";
 ---
 
 <footer
@@ -193,12 +155,6 @@ const initialStatsText = initialViews > 0
   </div>
 
   <p>{updateLabel}: {lastUpdateDate}</p>
-  <p
-    id="umami-stats"
-    class={`transition-opacity duration-300 ${initialStatsText ? "opacity-100" : "opacity-0"}`}
-  >
-    {initialStatsText}
-  </p>
 </footer>
 
 <style is:global>
@@ -807,76 +763,9 @@ const initialStatsText = initialViews > 0
     } catch {}
   }
 
-  async function loadStats() {
-    const container = document.getElementById("umami-stats");
-    if (!container) return;
-
-    const isEs =
-      document.documentElement.lang === "es" ||
-      window.location.pathname.includes("/es/") ||
-      window.location.pathname === "/es";
-
-    try {
-      let views = 0;
-      let visitors = 0;
-
-      try {
-        const localRes = await fetch("/api/stats.json");
-        if (localRes.ok) {
-          const localData = await localRes.json();
-          views = localData.pageviews || 0;
-          visitors = localData.visitors || 0;
-        }
-      } catch {
-        // Fallback
-      }
-
-      if (!views) {
-        const shareToken = "IKILGPgXIuMcSBcX";
-        const authRes = await fetch(`https://cloud.umami.is/analytics/us/api/share/${shareToken}`);
-        if (authRes.ok) {
-          const authData = await authRes.json();
-          const token = authData.token;
-          const websiteId = authData.websiteId;
-          if (token && websiteId) {
-            const startAt = new Date("2024-01-01").getTime();
-            const endAt = Date.now();
-            const statsRes = await fetch(
-              `https://cloud.umami.is/analytics/us/api/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`,
-              {
-                headers: {
-                  "x-umami-share-token": token,
-                  "x-umami-share-context": "share",
-                },
-              }
-            );
-            if (statsRes.ok) {
-              const data = await statsRes.json();
-              views = data.pageviews || 0;
-              visitors = data.visitors || 0;
-            }
-          }
-        }
-      }
-
-      if (views > 0) {
-        const fViews = new Intl.NumberFormat().format(views);
-        const fVisitors = new Intl.NumberFormat().format(visitors);
-        container.textContent = isEs
-          ? `${fViews} vistas • Visitante #${fVisitors}`
-          : `${fViews} views • Visitor #${fVisitors}`;
-        container.classList.remove("opacity-0");
-        container.classList.add("opacity-100");
-      }
-    } catch (e) {
-      console.warn("Could not load Umami stats:", e);
-    }
-  }
-
   function init() {
     loadSpotify();
     connectLanyardSocket();
-    loadStats();
   }
 
   // Load immediately on page initialization and view transitions

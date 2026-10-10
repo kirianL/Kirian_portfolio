@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
+import PostHog from '../components/PostHog.astro';
 
 interface Props {
   title: string;
@@ -80,7 +81,6 @@ const spanishURL = new URL(spanishPath, siteURL);
     <ClientRouter />
 
     <!-- Performance & Preconnect (SXO) -->
-    <link rel="dns-prefetch" href="https://cloud.umami.is" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://api.lanyard.rest" crossorigin />
@@ -192,8 +192,7 @@ const spanishURL = new URL(spanishPath, siteURL);
       }
     ])} />
     
-    <!-- Umami Analytics -->
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="427114d6-abc8-410e-adb2-98cc7571b5d3"></script>
+    <PostHog />
   </head>
   <body class="antialiased selection:bg-accent-4/20 selection:text-accent-12 min-h-screen bg-grayscale-1 text-grayscale-12">
     <slot />
