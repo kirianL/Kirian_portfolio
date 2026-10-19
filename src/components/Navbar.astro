@@ -6,7 +6,6 @@ const navLabels = {
   en: {
     home: "Home",
     projects: "Projects",
-    craft: "Craft",
     blog: "Blog",
     skills: "Skills",
     contact: "Contact",
@@ -15,7 +14,6 @@ const navLabels = {
   es: {
     home: "Inicio",
     projects: "Proyectos",
-    craft: "Craft",
     blog: "Blog",
     skills: "Habilidades",
     contact: "Contacto",
@@ -95,15 +93,6 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           data-cuelume-release="release"
           class={`hover:text-grayscale-12 transition-colors ${pathname.includes("/projects") ? "text-grayscale-12 font-semibold" : ""}`}
           >{navLabels.projects}</a
-        >
-        <a
-          href={`${localePrefix || ""}/craft/`}
-          data-astro-prefetch="viewport"
-          data-cuelume-hover="tick"
-          data-cuelume-press="page"
-          data-cuelume-release="release"
-          class={`hover:text-grayscale-12 transition-colors ${pathname.includes("/craft") ? "text-grayscale-12 font-semibold" : ""}`}
-          >{navLabels.craft}</a
         >
         <a
           href={`${localePrefix || ""}/blog/`}

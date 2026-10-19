@@ -6,15 +6,14 @@ import Projects from "../components/Projects.astro";
 import WorkExperience from "../components/WorkExperience.astro";
 import TechStack from "../components/TechStack.astro";
 import Footer from "../components/Footer.astro";
-import CardStampArc from "../components/CardStampArc.astro";
 import { dictionaries } from "../data/data";
 
 const data = dictionaries.EN;
 ---
 
 <Layout
-  title="Kirian Luna | Systems Engineer"
-  description="Professional portfolio of Kirian Luna, Systems Engineer based in Costa Rica."
+  title="Kirian Luna | Software Engineer"
+  description="Professional portfolio of Kirian Luna, Software Engineer based in Costa Rica."
   lang="en"
 >
   <Navbar />
@@ -223,25 +222,6 @@ const data = dictionaries.EN;
         </div>
       </section>
 
-      <!-- Off Screen Section -->
-      <section id="off-screen" class="flex flex-col gap-5 py-2">
-        <div>
-          <h2 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
-            off screen.
-          </h2>
-        </div>
-        <div class="w-full flex items-center justify-center py-12 px-4 sm:px-8 overflow-visible min-h-[240px] sm:min-h-[290px]">
-          <CardStampArc 
-            photos={[
-              { id: 0, caption: 'Kenzo', src: '/off-screen/Kenzo.png' },
-              { id: 1, caption: 'Puerto Limón', src: '/off-screen/Limon.png' },
-              { id: 2, caption: 'Guápiles', src: '/off-screen/Guápiles.png' },
-              { id: 3, caption: 'Favorite Game', src: '/off-screen/FavGame.png' },
-              { id: 4, caption: 'Mini Dev', src: '/off-screen/minidev.png' }
-            ]}
-          />
-        </div>
-      </section>
 
       <!-- Footer -->
       <Footer />

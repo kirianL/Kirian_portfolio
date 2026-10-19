@@ -36,7 +36,7 @@ export interface Project {
 
 const es = {
   name: "Kirian Luna",
-  title: "Ingeniero en Sistemas",
+  title: "Ingeniero de Software",
   location: "Costa Rica",
   locationIcon: "",
   experience: "2+ Años",
@@ -47,8 +47,8 @@ const es = {
   },
   hero: {
     greeting: "Soy Kirian,",
-    role: "Ingeniero en Sistemas",
-    desc: "<span>Soy Ingeniero en Sistemas de Limón, Costa Rica, enfocado en construir productos digitales modernos que <strong class=\"text-grayscale-12 font-medium\">resuelven problemas reales y generan valor para usuarios y empresas</strong>. Combino ingeniería, diseño y experiencia de usuario para crear soluciones <strong class=\"text-grayscale-12 font-medium\">escalables, eficientes, intuitivas y cuidadosamente construidas</strong>. Graduado de Ingeniería en Sistemas por la <a href=\"https://www.ulatina.ac.cr/\" target=\"_blank\" rel=\"noopener noreferrer\" data-cuelume-hover=\"tick\" data-cuelume-press data-cuelume-release class=\"text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors\">Universidad Latina de Costa Rica</a> y actualmente fortaleciendo mi formación en Ingeniería de Software y Docencia, mi enfoque va más allá de escribir código: entiendo el problema, diseño soluciones efectivas y transformo ideas en <strong class=\"text-grayscale-12 font-medium\">productos digitales funcionales, confiables y con propósito</strong>, colaborando con equipos y empresas tanto en Costa Rica como a nivel internacional.</span>",
+    role: "Ingeniero de Software",
+    desc: "<span>Soy Ingeniero de Software de Limón, Costa Rica, enfocado en construir productos digitales modernos que <strong class=\"text-grayscale-12 font-medium\">resuelven problemas reales y generan valor para usuarios y empresas</strong>. Combino ingeniería, diseño y experiencia de usuario para crear soluciones <strong class=\"text-grayscale-12 font-medium\">escalables, eficientes, intuitivas y cuidadosamente construidas</strong>. Graduado de Ingeniería en Sistemas por la <a href=\"https://www.ulatina.ac.cr/\" target=\"_blank\" rel=\"noopener noreferrer\" data-cuelume-hover=\"tick\" data-cuelume-press data-cuelume-release class=\"text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors\">Universidad Latina de Costa Rica</a> y actualmente fortaleciendo mi formación en Ingeniería de Software y Docencia, mi enfoque va más allá de escribir código: entiendo el problema, diseño soluciones efectivas y transformo ideas en <strong class=\"text-grayscale-12 font-medium\">productos digitales funcionales, confiables y con propósito</strong>, colaborando con equipos y empresas tanto en Costa Rica como a nivel internacional.</span>",
     based: "Basado en Costa Rica",
     ctaProjects: "Ver mis trabajos",
     ctaContact: "Hablemos",
@@ -59,13 +59,13 @@ const es = {
       projects: "Proyectos",
       commitment: "Compromiso",
     },
-    availability: "Disponible para oportunidades en Ingeniería en Sistemas",
+    availability: "Disponible para oportunidades en Ingeniería de Software",
     ctaExplore: "Explorar más",
   },
   about: {
     title: "Sobre Mí",
     badgeLabel: "En busca de nuevas oportunidades",
-    heroTitle: "Ingeniero en Sistemas & Amante de las Ideas",
+    heroTitle: "Ingeniero de Software & Amante de las Ideas",
     heroSubtitle:
       "Impulsando productos digitales con pasión por el código y el diseño.",
     ctaWork: "Mira mi trabajo",
@@ -74,10 +74,10 @@ const es = {
     intro:
       "Más que código, creo soluciones. Mi enfoque combina técnica sólida con diseño intuitivo.",
     bio: [
-      "Soy un apasionado Ingeniero en Sistemas enfocado en crear soluciones tecnológicas eficientes y escalables. Estudié en la Universidad Latina de Costa Rica y actualmente me encuentro de forma paralela estudiando la licenciatura en docencia en la Universidad Americana y la licenciatura en ingeniería de software en la Universidad Internacional de las Américas. Con más de 2 años de experiencia en el desarrollo de software, me especializo en construir experiencias de usuario fluidas y arquitecturas robustas.",
+      "Soy un apasionado Ingeniero de Software enfocado en crear soluciones tecnológicas eficientes y escalables. Estudié en la Universidad Latina de Costa Rica y actualmente me encuentro de forma paralela estudiando la licenciatura en docencia en la Universidad Americana y la licenciatura en ingeniería de software en la Universidad Internacional de las Américas. Con más de 2 años de experiencia en el desarrollo de software, me especializo en construir experiencias de usuario fluidas y arquitecturas robustas.",
       "Mi enfoque se centra en la limpieza del código, el rendimiento óptimo y el diseño centrado en el usuario. Siempre estoy en constante aprendizaje de las últimas tecnologías para ofrecer los mejores resultados en cada proyecto.",
     ],
-    roleTitle: "El Ingeniero en Sistemas",
+    roleTitle: "El Ingeniero de Software",
     locationTitle: "Ubicación",
     experienceTitle: "Experiencia",
     educationTitle: "Educación",
@@ -91,7 +91,7 @@ const es = {
     {
       year: "2026",
       period: "ene. 2026 – presente",
-      role: "Ingeniero en Sistemas",
+      role: "Ingeniero de Software",
       company: "Ultimate Media Productions",
       companyUrl: "https://ump-landing-page.vercel.app/es",
       companyColor: "bg-[#eef2ff]/90 hover:bg-[#e0e7ff] border-[#c7d2fe]/60 text-[#4f46e5] dark:bg-[#1e1b4b]/60 dark:border-[#3730a3]/50 dark:text-[#818cf8] dark:hover:bg-[#312e81]/60",
@@ -275,7 +275,7 @@ const es = {
 
 const en: typeof es = {
   name: "Kirian Luna",
-  title: "Systems Engineer",
+  title: "Software Engineer",
   location: "Costa Rica",
   locationIcon: "",
   experience: "2+ Years",
@@ -286,7 +286,7 @@ const en: typeof es = {
   },
   hero: {
     greeting: "I'm Kirian,",
-    desc: "<span>I’m a Systems Engineer from Limón, Costa Rica, focused on building modern digital products that <strong class=\"text-grayscale-12 font-medium\">solve real problems and create value for users and businesses</strong>. I combine engineering, design, and user experience to create <strong class=\"text-grayscale-12 font-medium\">scalable, performant, intuitive, and thoughtfully crafted solutions</strong>. I hold a degree in Systems Engineering from <a href=\"https://www.ulatina.ac.cr/\" target=\"_blank\" rel=\"noopener noreferrer\" data-cuelume-hover=\"tick\" data-cuelume-press data-cuelume-release class=\"text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors\">Universidad Latina de Costa Rica</a> and am currently furthering my education in Software Engineering and Teaching. My approach goes beyond writing code: I understand the problem, design effective solutions, and turn ideas into <strong class=\"text-grayscale-12 font-medium\">functional, reliable, and purposeful digital products</strong>, collaborating with teams and companies both in Costa Rica and internationally.</span>",
+    desc: "<span>I’m a Software Engineer from Limón, Costa Rica, focused on building modern digital products that <strong class=\"text-grayscale-12 font-medium\">solve real problems and create value for users and businesses</strong>. I combine engineering, design, and user experience to create <strong class=\"text-grayscale-12 font-medium\">scalable, performant, intuitive, and thoughtfully crafted solutions</strong>. I hold a degree in Systems Engineering from <a href=\"https://www.ulatina.ac.cr/\" target=\"_blank\" rel=\"noopener noreferrer\" data-cuelume-hover=\"tick\" data-cuelume-press data-cuelume-release class=\"text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors\">Universidad Latina de Costa Rica</a> and am currently furthering my education in Software Engineering and Teaching. My approach goes beyond writing code: I understand the problem, design effective solutions, and turn ideas into <strong class=\"text-grayscale-12 font-medium\">functional, reliable, and purposeful digital products</strong>, collaborating with teams and companies both in Costa Rica and internationally.</span>",
     based: "Based in Costa Rica",
     ctaProjects: "View my work",
     ctaContact: "Let's talk",
@@ -298,13 +298,13 @@ const en: typeof es = {
       projects: "Projects",
       commitment: "Commitment",
     },
-    availability: "Open to Systems Engineering opportunities",
+    availability: "Open to Software Engineering opportunities",
     ctaExplore: "Explore More",
   },
   about: {
     title: "About Me",
     badgeLabel: "Open to new opportunities",
-    heroTitle: "Systems Engineer & Passionate Creator",
+    heroTitle: "Software Engineer & Passionate Creator",
     heroSubtitle:
       "Boosting digital products with a passion for code and design.",
     ctaWork: "See my work",
@@ -313,10 +313,10 @@ const en: typeof es = {
     intro:
       "More than code, I create solutions. My approach combines solid technique with intuitive design.",
     bio: [
-      "I am a passionate Systems Engineer focused on creating efficient and scalable technological solutions. I studied at Universidad Latina de Costa Rica, and I am currently pursuing parallel Licentiate degrees in Teaching at Universidad Americana and Software Engineering at Universidad Internacional de las Américas. With 2+ years of software development experience, I specialize in building smooth user experiences and robust architectures.",
+      "I am a passionate Software Engineer focused on creating efficient and scalable technological solutions. I studied at Universidad Latina de Costa Rica, and I am currently pursuing parallel Licentiate degrees in Teaching at Universidad Americana and Software Engineering at Universidad Internacional de las Américas. With 2+ years of software development experience, I specialize in building smooth user experiences and robust architectures.",
       "My focus is on clean code, optimal performance, and user-centered design. I am always learning the latest technologies to deliver the best results in every project.",
     ],
-    roleTitle: "The Systems Engineer",
+    roleTitle: "The Software Engineer",
     locationTitle: "Location",
     experienceTitle: "Experience",
     educationTitle: "Education",
@@ -330,7 +330,7 @@ const en: typeof es = {
     {
       year: "2026",
       period: "Jan. 2026 – Present",
-      role: "Systems Engineer",
+      role: "Software Engineer",
       company: "Ultimate Media Productions",
       companyUrl: "https://ump-landing-page.vercel.app/en",
       companyColor: "bg-[#eef2ff]/90 hover:bg-[#e0e7ff] border-[#c7d2fe]/60 text-[#4f46e5] dark:bg-[#1e1b4b]/60 dark:border-[#3730a3]/50 dark:text-[#818cf8] dark:hover:bg-[#312e81]/60",
