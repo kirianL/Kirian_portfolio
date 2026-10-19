@@ -52,7 +52,7 @@ export const umpMusicDetails = {
       name: "Equipo UMP Music",
       link: "#",
     },
-    link: "https://ump-landing-page.vercel.app/es",
+    link: "https://ultimatemediaproductions.com",
   },
   EN: {
     slug: "ump-music",
@@ -105,7 +105,7 @@ export const umpMusicDetails = {
       name: "UMP Music Team",
       link: "#",
     },
-    link: "https://ump-landing-page.vercel.app/en",
+    link: "https://ultimatemediaproductions.com",
   },
   PT: {
     slug: "ump-music",
@@ -158,6 +158,6 @@ export const umpMusicDetails = {
       name: "Equipe UMP Music",
       link: "#",
     },
-    link: "https://ump-landing-page.vercel.app/pt",
+    link: "https://ultimatemediaproductions.com",
   },
 };
