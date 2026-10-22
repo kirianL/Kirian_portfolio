@@ -22,29 +22,6 @@ Anyone searching for information about Limonense culture today is likely to enco
 
 This absence is particularly paradoxical given the region's demographic and cultural significance. According to the [National Institute of Statistics and Censuses (INEC)](https://admin.inec.cr/sites/default/files/2023-07/INFOGRAFIA_ESTIM_POB_VIV_2022_LIMON.pdf), Limón had an estimated population of 470,383 inhabitants in 2022. Furthermore, analyses from the [United Nations Development Programme (UNDP)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf) confirm that the province concentrates the highest percentage of Afro-descendant population in the country, with approximately 23% of individuals identifying as Afro-descendant or Mulatto.
 
-### Limón in Figures
-
-| Indicator                  | Data               |
-| -------------------------- | ------------------ |
-| Estimated population (2022)| 470,383 inhabitants|
-| Women                      | 52%                |
-| Men                        | 48%                |
-| Afro-descendant population | 23%                |
-| Cantons                    | 6                  |
-
-<div class="not-prose my-10 py-6 border-y border-grayscale-3 dark:border-grayscale-3/40 grid grid-cols-1 sm:grid-cols-2 gap-8">
-  <div class="flex flex-col gap-1">
-    <span class="text-xs font-mono text-grayscale-10 uppercase tracking-wide">Estimated population (2022)</span>
-    <span class="text-3xl font-mono font-medium text-grayscale-12 tracking-tight">470,383</span>
-    <span class="text-xs text-grayscale-11 mt-1">Inhabitants across the Caribbean province</span>
-  </div>
-  <div class="flex flex-col gap-1">
-    <span class="text-xs font-mono text-grayscale-10 uppercase tracking-wide">Afro-descendant population</span>
-    <span class="text-3xl font-mono font-medium text-accent-9 tracking-tight">23%</span>
-    <span class="text-xs text-grayscale-11 mt-1">Highest nationwide concentration (INEC / UNDP)</span>
-  </div>
-</div>
-
 Yet, when comparing this demographic presence with the contemporary digital ecosystem, the imbalance is striking: dedicated digital initiatives that document Limonense heritage in all its breadth and dignity remain remarkably rare.
 
 ---
@@ -95,22 +72,9 @@ That same authenticity shaped the information architecture. Rather than leading 
 
 ## What I Learned
 
-Throughout the documentation process, one data point emerged that had little to do with cultural expressions, yet fundamentally reshaped the project's ethical compass: socioeconomic inequality. Data compiled by the [UNDP (PNUD)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf) from national census records reveals that approximately one-third of households in Limón live below the poverty line.
+Throughout the documentation process, one data point emerged that had little to do with cultural expressions, yet fundamentally reshaped the project's ethical compass: socioeconomic inequality. Data compiled by the [UNDP (PNUD)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf) from national census records reveals that approximately one-third of households in Limón (31%) live below the poverty line, in contrast with the remaining 69% of the province.
 
-<div class="not-prose my-10 py-6 border-y border-grayscale-3 dark:border-grayscale-3/40 grid grid-cols-1 sm:grid-cols-2 gap-8">
-  <div class="flex flex-col gap-1">
-    <span class="text-xs font-mono text-grayscale-10 uppercase tracking-wide">Households in poverty</span>
-    <span class="text-3xl font-mono font-medium text-grayscale-12 tracking-tight">31%</span>
-    <span class="text-xs text-grayscale-11 mt-1">Approximately one out of three households</span>
-  </div>
-  <div class="flex flex-col gap-1">
-    <span class="text-xs font-mono text-grayscale-10 uppercase tracking-wide">Socioeconomic landscape</span>
-    <span class="text-3xl font-mono font-medium text-grayscale-12 tracking-tight">69%</span>
-    <span class="text-xs text-grayscale-11 mt-1">Other households across Limón (UNDP)</span>
-  </div>
-</div>
-
-This finding dispelled any temptation of aesthetic romanticism. Designing with responsibility means not turning away from real social tensions. A community's cultural identity does not develop inside a pristine vacuum; it lives alongside material challenges, historical demands for equity, and the ongoing struggle for a more just future.
+This finding dispelled any temptation of aesthetic romanticism. Designing with responsibility means not turning away from real social tensions: a community's cultural identity does not develop inside a pristine vacuum, but lives alongside material challenges, historical demands for equity, and the ongoing struggle for a more just future.
 
 ---
 

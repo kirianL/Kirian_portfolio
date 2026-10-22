@@ -22,29 +22,6 @@ Si una persona busca información sobre la cultura limonense hoy, probablemente 
 
 Esta ausencia resulta paradójica frente al peso demográfico y cultural indiscutible de la región. Según los registros del [Instituto Nacional de Estadística y Censos (INEC)](https://admin.inec.cr/sites/default/files/2023-07/INFOGRAFIA_ESTIM_POB_VIV_2022_LIMON.pdf), Limón contaba con una población estimada de 470.383 habitantes en 2022. Asimismo, los análisis del [Programa de las Naciones Unidas para el Desarrollo (PNUD)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf) confirman que la provincia concentra el mayor porcentaje de población afrodescendiente del país, con cerca de un 23% de personas que se autoidentifican como afrodescendientes o mulatas.
 
-### Limón en cifras
-
-| Indicador                  | Dato               |
-| -------------------------- | ------------------ |
-| Población estimada (2022)  | 470.383 habitantes |
-| Mujeres                    | 52%                |
-| Hombres                    | 48%                |
-| Población afrodescendiente | 23%                |
-| Cantones                   | 6                  |
-
-<div class="not-prose my-10 py-6 border-y border-grayscale-3 dark:border-grayscale-3/40 grid grid-cols-1 sm:grid-cols-2 gap-8">
-  <div class="flex flex-col gap-1">
-    <span class="text-xs font-mono text-grayscale-10 uppercase tracking-wide">Población estimada (2022)</span>
-    <span class="text-3xl font-mono font-medium text-grayscale-12 tracking-tight">470.383</span>
-    <span class="text-xs text-grayscale-11 mt-1">Habitantes en la provincia caribeña</span>
-  </div>
-  <div class="flex flex-col gap-1">
-    <span class="text-xs font-mono text-grayscale-10 uppercase tracking-wide">Población afrodescendiente</span>
-    <span class="text-3xl font-mono font-medium text-accent-9 tracking-tight">23%</span>
-    <span class="text-xs text-grayscale-11 mt-1">La mayor proporción del país (INEC / PNUD)</span>
-  </div>
-</div>
-
 Sin embargo, al contrastar esta vitalidad humana con el panorama digital disponible, la desproporción salta a la vista: son escasas las iniciativas diseñadas específicamente para documentar y proyectar la identidad limonense en toda su amplitud y dignidad.
 
 ---
@@ -95,22 +72,9 @@ Esa misma autenticidad determinó la estructura del contenido. En vez de arranca
 
 ## Lo que aprendí
 
-Durante el proceso documental emergió un dato que no guardaba relación directa con la herencia cultural, pero que redefinió el sentido ético del proyecto: las brechas socioeconómicas de la provincia. Los diagnósticos del [PNUD](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf) a partir de censos poblacionales evidencian que aproximadamente una tercera parte de los hogares limonenses se encuentra en condición de pobreza.
+Durante el proceso documental emergió un dato que no guardaba relación directa con la herencia cultural, pero que redefinió el sentido ético del proyecto: las brechas socioeconómicas de la provincia. Los diagnósticos del [PNUD](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf) a partir de censos poblacionales evidencian que aproximadamente una tercera parte de los hogares limonenses (31%) se encuentra en condición de pobreza, frente al 69% restante de la provincia.
 
-<div class="not-prose my-10 py-6 border-y border-grayscale-3 dark:border-grayscale-3/40 grid grid-cols-1 sm:grid-cols-2 gap-8">
-  <div class="flex flex-col gap-1">
-    <span class="text-xs font-mono text-grayscale-10 uppercase tracking-wide">Hogares en condición de pobreza</span>
-    <span class="text-3xl font-mono font-medium text-grayscale-12 tracking-tight">31%</span>
-    <span class="text-xs text-grayscale-11 mt-1">Aproximadamente 1 de cada 3 hogares</span>
-  </div>
-  <div class="flex flex-col gap-1">
-    <span class="text-xs font-mono text-grayscale-10 uppercase tracking-wide">Brecha estructural</span>
-    <span class="text-3xl font-mono font-medium text-grayscale-12 tracking-tight">69%</span>
-    <span class="text-xs text-grayscale-11 mt-1">Resto de hogares de la provincia (PNUD)</span>
-  </div>
-</div>
-
-Esta constatación disipó cualquier tentación de complacencia estética. Diseñar con responsabilidad implica no eludir las tensiones que forman parte de la realidad cotidiana. La identidad cultural de un pueblo no florece en un escenario idílico ni puede desconectarse de sus condiciones materiales, de sus legítimas demandas históricas y de las luchas por un porvenir más equitativo.
+Esta constatación disipó cualquier tentación de complacencia estética. Diseñar con responsabilidad implica no eludir las tensiones que forman parte de la realidad cotidiana: la identidad cultural de un pueblo no florece en un escenario idílico ni puede desconectarse de sus condiciones materiales, de sus legítimas demandas históricas y de las luchas por un porvenir más equitativo.
 
 ---
 

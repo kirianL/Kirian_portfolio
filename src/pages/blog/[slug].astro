@@ -68,13 +68,13 @@ const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
   <ScrollRuler />
   
   <main class="min-h-screen bg-grayscale-1 px-4 sm:px-6 lg:px-8 py-10 md:py-16 pt-24 md:pt-28">
-    <div class="max-w-6xl mx-auto">
+    <div class="max-w-7xl mx-auto">
       
-      <!-- Minimalist Breathable 3-Column Layout -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-14 items-start">
+      <!-- Minimalist Symmetrically Centered Layout -->
+      <div class="flex flex-col lg:flex-row justify-center items-start gap-8 xl:gap-14">
         
         <!-- LEFT SIDEBAR: Navigation & TOC (Sticky Desktop) -->
-        <aside class="hidden lg:flex flex-col lg:col-span-3 sticky top-28 h-fit gap-8 self-start">
+        <aside class="hidden lg:flex flex-col w-56 xl:w-64 shrink-0 sticky top-28 h-fit gap-8 self-start">
           <a
             href="/blog/"
             data-cuelume-press
@@ -91,8 +91,8 @@ const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
           <BlogTOC headings={headings} lang="en" />
         </aside>
 
-        <!-- CENTER COLUMN: Airy, Open, Breathable Article Canvas -->
-        <div class="col-span-1 lg:col-span-6 w-full flex flex-col gap-10">
+        <!-- CENTER COLUMN: Airy, Open, Perfectly Centered Article Canvas -->
+        <div class="w-full max-w-2xl xl:max-w-3xl flex flex-col gap-10 min-w-0">
           
           <!-- Mobile Back Link -->
           <a href="/blog/" class="lg:hidden flex items-center gap-1.5 font-mono text-xs text-grayscale-11 hover:text-accent-9 transition-colors w-fit">
@@ -185,7 +185,7 @@ const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
         </div>
 
         <!-- RIGHT SIDEBAR: Author & Reactions (Sticky Desktop) -->
-        <aside class="hidden lg:flex flex-col lg:col-span-3 sticky top-28 h-fit gap-8 self-start">
+        <aside class="hidden lg:flex flex-col w-56 xl:w-64 shrink-0 sticky top-28 h-fit gap-8 self-start">
           
           <!-- Author -->
           <div class="flex flex-col gap-2.5">
