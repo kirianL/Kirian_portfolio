@@ -36,29 +36,145 @@ Furthermore, according to data from the [United Nations Development Programme (U
 | Afro-descendant population | 23%                |
 | Cantons                    | 6                  |
 
-<div class="my-6 p-5 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white/60 dark:bg-grayscale-2/60 backdrop-blur-xs flex flex-col gap-4 max-w-md mx-auto shadow-xs">
-  <div class="text-[11px] font-semibold tracking-wider text-grayscale-11 uppercase font-mono border-b border-grayscale-3/60 dark:border-grayscale-3/30 pb-2">Ethnic representation of the province</div>
-  <div class="flex flex-col gap-4">
-    <div class="flex items-center gap-3">
-      <div class="text-2xl font-bold font-mono text-accent-9 w-14 text-right">23%</div>
-      <div class="flex-1 flex flex-col gap-1">
-        <span class="text-xs font-medium text-grayscale-12">Afro-descendants</span>
-        <div class="w-full h-2 bg-grayscale-3 dark:bg-grayscale-3/60 rounded-full overflow-hidden">
-          <div class="bg-accent-9 h-full rounded-full" style="width: 23%"></div>
-        </div>
-      </div>
+<div class="not-prose my-8 p-6 rounded-xl border border-grayscale-3 dark:border-grayscale-3/50 bg-grayscale-2/40 dark:bg-black/30 backdrop-blur-sm flex flex-col gap-5">
+  <div class="flex items-center justify-between border-b border-grayscale-3/80 dark:border-grayscale-3/30 pb-3 text-[10px] font-mono tracking-widest uppercase text-grayscale-10">
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-accent-9 animate-pulse"></span>
+      <span class="text-grayscale-12 font-medium">TELEMETRY // DEMO-07-LIMON</span>
     </div>
-    <div class="flex items-center gap-3">
-      <div class="text-2xl font-bold font-mono text-grayscale-11 w-14 text-right">77%</div>
-      <div class="flex-1 flex flex-col gap-1">
-        <span class="text-xs font-medium text-grayscale-12">Rest of the population</span>
-        <div class="w-full h-2 bg-grayscale-3 dark:bg-grayscale-3/60 rounded-full overflow-hidden">
-          <div class="bg-grayscale-9 dark:bg-grayscale-11 h-full rounded-full" style="width: 77%"></div>
-        </div>
+    <span>CENSUS DATA // INEC</span>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+    <div class="md:col-span-5 flex flex-col gap-2">
+      <div class="text-[10px] font-mono uppercase tracking-wider text-grayscale-10">Afro-descendant Identity</div>
+      <div class="flex items-baseline gap-2">
+        <span class="text-4xl sm:text-5xl font-mono font-bold text-accent-9 tracking-tight">23.0%</span>
+        <span class="text-xs font-mono text-grayscale-11 font-medium">/ 108,188 people</span>
+      </div>
+      <p class="text-xs text-grayscale-11 leading-relaxed mt-1">
+        Limón concentrates the highest percentage of Afro-descendant & Mulatto population in Costa Rica, shaping the nation's maritime, musical, and linguistic heritage.
+      </p>
+    </div>
+
+    <div class="md:col-span-7 flex flex-col gap-3 bg-white dark:bg-[#16171d] p-4 rounded-lg border border-grayscale-3/60 dark:border-grayscale-3/40">
+      <div class="flex items-center justify-between text-[9px] font-mono uppercase text-grayscale-10">
+        <span>POPULATION DENSITY MATRIX (1 NODE = 1%)</span>
+        <span class="text-accent-9 font-semibold">23 NODES HIGHLIGHTED</span>
+      </div>
+      <div class="grid grid-cols-10 gap-1.5 py-1">
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-accent-9 shadow-[0_0_6px_rgba(235,94,40,0.4)]"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+        <div class="h-3 rounded-xs bg-grayscale-3 dark:bg-grayscale-3/40"></div>
+      </div>
+      <div class="flex items-center justify-between text-[10px] font-mono text-grayscale-10 pt-1 border-t border-grayscale-3/40 dark:border-grayscale-3/20">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-xs bg-accent-9"></span><span>23% Afro-descendants</span></div>
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-xs bg-grayscale-4 dark:bg-grayscale-3/60"></span><span>77% Rest of population</span></div>
       </div>
     </div>
   </div>
-  <div class="text-[9px] text-grayscale-10 font-mono pt-1">Source: INEC and UNDP</div>
+
+  <div class="text-[9px] font-mono text-grayscale-10 flex items-center justify-between border-t border-grayscale-3/60 dark:border-grayscale-3/20 pt-2">
+    <span>SOURCE: NATIONAL INSTITUTE OF STATISTICS & CENSUSES (INEC)</span>
+    <span>CONFIDENCE: 95%</span>
+  </div>
 </div>
 
 However, when comparing these figures with the number of digital projects dedicated to documenting Limonense identity, the contrast is stark.
@@ -178,29 +294,86 @@ It was related to inequality.
 
 According to data compiled by the [UNDP (PNUD)](https://pnud-conocimiento.cr/wp-content/uploads/2022/06/Ficha-tecnica-Limon-Folleto-imprimible.pdf) from census records, approximately one-third of Limonense households lived in poverty.
 
-<div class="my-6 p-5 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white/60 dark:bg-grayscale-2/60 backdrop-blur-xs flex flex-col gap-4 max-w-md mx-auto shadow-xs">
-  <div class="text-[11px] font-semibold tracking-wider text-grayscale-11 uppercase font-mono border-b border-grayscale-3/60 dark:border-grayscale-3/30 pb-2">Households in poverty conditions (Limón)</div>
-  <div class="flex flex-col gap-4">
-    <div class="flex items-center gap-3">
-      <div class="text-2xl font-bold font-mono text-red-500 w-14 text-right">31%</div>
-      <div class="flex-1 flex flex-col gap-1">
-        <span class="text-xs font-medium text-grayscale-12">Households in poverty</span>
-        <div class="w-full h-2 bg-grayscale-3 dark:bg-grayscale-3/60 rounded-full overflow-hidden">
-          <div class="bg-red-500 h-full rounded-full" style="width: 31%"></div>
-        </div>
-      </div>
+<div class="not-prose my-8 p-6 rounded-xl border border-grayscale-3 dark:border-grayscale-3/50 bg-grayscale-2/40 dark:bg-black/30 backdrop-blur-sm flex flex-col gap-5">
+  <div class="flex items-center justify-between border-b border-grayscale-3/80 dark:border-grayscale-3/30 pb-3 text-[10px] font-mono tracking-widest uppercase text-grayscale-10">
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-grayscale-10"></span>
+      <span class="text-grayscale-12 font-medium">INDICATORS // SOCIOECONOMIC-VULNERABILITY</span>
     </div>
-    <div class="flex items-center gap-3">
-      <div class="text-2xl font-bold font-mono text-grayscale-11 w-14 text-right">69%</div>
-      <div class="flex-1 flex flex-col gap-1">
-        <span class="text-xs font-medium text-grayscale-12">Other households</span>
-        <div class="w-full h-2 bg-grayscale-3 dark:bg-grayscale-3/60 rounded-full overflow-hidden">
-          <div class="bg-grayscale-9 dark:bg-grayscale-11 h-full rounded-full" style="width: 69%"></div>
-        </div>
+    <span>UNDP TECHNICAL FILE</span>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="p-4 rounded-lg bg-white dark:bg-[#16171d] border border-grayscale-3/60 dark:border-grayscale-3/40 flex flex-col justify-between gap-3">
+      <div class="flex items-center justify-between text-[10px] font-mono uppercase text-grayscale-10">
+        <span>Vulnerable Households</span>
+        <span class="font-bold text-grayscale-12">LIMÓN</span>
       </div>
+      <div class="text-3xl sm:text-4xl font-mono font-bold text-grayscale-12">
+        31.0<span class="text-lg font-normal text-grayscale-10">%</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="h-1.5 flex-1 bg-accent-9 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-accent-9 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-accent-9 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+      </div>
+      <p class="text-[11px] text-grayscale-11 leading-normal font-sans">
+        Approx. 1 out of 3 households experiences unmet basic needs, contrasting high-volume port logistics with regional household realities.
+      </p>
+    </div>
+
+    <div class="p-4 rounded-lg bg-white dark:bg-[#16171d] border border-grayscale-3/60 dark:border-grayscale-3/40 flex flex-col justify-between gap-3">
+      <div class="flex items-center justify-between text-[10px] font-mono uppercase text-grayscale-10">
+        <span>Basic Needs Covered</span>
+        <span class="font-bold text-grayscale-12">BASELINE</span>
+      </div>
+      <div class="text-3xl sm:text-4xl font-mono font-bold text-grayscale-12">
+        69.0<span class="text-lg font-normal text-grayscale-10">%</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="h-1.5 flex-1 bg-grayscale-9 dark:bg-grayscale-11 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-9 dark:bg-grayscale-11 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-9 dark:bg-grayscale-11 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-9 dark:bg-grayscale-11 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-9 dark:bg-grayscale-11 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-9 dark:bg-grayscale-11 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-9 dark:bg-grayscale-11 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+        <div class="h-1.5 flex-1 bg-grayscale-3 dark:bg-grayscale-3/40 rounded-full"></div>
+      </div>
+      <p class="text-[11px] text-grayscale-11 leading-normal font-sans">
+        Stable household infrastructure requiring sustainable digital investment to close the regional connectivity divide.
+      </p>
     </div>
   </div>
-  <div class="text-[9px] text-grayscale-10 font-mono pt-1">Source: UNDP - Social indicators of Limón</div>
+
+  <div class="text-[9px] font-mono text-grayscale-10 flex items-center justify-between border-t border-grayscale-3/60 dark:border-grayscale-3/20 pt-2">
+    <span>SOURCE: UNITED NATIONS DEVELOPMENT PROGRAMME (UNDP)</span>
+    <span>INDICATORS OF SOCIAL INEQUALITY</span>
+  </div>
+</div>
+
+<div class="not-prose my-10 p-6 rounded-xl border border-grayscale-3 dark:border-grayscale-3/50 bg-gradient-to-br from-grayscale-2/60 via-white to-grayscale-1 dark:from-[#181920] dark:via-[#131418] dark:to-[#0f1013] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-xs">
+  <div class="flex flex-col gap-1.5 max-w-lg">
+    <div class="flex items-center gap-2">
+      <span class="px-2 py-0.5 rounded text-[9px] font-mono uppercase font-bold tracking-wider bg-accent-9/10 text-accent-9 border border-accent-9/20">DOCUMENTARY ARCHIVE</span>
+    </div>
+    <div class="text-base font-semibold text-grayscale-12 font-sans">Living Cultural Memory of Limón</div>
+    <p class="text-xs text-grayscale-11 leading-relaxed">
+      Explore oral histories, architecture, and ancestral memory preserved directly by Limonense creators and communities.
+    </p>
+  </div>
+  <a href="https://tecdigital.tec.ac.cr/servicios/cv-recursos/html/anancy/" target="_blank" rel="noopener noreferrer" class="shrink-0 px-4 py-2.5 rounded-lg bg-grayscale-12 text-grayscale-1 font-mono text-xs uppercase font-bold tracking-wider hover:opacity-90 active:scale-95 transition-all">
+    EXPLORE ARCHIVE →
+  </a>
 </div>
 
 This data changed the way I understood the project.

@@ -22,6 +22,11 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
+
+// Exact reading time in Spanish
+const rawBody = post.body || "";
+const wordCount = rawBody.trim().split(/\s+/).filter(Boolean).length;
+const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min de lectura`;
 ---
 
 <Layout
@@ -55,182 +60,257 @@ const { Content, headings } = await render(post);
 
   <Navbar />
 
-  <!-- Atmospheric Editorial Scroll Vignettes (Top & Bottom Blur/Fade) -->
+  <!-- Atmospheric Editorial Scroll Vignettes -->
   <div class="blog-vignette-top"></div>
   <div class="blog-vignette-bottom"></div>
 
   <!-- Vertical Scroll Progress Ruler -->
   <ScrollRuler />
 
-  <main class="min-h-screen bg-grayscale-1 px-4 sm:px-6">
-    <div class="max-w-6xl mx-auto pt-28 pb-16 relative">
-      <div class="flex flex-col lg:flex-row items-start justify-center gap-10 lg:gap-14">
-
-        <!-- Left Sidebar: TOC & Reactions (Desktop Sticky) -->
-        <aside class="hidden lg:flex flex-col w-56 xl:w-60 sticky top-28 h-fit gap-5 shrink-0">
-          <BlogTOC headings={headings} lang="es" />
-          <div class="border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-3">
-            <span class="text-[10px] font-mono uppercase tracking-widest text-grayscale-10 mb-1 block">Reacciones</span>
-            <BlogReactions slug={Astro.params.slug!} lang="es" />
-          </div>
-        </aside>
-
-        <!-- Main Article Column -->
-        <div class="max-w-2xl w-full flex flex-col gap-8">
+  <main class="min-h-screen bg-grayscale-1 px-4 sm:px-6 lg:px-8 py-10 md:py-16 pt-24 md:pt-28">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Koyeb 3-Column 12-Grid Architecture -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-10 items-start">
+        
+        <!-- LEFT SIDEBAR: Navigation, Quick Context & TOC (Sticky Desktop) -->
+        <aside class="hidden lg:flex flex-col lg:col-span-3 sticky top-24 h-fit gap-6 self-start">
           <!-- Back Link -->
           <a
             href="/es/blog/"
             data-cuelume-press
             data-cuelume-release
-            class="group flex items-center gap-1.5 text-xs text-grayscale-11 hover:text-accent-9 transition-colors w-fit font-mono"
+            class="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-grayscale-10 hover:text-grayscale-12 transition-colors w-fit"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="group-hover:-translate-x-0.5 transition-transform"
-              ><path d="m15 18-6-6 6-6"></path></svg
-            >
-            Volver al blog
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+            TODOS LOS ARTÍCULOS
           </a>
 
-          <!-- Header -->
-          <header class="flex flex-col gap-3">
-            <div
-              class="flex items-center justify-between text-[10px] font-mono text-grayscale-10"
-            >
-              <span>{post.data.date}</span>
-              <span
-                class="px-2.5 py-0.5 bg-grayscale-3 text-grayscale-11 rounded-full font-medium text-[9px] shadow-3xs"
-                >{post.data.category}</span
-              >
+          <!-- Quick Context / About Essay Widget (Koyeb-style) -->
+          <div class="rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white/70 dark:bg-[#16171d]/70 backdrop-blur-md p-4 flex flex-col gap-3 shadow-xs">
+            <div class="flex items-center justify-between text-[10px] font-mono uppercase text-grayscale-10 tracking-wider">
+              <span class="flex items-center gap-1.5 font-semibold text-grayscale-12">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent-9"></span>
+                SOBRE ESTE ENSAYO
+              </span>
+              <span>[DOC]</span>
             </div>
-            <h1
-              class="text-grayscale-12 font-semibold tracking-tight text-xl sm:text-2xl mt-1 leading-snug"
-            >
-              {post.data.title}
-            </h1>
-            <p class="text-grayscale-11 text-sm leading-relaxed mt-1">
-              {post.data.description}
+            <p class="text-xs text-grayscale-11 leading-relaxed">
+              Una investigación sobre la memoria colectiva, representación arquitectónica e identidad caribeña en plataformas digitales.
             </p>
-          </header>
-
-          <!-- Post Cover Image -->
-          <div
-            class="w-full aspect-[16/9] overflow-hidden rounded-lg bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/50"
-          >
-            <img
-              src={post.data.image}
-              alt={post.data.title}
-              class="w-full h-full object-cover"
-            />
+            <div class="pt-2 border-t border-grayscale-3/60 dark:border-grayscale-3/30 flex items-center justify-between text-[10px] font-mono text-grayscale-10">
+              <span>TEMA: CULTURA / DISEÑO</span>
+              <span>COSTA RICA</span>
+            </div>
           </div>
 
-          <!-- Article Content -->
-          <article class="prose w-full">
-            <Content />
-          </article>
-
-          <!-- Mobile / Tablet Reactions Bar -->
-          <div class="lg:hidden flex flex-col gap-2 p-4 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 shadow-xs">
-            <span class="text-[11px] font-mono text-grayscale-10">Reacciones:</span>
-            <BlogReactions slug={Astro.params.slug!} lang="es" />
+          <!-- Table of Contents Component -->
+          <div class="pt-2">
+            <BlogTOC headings={headings} lang="es" />
           </div>
+        </aside>
 
-          <!-- Newsletter Section -->
-          <section
-            class="mt-4 p-5 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 flex flex-col gap-4 shadow-xs"
-          >
-            <h3 class="text-grayscale-12 font-semibold text-sm">
-              Suscríbete al boletín
-            </h3>
-            <p class="text-grayscale-11 text-xs leading-relaxed">
-              Recibe notificaciones cada vez que publique un nuevo artículo sobre
-              diseño, ingeniería y rendimiento web. Sin spam, desactívalo en
-              cualquier momento.
-            </p>
-            <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-1">
-              <input
-                type="email"
-                required
-                placeholder="tu@email.com"
-                class="flex-1 w-full px-3 py-2 text-xs rounded-lg border border-grayscale-3 bg-grayscale-1 text-grayscale-12 focus:outline-none focus:border-accent-9 transition-colors"
+        <!-- CENTER COLUMN: Main Article Container Card (Koyeb-style) -->
+        <div class="col-span-1 lg:col-span-6 w-full flex flex-col gap-8">
+          
+          <!-- Article Box Container -->
+          <div class="w-full rounded-2xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-[#121316] p-6 sm:p-10 md:p-12 shadow-[0_2px_16px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_16px_rgba(0,0,0,0.25)] flex flex-col gap-8">
+            
+            <!-- Mobile Back Link -->
+            <a href="/es/blog/" class="lg:hidden flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-grayscale-10 hover:text-grayscale-12 transition-colors w-fit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              TODOS LOS ARTÍCULOS
+            </a>
+
+            <!-- Article Header -->
+            <header class="flex flex-col gap-4">
+              <!-- Meta Row -->
+              <div class="flex flex-wrap items-center gap-3 text-xs font-mono uppercase text-grayscale-10 tracking-wider pb-4 border-b border-grayscale-3/60 dark:border-grayscale-3/30 font-medium">
+                <span>{post.data.date}</span>
+                <span class="text-grayscale-4 dark:text-grayscale-3">•</span>
+                <span>{readTime}</span>
+                <span class="text-grayscale-4 dark:text-grayscale-3">•</span>
+                <span class="text-accent-9 font-semibold">{post.data.category}</span>
+              </div>
+
+              <!-- Main Title -->
+              <h1 class="text-2xl sm:text-3xl md:text-[34px] font-bold tracking-tight text-grayscale-12 leading-[1.22] font-sans">
+                {post.data.title}
+              </h1>
+
+              <!-- Lead Subtitle -->
+              <p class="text-base sm:text-lg text-grayscale-11 leading-relaxed font-normal">
+                {post.data.description}
+              </p>
+            </header>
+
+            <!-- Hero Cover Image Presentation (Koyeb Documentary Style) -->
+            <div class="w-full overflow-hidden rounded-xl border border-grayscale-3 dark:border-grayscale-3/50 bg-grayscale-2 shadow-xs">
+              <img 
+                src={post.data.image} 
+                alt={post.data.title} 
+                class="w-full h-auto object-cover max-h-[460px]" 
               />
-              <button
-                type="submit"
-                data-cuelume-press
-                data-cuelume-release
-                class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
-              >
-                Suscribirse
-              </button>
-            </form>
-            <p id="subscribe-message" class="text-xs font-mono hidden"></p>
-          </section>
+              <div class="px-4 py-2.5 bg-grayscale-2/90 dark:bg-grayscale-2/40 border-t border-grayscale-3/60 dark:border-grayscale-3/30 flex items-center justify-between text-[10px] font-mono text-grayscale-10">
+                <span class="uppercase tracking-wider">ARCHIVO REGIONAL // COSTA RICA</span>
+                <span class="uppercase tracking-wider">FOTO: XAVIER SANDI CASTILLO</span>
+              </div>
+            </div>
 
-          <script>
-            import { play } from "cuelume";
+            <!-- Article Prose Body -->
+            <article class="prose max-w-full">
+              <Content />
+            </article>
 
-            const form = document.getElementById(
-              "subscribe-form",
-            ) as HTMLFormElement;
-            const message = document.getElementById(
-              "subscribe-message",
-            ) as HTMLParagraphElement;
+            <!-- Mobile Only: Reactions & Author Footer Box -->
+            <div class="lg:hidden flex flex-col gap-6 pt-6 border-t border-grayscale-3 dark:border-grayscale-3/40">
+              <div class="flex items-center gap-3 p-3.5 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-grayscale-2/50">
+                <img src="/profile.webp" alt="Kirian Luna" class="w-10 h-10 rounded-full border border-accent-9 object-cover shrink-0" />
+                <div class="flex flex-col">
+                  <span class="text-xs font-semibold text-grayscale-12">Kirian Luna</span>
+                  <span class="text-[10px] font-mono text-grayscale-10">Creative Engineer & Designer</span>
+                </div>
+              </div>
 
-            form?.addEventListener("submit", async (e) => {
-              e.preventDefault();
-              const emailInput = form.querySelector(
-                'input[type="email"]',
-              ) as HTMLInputElement;
-              const email = emailInput.value;
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] font-mono uppercase tracking-widest text-grayscale-10">REACCIONES</span>
+                <BlogReactions slug={Astro.params.slug!} lang="es" />
+              </div>
+            </div>
 
-              const button = form.querySelector("button") as HTMLButtonElement;
-              const originalText = button.textContent;
-              button.disabled = true;
-              button.textContent = "Suscribiendo...";
+            <!-- In-Article Newsletter / Subscription (Koyeb-style) -->
+            <section class="mt-4 p-6 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-gradient-to-b from-grayscale-2/40 to-grayscale-2/80 dark:from-[#16171d] dark:to-[#111215] flex flex-col gap-3 shadow-xs">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[9px] font-mono uppercase font-bold tracking-wider bg-accent-9/10 text-accent-9 border border-accent-9/20">BOLETÍN</span>
+              </div>
+              <h3 class="text-grayscale-12 font-semibold text-sm">Suscríbete a futuros ensayos</h3>
+              <p class="text-grayscale-11 text-xs leading-relaxed">
+                Recibe notificaciones cuando publique nuevos artículos sobre arquitectura, código creativo y rendimiento web. Cero spam.
+              </p>
+              <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-2">
+                <input 
+                  type="email" 
+                  required 
+                  placeholder="tu@email.com" 
+                  class="flex-1 w-full px-3 py-2 text-xs rounded-lg border border-grayscale-3 bg-white dark:bg-black/30 text-grayscale-12 focus:outline-none focus:border-accent-9 transition-colors font-mono"
+                />
+                <button 
+                  type="submit" 
+                  data-cuelume-press
+                  data-cuelume-release
+                  class="w-full sm:w-auto px-5 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-mono uppercase font-bold tracking-wider rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                >
+                  SUSCRIBIRSE
+                </button>
+              </form>
+              <p id="subscribe-message" class="text-xs font-mono hidden"></p>
+            </section>
 
-              try {
-                const res = await fetch("/api/subscribe", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ email, lang: "es" }),
-                });
-                const data = await res.json();
-
-                if (res.ok) {
-                  play("success");
-                  message.textContent = "✓ ¡Suscrito con éxito!";
-                  message.className = "text-xs font-mono text-green-600 block";
-                  form.reset();
-                } else {
-                  play("error");
-                  message.textContent = `✗ ${data.error || "Algo salió mal"}`;
-                  message.className = "text-xs font-mono text-red-600 block";
-                }
-              } catch (err) {
-                play("error");
-                message.textContent =
-                  "✗ Error de conexión. Por favor intenta de nuevo.";
-                message.className = "text-xs font-mono text-red-600 block";
-              } finally {
-                button.disabled = false;
-                button.textContent = originalText;
-                message.classList.remove("hidden");
-              }
-            });
-          </script>
+          </div>
 
           <!-- Footer -->
           <Footer />
 
         </div>
+
+        <!-- RIGHT SIDEBAR: Authors, Share, Reactions & Promo Widget (Sticky Desktop) -->
+        <aside class="hidden lg:flex flex-col lg:col-span-3 sticky top-24 h-fit gap-6 self-start">
+          
+          <!-- /AUTHORS -->
+          <div class="flex flex-col gap-3">
+            <div class="text-[10px] font-mono uppercase tracking-widest text-grayscale-10">/AUTORES</div>
+            <div class="flex items-center gap-3 p-3.5 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white/70 dark:bg-[#16171d]/70 backdrop-blur-md shadow-xs">
+              <img src="/profile.webp" alt="Kirian Luna" class="w-10 h-10 rounded-full border border-accent-9 object-cover shrink-0" />
+              <div class="flex flex-col min-w-0">
+                <span class="text-xs font-semibold text-grayscale-12 truncate">Kirian Luna</span>
+                <span class="text-[10px] font-mono text-grayscale-10 truncate">Creative Engineer & Designer</span>
+                <span class="text-[9px] font-mono text-accent-9 mt-0.5">Costa Rica</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- /SHARE -->
+          <div class="flex flex-col gap-3">
+            <div class="text-[10px] font-mono uppercase tracking-widest text-grayscale-10">/COMPARTIR</div>
+            <ul class="flex items-center gap-2">
+              <li>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(Astro.url.href)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-10 h-10 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-[#16171d] flex items-center justify-center text-grayscale-11 hover:text-grayscale-12 hover:border-grayscale-12 transition-all cursor-pointer shadow-xs"
+                  aria-label="Compartir en X"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-10 h-10 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-[#16171d] flex items-center justify-center text-grayscale-11 hover:text-grayscale-12 hover:border-grayscale-12 transition-all cursor-pointer shadow-xs"
+                  aria-label="Compartir en LinkedIn"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.2a1.66 1.66 0 0 0-1.66 1.66c0 .92.74 1.66 1.66 1.66.92 0 1.66-.74 1.66-1.66 0-.92-.74-1.66-1.66-1.66"/>
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <button
+                  id="copy-share-btn"
+                  type="button"
+                  class="w-10 h-10 rounded-lg border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-[#16171d] flex items-center justify-center text-grayscale-11 hover:text-grayscale-12 hover:border-grayscale-12 transition-all cursor-pointer shadow-xs relative group"
+                  aria-label="Copiar enlace"
+                >
+                  <svg id="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                  </svg>
+                  <svg id="copied-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden text-green-500">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- /REACTIONS (Pixel-art hand gestures) -->
+          <div class="flex flex-col gap-3">
+            <div class="text-[10px] font-mono uppercase tracking-widest text-grayscale-10">/REACCIONES</div>
+            <div class="p-3.5 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white/70 dark:bg-[#16171d]/70 backdrop-blur-md shadow-xs">
+              <BlogReactions slug={Astro.params.slug!} lang="es" />
+            </div>
+          </div>
+
+          <!-- Contextual CTA Card (Koyeb-style) -->
+          <div class="rounded-xl border border-grayscale-3 dark:border-grayscale-3/50 p-5 bg-gradient-to-b from-white to-grayscale-2/50 dark:from-[#181920] dark:to-[#121316] flex flex-col gap-3 shadow-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] font-mono uppercase px-2 py-0.5 rounded-sm bg-accent-9/10 text-accent-9 border border-accent-9/20 font-bold tracking-wider">[DISPONIBLE // 2026]</span>
+            </div>
+            <h4 class="text-xs font-semibold text-grayscale-12 leading-snug">
+              Diseño & Desarrollo Web de Alto Impacto
+            </h4>
+            <p class="text-[11px] text-grayscale-11 leading-relaxed">
+              ¿Tienes un proyecto ambicioso o deseas colaborar en una experiencia web de alto rendimiento? Conectemos.
+            </p>
+            <a
+              href="/es/contact"
+              data-cuelume-press
+              data-cuelume-release
+              class="w-full text-center py-2.5 px-3 rounded-lg bg-grayscale-12 text-grayscale-1 text-[11px] font-mono uppercase font-bold tracking-wider hover:opacity-90 active:scale-95 transition-all mt-1"
+            >
+              HABLEMOS →
+            </a>
+          </div>
+
+        </aside>
 
       </div>
     </div>
@@ -238,36 +318,120 @@ const { Content, headings } = await render(post);
 </Layout>
 
 <script>
-  const setupLinks = () => {
-    const links = document.querySelectorAll("article.prose a");
-    links.forEach((link) => {
-      if (link.getAttribute("href")?.startsWith("http")) {
-        link.setAttribute("target", "_blank");
-        link.setAttribute("rel", "noopener noreferrer");
+  import { play } from "cuelume";
+
+  // 1. Share copy link handler
+  const setupShareCopy = () => {
+    const copyBtn = document.getElementById("copy-share-btn");
+    const copyIcon = document.getElementById("copy-icon");
+    const copiedIcon = document.getElementById("copied-icon");
+
+    if (copyBtn && copyIcon && copiedIcon) {
+      copyBtn.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          play("tick");
+          copyIcon.classList.add("hidden");
+          copiedIcon.classList.remove("hidden");
+          setTimeout(() => {
+            copyIcon.classList.remove("hidden");
+            copiedIcon.classList.add("hidden");
+          }, 2000);
+        } catch {
+          // Fallback
+        }
+      };
+    }
+  };
+
+  // 2. Newsletter subscription handler
+  const setupNewsletter = () => {
+    const form = document.getElementById('subscribe-form') as HTMLFormElement;
+    const message = document.getElementById('subscribe-message') as HTMLParagraphElement;
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+      const email = emailInput?.value;
+      
+      const button = form.querySelector('button') as HTMLButtonElement;
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = 'Suscribiendo...';
+      
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, lang: 'es' })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          play("success");
+          message.textContent = '✓ ¡Suscripción confirmada!';
+          message.className = 'text-xs font-mono text-green-600 block mt-1';
+          form.reset();
+        } else {
+          play("error");
+          message.textContent = `✗ ${data.error || 'Algo salió mal'}`;
+          message.className = 'text-xs font-mono text-red-600 block mt-1';
+        }
+      } catch (err) {
+        play("error");
+        message.textContent = '✗ Error de conexión. Inténtalo de nuevo.';
+        message.className = 'text-xs font-mono text-red-600 block mt-1';
+      } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+        message.classList.remove('hidden');
       }
     });
   };
 
+  // 3. Setup external links safely
+  const setupLinks = () => {
+    const links = document.querySelectorAll('article.prose a');
+    links.forEach(link => {
+      if (link.getAttribute('href')?.startsWith('http')) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+      }
+    });
+  };
+
+  setupShareCopy();
+  setupNewsletter();
   setupLinks();
-  document.addEventListener("astro:after-swap", setupLinks);
+
+  document.addEventListener('astro:page-load', () => {
+    setupShareCopy();
+    setupNewsletter();
+    setupLinks();
+  });
+  document.addEventListener('astro:after-swap', () => {
+    setupShareCopy();
+    setupNewsletter();
+    setupLinks();
+  });
 </script>
 
 <style is:global>
   /* Markdown styling scoped to the article */
   article.prose a {
     color: var(--color-accent-9);
-    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: 3px;
     font-weight: 500;
     transition: color 0.15s ease;
   }
   article.prose a:hover {
     color: var(--color-accent-10);
-    text-decoration: none;
   }
   article.prose hr {
     border: none;
     text-align: center;
-    margin: 2.5rem 0;
+    margin: 3rem 0;
   }
   article.prose hr::after {
     content: "···";
@@ -277,64 +441,81 @@ const { Content, headings } = await render(post);
     font-weight: bold;
   }
   article.prose h2 {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-grayscale-12);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+  }
+  article.prose h3 {
+    font-size: 1.05rem;
     font-weight: 600;
     color: var(--color-grayscale-12);
-    margin-top: 2rem;
+    margin-top: 1.75rem;
     margin-bottom: 0.75rem;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
   article.prose p {
-    font-size: 0.875rem;
-    line-height: 1.625;
+    font-size: 0.9375rem;
+    line-height: 1.7;
     color: var(--color-grayscale-11);
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.35rem;
+  }
+  article.prose blockquote {
+    border-left: 3px solid var(--color-accent-9);
+    padding-left: 1.25rem;
+    margin: 2rem 0;
+    color: var(--color-grayscale-12);
+    font-style: italic;
+    font-size: 1.025rem;
+    line-height: 1.6;
   }
   article.prose code {
-    font-family: var(--font-geistmono);
+    font-family: var(--font-jetbrains-mono, monospace);
     font-size: 0.8125rem;
     background-color: var(--color-grayscale-2);
-    padding: 0.125rem 0.25rem;
+    padding: 0.15rem 0.35rem;
     border-radius: 4px;
     border: 1px solid var(--color-grayscale-3);
   }
   article.prose pre {
     background-color: var(--color-grayscale-2);
     border: 1px solid var(--color-grayscale-3);
-    padding: 1rem;
-    border-radius: 8px;
+    padding: 1.25rem;
+    border-radius: 10px;
     overflow-x: auto;
-    margin-bottom: 1.5rem;
+    margin: 1.75rem 0;
   }
   article.prose pre code {
     background-color: transparent;
     padding: 0;
     border: none;
-    border-radius: 0;
   }
   article.prose ul {
     list-style-type: disc;
-    padding-left: 1.25rem;
-    margin-bottom: 1.25rem;
+    padding-left: 1.35rem;
+    margin-bottom: 1.35rem;
     color: var(--color-grayscale-11);
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
   }
   article.prose li {
     margin-bottom: 0.5rem;
   }
-  /* Table styling */
   article.prose table {
     display: block;
     width: 100%;
     overflow-x: auto;
     border-collapse: collapse;
-    margin-bottom: 1.5rem;
+    margin: 2rem 0;
     font-size: 0.8125rem;
+    font-family: var(--font-jetbrains-mono, monospace);
     -webkit-overflow-scrolling: touch;
   }
-  article.prose th,
-  article.prose td {
-    padding: 0.5rem 0.75rem;
+  article.prose th, article.prose td {
+    padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--color-grayscale-3);
     text-align: left;
     white-space: nowrap;
@@ -342,5 +523,9 @@ const { Content, headings } = await render(post);
   article.prose th {
     font-weight: 600;
     color: var(--color-grayscale-12);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    background-color: var(--color-grayscale-2);
   }
 </style>

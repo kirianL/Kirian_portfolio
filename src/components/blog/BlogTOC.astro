@@ -12,118 +12,79 @@ interface Props {
 
 const { headings = [], lang = "en" } = Astro.props;
 const backToTopText = lang === "es" ? "↑ volver arriba" : "↑ back to top";
+const tocLabel = lang === "es" ? "/ÍNDICE" : "/INDEX";
 
-// Only main chapters (h2) for a clean, non-cluttered editorial index
+// Main chapters (h2) for an authoritative, clean editorial index
 const tocHeadings = headings.filter((h) => h.depth === 2);
 ---
 
 <nav id="blog-toc-nav" class="flex flex-col gap-3 select-none w-full" aria-label="Table of contents">
+  <div class="text-[10px] font-mono uppercase tracking-widest text-grayscale-10 flex items-center justify-between pb-1">
+    <div class="flex items-center gap-1.5">
+      <span class="w-1.5 h-1.5 rounded-full bg-accent-9"></span>
+      <span>{tocLabel}</span>
+    </div>
+    <span class="text-[9px] text-grayscale-10">{tocHeadings.length} SECTIONS</span>
+  </div>
+
+  {tocHeadings.length > 0 && (
+    <div id="toc-list" class="border-s-2 border-grayscale-3 dark:border-grayscale-3/40 flex flex-col">
+      {tocHeadings.map((h, index) => {
+        const num = String(index + 1).padStart(2, "0");
+        return (
+          <a
+            href={`#${h.slug}`}
+            data-toc-target={h.slug}
+            class="toc-item-link -ms-[2px] border-s-2 border-transparent ps-3 py-1.5 text-[11px] font-mono uppercase tracking-wider text-grayscale-10 hover:text-grayscale-12 hover:ps-3.5 transition-all leading-snug cursor-pointer flex items-baseline gap-1.5"
+          >
+            <span class="toc-item-num text-[10px] opacity-40 shrink-0">{num}.</span>
+            <span class="toc-item-text truncate">{h.text}</span>
+          </a>
+        );
+      })}
+    </div>
+  )}
+
   <!-- Back to Top Link -->
   <button
     id="toc-back-to-top"
     type="button"
     data-cuelume-hover="tick"
-    class="text-xs font-mono text-grayscale-10 hover:text-accent-9 transition-colors cursor-pointer text-left w-fit flex items-center gap-1.5 group mb-1"
+    class="text-[11px] font-mono text-grayscale-10 hover:text-accent-9 transition-colors cursor-pointer text-left w-fit flex items-center gap-1.5 group pt-1 mt-1"
   >
     <span class="group-hover:-translate-y-0.5 transition-transform duration-200">{backToTopText}</span>
   </button>
-
-  {tocHeadings.length > 0 && (
-    <ul id="toc-list" class="flex flex-col gap-2 text-xs font-mono">
-      {tocHeadings.map((h, index) => {
-        const num = String(index + 1).padStart(2, "0");
-        return (
-          <li class="flex items-start">
-            <a
-              href={`#${h.slug}`}
-              data-toc-target={h.slug}
-              class="toc-item-link text-grayscale-10 hover:text-grayscale-12 leading-relaxed cursor-pointer py-0.5"
-            >
-              <span class="toc-item-num opacity-40 mr-1.5 shrink-0 font-mono text-[10px]">{num}.</span>
-              <span class="toc-item-text">
-                {h.text}
-                <span class="toc-strike-line" aria-hidden="true"></span>
-              </span>
-            </a>
-          </li>
-        );
-      })}
-    </ul>
-  )}
 </nav>
 
 <style is:global>
   .toc-item-link {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    transform-origin: left center;
+    transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                padding 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .toc-item-num {
-    transition: opacity 0.3s ease, color 0.3s ease, font-weight 0.3s ease;
-  }
-
-  .toc-item-text {
-    position: relative;
-    display: inline-block;
-  }
-
-  /* Fluid animated ink strikethrough line */
-  .toc-strike-line {
-    position: absolute;
-    left: -2px;
-    right: -2px;
-    top: 50%;
-    height: 1.5px;
-    background: currentColor;
-    border-radius: 1px;
-    transform-origin: left center;
-    transform: scaleX(0);
-    opacity: 0.85;
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 0.3s ease;
-    pointer-events: none;
-  }
-
-  /* Passed / Strikethrough state (Tachado fluido) */
   .toc-item-link.is-passed {
-    opacity: 0.35;
-    transform: translateX(0);
+    opacity: 0.45;
   }
 
   .toc-item-link.is-passed:hover {
     opacity: 0.85;
   }
 
-  .toc-item-link.is-passed .toc-strike-line {
-    transform: scaleX(1);
-    opacity: 0.7;
-  }
-
-  .toc-item-link.is-passed .toc-item-num {
-    opacity: 0.25;
-  }
-
-  /* Active / Currently reading state */
+  /* Active / Currently reading state (Koyeb signature active border) */
   .toc-item-link.is-active {
-    color: var(--color-grayscale-12, #ffffff);
+    border-color: var(--color-accent-9, #eb5e28) !important;
+    color: var(--color-grayscale-12, #ffffff) !important;
     font-weight: 600;
     opacity: 1;
-    transform: translateX(3.5px);
+    padding-inline-start: 1rem;
   }
 
   .toc-item-link.is-active .toc-item-num {
-    color: var(--color-accent-9, #f97316);
+    color: var(--color-accent-9, #eb5e28);
     opacity: 1;
     font-weight: 700;
-  }
-
-  .toc-item-link.is-active .toc-strike-line {
-    transform: scaleX(0);
   }
 </style>
 
@@ -221,7 +182,6 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
               item.passed = true;
             }
           } else if (nextRect && nextRect.top <= triggerY) {
-            // Passed completely into the next section -> Strikethrough with smooth sweep
             item.link.classList.add("is-passed");
             item.link.classList.remove("is-active");
             if (!item.passed) {
@@ -232,12 +192,10 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
               }
             }
           } else if (rect.top <= triggerY) {
-            // Currently active reading section
             item.link.classList.remove("is-passed");
             item.link.classList.add("is-active");
             item.passed = false;
           } else {
-            // Upcoming section
             item.link.classList.remove("is-passed", "is-active");
             item.passed = false;
           }
@@ -257,7 +215,6 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
       window.addEventListener("scroll", onScroll, { passive: true, signal });
       window.addEventListener("resize", onScroll, { passive: true, signal });
 
-      // Run immediately
       checkScroll();
     };
 
