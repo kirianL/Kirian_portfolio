@@ -10,7 +10,7 @@ const { name, title } = Astro.props;
 <div class="banner-hero relative h-44 w-full sm:h-48">
   <div class="js-liquid-frame absolute inset-0 z-[1] overflow-hidden bg-[#F4F5F8] transition-colors duration-[780ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none dark:bg-[#16171D]">
     <canvas
-      class="js-liquid-banner absolute inset-0 block h-full w-full cursor-default opacity-0 transition-opacity duration-200 motion-reduce:transition-none"
+      class="js-liquid-banner absolute inset-0 block h-full w-full cursor-default"
       aria-hidden="true"
     ></canvas>
   </div>
@@ -421,7 +421,6 @@ const { name, title } = Astro.props;
 
     resize();
     draw();
-    canvas.classList.remove("opacity-0");
     play();
 
     queueMicrotask(() => {

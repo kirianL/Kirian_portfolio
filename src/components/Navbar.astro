@@ -287,88 +287,38 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
       };
     }
 
-    // 2. Native In-Place Language Switch (Instant, 0 page reload, perfectly preserved scroll)
+    // 2. Language Switch Scroll Preservation (Keep exact scroll position when toggling ES/EN)
     const langLinks = document.querySelectorAll("[data-lang-switch]");
     langLinks.forEach((link) => {
-      link.addEventListener("click", async (e) => {
-        const targetHref = link.getAttribute("href");
-        if (!targetHref) return;
-
-        const currentPath = window.location.pathname.replace(/\/$/, "");
-        const targetPath = targetHref.replace(/\/$/, "");
-        if (currentPath === targetPath) return;
-
-        e.preventDefault();
-
-        if ((window as any).__isLanguageSwitching) return;
-        (window as any).__isLanguageSwitching = true;
-
-        try {
-          const res = await fetch(targetHref);
-          if (!res.ok) throw new Error("Fetch failed");
-          const html = await res.text();
-          const parser = new DOMParser();
-          const newDoc = parser.parseFromString(html, "text/html");
-
-          const performSwap = () => {
-            // Swap main content seamlessly in place
-            const currentMain = document.querySelector("main");
-            const newMain = newDoc.querySelector("main");
-            if (currentMain && newMain) {
-              currentMain.replaceWith(newMain);
-            }
-
-            // Swap footer seamlessly
-            const currentFooter = document.querySelector("footer");
-            const newFooter = newDoc.querySelector("footer");
-            if (currentFooter && newFooter) {
-              currentFooter.replaceWith(newFooter);
-            }
-
-            // Swap navbar to update links & active language indicator
-            const currentNav = document.querySelector("nav");
-            const newNav = newDoc.querySelector("nav");
-            if (currentNav && newNav) {
-              currentNav.replaceWith(newNav);
-            }
-
-            // Update document title and lang attribute
-            document.title = newDoc.title;
-            document.documentElement.lang =
-              newDoc.documentElement.lang ||
-              (targetPath.startsWith("/es") ? "es" : "en");
-
-            // Update URL without page reload
-            window.history.pushState({ path: targetHref }, "", targetHref);
-
-            // Reinitialize interactive components without resetting scroll
-            document.dispatchEvent(new Event("astro:page-load"));
-          };
-
-          if ("startViewTransition" in document) {
-            (document as any).startViewTransition(() => {
-              performSwap();
-            });
-          } else {
-            performSwap();
-          }
-        } catch {
-          window.location.href = targetHref;
-        } finally {
-          (window as any).__isLanguageSwitching = false;
-        }
+      link.addEventListener("click", () => {
+        const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+        sessionStorage.setItem("portfolio_lang_scroll", scrollY.toString());
       });
     });
   };
 
+  const restoreLangScroll = () => {
+    const savedScroll = sessionStorage.getItem("portfolio_lang_scroll");
+    if (savedScroll !== null) {
+      const targetY = parseInt(savedScroll, 10);
+      window.scrollTo({ top: targetY, behavior: "instant" });
+      sessionStorage.removeItem("portfolio_lang_scroll");
+    }
+  };
+
   initNavbarInteractions();
+  restoreLangScroll();
 
   document.addEventListener("astro:page-load", () => {
     initNavbarInteractions();
+    restoreLangScroll();
   });
 
-  window.addEventListener("popstate", () => {
-    initNavbarInteractions();
+  document.addEventListener("astro:before-swap", (e: any) => {
+    const savedScroll = sessionStorage.getItem("portfolio_lang_scroll");
+    if (savedScroll !== null && e.newDocument) {
+      e.newDocument.documentElement.scrollTop = parseInt(savedScroll, 10);
+    }
   });
 </script>
 
@@ -418,12 +368,5 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
     45%, 100% {
       background-position: -50% 0;
     }
-  }
-
-  /* Silky smooth in-place cross-fade for language swap */
-  :global(::view-transition-old(root)),
-  :global(::view-transition-new(root)) {
-    animation-duration: 160ms;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 </style>
