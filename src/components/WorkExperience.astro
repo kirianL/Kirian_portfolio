@@ -269,29 +269,32 @@ const defaultFolderStyle = {
 <style>
   /* SVG Folder Flap Animation */
   .folder-svg {
-    perspective: 300px;
+    perspective: 400px;
   }
 
   .folder-flap {
     transform-origin: 2px 14px;
-    transition: transform 380ms cubic-bezier(0.34, 1.4, 0.64, 1);
+    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .folder-sheet {
-    transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: center bottom;
+    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .folder-chevron {
     transform: rotate(0deg);
-    transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* Grid collapsible drawer */
+  /* Grid collapsible drawer - Pure butter smooth */
   .folder-collapsible-content {
     display: grid;
     grid-template-rows: 0fr;
     opacity: 0;
-    transition: grid-template-rows 420ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      grid-template-rows 400ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 320ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* OPEN STATE */
@@ -305,30 +308,38 @@ const defaultFolderStyle = {
   }
 
   .minimal-folder-item[data-open="true"] .folder-flap {
-    transform: rotateX(-45deg) skewX(-10deg) scaleY(0.85);
+    transform: rotateX(-32deg) scaleY(0.88) translateY(0.5px);
   }
 
   .minimal-folder-item[data-open="true"] .folder-sheet {
-    transform: translateY(-2px);
+    transform: translateY(-2.5px);
   }
 
-  /* Staggered entrance for items */
+  /* Content items transition smoothly as a unified block */
+  .folder-collapsible-inner {
+    overflow: hidden;
+    min-height: 0;
+    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .minimal-folder-item[data-open="true"] .folder-collapsible-inner {
+    transform: translateY(0);
+  }
+
+  .minimal-folder-item[data-open="false"] .folder-collapsible-inner {
+    transform: translateY(-4px);
+  }
+
   .folder-exp-item {
-    transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1), transform 380ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .minimal-folder-item[data-open="true"] .folder-exp-item {
     opacity: 1;
-    transform: translateY(0);
-    transition-delay: var(--stagger-delay, 0ms);
   }
 
-  /* CLOSED STATE */
   .minimal-folder-item[data-open="false"] .folder-exp-item {
-    opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity 160ms ease, transform 180ms ease;
-    transition-delay: 0ms !important;
+    opacity: 0.2;
   }
 </style>
 

@@ -192,7 +192,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           </svg>
         </button>
 
-        <!-- Language Selector (Minimalist active-pills layout, quiet & bordered) -->
+        <!-- Language Selector (Minimalist active-pills layout with Costa Rica micro-animation) -->
         <div
           class="flex items-center gap-0.5 font-mono text-[10px] text-grayscale-10 bg-grayscale-2/60 p-0.5 rounded-lg border border-grayscale-3/40 shrink-0"
         >
@@ -202,6 +202,8 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
             data-lang-switch
             data-cuelume-hover="tick"
             data-cuelume-toggle
+            aria-label="Switch to English"
+            title="English"
             class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "en" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
           >
             EN
@@ -212,9 +214,34 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
             data-lang-switch
             data-cuelume-hover="tick"
             data-cuelume-toggle
-            class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "es" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
+            aria-label="Español (Costa Rica)"
+            title="Español (Costa Rica)"
+            class={`cr-tico-btn px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-200 flex items-center justify-center ${currentLocale === "es" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 shadow-3xs" : "opacity-70 hover:opacity-100"}`}
           >
-            ES
+            <!-- Costa Rica Minimalist Micro Flag -->
+            <span
+              class="cr-flag-container inline-flex items-center justify-center w-[14px] h-[9.5px] rounded-[1.5px] overflow-hidden border border-black/10 dark:border-white/15 shadow-2xs shrink-0 select-none"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 15 10"
+                class="w-full h-full block"
+                preserveAspectRatio="none"
+              >
+                <!-- Blue top stripe (1/6) -->
+                <rect width="15" height="1.67" fill="#002B7F"></rect>
+                <!-- White stripe (1/6) -->
+                <rect y="1.67" width="15" height="1.67" fill="#FFFFFF"></rect>
+                <!-- Red center stripe (2/6) -->
+                <rect y="3.33" width="15" height="3.34" fill="#CE1126"></rect>
+                <!-- White stripe (1/6) -->
+                <rect y="6.67" width="15" height="1.67" fill="#FFFFFF"></rect>
+                <!-- Blue bottom stripe (1/6) -->
+                <rect y="8.33" width="15" height="1.67" fill="#002B7F"></rect>
+              </svg>
+              <!-- Soft satin sheen reflection -->
+              <span class="cr-flag-sheen"></span>
+            </span>
           </a>
         </div>
       </div>
@@ -260,40 +287,143 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
       };
     }
 
-    // 2. Language Switch Scroll Preservation (Keep exact scroll position when toggling ES/EN)
+    // 2. Native In-Place Language Switch (Instant, 0 page reload, perfectly preserved scroll)
     const langLinks = document.querySelectorAll("[data-lang-switch]");
     langLinks.forEach((link) => {
-      link.addEventListener("click", () => {
-        const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
-        sessionStorage.setItem("portfolio_lang_scroll", scrollY.toString());
+      link.addEventListener("click", async (e) => {
+        const targetHref = link.getAttribute("href");
+        if (!targetHref) return;
+
+        const currentPath = window.location.pathname.replace(/\/$/, "");
+        const targetPath = targetHref.replace(/\/$/, "");
+        if (currentPath === targetPath) return;
+
+        e.preventDefault();
+
+        if ((window as any).__isLanguageSwitching) return;
+        (window as any).__isLanguageSwitching = true;
+
+        try {
+          const res = await fetch(targetHref);
+          if (!res.ok) throw new Error("Fetch failed");
+          const html = await res.text();
+          const parser = new DOMParser();
+          const newDoc = parser.parseFromString(html, "text/html");
+
+          const performSwap = () => {
+            // Swap main content seamlessly in place
+            const currentMain = document.querySelector("main");
+            const newMain = newDoc.querySelector("main");
+            if (currentMain && newMain) {
+              currentMain.replaceWith(newMain);
+            }
+
+            // Swap footer seamlessly
+            const currentFooter = document.querySelector("footer");
+            const newFooter = newDoc.querySelector("footer");
+            if (currentFooter && newFooter) {
+              currentFooter.replaceWith(newFooter);
+            }
+
+            // Swap navbar to update links & active language indicator
+            const currentNav = document.querySelector("nav");
+            const newNav = newDoc.querySelector("nav");
+            if (currentNav && newNav) {
+              currentNav.replaceWith(newNav);
+            }
+
+            // Update document title and lang attribute
+            document.title = newDoc.title;
+            document.documentElement.lang =
+              newDoc.documentElement.lang ||
+              (targetPath.startsWith("/es") ? "es" : "en");
+
+            // Update URL without page reload
+            window.history.pushState({ path: targetHref }, "", targetHref);
+
+            // Reinitialize interactive components without resetting scroll
+            document.dispatchEvent(new Event("astro:page-load"));
+          };
+
+          if ("startViewTransition" in document) {
+            (document as any).startViewTransition(() => {
+              performSwap();
+            });
+          } else {
+            performSwap();
+          }
+        } catch {
+          window.location.href = targetHref;
+        } finally {
+          (window as any).__isLanguageSwitching = false;
+        }
       });
     });
   };
 
-  const restoreLangScroll = () => {
-    const savedScroll = sessionStorage.getItem("portfolio_lang_scroll");
-    if (savedScroll !== null) {
-      const targetY = parseInt(savedScroll, 10);
-      window.scrollTo({ top: targetY, behavior: "instant" });
-      requestAnimationFrame(() => {
-        window.scrollTo({ top: targetY, behavior: "instant" });
-        sessionStorage.removeItem("portfolio_lang_scroll");
-      });
-    }
-  };
-
   initNavbarInteractions();
-  restoreLangScroll();
 
   document.addEventListener("astro:page-load", () => {
     initNavbarInteractions();
-    restoreLangScroll();
   });
 
-  document.addEventListener("astro:before-swap", (e: any) => {
-    const savedScroll = sessionStorage.getItem("portfolio_lang_scroll");
-    if (savedScroll !== null && e.newDocument) {
-      e.newDocument.documentElement.scrollTop = parseInt(savedScroll, 10);
-    }
+  window.addEventListener("popstate", () => {
+    initNavbarInteractions();
   });
 </script>
+
+<style>
+  /* Minimalist subtle animation for Costa Rica micro-flag */
+  .cr-flag-container {
+    position: relative;
+    transform-origin: center center;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: cr-flag-wave 4.5s ease-in-out infinite;
+  }
+
+  .cr-tico-btn:hover .cr-flag-container {
+    transform: translateY(-0.5px) scale(1.06);
+  }
+
+  @keyframes cr-flag-wave {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    33% {
+      transform: translateY(-0.35px) rotate(-1deg);
+    }
+    66% {
+      transform: translateY(0.2px) rotate(1deg);
+    }
+  }
+
+  .cr-flag-sheen {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      115deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.25) 50%,
+      transparent 80%
+    );
+    background-size: 200% 100%;
+    animation: cr-flag-sheen 4.5s ease-in-out infinite;
+  }
+
+  @keyframes cr-flag-sheen {
+    0% {
+      background-position: 150% 0;
+    }
+    45%, 100% {
+      background-position: -50% 0;
+    }
+  }
+
+  /* Silky smooth in-place cross-fade for language swap */
+  :global(::view-transition-old(root)),
+  :global(::view-transition-new(root)) {
+    animation-duration: 160ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+</style>
