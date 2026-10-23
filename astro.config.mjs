@@ -7,7 +7,7 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: 'https://kirian.dev',
   adapter: vercel(),
-  output: 'static',
+  output: 'server',
   integrations: [sitemap()],
   prefetch: {
     prefetchAll: true,
