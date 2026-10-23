@@ -2,16 +2,9 @@
 interface Props {
   name: string;
   title: string;
-  openToWorkText?: string;
-  contactHref?: string;
 }
 
-const {
-  name,
-  title,
-  openToWorkText = "Open to work",
-  contactHref = Astro.currentLocale === "es" ? "/es/contact" : "/contact",
-} = Astro.props;
+const { name, title } = Astro.props;
 ---
 
 <div class="banner-hero relative h-44 w-full sm:h-48">
@@ -26,19 +19,8 @@ const {
     <h1 class="text-grayscale-12 font-display text-lg leading-none font-medium tracking-tight sm:text-xl">
       {name}
     </h1>
-    <p class="text-grayscale-10 mt-1.5 font-mono text-[11px] leading-none sm:text-xs flex items-center gap-1.5">
-      <span>{title}</span>
-      <span class="text-grayscale-6 select-none font-sans opacity-70">·</span>
-      <a
-        href={contactHref}
-        data-cuelume-hover="tick"
-        data-cuelume-press="page"
-        title={Astro.currentLocale === "es" ? "Disponible para nuevos proyectos y roles" : "Available for new projects and roles"}
-        class="group inline-flex items-center gap-0.5 text-grayscale-11 hover:text-grayscale-12 transition-colors duration-150"
-      >
-        <span>{openToWorkText}</span>
-        <span class="text-[10px] text-grayscale-9 group-hover:text-grayscale-12 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200">↗</span>
-      </a>
+    <p class="text-grayscale-10 mt-1.5 font-mono text-[11px] leading-none sm:text-xs">
+      {title}
     </p>
   </div>
 
