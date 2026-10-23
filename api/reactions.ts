@@ -65,23 +65,32 @@ export default async function handler(req: any, res: any) {
 
       const slug = getCanonicalSlug(rawSlug);
 
-      if (redis) {
-        try {
-          const data = await redis.hgetall<Record<string, number>>(`reactions:${slug}`);
-          const counts = {
-            pinch: Number(data?.pinch ?? 0),
-            thumb: Number(data?.thumb ?? 0),
-            clap: Number(data?.clap ?? 0),
-            ok: Number(data?.ok ?? 0),
-          };
-          res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-          return res.status(200).json({ slug, counts });
-        } catch (e: any) {
-          console.error("Redis GET error:", e);
-        }
+      if (!redis) {
+        return res.status(200).json({
+          slug,
+          counts: { ...DEFAULT_REACTION_COUNTS },
+          _debug: "no_redis",
+        });
       }
 
-      return res.status(200).json({ slug, counts: { ...DEFAULT_REACTION_COUNTS } });
+      try {
+        const data = await redis.hgetall<Record<string, any>>(`reactions:${slug}`);
+        const counts = {
+          pinch: Math.max(0, Number(data?.pinch ?? 0)),
+          thumb: Math.max(0, Number(data?.thumb ?? 0)),
+          clap: Math.max(0, Number(data?.clap ?? 0)),
+          ok: Math.max(0, Number(data?.ok ?? 0)),
+        };
+        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        return res.status(200).json({ slug, counts, _debug: { ok: true, data } });
+      } catch (e: any) {
+        console.error("Redis GET error:", e);
+        return res.status(200).json({
+          slug,
+          counts: { ...DEFAULT_REACTION_COUNTS },
+          _debug: { error: e.message || String(e) },
+        });
+      }
     }
 
     if (req.method === "POST") {
