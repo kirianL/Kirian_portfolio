@@ -1,7 +1,7 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
-import { getReactions, incrementReaction, DEFAULT_REACTION_COUNTS } from "../../lib/redis";
+import { getReactions, incrementReaction, updateReaction, DEFAULT_REACTION_COUNTS } from "../../lib/redis";
 
 export const GET: APIRoute = async ({ request }) => {
   try {
@@ -44,7 +44,7 @@ export const GET: APIRoute = async ({ request }) => {
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json().catch(() => ({}));
-    const { slug, type } = body || {};
+    const { slug, type, previousType } = body || {};
 
     if (!slug || typeof slug !== "string" || !/^[a-z0-9-_]+$/i.test(slug)) {
       return new Response(
@@ -57,7 +57,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const validTypes = ["pinch", "thumb", "clap", "ok"];
-    if (!type || !validTypes.includes(type)) {
+    if (type && !validTypes.includes(type)) {
       return new Response(
         JSON.stringify({ error: "Invalid reaction 'type'" }),
         {
@@ -66,8 +66,26 @@ export const POST: APIRoute = async ({ request }) => {
         }
       );
     }
+    if (previousType && !validTypes.includes(previousType)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid reaction 'previousType'" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+    if (!type && !previousType) {
+      return new Response(
+        JSON.stringify({ error: "Either 'type' or 'previousType' is required" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
-    const counts = await incrementReaction(slug, type);
+    const counts = await updateReaction(slug, type, previousType);
     return new Response(
       JSON.stringify({ success: true, slug, counts }),
       {

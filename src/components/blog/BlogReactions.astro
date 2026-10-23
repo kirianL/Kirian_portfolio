@@ -262,16 +262,47 @@ const reactions = [
       if (!slug) return;
 
       const buttons = container.querySelectorAll(".reaction-btn");
+      const postKey = `portfolio_active_reaction_${slug}`;
 
-      // 1. Initial Local State
+      // Helper to update count numbers in the UI
+      const updateButtonCounts = (counts: Record<string, number>) => {
+        if (!counts) return;
+        buttons.forEach((btn) => {
+          const reactionId = btn.getAttribute("data-reaction-id") || "";
+          const countEl = btn.querySelector(".reaction-count");
+          const val = counts[reactionId];
+          if (countEl && typeof val === "number") {
+            countEl.textContent = new Intl.NumberFormat().format(val);
+          }
+        });
+      };
+
+      // 1. Initial Local State (Only 1 active reaction per user per post)
+      let activeReaction = localStorage.getItem(postKey);
+
+      // Clean up legacy multi-reaction keys and migrate if needed
+      const validTypes = ["pinch", "thumb", "clap", "ok"];
+      if (!activeReaction) {
+        for (const t of validTypes) {
+          const legacyKey = `portfolio_reaction_${slug}_${t}`;
+          if (localStorage.getItem(legacyKey) === "true") {
+            activeReaction = t;
+          }
+          localStorage.removeItem(legacyKey);
+        }
+        if (activeReaction) {
+          localStorage.setItem(postKey, activeReaction);
+        }
+      } else {
+        validTypes.forEach((t) => localStorage.removeItem(`portfolio_reaction_${slug}_${t}`));
+      }
+
       buttons.forEach((btn) => {
         const reactionId = btn.getAttribute("data-reaction-id") || "";
-        const storageKey = `portfolio_reaction_${slug}_${reactionId}`;
-        const hasReacted = localStorage.getItem(storageKey) === "true";
-        const countEl = btn.querySelector(".reaction-count");
-
-        if (hasReacted) {
+        if (activeReaction === reactionId) {
           btn.classList.add("has-reacted");
+        } else {
+          btn.classList.remove("has-reacted");
         }
       });
 
@@ -280,79 +311,92 @@ const reactions = [
         const res = await fetch(`/api/reactions?slug=${encodeURIComponent(slug)}`);
         if (res.ok) {
           const data = await res.json();
-          const counts = data.counts || {};
-
-          buttons.forEach((btn) => {
-            const reactionId = btn.getAttribute("data-reaction-id") || "";
-            const countEl = btn.querySelector(".reaction-count");
-            const serverCount = counts[reactionId];
-
-            if (countEl && typeof serverCount === "number") {
-              countEl.textContent = new Intl.NumberFormat().format(serverCount);
-            }
-          });
+          updateButtonCounts(data.counts || {});
         }
       } catch (err) {
         console.warn("Reactions sync:", err);
       }
 
-      // 3. Click handler — one reaction per type per visitor
+      // 3. Click handler — allows 1 active reaction, switching, or toggling off
       buttons.forEach((btn) => {
         if (btn.hasAttribute("data-bound")) return;
         btn.setAttribute("data-bound", "true");
 
         btn.addEventListener("click", async () => {
           const reactionId = btn.getAttribute("data-reaction-id") || "";
-          const storageKey = `portfolio_reaction_${slug}_${reactionId}`;
-          const hasReacted = localStorage.getItem(storageKey) === "true";
+          const currentActive = localStorage.getItem(postKey);
 
-          if (hasReacted) return;
-
-          const countEl = btn.querySelector(".reaction-count");
-          const currentCount = parseInt(countEl?.textContent?.replace(/,/g, "") || "0", 10);
-
-          localStorage.setItem(storageKey, "true");
-
-          if (countEl) {
-            countEl.textContent = new Intl.NumberFormat().format(currentCount + 1);
-          }
-
-          btn.classList.remove("animate-pop");
-          void btn.offsetWidth;
-          btn.classList.add("animate-pop");
-          btn.classList.add("has-reacted");
-
-          const color = btn.style.getPropertyValue("--reaction-hover-color") || "#f97316";
-          triggerSparks(btn as HTMLElement, color);
-          try { play("pop"); } catch {}
-
-          try {
-            const postRes = await fetch("/api/reactions", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ slug, type: reactionId }),
-            });
-
-            if (postRes.ok) {
-              const data = await postRes.json();
-              if (data.counts && typeof data.counts[reactionId] === "number" && countEl) {
-                countEl.textContent = new Intl.NumberFormat().format(data.counts[reactionId]);
-              }
-            } else {
-              localStorage.removeItem(storageKey);
-              btn.classList.remove("has-reacted");
-              if (countEl) {
-                countEl.textContent = new Intl.NumberFormat().format(currentCount);
-              }
-              console.warn("Reaction failed:", await postRes.text());
-            }
-          } catch (err) {
-            localStorage.removeItem(storageKey);
+          if (currentActive === reactionId) {
+            // Un-react / toggle off current reaction
+            localStorage.removeItem(postKey);
             btn.classList.remove("has-reacted");
+
+            const countEl = btn.querySelector(".reaction-count");
+            const curCount = parseInt(countEl?.textContent?.replace(/,/g, "") || "0", 10);
             if (countEl) {
-              countEl.textContent = new Intl.NumberFormat().format(currentCount);
+              countEl.textContent = new Intl.NumberFormat().format(Math.max(0, curCount - 1));
             }
-            console.warn("Redis reaction update:", err);
+
+            try {
+              const postRes = await fetch("/api/reactions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ slug, type: null, previousType: reactionId }),
+              });
+              if (postRes.ok) {
+                const data = await postRes.json();
+                updateButtonCounts(data.counts);
+              }
+            } catch (err) {
+              console.warn("Un-react error:", err);
+            }
+          } else {
+            // React or switch from another reaction
+            const previousReactionId = currentActive;
+            localStorage.setItem(postKey, reactionId);
+
+            // If switching from another reaction, turn off previous button
+            if (previousReactionId) {
+              const prevBtn = container.querySelector(`[data-reaction-id="${previousReactionId}"]`);
+              if (prevBtn) {
+                prevBtn.classList.remove("has-reacted");
+                const prevCountEl = prevBtn.querySelector(".reaction-count");
+                const prevCount = parseInt(prevCountEl?.textContent?.replace(/,/g, "") || "0", 10);
+                if (prevCountEl) {
+                  prevCountEl.textContent = new Intl.NumberFormat().format(Math.max(0, prevCount - 1));
+                }
+              }
+            }
+
+            // Activate new button
+            btn.classList.add("has-reacted");
+            btn.classList.remove("animate-pop");
+            void btn.offsetWidth;
+            btn.classList.add("animate-pop");
+
+            const countEl = btn.querySelector(".reaction-count");
+            const curCount = parseInt(countEl?.textContent?.replace(/,/g, "") || "0", 10);
+            if (countEl) {
+              countEl.textContent = new Intl.NumberFormat().format(curCount + 1);
+            }
+
+            const color = btn.style.getPropertyValue("--reaction-hover-color") || "#f97316";
+            triggerSparks(btn as HTMLElement, color);
+            try { play("pop"); } catch {}
+
+            try {
+              const postRes = await fetch("/api/reactions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ slug, type: reactionId, previousType: previousReactionId }),
+              });
+              if (postRes.ok) {
+                const data = await postRes.json();
+                updateButtonCounts(data.counts);
+              }
+            } catch (err) {
+              console.warn("React/switch error:", err);
+            }
           }
         });
       });

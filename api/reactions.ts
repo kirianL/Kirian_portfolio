@@ -75,28 +75,46 @@ export default async function handler(req: any, res: any) {
 
     if (req.method === "POST") {
       const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
-      const { slug: rawSlug, type } = body || {};
+      const { slug: rawSlug, type, previousType } = body || {};
 
       if (!rawSlug || typeof rawSlug !== "string" || !/^[a-z0-9-_]+$/i.test(rawSlug)) {
         return res.status(400).json({ error: "Invalid or missing 'slug'" });
       }
 
       const validTypes = ["pinch", "thumb", "clap", "ok"];
-      if (!type || !validTypes.includes(type)) {
+      if (type && !validTypes.includes(type)) {
         return res.status(400).json({ error: "Invalid reaction 'type'" });
+      }
+      if (previousType && !validTypes.includes(previousType)) {
+        return res.status(400).json({ error: "Invalid reaction 'previousType'" });
+      }
+      if (!type && !previousType) {
+        return res.status(400).json({ error: "Either 'type' or 'previousType' is required" });
       }
 
       const slug = getCanonicalSlug(rawSlug);
 
       if (redis) {
         try {
-          await redis.hincrby(`reactions:${slug}`, type, 1);
+          // Decrement previous reaction if switching or un-reacting
+          if (previousType && validTypes.includes(previousType) && previousType !== type) {
+            const currentVal = await redis.hget<number>(`reactions:${slug}`, previousType);
+            if (currentVal && Number(currentVal) > 0) {
+              await redis.hincrby(`reactions:${slug}`, previousType, -1);
+            }
+          }
+
+          // Increment new reaction if reacting or switching
+          if (type && validTypes.includes(type) && type !== previousType) {
+            await redis.hincrby(`reactions:${slug}`, type, 1);
+          }
+
           const data = await redis.hgetall<Record<string, number>>(`reactions:${slug}`);
           const counts = {
-            pinch: Number(data?.pinch ?? 0),
-            thumb: Number(data?.thumb ?? 0),
-            clap: Number(data?.clap ?? 0),
-            ok: Number(data?.ok ?? 0),
+            pinch: Math.max(0, Number(data?.pinch ?? 0)),
+            thumb: Math.max(0, Number(data?.thumb ?? 0)),
+            clap: Math.max(0, Number(data?.clap ?? 0)),
+            ok: Math.max(0, Number(data?.ok ?? 0)),
           };
           return res.status(200).json({ success: true, slug, counts });
         } catch (e: any) {
@@ -109,7 +127,7 @@ export default async function handler(req: any, res: any) {
         slug,
         counts: {
           ...DEFAULT_REACTION_COUNTS,
-          [type]: 1,
+          ...(type ? { [type]: 1 } : {}),
         },
       });
     }

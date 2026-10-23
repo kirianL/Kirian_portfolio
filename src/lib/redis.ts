@@ -115,3 +115,53 @@ export async function incrementReaction(
   memoryStore.set(slug, updated);
   return updated;
 }
+
+export async function updateReaction(
+  rawSlug: string,
+  type: string | null | undefined,
+  previousType?: string | null | undefined
+): Promise<Record<string, number>> {
+  if (!isValidReactionSlug(rawSlug)) {
+    throw new Error("Invalid slug");
+  }
+  const slug = getCanonicalSlug(rawSlug);
+
+  const validTypes = ["pinch", "thumb", "clap", "ok"];
+  if (type && !validTypes.includes(type)) {
+    throw new Error("Invalid reaction type");
+  }
+  if (previousType && !validTypes.includes(previousType)) {
+    throw new Error("Invalid previous reaction type");
+  }
+
+  const redis = getRedisClient();
+  if (redis) {
+    try {
+      if (previousType && validTypes.includes(previousType) && previousType !== type) {
+        const cur = await redis.hget<number>(`reactions:${slug}`, previousType);
+        if (cur && Number(cur) > 0) {
+          await redis.hincrby(`reactions:${slug}`, previousType, -1);
+        }
+      }
+      if (type && validTypes.includes(type) && type !== previousType) {
+        await redis.hincrby(`reactions:${slug}`, type, 1);
+      }
+      return await getReactions(slug);
+    } catch (e) {
+      console.error("Redis updateReaction error:", e);
+    }
+  }
+
+  // Fallback in-memory
+  const current = memoryStore.get(slug) || { ...DEFAULT_REACTION_COUNTS };
+  const updated = { ...current };
+  if (previousType && updated[previousType] > 0 && previousType !== type) {
+    updated[previousType] = Math.max(0, updated[previousType] - 1);
+  }
+  if (type && type !== previousType) {
+    updated[type] = (updated[type] || 0) + 1;
+  }
+  memoryStore.set(slug, updated);
+  return updated;
+}
+
