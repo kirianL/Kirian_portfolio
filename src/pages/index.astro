@@ -26,7 +26,7 @@ const data = dictionaries.EN;
         <BannerHero name={data.name} title={data.title} />
 
         <!-- Metadata row -->
-        <div class="grid grid-cols-2 sm:flex sm:items-start gap-x-6 gap-y-4 sm:gap-8 mt-6">
+        <div class="grid grid-cols-2 sm:flex sm:items-start gap-x-6 gap-y-4 sm:gap-7 mt-6">
           <!-- Location -->
           <div class="flex flex-col gap-1.5">
             <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-10">Location</span>
@@ -38,8 +38,28 @@ const data = dictionaries.EN;
               {data.location}
             </span>
           </div>
-          <!-- Email -->
+
+          <!-- Status / Open to work -->
           <div class="flex flex-col gap-1.5">
+            <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-10">Status</span>
+            <a
+              href="/contact"
+              data-cuelume-hover="tick"
+              data-cuelume-press="page"
+              title="Open to full-time roles & select contracts"
+              class="group text-grayscale-12 text-sm flex items-center gap-1.5 hover:text-accent-9 transition-colors"
+            >
+              <svg class="w-3.5 h-3.5 text-grayscale-10 group-hover:text-accent-9 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+              <span>Open to work</span>
+              <span class="text-[11px] font-mono text-grayscale-10 group-hover:text-accent-9 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200">↗</span>
+            </a>
+          </div>
+
+          <!-- Email -->
+          <div class="flex flex-col gap-1.5 col-span-2 sm:col-span-1">
             <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-10">Email</span>
             <a href={`mailto:${data.contact.email}`} class="text-grayscale-12 text-sm flex items-center gap-1.5 hover:text-accent-9 transition-colors">
               <svg class="w-3.5 h-3.5 text-grayscale-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -48,6 +68,7 @@ const data = dictionaries.EN;
               {data.contact.email}
             </a>
           </div>
+
           <!-- Experience -->
           <div class="flex flex-col gap-1.5">
             <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-10">Experience</span>
