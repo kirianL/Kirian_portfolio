@@ -729,7 +729,7 @@ const initialStatsText =
 
   async function checkDirectSpotify() {
     try {
-      const spotifyRes = await fetchWithTimeout("/api/spotify.json", 3000);
+      const spotifyRes = await fetchWithTimeout("/api/spotify", 3000);
       if (spotifyRes && spotifyRes.isPlaying) {
         lastDirectSpotifyState = spotifyRes;
       } else {
@@ -840,7 +840,7 @@ const initialStatsText =
       window.location.pathname === "/es";
 
     try {
-      const res = await fetch("/api/stats.json");
+      const res = await fetch("/api/stats");
       if (res.ok) {
         const data = await res.json();
         const views = data.pageviews || 0;
