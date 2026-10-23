@@ -69,7 +69,6 @@ export default async function handler(req: any, res: any) {
         return res.status(200).json({
           slug,
           counts: { ...DEFAULT_REACTION_COUNTS },
-          _debug: "no_redis",
         });
       }
 
@@ -82,13 +81,12 @@ export default async function handler(req: any, res: any) {
           ok: Math.max(0, Number(data?.ok ?? 0)),
         };
         res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        return res.status(200).json({ slug, counts, _debug: { ok: true, data } });
+        return res.status(200).json({ slug, counts });
       } catch (e: any) {
         console.error("Redis GET error:", e);
         return res.status(200).json({
           slug,
           counts: { ...DEFAULT_REACTION_COUNTS },
-          _debug: { error: e.message || String(e) },
         });
       }
     }
