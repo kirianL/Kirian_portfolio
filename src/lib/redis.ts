@@ -26,7 +26,10 @@ export function isValidReactionSlug(slug: string): boolean {
 }
 
 export function getRedisClient(): Redis | null {
-  const metaEnv = (import.meta as any).env || {};
+  let metaEnv: any = {};
+  try {
+    metaEnv = (typeof import.meta !== "undefined" && (import.meta as any).env) || {};
+  } catch {}
   const url =
     process.env.UPSTASH_REDIS_REST_URL ||
     process.env.REDIS_URL ||
