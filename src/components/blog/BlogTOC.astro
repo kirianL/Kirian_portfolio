@@ -45,7 +45,6 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
   <button
     id="toc-back-to-top"
     type="button"
-    data-cuelume-hover="tick"
     class="text-[11px] font-mono text-grayscale-10 hover:text-accent-9 transition-colors cursor-pointer text-left w-fit flex items-center gap-1.5 group pt-2 mt-1"
   >
     <span class="group-hover:-translate-y-0.5 transition-transform duration-200">{backToTopText}</span>
@@ -95,8 +94,6 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
 </style>
 
 <script>
-  import { play } from "cuelume";
-
   let abortController: AbortController | null = null;
 
   const setupTOC = () => {
@@ -161,7 +158,6 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
         };
       });
 
-      let lastTick = 0;
       let ticking = false;
 
       const checkScroll = () => {
@@ -170,7 +166,6 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
         const triggerY = 120; // 120px threshold from top of viewport
         const docHeight = document.documentElement.scrollHeight;
         const isAtBottom = scrollY + window.innerHeight >= docHeight - 40;
-        const now = Date.now();
 
         items.forEach((item, i) => {
           const rect = item.el.getBoundingClientRect();
@@ -190,13 +185,7 @@ const tocHeadings = headings.filter((h) => h.depth === 2);
           } else if (nextRect && nextRect.top <= triggerY) {
             item.link.classList.add("is-passed");
             item.link.classList.remove("is-active");
-            if (!item.passed) {
-              item.passed = true;
-              if (now - lastTick > 150) {
-                lastTick = now;
-                try { play("tick"); } catch {}
-              }
-            }
+            item.passed = true;
           } else if (rect.top <= triggerY) {
             item.link.classList.remove("is-passed");
             item.link.classList.add("is-active");
