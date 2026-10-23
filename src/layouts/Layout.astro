@@ -201,6 +201,36 @@ const spanishURL = new URL(spanishPath, siteURL);
         "mainEntity": {
           "@id": "https://kirian.dev/#person"
         }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": "https://kirian.dev/#organization",
+        "name": "Kirian Luna",
+        "alternateName": "SorinLabs",
+        "url": "https://kirian.dev",
+        "logo": new URL('/LogoKirian.png', siteURL).href,
+        "email": "kirianluna.u@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Limón",
+          "addressRegion": "Limón",
+          "postalCode": "70101",
+          "addressCountry": "Costa Rica"
+        },
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "email": "kirianluna.u@gmail.com",
+            "contactType": "customer service",
+            "availableLanguage": ["English", "Spanish"]
+          }
+        ],
+        "sameAs": [
+          "https://github.com/kirianL",
+          "https://linkedin.com/in/kirianluna",
+          "https://x.com/kirianluna"
+        ]
       }
     ])} />
     

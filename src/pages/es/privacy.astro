@@ -1,0 +1,98 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<Layout
+  title="Política de Privacidad | Kirian Luna"
+  description="Política de privacidad y protección de datos para kirian.dev. Conoce cómo se gestionan los datos, analíticas y derechos del usuario."
+  lang="es"
+>
+  <Navbar />
+
+  <main id="main-content" class="min-h-screen bg-grayscale-1">
+    <div class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-16 flex flex-col gap-10">
+      <!-- Header -->
+      <section class="flex flex-col gap-3">
+        <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+          política de privacidad.
+        </h1>
+        <p class="text-grayscale-11 text-xs sm:text-sm leading-relaxed">
+          Última actualización: 23 de octubre de 2026. Esta política describe de manera transparente el tratamiento de la información al visitar o utilizar kirian.dev.
+        </p>
+      </section>
+
+      <!-- Section: Overview -->
+      <section class="flex flex-col gap-3 text-grayscale-11 text-[13.5px] leading-relaxed">
+        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
+          1. identidad & alcance.
+        </h2>
+        <p>
+          Este sitio web (<strong>https://kirian.dev</strong>) es gestionado por Kirian Luna, ingeniero de software independiente con sede en Limón, Costa Rica. Tu privacidad se respeta rigurosamente aplicando el principio de recopilación mínima de datos, sin cookies publicitarias invasivas ni venta de información a terceros.
+        </p>
+      </section>
+
+      <!-- Section: Information Collected -->
+      <section class="flex flex-col gap-3 text-grayscale-11 text-[13.5px] leading-relaxed">
+        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
+          2. datos recopilados & finalidad.
+        </h2>
+        <div class="flex flex-col gap-3">
+          <div>
+            <h3 class="text-grayscale-12 text-sm font-semibold">Mensajes Directos y Contacto</h3>
+            <p class="mt-1">
+              Al remitir un mensaje a través del formulario o por correo electrónico, recibimos tu nombre, dirección de correo electrónico y el contenido del mensaje. Esta información se emplea única y exclusivamente para responder a tu consulta, evaluar propuestas comerciales o dar seguimiento profesional. En ningún caso se cede o comercializa a terceros.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-grayscale-12 text-sm font-semibold">Métricas de Uso y Analítica</h3>
+            <p class="mt-1">
+              Utilizamos una instancia de PostHog enfocada en la privacidad para contabilizar visitas agregadas y fuentes de referencia. La analítica funciona sin cookies persistentes de rastreo cruzado y no crea perfiles conductuales invasivos.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-grayscale-12 text-sm font-semibold">Reacciones y Participación en Artículos</h3>
+            <p class="mt-1">
+              Las reacciones a publicaciones de blog se gestionan en una base de datos segura Redis (Upstash). Para prevenir duplicaciones abusivas se almacena temporalmente un resumen criptográfico no reversible de la IP y User-Agent del cliente; no se vincula ninguna identidad personal visible con las reacciones emitidas.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Third-Party Infrastructure -->
+      <section class="flex flex-col gap-3 text-grayscale-11 text-[13.5px] leading-relaxed">
+        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
+          3. proveedores e infraestructura.
+        </h2>
+        <p>
+          El funcionamiento del sitio se apoya en proveedores líderes de la industria bajo rigurosos estándares de seguridad:
+        </p>
+        <ul class="list-disc list-inside space-y-1 text-xs text-grayscale-11">
+          <li><strong>Vercel</strong>: Alojamiento perimetral (Edge CDN) y distribución global de contenido.</li>
+          <li><strong>Formspree</strong>: Procesamiento y entrega segura de formularios de contacto.</li>
+          <li><strong>Upstash</strong>: Base de datos serverless para el conteo de reacciones.</li>
+          <li><strong>PostHog</strong>: Registro analítico anonimizado de rendimiento web.</li>
+        </ul>
+      </section>
+
+      <!-- Section: User Rights -->
+      <section class="flex flex-col gap-3 text-grayscale-11 text-[13.5px] leading-relaxed">
+        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
+          4. derechos del titular & contacto.
+        </h2>
+        <p>
+          De conformidad con la normativa aplicable, incluida la Ley N° 8968 de Protección de la Persona frente al Tratamiento de sus Datos Personales de Costa Rica y directivas equivalentes (RGPD), tienes derecho a solicitar acceso, rectificación o eliminación total de cualquier dato personal transmitido mediante este sitio web.
+        </p>
+        <p>
+          Para ejercer tus derechos o resolver cualquier duda sobre esta política, puedes contactarme directamente en:
+        </p>
+        <p class="font-mono text-xs text-grayscale-12">
+          Correo: <a href="mailto:kirianluna.u@gmail.com" class="underline underline-offset-4 hover:text-accent-9">kirianluna.u@gmail.com</a>
+        </p>
+      </section>
+
+      <Footer />
+    </div>
+  </main>
+</Layout>

@@ -219,6 +219,17 @@ const initialStatsText =
     </div>
   </div>
 
+  <!-- Trust Anchor Navigation -->
+  <div class="flex items-center justify-center gap-2.5 text-[11px] font-mono text-grayscale-10 pt-1">
+    <a href={currentLocale === 'es' ? '/es/about' : '/about'} data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">{currentLocale === 'es' ? 'Sobre mí' : 'About'}</a>
+    <span class="text-grayscale-5 select-none">·</span>
+    <a href={currentLocale === 'es' ? '/es/privacy' : '/privacy'} data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">{currentLocale === 'es' ? 'Privacidad' : 'Privacy'}</a>
+    <span class="text-grayscale-5 select-none">·</span>
+    <a href={currentLocale === 'es' ? '/es/contact' : '/contact'} data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">{currentLocale === 'es' ? 'Contacto' : 'Contact'}</a>
+    <span class="text-grayscale-5 select-none">·</span>
+    <a href="/llms.txt" data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">llms.txt</a>
+  </div>
+
   <p>{updateLabel}: {lastUpdateDate}</p>
   <p
     id="posthog-stats"

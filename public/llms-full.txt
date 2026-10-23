@@ -46,3 +46,26 @@
 ## 4. Writing & Knowledge Sharing
 Kirian writes articles on software engineering, web performance, and UX design at https://kirian.dev/blog/.
 - Topics include: Digitalizing cultural heritage, building responsive design systems, Web Audio API interactions, and full-stack architecture patterns.
+
+---
+
+## 5. Services & Engagement Models
+- **Full-Stack Web Engineering**: Production web applications using Next.js, React 19, Astro, and TypeScript with 100/100 Core Web Vitals.
+- **Backend & Database Architecture**: PostgreSQL schemas, Prisma ORM, Redis caching, robust REST API design, JWT authentication, and security audit logs.
+- **Pricing & Engagement**:
+  - *Fixed-Scope Milestone Projects*: From $1,200 USD for well-defined applications, landing systems, and bespoke redesigns.
+  - *Monthly Retainer / Consulting*: Dedicated hours for ongoing product development and architectural direction.
+  - *Full-Time Remote Roles*: Available for Software Engineer / Full-Stack Engineer roles.
+
+---
+
+## 6. Official Trust Anchor Pages & Navigation
+- **Homepage**: https://kirian.dev/
+- **About Page**: https://kirian.dev/about
+- **Projects**: https://kirian.dev/projects
+- **Blog / Writing**: https://kirian.dev/blog
+- **Contact Surface**: https://kirian.dev/contact
+- **Privacy Policy**: https://kirian.dev/privacy
+- **XML Sitemap**: https://kirian.dev/sitemap-index.xml
+- **Compact LLMs File**: https://kirian.dev/llms.txt
+

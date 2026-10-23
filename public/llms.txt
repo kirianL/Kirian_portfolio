@@ -20,8 +20,20 @@
 3. **Young Legends**: Modern landing page built for streetwear and athletic lifestyle branding.
 4. **UMP Music**: Web platform featuring custom Web Audio API interactions and streaming player components.
 
+## Services & Engagement Models
+- **Full-Stack Development**: Web applications with TypeScript, React 19, Next.js, and Astro.
+- **Backend & Database Architecture**: PostgreSQL schemas, Prisma ORM, Redis caching, REST APIs.
+- **Engagement Models**: Fixed-price milestone projects, technical consulting retainers, and full-time software engineering roles.
+
 ## Online Presence & Links
 - **Website**: https://kirian.dev
+- **About**: https://kirian.dev/about
+- **Projects**: https://kirian.dev/projects
+- **Blog**: https://kirian.dev/blog
+- **Contact**: https://kirian.dev/contact
+- **Privacy Policy**: https://kirian.dev/privacy
 - **GitHub**: https://github.com/kirianL
 - **LinkedIn**: https://linkedin.com/in/kirianluna
 - **Email**: kirianluna.u@gmail.com
+- **Sitemap**: https://kirian.dev/sitemap-index.xml
+

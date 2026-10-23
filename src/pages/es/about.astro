@@ -1,0 +1,121 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+---
+
+<Layout
+  title="Sobre mí | Kirian Luna — Ingeniero de Software"
+  description="Conoce la trayectoria de Kirian Luna, su formación en ingeniería de sistemas, servicios profesionales, modelos de trabajo y contacto verificado."
+  lang="es"
+>
+  <Navbar />
+
+  <main id="main-content" class="min-h-screen bg-grayscale-1">
+    <div class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-16 flex flex-col gap-12">
+      <!-- Header -->
+      <section class="flex flex-col gap-3">
+        <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+          sobre mí.
+        </h1>
+        <p class="text-grayscale-11 text-xs sm:text-sm leading-relaxed">
+          Ingeniero de software, arquitecto de sistemas y creador enfocado en construir herramientas digitales duraderas, rápidas y meticulosamente diseñadas.
+        </p>
+      </section>
+
+      <!-- Narrative Section -->
+      <section class="flex flex-col gap-4 text-grayscale-11 text-[13.5px] leading-relaxed">
+        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
+          trayectoria & filosofía.
+        </h2>
+        <p>
+          Soy Kirian Luna, graduado de Bachillerato en Ingeniería de Sistemas por la Universidad Latina de Costa Rica, con residencia en Limón, Costa Rica (CST / UTC-6). Actualmente continúo profundizando en investigación de ingeniería de software, docencia y tecnologías web accesibles.
+        </p>
+        <p>
+          Mi enfoque de ingeniería combina simplicidad, velocidad de ejecución y longevidad del código. El software no solo debe resolver un problema; debe sentirse instantáneo, responder de forma clara a las interacciones del usuario y mantenerse fácilmente a lo largo del tiempo sin complejidad innecesaria. Desde plataformas de administración académica con control de acceso por roles hasta experiencias web culturales interactivas, busco la armonía entre código tipado riguroso y una experiencia visual de alto calibre.
+        </p>
+      </section>
+
+      <!-- Services & Scope Breakdown -->
+      <section class="flex flex-col gap-4">
+        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
+          servicios & capacidades técnicas.
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div class="p-4 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 flex flex-col gap-2">
+            <h3 class="text-grayscale-12 text-sm font-semibold">Desarrollo Web Full-Stack</h3>
+            <p class="text-grayscale-11 text-xs leading-relaxed">
+              Construcción de aplicaciones web completas con TypeScript, React 19, Next.js (App Router), Astro y Node.js. Optimización rigurosa para Core Web Vitals 100/100 y posicionamiento SXO.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 flex flex-col gap-2">
+            <h3 class="text-grayscale-12 text-sm font-semibold">Bases de Datos & Arquitectura Backend</h3>
+            <p class="text-grayscale-11 text-xs leading-relaxed">
+              Diseño de esquemas relacionales, APIs REST y GraphQL con PostgreSQL, Prisma ORM, Redis, autenticación robusta JWT y registros de auditoría de seguridad.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 flex flex-col gap-2">
+            <h3 class="text-grayscale-12 text-sm font-semibold">Sistemas de Diseño & Micro-Interacciones</h3>
+            <p class="text-grayscale-11 text-xs leading-relaxed">
+              Interfaces minimalistas y fluidas, adaptación dark/light nativa y retroalimentación táctil/auditiva sutil mediante Web Audio API (cuelume).
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 flex flex-col gap-2">
+            <h3 class="text-grayscale-12 text-sm font-semibold">Auditoría Técnica & Optimización</h3>
+            <p class="text-grayscale-11 text-xs leading-relaxed">
+              Evaluación de accesibilidad WCAG 2.1, reducción de latencia, arquitectura limpia y compatibilidad con agentes de inteligencia artificial y LLMs.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pricing & Engagement Models -->
+      <section class="flex flex-col gap-4 text-grayscale-11 text-[13.5px] leading-relaxed">
+        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
+          modelos de trabajo & contratación.
+        </h2>
+        <div class="flex flex-col divide-y divide-grayscale-3/60 dark:divide-grayscale-3/30 border-y border-grayscale-3/60 dark:border-grayscale-3/30">
+          <div class="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5">
+            <div>
+              <h3 class="text-grayscale-12 text-sm font-medium">Proyectos por Hitos / Alcance Fijo</h3>
+              <p class="text-grayscale-10 text-xs">Ideal para aplicaciones definidas, rediseños completos y plataformas a medida.</p>
+            </div>
+            <span class="font-mono text-xs text-grayscale-12 whitespace-nowrap">Desde $1,200 USD</span>
+          </div>
+          <div class="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5">
+            <div>
+              <h3 class="text-grayscale-12 text-sm font-medium">Retainer Mensual / Consultoría Continua</h3>
+              <p class="text-grayscale-10 text-xs">Desarrollo continuo de producto, arquitectura de software y soporte técnico especializado.</p>
+            </div>
+            <span class="font-mono text-xs text-grayscale-12 whitespace-nowrap">Por horas / Asignación flexible</span>
+          </div>
+          <div class="py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5">
+            <div>
+              <h3 class="text-grayscale-12 text-sm font-medium">Roles de Tiempo Completo / Remoto</h3>
+              <p class="text-grayscale-10 text-xs">Contratación directa como Frontend, Backend o Full-Stack Engineer.</p>
+            </div>
+            <span class="font-mono text-xs text-grayscale-12 whitespace-nowrap">Disponible para evaluación</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trust & Verification -->
+      <section class="flex flex-col gap-4 text-grayscale-11 text-[13.5px] leading-relaxed">
+        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
+          contacto & verificación.
+        </h2>
+        <p>
+          Ubicado en Costa Rica con disponibilidad para trabajar con equipos a nivel global. Canales directos de verificación y contacto:
+        </p>
+        <ul class="list-disc list-inside space-y-1 text-xs text-grayscale-11">
+          <li>Correo directo: <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-accent-9">kirianluna.u@gmail.com</a></li>
+          <li>LinkedIn: <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-accent-9">linkedin.com/in/kirianluna</a></li>
+          <li>GitHub: <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-accent-9">github.com/kirianL</a></li>
+          <li>Formulario oficial: <a href="/es/contact" class="text-grayscale-12 underline underline-offset-4 hover:text-accent-9">kirian.dev/es/contact</a></li>
+        </ul>
+      </section>
+
+      <Footer />
+    </div>
+  </main>
+</Layout>
