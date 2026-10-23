@@ -81,6 +81,13 @@ if (initialViews === 0) {
 const formattedViews = new Intl.NumberFormat().format(initialViews);
 const formattedVisitors = new Intl.NumberFormat().format(initialVisitors);
 
+const defaultDevSprite = `<svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="2" y="2" width="20" height="15" fill="#71717a"/><rect x="4" y="4" width="16" height="11" fill="#09090b"/><rect x="6" y="6" width="6" height="2" fill="#22c55e"/><rect x="6" y="9" width="10" height="2" fill="#4ade80"/><rect x="6" y="12" width="4" height="2" fill="#86efac"/><rect x="10" y="17" width="4" height="3" fill="#71717a"/><rect x="6" y="20" width="12" height="2" fill="#a1a1aa"/></svg>`;
+const defaultBadge = "[Kirian: Online]";
+const defaultDialogue =
+  currentLocale === "es"
+    ? `"Compilando nuevas ideas y puliendo interfaces."`
+    : `"Crafting the next release."`;
+
 const initialStatsText =
   currentLocale === "es"
     ? `${formattedViews} vistas | Visitante #${formattedVisitors}`
@@ -194,17 +201,17 @@ const initialStatsText =
     <div
       id="dev-status-widget"
       data-cuelume-hover="tick"
-      class="hidden transition-all duration-300 flex-col sm:flex-row items-center justify-center gap-x-1.5 gap-y-0.5 text-[11px] sm:text-xs text-center leading-relaxed max-w-full select-none px-2"
+      class="flex transition-all duration-300 flex-col sm:flex-row items-center justify-center gap-x-1.5 gap-y-0.5 text-[11px] sm:text-xs text-center leading-relaxed max-w-full select-none px-2"
     >
       <!-- Title & Sprite Group -->
       <div class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0">
-        <span id="dev-status-sprite" class="w-4.5 h-4.5 sm:w-5 sm:h-5 shrink-0 inline-flex items-center justify-center animate-pixel-idle"></span>
-        <span id="dev-status-badge" class="font-mono text-zinc-900 dark:text-zinc-100 font-semibold whitespace-nowrap"></span>
+        <span id="dev-status-sprite" class="w-4.5 h-4.5 sm:w-5 sm:h-5 shrink-0 inline-flex items-center justify-center animate-pixel-idle" set:html={defaultDevSprite}></span>
+        <span id="dev-status-badge" class="font-mono text-zinc-900 dark:text-zinc-100 font-semibold whitespace-nowrap">{defaultBadge}</span>
         <span class="text-grayscale-10 font-mono hidden sm:inline shrink-0">›</span>
       </div>
 
       <!-- Dialogue text -->
-      <span id="dev-status-dialogue" class="font-mono text-grayscale-11 dark:text-grayscale-10 italic text-center max-w-xs sm:max-w-none text-balance sm:whitespace-nowrap inline-flex items-center justify-center"></span>
+      <span id="dev-status-dialogue" class="font-mono text-grayscale-11 dark:text-grayscale-10 italic text-center max-w-xs sm:max-w-none text-balance sm:whitespace-nowrap inline-flex items-center justify-center" data-rendered-text={defaultDialogue} title={defaultDialogue}>{defaultDialogue}</span>
     </div>
   </div>
 
@@ -334,14 +341,12 @@ const initialStatsText =
     gamepad: `<svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="3" y="6" width="18" height="11" fill="#475569"/><rect x="5" y="10" width="5" height="2" fill="#0f172a"/><rect x="6" y="8" width="2" height="6" fill="#0f172a"/><rect x="16" y="9" width="2" height="2" fill="#ef4444"/><rect x="18" y="11" width="2" height="2" fill="#38bdf8"/><rect x="14" y="11" width="2" height="2" fill="#eab308"/><rect x="16" y="13" width="2" height="2" fill="#22c55e"/></svg>`,
   };
 
-  function decryptMotion(element: HTMLElement, targetText: string, speed = 20) {
+  function decryptMotion(element: HTMLElement, targetText: string, speed = 14) {
     if (!element) return;
-    if (element.dataset.resolvedText === targetText && element.textContent === targetText) return;
-    element.dataset.resolvedText = targetText;
 
     const length = targetText.length;
     let iteration = 0;
-    const maxIterations = length + 6;
+    const maxIterations = length + 4;
 
     if ((element as any)._decryptTimer) {
       clearInterval((element as any)._decryptTimer);
@@ -359,7 +364,7 @@ const initialStatsText =
         })
         .join("");
 
-      iteration += 1 / 1.4;
+      iteration += 1 / 1.3;
 
       if (iteration >= maxIterations) {
         clearInterval((element as any)._decryptTimer);
@@ -573,6 +578,9 @@ const initialStatsText =
 
   function applyPresence(lanyardData: any) {
     try {
+      if (typeof window !== "undefined") {
+        (window as any).__lastLanyardData = lanyardData;
+      }
       const spotifyWidget = document.getElementById("spotify-widget");
       const gameWidget = document.getElementById("game-widget");
       const devWidget = document.getElementById("dev-status-widget");
@@ -703,10 +711,9 @@ const initialStatsText =
         if (devSprite && devInfo.sprite && PIXEL_SPRITES[devInfo.sprite]) {
           devSprite.innerHTML = PIXEL_SPRITES[devInfo.sprite];
         }
-        if (devDialogue && devDialogue.dataset.renderedText !== devInfo.text) {
-          devDialogue.dataset.renderedText = devInfo.text;
+        if (devDialogue && devDialogue.textContent !== devInfo.text && !(devDialogue as any)._decryptTimer) {
           devDialogue.title = devInfo.text;
-          decryptMotion(devDialogue, devInfo.text, 18);
+          decryptMotion(devDialogue, devInfo.text, 14);
         }
       } else {
         if (devWidget) {
@@ -853,6 +860,36 @@ const initialStatsText =
   }
 
   function init() {
+    // 1. Immediately trigger the decrypt animation on page arrival (0ms wait!)
+    const devInfo = getDevStatusDialogue();
+    const devBadge = document.getElementById("dev-status-badge");
+    const devSprite = document.getElementById("dev-status-sprite");
+    const devDialogue = document.getElementById("dev-status-dialogue");
+    if (devBadge) devBadge.textContent = devInfo.badge;
+    if (devSprite && devInfo.sprite && PIXEL_SPRITES[devInfo.sprite]) {
+      devSprite.innerHTML = PIXEL_SPRITES[devInfo.sprite];
+    }
+    if (devDialogue) {
+      devDialogue.title = devInfo.text;
+      decryptMotion(devDialogue, devInfo.text, 14);
+    }
+
+    // 2. Click re-trigger for decrypt animation
+    const devWidget = document.getElementById("dev-status-widget");
+    if (devWidget) {
+      devWidget.onclick = () => {
+        const info = getDevStatusDialogue();
+        const dial = document.getElementById("dev-status-dialogue");
+        if (dial) {
+          decryptMotion(dial, info.text, 14);
+        }
+      };
+    }
+
+    // 3. Immediately apply cached presence if available in memory (0ms instant render)
+    if (typeof window !== "undefined" && (window as any).__lastLanyardData) {
+      applyPresence((window as any).__lastLanyardData);
+    }
     loadSpotify();
     connectLanyardSocket();
     loadPostHogStats();

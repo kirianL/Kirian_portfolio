@@ -2,6 +2,7 @@ import { puertoLimonDetails } from "./data-puertolimon";
 import { brisasDelRioDetails } from "./data-brisasdelrio";
 import { youngLegendsDetails } from "./data-younglegends";
 import { umpMusicDetails } from "./data-umpmusic";
+import { gigBladesDetails } from "./data-gigblades";
 
 export type Language = "ES" | "EN";
 
@@ -178,6 +179,7 @@ const es = {
     resultsLabel: "Impacto",
     caseStudyLabel: "Caso de Estudio",
     list: [
+      gigBladesDetails.ES,
       puertoLimonDetails.ES,
       brisasDelRioDetails.ES,
       youngLegendsDetails.ES,
@@ -417,6 +419,7 @@ const en: typeof es = {
     resultsLabel: "Impact",
     caseStudyLabel: "Case Study",
     list: [
+      gigBladesDetails.EN,
       puertoLimonDetails.EN,
       brisasDelRioDetails.EN,
       youngLegendsDetails.EN,

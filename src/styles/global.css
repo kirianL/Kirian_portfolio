@@ -309,18 +309,36 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   Page Transitions — Instant Swap (Zero pop-in, zero content delay)
-   iOS Safari defers painting below-fold content during view-transition
-   animations, causing sections like "experience." to flash in late.
-   An instant swap eliminates this entirely for a native-app feel.
+   Page Transitions — Pure Clean Cross-Fade (Zero jumps, Zero shifts, Zero zoom)
    ========================================================================== */
-::view-transition-old(root) {
+::view-transition-group(root) {
   animation: none !important;
-  display: none !important;
+}
+
+::view-transition-old(root) {
+  animation: 90ms ease-out both pureFadeOut;
 }
 
 ::view-transition-new(root) {
-  animation: none !important;
+  animation: 140ms ease-in both pureFadeIn;
+}
+
+@keyframes pureFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes pureFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Accessibility & Battery optimization: Respect OS reduced motion preference */

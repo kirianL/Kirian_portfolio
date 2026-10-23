@@ -54,11 +54,6 @@ const spanishURL = new URL(spanishPath, siteURL);
           if (e.newDocument) {
             applyTheme(e.newDocument);
           }
-          try {
-            if (e.viewTransition && e.viewTransition.skipTransition) {
-              e.viewTransition.skipTransition();
-            }
-          } catch (_) {}
         });
 
         // Sync again after swap
@@ -222,8 +217,8 @@ const spanishURL = new URL(spanishPath, siteURL);
 
       const initLenis = () => {
         if (lenis) {
-          lenis.destroy();
-          if (rafId !== null) cancelAnimationFrame(rafId);
+          lenis.resize();
+          return;
         }
 
         lenis = new Lenis({

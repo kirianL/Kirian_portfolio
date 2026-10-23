@@ -2,142 +2,194 @@
 import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
-
 import { getCollection } from 'astro:content';
 
-// Localized blog content
-const title = "Blog";
-const description = "Sharing thoughts on design, engineering, and web performance.";
+const title = "Blog | Kirian Luna";
+const description = "Thoughts on software engineering, product design, and web architecture.";
 
 // Fetch English posts from Content Collection
 const allPosts = await getCollection('blog');
 const posts = allPosts
   .filter(post => post.id.startsWith('en/'))
-  .map(post => ({
-    title: post.data.title,
-    description: post.data.description,
-    date: post.data.date,
-    category: post.data.category,
-    image: post.data.image,
-    link: `/blog/${post.id.replace(/^en\//, '')}/`
-  }));
+  .map(post => {
+    const rawBody = post.body || "";
+    const wordCount = rawBody.trim().split(/\s+/).filter(Boolean).length;
+    const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
+
+    return {
+      title: post.data.title,
+      description: post.data.description,
+      date: post.data.date,
+      category: post.data.category,
+      image: post.data.image,
+      readTime,
+      link: `/blog/${post.id.replace(/^en\//, '')}/`
+    };
+  })
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 ---
 
 <Layout 
-  title="Blog | Kirian Luna" 
+  title={title}
   description={description}
   lang="en"
 >
   <Navbar />
   
-  <main class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-16">
-    <div class="flex flex-col gap-10">
-      
-      <!-- Blog Header -->
-      <section class="flex flex-col gap-2">
-        <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
-          blog.
-        </h1>
-        <p class="text-grayscale-11 text-xs leading-normal">
-          {description}
-        </p>
-      </section>
+  <main class="min-h-screen bg-grayscale-1">
+    <div class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-16">
+      <div class="flex flex-col gap-10">
+        
+        <!-- Blog Header -->
+        <header class="flex flex-col gap-2">
+          <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+            blog.
+          </h1>
+          <p class="text-grayscale-11 text-xs leading-normal">
+            {description}
+          </p>
+        </header>
 
-      <!-- Blog Posts List -->
-      <section class="flex flex-col gap-6">
-        {posts.map((post) => (
-          <a href={post.link} data-cuelume-hover="tick" data-cuelume-press data-cuelume-release class="group flex flex-col gap-3.5 p-3 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 transition-all duration-200 shadow-xs">
-            <div class="w-full aspect-[16/9] overflow-hidden rounded-lg bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/50">
-              <img 
-                src={post.image} 
-                alt={post.title} 
-                class="w-full h-full object-cover group-hover:scale-[1.01] transition-transform duration-500 ease-out" 
-                loading="lazy"
-              />
-            </div>
-            <div class="flex flex-col gap-1 px-1 py-0.5">
-              <div class="flex items-center justify-between text-[10px] font-mono text-grayscale-10">
-                <span>{post.date}</span>
-                <span class="px-2.5 py-0.5 bg-grayscale-3 text-grayscale-11 rounded-full font-medium text-[9px] shadow-3xs">{post.category}</span>
-              </div>
-              <h3 class="text-grayscale-12 font-semibold text-[13.5px] leading-tight group-hover:text-accent-9 transition-colors mt-2">
-                {post.title}
-              </h3>
-              <p class="text-grayscale-11 text-[12.5px] leading-relaxed mt-1">
-                {post.description}
-              </p>
-            </div>
-          </a>
-        ))}
-      </section>
+        <!-- Editorial Article Grid (Designed for scale, clear imagery, neutral hovers) -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+          {posts.map((post) => (
+            <article class="flex flex-col">
+              <a 
+                href={post.link} 
+                data-astro-prefetch="viewport"
+                data-cuelume-hover="tick" 
+                data-cuelume-press="page" 
+                data-cuelume-release="release"
+                class="group flex flex-col h-full p-2.5 rounded-2xl bg-white dark:bg-grayscale-2/30 border border-grayscale-3/70 dark:border-grayscale-3/30 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 shadow-3xs hover:shadow-2xs transition-all duration-300"
+              >
+                <!-- Framed Preview Image (Crisp, clearly visible, balanced aspect ratio) -->
+                {post.image && (
+                  <div class="w-full aspect-[16/10] overflow-hidden rounded-xl bg-grayscale-2 border border-grayscale-3/60 dark:border-grayscale-3/40 shrink-0">
+                    <img 
+                      src={post.image} 
+                      alt={post.title} 
+                      class="w-full h-full object-cover" 
+                      loading="lazy"
+                    />
+                  </div>
+                )}
 
-      <!-- Newsletter Section -->
-      <section class="mt-4 p-5 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 flex flex-col gap-4 shadow-xs">
-        <h3 class="text-grayscale-12 font-semibold text-sm">Subscribe to the newsletter</h3>
-        <p class="text-grayscale-11 text-xs leading-relaxed">
-          Get notified whenever I publish a new article about design, engineering, and web performance. No spam, unsubscribe at any time.
-        </p>
-        <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-1">
-          <input 
-            type="email" 
-            required 
-            placeholder="your@email.com" 
-            class="flex-1 w-full px-3 py-2 text-xs rounded-lg border border-grayscale-3 bg-grayscale-1 text-grayscale-12 focus:outline-none focus:border-accent-9 transition-colors"
-          />
-          <button 
-            type="submit" 
-            class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
-          >
-            Subscribe
-          </button>
-        </form>
-        <p id="subscribe-message" class="text-xs font-mono hidden"></p>
-      </section>
+                <!-- Card Content -->
+                <div class="flex flex-col flex-1 pt-3.5 pb-1 px-1">
+                  <!-- Metadata Row: Date & Category -->
+                  <div class="flex items-center justify-between text-[11px] font-mono text-grayscale-10 mb-2">
+                    <time>{post.date}</time>
+                    <span class="px-2 py-0.5 rounded-md bg-grayscale-2 dark:bg-grayscale-3/40 border border-grayscale-3/60 dark:border-grayscale-3/30 text-[10px] text-grayscale-11 font-medium select-none">
+                      {post.category}
+                    </span>
+                  </div>
 
-      <script>
-        const form = document.getElementById('subscribe-form') as HTMLFormElement;
-        const message = document.getElementById('subscribe-message') as HTMLParagraphElement;
+                  <!-- Title: Crisp & neutral (no blue hover) -->
+                  <h2 class="text-grayscale-12 font-medium text-[15px] leading-snug tracking-tight">
+                    {post.title}
+                  </h2>
 
-        form?.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
-          const email = emailInput.value;
-          
-          const button = form.querySelector('button') as HTMLButtonElement;
-          const originalText = button.textContent;
-          button.disabled = true;
-          button.textContent = 'Subscribing...';
-          
-          try {
-            const res = await fetch('/api/subscribe', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email, lang: 'en' })
-            });
-            const data = await res.json();
-            
-            if (res.ok) {
-              message.textContent = '✓ Successfully subscribed!';
-              message.className = 'text-xs font-mono text-green-600';
-              form.reset();
-            } else {
-              message.textContent = `✗ ${data.error || 'Something went wrong'}`;
-              message.className = 'text-xs font-mono text-red-600';
-            }
-          } catch (err) {
-            message.textContent = '✗ Connection error. Please try again.';
-            message.className = 'text-xs font-mono text-red-600';
-          } finally {
-            button.disabled = false;
-            button.textContent = originalText;
-            message.classList.remove('hidden');
-          }
-        });
-      </script>
+                  <!-- Description -->
+                  <p class="text-grayscale-11 text-xs leading-relaxed line-clamp-2 mt-2">
+                    {post.description}
+                  </p>
 
-      <!-- Footer -->
-      <Footer />
+                  <!-- Bottom row: Reading time & neutral indicator -->
+                  <div class="mt-auto pt-3.5 flex items-center justify-between text-[11px] font-mono text-grayscale-10">
+                    <span>{post.readTime}</span>
+                    <span class="text-grayscale-11 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1 select-none">
+                      Read article
+                      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          ))}
+        </section>
 
+        <!-- Newsletter Section (Clean & Minimal) -->
+        <section class="p-5 sm:p-6 rounded-2xl bg-grayscale-2/40 border border-grayscale-3/50 dark:border-grayscale-3/30 flex flex-col gap-3">
+          <div class="flex flex-col gap-1">
+            <h3 class="text-grayscale-12 font-medium text-sm tracking-tight">Newsletter</h3>
+            <p class="text-grayscale-11 text-xs leading-relaxed max-w-lg">
+              Get notified whenever I publish a new article about design, engineering, and web performance. Zero spam, unsubscribe anytime.
+            </p>
+          </div>
+
+          <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-1">
+            <input 
+              type="email" 
+              required 
+              placeholder="you@domain.com" 
+              class="flex-1 w-full px-3.5 py-2 text-xs rounded-lg border border-grayscale-3/70 bg-white dark:bg-grayscale-2 text-grayscale-12 placeholder:text-grayscale-9 focus:outline-hidden focus:border-accent-9 transition-colors"
+            />
+            <button 
+              type="submit" 
+              data-cuelume-hover="tick"
+              data-cuelume-press="scan"
+              class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer select-none shrink-0"
+            >
+              Subscribe
+            </button>
+          </form>
+          <p id="subscribe-message" class="text-xs font-mono hidden"></p>
+        </section>
+
+        <!-- Footer -->
+        <Footer />
+      </div>
     </div>
   </main>
 </Layout>
+
+<script>
+  const setupNewsletterForm = () => {
+    const form = document.getElementById('subscribe-form') as HTMLFormElement | null;
+    const message = document.getElementById('subscribe-message') as HTMLParagraphElement | null;
+    if (!form || !message || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+      const email = emailInput ? emailInput.value : '';
+      const button = form.querySelector('button') as HTMLButtonElement;
+      const originalText = button ? button.textContent : 'Subscribe';
+      if (button) {
+        button.disabled = true;
+        button.textContent = '...';
+      }
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, lang: 'en' })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          message.textContent = '✓ Subscribed successfully!';
+          message.className = 'text-xs font-mono text-emerald-600 dark:text-emerald-400';
+          form.reset();
+        } else {
+          message.textContent = `✗ ${data.error || 'Something went wrong'}`;
+          message.className = 'text-xs font-mono text-red-600 dark:text-red-400';
+        }
+      } catch (err) {
+        message.textContent = '✗ Connection error. Please try again.';
+        message.className = 'text-xs font-mono text-red-600 dark:text-red-400';
+      } finally {
+        if (button) {
+          button.disabled = false;
+          button.textContent = originalText;
+        }
+        message.classList.remove('hidden');
+      }
+    });
+  };
+
+  setupNewsletterForm();
+  document.addEventListener('astro:page-load', setupNewsletterForm);
+</script>

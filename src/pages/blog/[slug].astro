@@ -27,6 +27,27 @@ const { Content, headings } = await render(post);
 const rawBody = post.body || "";
 const wordCount = rawBody.trim().split(/\s+/).filter(Boolean).length;
 const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
+
+// Fetch other blog posts for "More writings" section
+const allPosts = await getCollection('blog');
+const morePosts = allPosts
+  .filter(p => p.id.startsWith('en/') && p.id !== post.id)
+  .map(p => {
+    const pBody = p.body || "";
+    const pWords = pBody.trim().split(/\s+/).filter(Boolean).length;
+    const pReadTime = `${Math.max(1, Math.ceil(pWords / 200))} min read`;
+    return {
+      title: p.data.title,
+      description: p.data.description,
+      date: p.data.date,
+      category: p.data.category,
+      image: p.data.image,
+      readTime: pReadTime,
+      link: `/blog/${p.id.replace(/^en\//, '')}/`
+    };
+  })
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 2);
 ---
 
 <Layout 
@@ -153,6 +174,76 @@ const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
               <BlogReactions slug={Astro.params.slug!} lang="en" />
             </div>
           </div>
+
+          <!-- Keep reading (Modern & Minimalist) -->
+          <section class="flex flex-col gap-4 pt-8 border-t border-grayscale-3/60 dark:border-grayscale-3/40">
+            <div class="flex items-center justify-between">
+              <div class="flex flex-col gap-0.5">
+                <span class="text-[11px] font-mono uppercase tracking-wider text-grayscale-10">Keep reading</span>
+                <h3 class="text-grayscale-12 font-medium text-base tracking-tight">More from the blog</h3>
+              </div>
+              <a 
+                href="/blog/"
+                data-cuelume-hover="tick"
+                class="text-xs font-mono text-grayscale-10 hover:text-grayscale-12 transition-colors inline-flex items-center gap-1 select-none"
+              >
+                <span>View all</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+
+            {morePosts.length > 0 ? (
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {morePosts.map(p => (
+                  <article class="flex flex-col">
+                    <a 
+                      href={p.link}
+                      data-astro-prefetch="viewport"
+                      data-cuelume-hover="tick"
+                      class="group flex flex-col h-full p-2.5 rounded-2xl bg-white dark:bg-grayscale-2/30 border border-grayscale-3/70 dark:border-grayscale-3/30 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 transition-all duration-200"
+                    >
+                      {p.image && (
+                        <div class="w-full aspect-[16/10] overflow-hidden rounded-xl bg-grayscale-2 border border-grayscale-3/50 dark:border-grayscale-3/30 shrink-0">
+                          <img src={p.image} alt={p.title} class="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                      )}
+                      <div class="flex flex-col pt-3 pb-1 px-1 flex-1">
+                        <div class="flex items-center justify-between text-[11px] font-mono text-grayscale-10 mb-1.5">
+                          <time>{p.date}</time>
+                          <span class="px-2 py-0.5 rounded-md bg-grayscale-2 dark:bg-grayscale-3/40 border border-grayscale-3/60 dark:border-grayscale-3/30 text-[10px] text-grayscale-11 font-medium">{p.category}</span>
+                        </div>
+                        <h4 class="text-grayscale-12 font-medium text-sm leading-snug tracking-tight">
+                          {p.title}
+                        </h4>
+                        <p class="text-grayscale-11 text-xs line-clamp-2 mt-1.5 leading-relaxed">
+                          {p.description}
+                        </p>
+                        <div class="mt-auto pt-2.5 text-[11px] font-mono text-grayscale-10">
+                          <span>{p.readTime}</span>
+                        </div>
+                      </div>
+                    </a>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div class="p-4 sm:p-5 rounded-2xl border border-grayscale-3/60 dark:border-grayscale-3/30 bg-grayscale-2/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex flex-col gap-1">
+                  <span class="text-[11px] font-mono text-grayscale-10">Upcoming articles</span>
+                  <p class="text-grayscale-12 text-xs sm:text-[13px] font-medium leading-relaxed">
+                    More articles on software architecture, interface design, and web performance are on the way.
+                  </p>
+                </div>
+                <a 
+                  href="/blog/"
+                  data-cuelume-hover="tick"
+                  class="shrink-0 px-3 py-1.5 rounded-lg border border-grayscale-3/80 hover:border-grayscale-5 text-grayscale-12 font-mono text-xs hover:bg-grayscale-2 transition-colors duration-200 select-none"
+                >
+                  Explore blog
+                </a>
+              </div>
+            )}
+          </section>
 
           <!-- Minimalist Newsletter Box -->
           <section class="mt-4 p-6 rounded-xl border border-grayscale-3/60 dark:border-grayscale-3/40 bg-grayscale-2/30 dark:bg-grayscale-2/20 flex flex-col gap-3">
