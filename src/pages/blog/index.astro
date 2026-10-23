@@ -36,7 +36,7 @@ const posts = allPosts
 >
   <Navbar />
   
-  <main class="min-h-screen bg-grayscale-1">
+  <main id="main-content" class="min-h-screen bg-grayscale-1">
     <div class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-16">
       <div class="flex flex-col gap-10">
         
@@ -68,6 +68,8 @@ const posts = allPosts
                     <img 
                       src={post.image} 
                       alt={post.title} 
+                      width="600"
+                      height="375"
                       class="w-full h-full object-cover" 
                       loading="lazy"
                     />

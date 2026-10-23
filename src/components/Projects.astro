@@ -127,6 +127,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
             type="button"
             role="tab"
             aria-selected="true"
+            aria-label={currentLocale === 'ES' ? 'Vista de lista' : 'List view'}
             data-cuelume-toggle
             class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
             title={currentLocale === 'ES' ? 'Vista de lista' : 'List view'}
@@ -142,6 +143,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
             type="button"
             role="tab"
             aria-selected="false"
+            aria-label={currentLocale === 'ES' ? 'Vista de cuadrícula' : 'Grid view'}
             data-cuelume-toggle
             class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
             title={currentLocale === 'ES' ? 'Vista de cuadrícula' : 'Grid view'}
@@ -230,7 +232,7 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
               >
                 <div class="w-full h-full overflow-hidden rounded-lg">
                   {typeof project.image === 'string' ? (
-                    <img src={project.image} alt={project.name} class="w-full h-full object-cover group-hover/grid:scale-[1.02] transition-transform duration-500 ease-out" />
+                    <img src={project.image} alt={project.name} width="320" height="200" loading="lazy" class="w-full h-full object-cover group-hover/grid:scale-[1.02] transition-transform duration-500 ease-out" />
                   ) : (
                     <Image src={project.image} alt={project.name} class="w-full h-full object-cover group-hover/grid:scale-[1.02] transition-transform duration-500 ease-out" width={320} height={200} format="webp" />
                   )}

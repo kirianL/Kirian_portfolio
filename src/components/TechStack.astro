@@ -61,6 +61,7 @@ const skills = data.skills.list || [];
           type="button"
           role="tab"
           aria-selected="true"
+          aria-label={currentLocale === "ES" ? "Vista de lista" : "List view"}
           data-cuelume-toggle
           class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
           title={currentLocale === "ES" ? "Vista de lista" : "List view"}
@@ -84,6 +85,7 @@ const skills = data.skills.list || [];
           type="button"
           role="tab"
           aria-selected="false"
+          aria-label={currentLocale === "ES" ? "Vista de cuadrícula" : "Grid view"}
           data-cuelume-toggle
           class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
           title={currentLocale === "ES" ? "Vista de cuadrícula" : "Grid view"}

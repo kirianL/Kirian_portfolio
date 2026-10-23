@@ -76,9 +76,25 @@ const spanishURL = new URL(spanishPath, siteURL);
     <ClientRouter />
 
     <!-- Performance & Preconnect (SXO) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=Instrument+Serif:ital@0;1&display=swap" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=Instrument+Serif:ital@0;1&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=Instrument+Serif:ital@0;1&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=Instrument+Serif:ital@0;1&display=swap"
+      />
+    </noscript>
     <link rel="preconnect" href="https://api.lanyard.rest" crossorigin />
     <link rel="preconnect" href="https://i.scdn.co" crossorigin />
 
@@ -191,6 +207,14 @@ const spanishURL = new URL(spanishPath, siteURL);
     <PostHog />
   </head>
   <body class="antialiased selection:bg-accent-4/20 selection:text-accent-12 min-h-screen bg-grayscale-1 text-grayscale-12">
+    <!-- Accessibility: Skip to Main Content Link -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-grayscale-12 focus:text-grayscale-1 focus:rounded-lg focus:shadow-md focus:text-xs focus:font-mono focus:outline-none"
+    >
+      {lang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content'}
+    </a>
+
     <slot />
 
     <!-- cuelume interaction sounds & audio engine -->

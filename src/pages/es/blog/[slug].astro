@@ -86,7 +86,7 @@ const morePosts = allPosts
   <div class="blog-vignette-top"></div>
   <div class="blog-vignette-bottom"></div>
 
-  <main class="min-h-screen bg-grayscale-1 px-4 sm:px-6 lg:px-8 py-10 md:py-16 pt-24 md:pt-28">
+  <main id="main-content" class="min-h-screen bg-grayscale-1 px-4 sm:px-6 lg:px-8 py-10 md:py-16 pt-24 md:pt-28">
     <div class="max-w-7xl mx-auto">
       
       <!-- Minimalist Symmetrically Centered Layout -->
@@ -148,6 +148,9 @@ const morePosts = allPosts
             <img 
               src={post.data.image} 
               alt={post.data.title} 
+              width="1200"
+              height="675"
+              fetchpriority="high"
               class="w-full h-auto object-cover max-h-[460px]" 
             />
           </div>
@@ -160,7 +163,7 @@ const morePosts = allPosts
           <!-- Mobile Only: Reactions & Author Box -->
           <div class="lg:hidden flex flex-col gap-6 pt-6 border-t border-grayscale-3/60 dark:border-grayscale-3/40">
             <div class="flex items-center gap-3">
-              <img src="/LogoKirian.png" alt="Kirian Luna" class="w-9 h-9 sm:w-10 sm:h-10 aspect-square object-contain dark:invert shrink-0" />
+              <img src="/LogoKirian.png" alt="Kirian Luna" width="40" height="40" class="w-9 h-9 sm:w-10 sm:h-10 aspect-square object-contain dark:invert shrink-0" />
               <div class="flex flex-col">
                 <span class="text-xs font-medium text-grayscale-12">Kirian Luna</span>
                 <span class="text-[11px] text-grayscale-10 font-mono">Ingeniero de Software</span>
@@ -277,7 +280,7 @@ const morePosts = allPosts
           <div class="flex flex-col gap-2.5">
             <span class="text-[11px] font-mono uppercase tracking-wider text-grayscale-10">Autor</span>
             <div class="flex items-center gap-3">
-              <img src="/LogoKirian.png" alt="Kirian Luna" class="w-9 h-9 sm:w-10 sm:h-10 aspect-square object-contain dark:invert shrink-0" />
+              <img src="/LogoKirian.png" alt="Kirian Luna" width="40" height="40" class="w-9 h-9 sm:w-10 sm:h-10 aspect-square object-contain dark:invert shrink-0" />
               <div class="flex flex-col min-w-0">
                 <span class="text-xs font-medium text-grayscale-12 truncate">Kirian Luna</span>
                 <span class="text-[11px] font-mono text-grayscale-10 truncate">Ingeniero de Software</span>
