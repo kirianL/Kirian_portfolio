@@ -306,12 +306,27 @@ const reactions = [
         }
       });
 
-      // 2. Fetch live counts from Redis API
+      // 2. Fetch live counts from Redis API and sync user's active reaction by IP
       try {
         const res = await fetch(`/api/reactions?slug=${encodeURIComponent(slug)}`);
         if (res.ok) {
           const data = await res.json();
           updateButtonCounts(data.counts || {});
+
+          if (data.userReaction !== undefined) {
+            if (data.userReaction) {
+              activeReaction = data.userReaction;
+              localStorage.setItem(postKey, activeReaction);
+            }
+            buttons.forEach((btn) => {
+              const reactionId = btn.getAttribute("data-reaction-id") || "";
+              if (activeReaction === reactionId) {
+                btn.classList.add("has-reacted");
+              } else {
+                btn.classList.remove("has-reacted");
+              }
+            });
+          }
         }
       } catch (err) {
         console.warn("Reactions sync:", err);
@@ -346,6 +361,11 @@ const reactions = [
               if (postRes.ok) {
                 const data = await postRes.json();
                 updateButtonCounts(data.counts);
+                if (data.userReaction) {
+                  localStorage.setItem(postKey, data.userReaction);
+                } else {
+                  localStorage.removeItem(postKey);
+                }
               }
             } catch (err) {
               console.warn("Un-react error:", err);
@@ -393,6 +413,11 @@ const reactions = [
               if (postRes.ok) {
                 const data = await postRes.json();
                 updateButtonCounts(data.counts);
+                if (data.userReaction) {
+                  localStorage.setItem(postKey, data.userReaction);
+                } else {
+                  localStorage.removeItem(postKey);
+                }
               }
             } catch (err) {
               console.warn("React/switch error:", err);
