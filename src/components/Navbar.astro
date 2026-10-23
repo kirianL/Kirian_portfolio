@@ -63,6 +63,8 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
 ---
 
 <nav
+  id="main-navbar"
+  transition:persist="main-navbar"
   class="fixed top-0 left-0 right-0 z-50 bg-grayscale-1/70 backdrop-blur-md border-b border-grayscale-3/40 dark:border-grayscale-3/20 transition-colors duration-200"
 >
   <div
@@ -70,6 +72,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
   >
     <!-- Brand / Logo Link -->
     <a
+      id="nav-brand-logo"
       href={homePath}
       data-astro-prefetch="viewport"
       data-cuelume-hover="tick"
@@ -91,7 +94,8 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
         class="flex items-center gap-2 sm:gap-4 text-[11px] sm:text-[12.5px] font-medium text-grayscale-11 shrink-0"
       >
         <a
-          href={`${localePrefix || ""}/projects/`}
+          id="nav-link-projects"
+          href={`${localePrefix || ""}/projects`}
           data-astro-prefetch="viewport"
           data-cuelume-hover="tick"
           data-cuelume-press="page"
@@ -100,7 +104,8 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           >{navLabels.projects}</a
         >
         <a
-          href={`${localePrefix || ""}/blog/`}
+          id="nav-link-blog"
+          href={`${localePrefix || ""}/blog`}
           data-astro-prefetch="viewport"
           data-cuelume-hover="tick"
           data-cuelume-press="page"
@@ -109,7 +114,8 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           >{navLabels.blog}</a
         >
         <a
-          href={`${localePrefix || ""}/contact/`}
+          id="nav-link-contact"
+          href={`${localePrefix || ""}/contact`}
           data-astro-prefetch="viewport"
           data-cuelume-hover="tick"
           data-cuelume-press="page"
@@ -118,6 +124,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           >{navLabels.contact}</a
         >
         <a
+          id="nav-link-agency"
           href="https://sorinlabs.dev"
           target="_blank"
           rel="noopener noreferrer"
@@ -125,7 +132,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           data-cuelume-press="scan"
           class="hover:text-grayscale-12 transition-colors hidden sm:flex items-center gap-0.5 group/agency"
         >
-          {navLabels.agency}
+          <span id="nav-text-agency">{navLabels.agency}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="10"
@@ -202,6 +209,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           class="flex items-center gap-0.5 font-mono text-[10px] text-grayscale-10 bg-grayscale-2/60 p-0.5 rounded-lg border border-grayscale-3/40 shrink-0"
         >
           <a
+            id="lang-btn-en"
             href={enPath}
             data-astro-prefetch="viewport"
             data-lang-switch
@@ -214,6 +222,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
             EN
           </a>
           <a
+            id="lang-btn-es"
             href={esPath}
             data-astro-prefetch="viewport"
             data-lang-switch
@@ -255,10 +264,122 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
 </nav>
 
 <script>
+  const blogMapping: Record<string, string> = {
+    "/blog/digitalizing-a-cultural-identity":
+      "/es/blog/digitalizar-una-identidad-cultural",
+    "/es/blog/digitalizar-una-identidad-cultural":
+      "/blog/digitalizing-a-cultural-identity",
+  };
+
+  const navLabelsMap = {
+    en: {
+      home: "Home",
+      projects: "Projects",
+      blog: "Blog",
+      contact: "Contact",
+      agency: "Agency",
+    },
+    es: {
+      home: "Inicio",
+      projects: "Proyectos",
+      blog: "Blog",
+      contact: "Contacto",
+      agency: "Agencia",
+    },
+  };
+
+  const syncNavbarState = () => {
+    const rawPath = window.location.pathname;
+    const cleanPath = rawPath.replace(/\/$/, "");
+    const isEs = cleanPath.startsWith("/es");
+    const locale = isEs ? "es" : "en";
+    const prefix = isEs ? "/es" : "";
+
+    // 1. Update logo link
+    const logoEl = document.getElementById("nav-brand-logo") as HTMLAnchorElement | null;
+    if (logoEl) {
+      logoEl.href = isEs ? "/es/" : "/";
+      logoEl.setAttribute("aria-label", navLabelsMap[locale].home);
+    }
+
+    // 2. Update navigation links (href + active state + labels)
+    const links = [
+      { id: "nav-link-projects", pathSegment: "/projects", label: navLabelsMap[locale].projects },
+      { id: "nav-link-blog", pathSegment: "/blog", label: navLabelsMap[locale].blog },
+      { id: "nav-link-contact", pathSegment: "/contact", label: navLabelsMap[locale].contact },
+    ];
+
+    links.forEach(({ id, pathSegment, label }) => {
+      const el = document.getElementById(id) as HTMLAnchorElement | null;
+      if (el) {
+        el.href = `${prefix}${pathSegment}`;
+        el.textContent = label;
+        const isActive = cleanPath.includes(pathSegment);
+        if (isActive) {
+          el.classList.add("text-grayscale-12", "font-semibold");
+          el.classList.remove("text-grayscale-11");
+        } else {
+          el.classList.remove("text-grayscale-12", "font-semibold");
+          el.classList.add("text-grayscale-11");
+        }
+      }
+    });
+
+    // 3. Agency label
+    const agencyText = document.getElementById("nav-text-agency");
+    if (agencyText) {
+      agencyText.textContent = navLabelsMap[locale].agency;
+    }
+
+    // 4. Compute EN and ES target URLs for the language switcher
+    let enTarget = "/";
+    let esTarget = "/es/";
+
+    const mapped = blogMapping[cleanPath];
+    if (mapped) {
+      if (isEs) {
+        esTarget = cleanPath;
+        enTarget = mapped;
+      } else {
+        enTarget = cleanPath;
+        esTarget = mapped;
+      }
+    } else if (isEs) {
+      const base = cleanPath.replace(/^\/es/, "");
+      enTarget = base ? base : "/";
+      esTarget = cleanPath;
+    } else {
+      enTarget = cleanPath ? cleanPath : "/";
+      esTarget = cleanPath ? `/es${cleanPath}` : "/es/";
+    }
+
+    const enBtn = document.getElementById("lang-btn-en") as HTMLAnchorElement | null;
+    const esBtn = document.getElementById("lang-btn-es") as HTMLAnchorElement | null;
+
+    if (enBtn) {
+      enBtn.href = enTarget;
+      if (!isEs) {
+        enBtn.className = "px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs";
+      } else {
+        enBtn.className = "px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 hover:text-grayscale-12 text-grayscale-10";
+      }
+    }
+
+    if (esBtn) {
+      esBtn.href = esTarget;
+      if (isEs) {
+        esBtn.className = "cr-tico-btn px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-200 flex items-center justify-center bg-white dark:bg-grayscale-3 text-grayscale-12 shadow-3xs";
+      } else {
+        esBtn.className = "cr-tico-btn px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-200 flex items-center justify-center opacity-70 hover:opacity-100";
+      }
+    }
+  };
+
   const initNavbarInteractions = () => {
     // 1. Theme Toggle Button
     const toggleBtn = document.getElementById("theme-toggle");
-    if (toggleBtn) {
+    if (toggleBtn && !(toggleBtn as any).__bound) {
+      (toggleBtn as any).__bound = true;
       toggleBtn.onclick = (e) => {
         e.preventDefault();
 
@@ -295,10 +416,13 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
     // 2. Language Switch Scroll Preservation (Keep exact scroll position when toggling ES/EN)
     const langLinks = document.querySelectorAll("[data-lang-switch]");
     langLinks.forEach((link) => {
-      link.addEventListener("click", () => {
-        const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
-        sessionStorage.setItem("portfolio_lang_scroll", scrollY.toString());
-      });
+      if (!(link as any).__bound) {
+        (link as any).__bound = true;
+        link.addEventListener("click", () => {
+          const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+          sessionStorage.setItem("portfolio_lang_scroll", scrollY.toString());
+        });
+      }
     });
   };
 
@@ -311,12 +435,20 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
     }
   };
 
+  // Run on initial load
   initNavbarInteractions();
+  syncNavbarState();
   restoreLangScroll();
 
+  // Run on client router events
   document.addEventListener("astro:page-load", () => {
     initNavbarInteractions();
+    syncNavbarState();
     restoreLangScroll();
+  });
+
+  document.addEventListener("astro:after-swap", () => {
+    syncNavbarState();
   });
 
   document.addEventListener("astro:before-swap", (e: any) => {

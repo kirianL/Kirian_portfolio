@@ -309,21 +309,31 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   Page Transitions — Pure Clean Cross-Fade (Zero jumps, Zero shifts, Zero zoom)
+   Page Transitions — Ultra-Smooth Fluid Cross-Fade & Persistent Navbar
    ========================================================================== */
+::view-transition-group(main-navbar) {
+  animation: none !important;
+  z-index: 100 !important;
+}
+
+::view-transition-old(main-navbar),
+::view-transition-new(main-navbar) {
+  animation: none !important;
+}
+
 ::view-transition-group(root) {
   animation: none !important;
 }
 
 ::view-transition-old(root) {
-  animation: 90ms ease-out both pureFadeOut;
+  animation: 160ms cubic-bezier(0.16, 1, 0.3, 1) both vtFadeOut;
 }
 
 ::view-transition-new(root) {
-  animation: 140ms ease-in both pureFadeIn;
+  animation: 160ms cubic-bezier(0.16, 1, 0.3, 1) both vtFadeIn;
 }
 
-@keyframes pureFadeOut {
+@keyframes vtFadeOut {
   from {
     opacity: 1;
   }
@@ -332,7 +342,7 @@ html.lenis body {
   }
 }
 
-@keyframes pureFadeIn {
+@keyframes vtFadeIn {
   from {
     opacity: 0;
   }

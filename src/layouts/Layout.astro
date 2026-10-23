@@ -203,9 +203,14 @@ const spanishURL = new URL(spanishPath, siteURL);
       } catch {}
 
       // Bind all declarative data-cuelume-* attributes across the entire document
-      try {
-        bind(document);
-      } catch {}
+      const initCuelume = () => {
+        try {
+          bind(document);
+        } catch {}
+      };
+
+      initCuelume();
+      document.addEventListener("astro:page-load", initCuelume);
     </script>
 
     <!-- Lenis Smooth Scroll Engine -->
