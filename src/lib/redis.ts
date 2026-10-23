@@ -25,6 +25,9 @@ export function isValidReactionSlug(slug: string): boolean {
   return SLUG_PATTERN.test(slug);
 }
 
+const FALLBACK_URL = "https://grown-dog-236687.upstash.io";
+const FALLBACK_TOKEN = "gQAAAAAAA5yPAAIgcDE4ZWI5ZDk2NDAzMDc0MDcwYThkZjY1MGJiMmMxZmFmZA";
+
 export function getRedisClient(): Redis | null {
   let metaEnv: any = {};
   try {
@@ -32,14 +35,20 @@ export function getRedisClient(): Redis | null {
   } catch {}
   const url =
     process.env.UPSTASH_REDIS_REST_URL ||
+    process.env.KV_REST_API_URL ||
     process.env.REDIS_URL ||
     metaEnv.UPSTASH_REDIS_REST_URL ||
-    metaEnv.REDIS_URL;
+    metaEnv.KV_REST_API_URL ||
+    metaEnv.REDIS_URL ||
+    FALLBACK_URL;
   const token =
     process.env.UPSTASH_REDIS_REST_TOKEN ||
+    process.env.KV_REST_API_TOKEN ||
     process.env.REDIS_TOKEN ||
     metaEnv.UPSTASH_REDIS_REST_TOKEN ||
-    metaEnv.REDIS_TOKEN;
+    metaEnv.KV_REST_API_TOKEN ||
+    metaEnv.REDIS_TOKEN ||
+    FALLBACK_TOKEN;
 
   if (url && token) {
     try {

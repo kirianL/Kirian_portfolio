@@ -15,10 +15,21 @@ function getCanonicalSlug(rawSlug: string): string {
   return CANONICAL_SLUG_MAP[rawSlug] || rawSlug;
 }
 
+const FALLBACK_URL = "https://grown-dog-236687.upstash.io";
+const FALLBACK_TOKEN = "gQAAAAAAA5yPAAIgcDE4ZWI5ZDk2NDAzMDc0MDcwYThkZjY1MGJiMmMxZmFmZA";
+
 function getRedisClient(): Redis | null {
   try {
-    let url = process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL;
-    let token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_TOKEN;
+    let url =
+      process.env.UPSTASH_REDIS_REST_URL ||
+      process.env.KV_REST_API_URL ||
+      process.env.REDIS_URL ||
+      FALLBACK_URL;
+    let token =
+      process.env.UPSTASH_REDIS_REST_TOKEN ||
+      process.env.KV_REST_API_TOKEN ||
+      process.env.REDIS_TOKEN ||
+      FALLBACK_TOKEN;
 
     if (!url || !token) {
       return null;
