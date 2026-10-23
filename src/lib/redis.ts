@@ -12,13 +12,31 @@ export const DEFAULT_REACTION_COUNTS: Record<string, number> = {
 
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
 
+// Canonical map to share reactions between language versions of the same article
+const CANONICAL_SLUG_MAP: Record<string, string> = {
+  "digitalizar-una-identidad-cultural": "digitalizing-a-cultural-identity",
+};
+
+export function getCanonicalSlug(slug: string): string {
+  return CANONICAL_SLUG_MAP[slug] || slug;
+}
+
 export function isValidReactionSlug(slug: string): boolean {
   return SLUG_PATTERN.test(slug);
 }
 
 export function getRedisClient(): Redis | null {
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_TOKEN;
+  const metaEnv = (import.meta as any).env || {};
+  const url =
+    process.env.UPSTASH_REDIS_REST_URL ||
+    process.env.REDIS_URL ||
+    metaEnv.UPSTASH_REDIS_REST_URL ||
+    metaEnv.REDIS_URL;
+  const token =
+    process.env.UPSTASH_REDIS_REST_TOKEN ||
+    process.env.REDIS_TOKEN ||
+    metaEnv.UPSTASH_REDIS_REST_TOKEN ||
+    metaEnv.REDIS_TOKEN;
 
   if (url && token) {
     try {
@@ -34,10 +52,11 @@ export function getRedisClient(): Redis | null {
   return null;
 }
 
-export async function getReactions(slug: string): Promise<Record<string, number>> {
-  if (!isValidReactionSlug(slug)) {
+export async function getReactions(rawSlug: string): Promise<Record<string, number>> {
+  if (!isValidReactionSlug(rawSlug)) {
     throw new Error("Invalid slug");
   }
+  const slug = getCanonicalSlug(rawSlug);
 
   const redis = getRedisClient();
   if (redis) {
@@ -61,12 +80,13 @@ export async function getReactions(slug: string): Promise<Record<string, number>
 }
 
 export async function incrementReaction(
-  slug: string,
+  rawSlug: string,
   type: string
 ): Promise<Record<string, number>> {
-  if (!isValidReactionSlug(slug)) {
+  if (!isValidReactionSlug(rawSlug)) {
     throw new Error("Invalid slug");
   }
+  const slug = getCanonicalSlug(rawSlug);
 
   const validTypes = ["pinch", "thumb", "clap", "ok"];
   if (!validTypes.includes(type)) {
