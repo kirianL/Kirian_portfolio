@@ -97,17 +97,17 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST || "https://us.i.posthog
             });
           }
 
-          // Defer PostHog execution to idle or first user interaction
-          if ("requestIdleCallback" in window) {
-            requestIdleCallback(loadPostHog, { timeout: 6000 });
-          } else {
-            window.addEventListener("load", function () {
-              setTimeout(loadPostHog, 4000);
-            });
-          }
-          ["scroll", "touchstart", "click"].forEach(function (evt) {
+          // Defer PostHog execution: trigger immediately on real user gesture, or after 7s for idle readers
+          ["scroll", "touchstart", "click", "mousemove", "keydown"].forEach(function (evt) {
             window.addEventListener(evt, loadPostHog, { once: true, passive: true });
           });
+          setTimeout(function () {
+            if ("requestIdleCallback" in window) {
+              requestIdleCallback(loadPostHog, { timeout: 3000 });
+            } else {
+              loadPostHog();
+            }
+          }, 7000);
         }
       </script>
     </>

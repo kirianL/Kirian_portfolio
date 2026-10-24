@@ -421,7 +421,14 @@ const { name, title } = Astro.props;
 
     resize();
     draw();
-    play();
+
+    const startAnimation = () => {
+      play();
+    };
+    ["scroll", "touchstart", "mousemove", "click"].forEach((evt) => {
+      window.addEventListener(evt, startAnimation, { once: true, passive: true });
+    });
+    setTimeout(startAnimation, 3500);
 
     queueMicrotask(() => {
       const nextDark = isDarkTheme();
