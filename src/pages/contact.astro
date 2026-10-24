@@ -33,10 +33,13 @@ const data = dictionaries[currentLocale];
       <section>
         <form 
           id="contact-form" 
-          action="https://formspree.io/f/xvgooyob" 
+          action="/api/contact" 
           method="POST" 
           class="flex flex-col gap-3.5"
         >
+          <!-- Honeypot for bot spam prevention -->
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" style="display:none !important;" />
+
           <!-- Row 1: Name and Email -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <input 
@@ -243,7 +246,7 @@ const data = dictionaries[currentLocale];
 
     if (!form || !status || !submitBtn) return;
 
-    // Handle Formspree submission via AJAX to prevent redirect
+    // Handle form submission via internal Resend API endpoint
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -255,23 +258,22 @@ const data = dictionaries[currentLocale];
         const response = await fetch(form.action, {
           method: form.method,
           body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
         });
 
-        if (response.ok) {
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.success) {
           play("success");
           status.textContent = 'Message sent successfully!';
           status.classList.remove('hidden', 'text-red-600', 'dark:text-red-400');
           status.classList.add('text-emerald-600', 'dark:text-emerald-400');
           form.reset();
         } else {
-          throw new Error('Form submission failed');
+          throw new Error(data.error || 'Form submission failed');
         }
-      } catch (err) {
+      } catch (err: any) {
         play("error");
-        status.textContent = 'Oops! There was a problem sending your message.';
+        status.textContent = err?.message || 'Oops! There was a problem sending your message.';
         status.classList.remove('hidden', 'text-emerald-600', 'dark:text-emerald-400');
         status.classList.add('text-red-600', 'dark:text-red-400');
       } finally {
