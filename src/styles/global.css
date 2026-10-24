@@ -13,6 +13,15 @@
 }
 
 @font-face {
+  font-family: "Inter-Fallback";
+  src: local("Arial");
+  ascent-override: 90.2%;
+  descent-override: 22.5%;
+  line-gap-override: 0%;
+  size-adjust: 107.4%;
+}
+
+@font-face {
   font-family: "Insomnyacs";
   src:
     url("/fonts/Insomnyacs.otf") format("opentype"),
