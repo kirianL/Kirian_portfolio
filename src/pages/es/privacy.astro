@@ -5,14 +5,14 @@ import Footer from "../../components/Footer.astro";
 ---
 
 <Layout
-  title="Privacidad | Kirian Luna — Ingeniero de Software"
-  description="Política de privacidad y principios de datos de kirian.dev. Sin cookies de rastreo, total transparencia y detalle completo de servicios utilizados."
+  title="Privacidad | Kirian Luna | Ingeniero de Software"
+  description="Política de privacidad y principios de datos de kirian.dev. Sin cookies de rastreo, total transparencia y detalle conciso de servicios utilizados."
   lang="es"
 >
   <Navbar />
 
-  <main id="main-content" class="min-h-screen bg-grayscale-1 flex flex-col justify-between">
-    <div class="max-w-xl w-full mx-auto px-6 sm:px-0 pt-28 pb-10 flex flex-col gap-9">
+  <main id="main-content" class="min-h-screen bg-grayscale-1">
+    <div class="max-w-xl mx-auto px-6 sm:px-0 pt-28 pb-16 flex flex-col gap-10">
       
       <!-- Back Link -->
       <div>
@@ -31,70 +31,38 @@ import Footer from "../../components/Footer.astro";
         <h1 class="text-sm font-semibold text-grayscale-12 font-mono tracking-tight select-none">
           Privacidad
         </h1>
-        <p class="text-xs sm:text-[13px] text-grayscale-11 leading-relaxed">
-          Este sitio es un portafolio de ingeniería personal concebido bajo un principio estricto de privacidad, minimización de datos y transparencia total. No utiliza cookies publicitarias, no ejecuta scripts de rastreo invasivos y no recopila datos personales sin tu consentimiento explícito. Esta página detalla cada servicio utilizado en este dominio, su propósito técnico y el tratamiento de la información durante tu visita.
-        </p>
+        <div class="flex flex-col gap-3 text-xs sm:text-[13px] text-grayscale-11 leading-relaxed">
+          <p>
+            Este sitio es un portafolio de ingenieria con un firme compromiso hacia la privacidad, la transparencia y la minima recoleccion de datos. No utiliza cookies de publicidad, no ejecuta scripts de perfilamiento y nunca recopila informacion personal sin tu conocimiento expreso.
+          </p>
+        </div>
       </section>
 
       <!-- Minimal Two-Column Structured Sections -->
-      <div class="flex flex-col gap-9 text-xs sm:text-[13px] leading-relaxed">
+      <div class="flex flex-col gap-10 text-xs sm:text-[13px] leading-relaxed">
         
-        <!-- Alojamiento -->
+        <!-- Servicios -->
         <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Alojamiento</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Servicios</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              El sitio web se encuentra alojado en <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Vercel</a>, una red perimetral global que distribuye páginas y archivos estáticos cerca de tu ubicación geográfica. Al solicitar una página, Vercel procesa encabezados HTTP estándar, como tu dirección IP y navegador, exclusivamente para entregar el contenido y proteger la infraestructura contra accesos no autorizados o abusos. Estos registros técnicos se conservan temporalmente con fines de diagnóstico y nunca se emplean para perfilar usuarios.
+              El sitio web esta desplegado en <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Vercel</a>, una red global que procesa solicitudes HTTP estandar unicamente para entregar contenido con rapidez y resguardar la infraestructura frente a abusos. Las consultas enviadas desde la pagina de contacto se procesan de forma segura mediante <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Formspree</a> y llegan directo a mi buzon personal, utilizandose unicamente para responderte. Las reacciones y contadores de los articulos operan sobre una base de datos serverless en <a href="https://upstash.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Upstash</a> Redis que almacena resúmenes criptograficos irreversibles para evitar spam preservando el anonimato total.
             </p>
-          </div>
-        </section>
-
-        <!-- Métricas -->
-        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Métricas</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
             <p>
-              Las estadísticas de tráfico se gestionan mediante una configuración de <a href="https://posthog.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">PostHog</a> orientada a la privacidad. Esta herramienta contabiliza visitas agregadas, rutas de referencia y tipos de dispositivo para identificar qué proyectos y artículos resultan más relevantes para los lectores. PostHog funciona sin cookies de seguimiento entre sitios, no recopila identificadores personales y los datos jamás se comercializan ni se comparten con empresas de publicidad.
-            </p>
-          </div>
-        </section>
-
-        <!-- Contacto -->
-        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Contacto</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
-            <p>
-              Al enviar un mensaje mediante la página de contacto, la información se procesa de forma segura a través de <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Formspree</a> y se remite directamente a mi bandeja de entrada personal. Tu nombre, correo electrónico y mensaje se utilizan de manera exclusiva para responder a tu consulta o valorar oportunidades profesionales. Esta información no se incorpora a listas de correo masivo ni se transfiere a terceros.
-            </p>
-          </div>
-        </section>
-
-        <!-- Reacciones -->
-        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Reacciones</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
-            <p>
-              Las reacciones a los artículos del blog utilizan una base de datos serverless en <a href="https://upstash.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Upstash</a> Redis. Para evitar envíos duplicados o spam garantizando tu anonimato, se almacena de forma transitoria un resumen criptográfico no reversible derivado de la solicitud. Ningún dato de identidad personal ni dirección IP sin cifrar queda asociado a las reacciones registradas.
-            </p>
-          </div>
-        </section>
-
-        <!-- Estado en vivo -->
-        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Estado</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
-            <p>
-              El pie de página muestra música y estado en tiempo real mediante consultas de solo lectura a Spotify y Discord Lanyard. Estas solicitudes obtienen información pública de presencia de forma segura y se activan únicamente al interactuar con el sitio. No se lee ni se transmite ningún historial o dato personal proveniente de tu propio dispositivo.
+              El trafico general se mide mediante una configuracion respetuosa de la privacidad en <a href="https://posthog.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">PostHog</a> que recopila visitas agregadas y tipos de dispositivo sin cookies de rastreo ni perfiles personales. La actividad y musica en vivo del pie de pagina consultan datos publicos de solo lectura desde Spotify y Discord Lanyard unicamente cuando interactuas con el sitio. Ningun historial ni dato personal de tu dispositivo se lee o comparte jamas.
             </p>
           </div>
         </section>
 
         <!-- Tu navegador -->
         <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Almacenamiento</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Tu navegador</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              La elección entre modo claro o modo oscuro se almacena de manera local en el localStorage de tu navegador para conservar tu preferencia en visitas posteriores. Los ajustes de sonido para las interacciones táctiles se guardan temporalmente durante tu sesión activa. Esta información permanece exclusivamente en tu dispositivo y nunca se envía a servidores externos.
+              Tu preferencia de apariencia entre modo oscuro y claro se almacena localmente en el localStorage de tu navegador para recordar tu eleccion en futuras visitas. Los ajustes de sonido para las interacciones se conservan en la memoria de la sesion activa. Esta informacion permanece estrictamente en tu dispositivo y nunca se transmite a servidores externos.
+            </p>
+            <p>
+              Los enlaces a plataformas externas como <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">GitHub</a> o <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a> funcionan bajo las politicas de privacidad independientes de cada servicio.
             </p>
           </div>
         </section>
@@ -102,17 +70,15 @@ import Footer from "../../components/Footer.astro";
         <!-- Consultas -->
         <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
           <span class="text-xs font-mono text-grayscale-10 select-none">Consultas</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              Los enlaces a plataformas externas como <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">GitHub</a> o <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a> se rigen por las políticas de privacidad propias de cada servicio. Si deseas formular cualquier pregunta sobre el tratamiento de tus datos o solicitar la eliminación de cualquier mensaje enviado, puedes escribirme directamente al correo electrónico <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">kirianluna.u@gmail.com</a>.
+              Si tienes preguntas sobre como se tratan los datos tecnicos o deseas solicitar la eliminacion de cualquier mensaje que hayas enviado, puedes escribirme directamente por correo a <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">kirianluna.u@gmail.com</a>.
             </p>
           </div>
         </section>
 
       </div>
-    </div>
 
-    <div class="max-w-xl w-full mx-auto px-6 sm:px-0 pb-12">
       <Footer />
     </div>
   </main>

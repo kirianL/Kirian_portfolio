@@ -5,14 +5,14 @@ import Footer from "../components/Footer.astro";
 ---
 
 <Layout
-  title="Privacy | Kirian Luna — Software Engineer"
-  description="Privacy policy and data handling principles for kirian.dev. No tracking cookies, full transparency, and explicit service breakdown."
+  title="Privacy | Kirian Luna | Software Engineer"
+  description="Privacy policy and technical data handling principles for kirian.dev. No tracking cookies, no advertising scripts, and full transparency."
   lang="en"
 >
   <Navbar />
 
-  <main id="main-content" class="min-h-screen bg-grayscale-1 flex flex-col justify-between">
-    <div class="max-w-xl w-full mx-auto px-6 sm:px-0 pt-28 pb-10 flex flex-col gap-9">
+  <main id="main-content" class="min-h-screen bg-grayscale-1">
+    <div class="max-w-xl mx-auto px-6 sm:px-0 pt-28 pb-16 flex flex-col gap-10">
       
       <!-- Back Link -->
       <div>
@@ -31,70 +31,38 @@ import Footer from "../components/Footer.astro";
         <h1 class="text-sm font-semibold text-grayscale-12 font-mono tracking-tight select-none">
           Privacy
         </h1>
-        <p class="text-xs sm:text-[13px] text-grayscale-11 leading-relaxed">
-          This site is a personal engineering portfolio designed with a strong commitment to privacy, data minimization, and transparency. It sets no invasive advertising cookies, runs no behavioral tracking scripts, and never collects personal data without your explicit knowledge. This page explains every service running on this domain, why it exists, and how technical information is handled when you browse.
-        </p>
+        <div class="flex flex-col gap-3 text-xs sm:text-[13px] text-grayscale-11 leading-relaxed">
+          <p>
+            This site is a personal engineering portfolio designed with a strong commitment to privacy, data minimization, and transparency. It sets no invasive advertising cookies, runs no behavioral profiling scripts, and never collects personal data without your explicit knowledge.
+          </p>
+        </div>
       </section>
 
       <!-- Minimal Two-Column Structured Sections -->
-      <div class="flex flex-col gap-9 text-xs sm:text-[13px] leading-relaxed">
+      <div class="flex flex-col gap-10 text-xs sm:text-[13px] leading-relaxed">
         
-        <!-- Hosting -->
+        <!-- Services -->
         <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Hosting</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Services</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              The website is deployed on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Vercel</a>, a global edge network that serves pages and static assets close to your location. When you visit any page, Vercel processes standard HTTP request headers, such as your IP address and user agent, solely to deliver the content and safeguard the infrastructure against denial of service or malicious abuse. These server logs are retained temporarily for diagnostic purposes and are never used to track or profile individual visitors.
+              The website is deployed on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Vercel</a>, a global edge network that processes standard HTTP requests solely to deliver content and safeguard infrastructure against abuse. Direct inquiries sent through the contact page are handled securely by <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Formspree</a> and forwarded directly to my private inbox, used exclusively to reply. Article reactions and counters run on an <a href="https://upstash.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Upstash</a> serverless Redis database that stores irreversible cryptographic hashes to prevent spam while preserving complete anonymity.
+            </p>
+            <p>
+              Traffic metrics are measured through a privacy focused configuration of <a href="https://posthog.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">PostHog</a> that captures aggregate pageviews and device types without persistent tracking cookies or personal profiling. Live activity and music status in the footer query public read only endpoints from Spotify and Discord Lanyard only upon user interaction. No listening history or personal identity from your device is ever read or shared.
             </p>
           </div>
         </section>
 
-        <!-- Analytics -->
+        <!-- Your browser -->
         <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Analytics</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Your browser</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              Traffic metrics are measured through a privacy-first configuration of <a href="https://posthog.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">PostHog</a>. This system captures aggregate pageviews, referral paths, and device types to help me understand which technical articles and projects resonate most with readers. PostHog operates without persistent cross-site tracking cookies, does not collect personal identifiers, and the data is never shared with or sold to commercial advertising networks.
+              Your visual theme preference between dark mode and light mode is saved locally in your browser localStorage so the site remembers your choice across visits. Audio feedback preferences for interface interactions are kept in active session memory. This information remains strictly on your device and is never transmitted to any external server.
             </p>
-          </div>
-        </section>
-
-        <!-- Forms -->
-        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Forms</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
             <p>
-              When you send a message through the contact page, the submission is securely processed by <a href="https://formspree.io" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Formspree</a> and forwarded directly to my private inbox. The name, email address, and message content you provide are used exclusively to reply to your inquiry or discuss professional collaborations. Form data is never added to marketing newsletters, sold to data brokers, or used for automated marketing campaigns.
-            </p>
-          </div>
-        </section>
-
-        <!-- Reactions -->
-        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Reactions</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
-            <p>
-              Article reactions and interactive counters use an <a href="https://upstash.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Upstash</a> serverless Redis database. To prevent repeated spam clicks while preserving complete anonymity, a non-reversible cryptographic hash of your client network header is stored transiently. No personal profile, name, or readable IP address is ever stored alongside article reactions.
-            </p>
-          </div>
-        </section>
-
-        <!-- Live status -->
-        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Live status</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
-            <p>
-              The footer displays live music and activity status through read-only integrations with Spotify and Discord Lanyard. These requests fetch public presence information securely and only activate when you interact with the page. No listening history or personal identity from your own device is ever read or transmitted to external services.
-            </p>
-          </div>
-        </section>
-
-        <!-- Browser storage -->
-        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">Storage</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
-            <p>
-              Your visual theme preference, whether dark mode or light mode, is saved locally in your browser localStorage so the site remembers your preferred appearance between visits. Audio feedback preferences for UI micro-interactions are stored temporarily in your active session. This information remains strictly on your device and is never transmitted to any external server.
+              External links to platforms such as <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">GitHub</a> or <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a> open under the independent privacy policies of those respective services.
             </p>
           </div>
         </section>
@@ -102,17 +70,15 @@ import Footer from "../components/Footer.astro";
         <!-- Questions -->
         <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
           <span class="text-xs font-mono text-grayscale-10 select-none">Questions</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              External links to platforms such as <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">GitHub</a> or <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a> open under the independent privacy policies of those respective services. If you have any questions regarding how your data is treated, or if you wish to request the deletion of any communication you sent, feel free to reach out directly by email at <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">kirianluna.u@gmail.com</a>.
+              If you have any questions regarding how technical information is handled, or if you wish to request the deletion of any communication you sent, feel free to reach out directly by email at <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">kirianluna.u@gmail.com</a>.
             </p>
           </div>
         </section>
 
       </div>
-    </div>
 
-    <div class="max-w-xl w-full mx-auto px-6 sm:px-0 pb-12">
       <Footer />
     </div>
   </main>
