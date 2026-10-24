@@ -95,7 +95,7 @@ const initialStatsText =
 ---
 
 <footer
-  class="mt-6 text-center text-xs text-grayscale-10 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8 flex flex-col items-center justify-center gap-1.5"
+  class="mt-6 text-center text-xs text-grayscale-11 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8 flex flex-col items-center justify-center gap-1.5"
 >
   <!-- Active State Container (Fluid Dual Activity Stacking for Spotify & Gaming) -->
   <div id="footer-status-wrapper" class="flex flex-col items-center justify-center gap-y-1.5 text-xs text-center leading-relaxed py-0.5 px-3 max-w-full transition-all duration-300">
@@ -109,7 +109,7 @@ const initialStatsText =
         <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
       </svg>
 
-      <span class="text-grayscale-10 shrink-0">{listeningLabel}:</span>
+      <span class="text-grayscale-11 shrink-0">{listeningLabel}:</span>
 
       <!-- Hover Track Link -->
       <a
@@ -211,16 +211,16 @@ const initialStatsText =
       <div class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0">
         <span id="dev-status-sprite" class="w-4.5 h-4.5 sm:w-5 sm:h-5 shrink-0 inline-flex items-center justify-center animate-pixel-idle" set:html={defaultDevSprite}></span>
         <span id="dev-status-badge" class="font-mono text-zinc-900 dark:text-zinc-100 font-semibold whitespace-nowrap">{defaultBadge}</span>
-        <span class="text-grayscale-10 font-mono hidden sm:inline shrink-0">›</span>
+        <span class="text-grayscale-11 font-mono hidden sm:inline shrink-0">›</span>
       </div>
 
       <!-- Dialogue text -->
-      <span id="dev-status-dialogue" class="font-mono text-grayscale-11 dark:text-grayscale-10 italic text-center max-w-xs sm:max-w-none text-balance sm:whitespace-nowrap inline-flex items-center justify-center" data-rendered-text={defaultDialogue} title={defaultDialogue}>{defaultDialogue}</span>
+      <span id="dev-status-dialogue" class="font-mono text-grayscale-11 italic text-center max-w-xs sm:max-w-none text-balance sm:whitespace-nowrap inline-flex items-center justify-center" data-rendered-text={defaultDialogue} title={defaultDialogue}>{defaultDialogue}</span>
     </div>
   </div>
 
   <!-- Trust Anchor Navigation -->
-  <div class="flex items-center justify-center gap-2.5 text-[11px] font-mono text-grayscale-10 pt-1">
+  <div class="flex items-center justify-center gap-2.5 text-[11px] font-mono text-grayscale-11 pt-1">
     <a href={currentLocale === 'es' ? '/es/about' : '/about'} data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">{currentLocale === 'es' ? 'Sobre mí' : 'About'}</a>
     <span class="text-grayscale-5 select-none">·</span>
     <a href={currentLocale === 'es' ? '/es/privacy' : '/privacy'} data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">{currentLocale === 'es' ? 'Privacidad' : 'Privacy'}</a>
@@ -785,9 +785,11 @@ const initialStatsText =
   // Real-Time Lanyard WebSocket Connection (Instant Push Updates on song change / game switch)
   let lanyardSocket: WebSocket | null = null;
   let heartbeatInterval: any = null;
+  let socketRetries = 0;
+  let socketDisabled = false;
 
   function connectLanyardSocket() {
-    if (typeof window === "undefined" || !("WebSocket" in window)) return;
+    if (typeof window === "undefined" || !("WebSocket" in window) || socketDisabled) return;
     if (lanyardSocket && (lanyardSocket.readyState === WebSocket.OPEN || lanyardSocket.readyState === WebSocket.CONNECTING)) {
       return;
     }
@@ -797,6 +799,7 @@ const initialStatsText =
 
       lanyardSocket.onmessage = (event) => {
         try {
+          socketRetries = 0;
           const message = JSON.parse(event.data);
           const { op, d, t } = message;
 
@@ -836,13 +839,19 @@ const initialStatsText =
 
       lanyardSocket.onclose = () => {
         if (heartbeatInterval) clearInterval(heartbeatInterval);
-        setTimeout(connectLanyardSocket, 5000);
+        if (socketRetries < 1) {
+          socketRetries++;
+          setTimeout(connectLanyardSocket, 15000);
+        }
       };
 
       lanyardSocket.onerror = () => {
+        socketDisabled = true;
         try { lanyardSocket?.close(); } catch {}
       };
-    } catch {}
+    } catch {
+      socketDisabled = true;
+    }
   }
 
   async function loadPostHogStats() {
@@ -905,9 +914,21 @@ const initialStatsText =
     if (typeof window !== "undefined" && (window as any).__lastLanyardData) {
       applyPresence((window as any).__lastLanyardData);
     }
-    loadSpotify();
-    connectLanyardSocket();
-    loadPostHogStats();
+
+    // 4. Defer non-critical network requests so initial paint & LCP are never blocked
+    const fetchPresence = () => {
+      loadSpotify();
+      connectLanyardSocket();
+      loadPostHogStats();
+    };
+
+    if (typeof window !== "undefined") {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(fetchPresence, { timeout: 2500 });
+      } else {
+        setTimeout(fetchPresence, 1000);
+      }
+    }
   }
 
   // Load immediately on page initialization and view transitions
@@ -918,20 +939,21 @@ const initialStatsText =
   if (typeof window !== "undefined") {
     let lastPoll = 0;
     const triggerRevalidation = () => {
+      socketDisabled = false;
       const now = Date.now();
-      if (now - lastPoll > 2500) {
+      if (now - lastPoll > 3000) {
         lastPoll = now;
         loadSpotify();
         connectLanyardSocket();
       }
     };
 
-    // 1. Regular 3s Polling when active as backup to WebSocket
+    // 1. Passive 45s Polling when active as gentle backup to WebSocket
     setInterval(() => {
       if (!document.hidden) {
         loadSpotify();
       }
-    }, 3000);
+    }, 45000);
 
     // 2. Mobile Instant Wakeup (Tab switch, App switch, Screen unlock, Page show)
     document.addEventListener("visibilitychange", () => {

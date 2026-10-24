@@ -240,11 +240,11 @@
   },
   "c#": {
     "type": "single",
-    "src": "/icons/tech/c#.svg"
+    "src": "/icons/tech/csharp.svg"
   },
   "c++": {
     "type": "single",
-    "src": "/icons/tech/c++.svg"
+    "src": "/icons/tech/cpp.svg"
   },
   "astro": {
     "type": "single",
