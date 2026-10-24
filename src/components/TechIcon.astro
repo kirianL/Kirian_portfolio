@@ -1,5 +1,5 @@
 ---
-import svglIcons from "../data/svgl-icons.json";
+import iconMap from "../data/tech-icon-map.json";
 
 interface Props {
   name: string;
@@ -11,32 +11,43 @@ const { name, class: className = "w-4 h-4" } = Astro.props;
 // Normalize name to match JSON keys
 const key = name.toLowerCase().trim().replace(/[\s\.\-\/]/g, "");
 
-// Check if we have the icon in the cache
-const iconData = (svglIcons as any)[key];
-
-// Helper function to dynamically inject sizing class into SVG
-const injectClass = (svgCode: string, cls: string) => {
-  if (!svgCode) return "";
-  if (svgCode.includes('class="')) {
-    return svgCode.replace('class="', `class="${cls} `);
-  }
-  return svgCode.replace('<svg', `<svg class="${cls}"`);
-};
+// Check if we have the icon in the map
+const iconData = (iconMap as any)[key];
 ---
 
 <span class="tech-icon inline-flex items-center justify-center leading-none">
 {
   iconData ? (
-    iconData.single ? (
-      <Fragment set:html={injectClass(iconData.single, className)} />
+    iconData.type === "single" ? (
+      <img
+        src={iconData.src}
+        alt=""
+        class={`${className} object-contain`}
+        loading="lazy"
+        decoding="async"
+        width="20"
+        height="20"
+      />
     ) : (
       <>
-        <span class="dark:hidden inline-flex items-center justify-center">
-          <Fragment set:html={injectClass(iconData.light, className)} />
-        </span>
-        <span class="hidden dark:inline-flex items-center justify-center">
-          <Fragment set:html={injectClass(iconData.dark, className)} />
-        </span>
+        <img
+          src={iconData.light}
+          alt=""
+          class={`${className} object-contain dark:hidden`}
+          loading="lazy"
+          decoding="async"
+          width="20"
+          height="20"
+        />
+        <img
+          src={iconData.dark}
+          alt=""
+          class={`${className} object-contain hidden dark:inline-block`}
+          loading="lazy"
+          decoding="async"
+          width="20"
+          height="20"
+        />
       </>
     )
   ) : (
@@ -51,7 +62,7 @@ const injectClass = (svgCode: string, cls: string) => {
     align-items: center;
     justify-content: center;
   }
-  .tech-icon svg {
+  .tech-icon img {
     max-width: 100%;
     max-height: 100%;
   }

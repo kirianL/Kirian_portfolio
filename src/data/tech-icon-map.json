@@ -1,0 +1,253 @@
+{
+  "typescript": {
+    "type": "single",
+    "src": "/icons/tech/typescript.svg"
+  },
+  "javascript": {
+    "type": "single",
+    "src": "/icons/tech/javascript.svg"
+  },
+  "python": {
+    "type": "single",
+    "src": "/icons/tech/python.svg"
+  },
+  "figma": {
+    "type": "single",
+    "src": "/icons/tech/figma.svg"
+  },
+  "ps": {
+    "type": "single",
+    "src": "/icons/tech/ps.svg"
+  },
+  "photoshop": {
+    "type": "single",
+    "src": "/icons/tech/photoshop.svg"
+  },
+  "ai": {
+    "type": "single",
+    "src": "/icons/tech/ai.svg"
+  },
+  "illustrator": {
+    "type": "single",
+    "src": "/icons/tech/illustrator.svg"
+  },
+  "paper": {
+    "type": "single",
+    "src": "/icons/tech/paper.svg"
+  },
+  "pencil": {
+    "type": "single",
+    "src": "/icons/tech/pencil.svg"
+  },
+  "react": {
+    "type": "dual",
+    "light": "/icons/tech/react-light.svg",
+    "dark": "/icons/tech/react-dark.svg"
+  },
+  "nextjs": {
+    "type": "single",
+    "src": "/icons/tech/nextjs.svg"
+  },
+  "tanstack": {
+    "type": "single",
+    "src": "/icons/tech/tanstack.svg"
+  },
+  "tailwindcss": {
+    "type": "single",
+    "src": "/icons/tech/tailwindcss.svg"
+  },
+  "shadcnui": {
+    "type": "dual",
+    "light": "/icons/tech/shadcnui-light.svg",
+    "dark": "/icons/tech/shadcnui-dark.svg"
+  },
+  "radixui": {
+    "type": "dual",
+    "light": "/icons/tech/radixui-light.svg",
+    "dark": "/icons/tech/radixui-dark.svg"
+  },
+  "baseui": {
+    "type": "dual",
+    "light": "/icons/tech/baseui-light.svg",
+    "dark": "/icons/tech/baseui-dark.svg"
+  },
+  "motion": {
+    "type": "dual",
+    "light": "/icons/tech/motion-light.svg",
+    "dark": "/icons/tech/motion-dark.svg"
+  },
+  "fumadocs": {
+    "type": "single",
+    "src": "/icons/tech/fumadocs.svg"
+  },
+  "zod": {
+    "type": "single",
+    "src": "/icons/tech/zod.svg"
+  },
+  "redux": {
+    "type": "single",
+    "src": "/icons/tech/redux.svg"
+  },
+  "zustand": {
+    "type": "single",
+    "src": "/icons/tech/zustand.svg"
+  },
+  "betterauth": {
+    "type": "dual",
+    "light": "/icons/tech/betterauth-light.svg",
+    "dark": "/icons/tech/betterauth-dark.svg"
+  },
+  "clerk": {
+    "type": "dual",
+    "light": "/icons/tech/clerk-light.svg",
+    "dark": "/icons/tech/clerk-dark.svg"
+  },
+  "firebase": {
+    "type": "single",
+    "src": "/icons/tech/firebase.svg"
+  },
+  "supabase": {
+    "type": "single",
+    "src": "/icons/tech/supabase.svg"
+  },
+  "convex": {
+    "type": "single",
+    "src": "/icons/tech/convex.svg"
+  },
+  "nodejs": {
+    "type": "single",
+    "src": "/icons/tech/nodejs.svg"
+  },
+  "bun": {
+    "type": "single",
+    "src": "/icons/tech/bun.svg"
+  },
+  "prisma": {
+    "type": "dual",
+    "light": "/icons/tech/prisma-light.svg",
+    "dark": "/icons/tech/prisma-dark.svg"
+  },
+  "drizzle": {
+    "type": "dual",
+    "light": "/icons/tech/drizzle-light.svg",
+    "dark": "/icons/tech/drizzle-dark.svg"
+  },
+  "postgresql": {
+    "type": "single",
+    "src": "/icons/tech/postgresql.svg"
+  },
+  "mongodb": {
+    "type": "dual",
+    "light": "/icons/tech/mongodb-light.svg",
+    "dark": "/icons/tech/mongodb-dark.svg"
+  },
+  "redis": {
+    "type": "single",
+    "src": "/icons/tech/redis.svg"
+  },
+  "cursor": {
+    "type": "dual",
+    "light": "/icons/tech/cursor-light.svg",
+    "dark": "/icons/tech/cursor-dark.svg"
+  },
+  "claudecode": {
+    "type": "single",
+    "src": "/icons/tech/claudecode.svg"
+  },
+  "pi": {
+    "type": "dual",
+    "light": "/icons/tech/pi-light.svg",
+    "dark": "/icons/tech/pi-dark.svg"
+  },
+  "opencode": {
+    "type": "dual",
+    "light": "/icons/tech/opencode-light.svg",
+    "dark": "/icons/tech/opencode-dark.svg"
+  },
+  "codex": {
+    "type": "dual",
+    "light": "/icons/tech/codex-light.svg",
+    "dark": "/icons/tech/codex-dark.svg"
+  },
+  "antigravity": {
+    "type": "single",
+    "src": "/icons/tech/antigravity.svg"
+  },
+  "cal": {
+    "type": "dual",
+    "light": "/icons/tech/cal-light.svg",
+    "dark": "/icons/tech/cal-dark.svg"
+  },
+  "airbnb": {
+    "type": "single",
+    "src": "/icons/tech/airbnb.svg"
+  },
+  "meta": {
+    "type": "single",
+    "src": "/icons/tech/meta.svg"
+  },
+  "html5": {
+    "type": "single",
+    "src": "/icons/tech/html5.svg"
+  },
+  "html": {
+    "type": "single",
+    "src": "/icons/tech/html.svg"
+  },
+  "css": {
+    "type": "single",
+    "src": "/icons/tech/css.svg"
+  },
+  "css3": {
+    "type": "single",
+    "src": "/icons/tech/css3.svg"
+  },
+  "php": {
+    "type": "single",
+    "src": "/icons/tech/php.svg"
+  },
+  "csharp": {
+    "type": "single",
+    "src": "/icons/tech/csharp.svg"
+  },
+  "c": {
+    "type": "single",
+    "src": "/icons/tech/c.svg"
+  },
+  "cpp": {
+    "type": "single",
+    "src": "/icons/tech/cpp.svg"
+  },
+  "java": {
+    "type": "single",
+    "src": "/icons/tech/java.svg"
+  },
+  "go": {
+    "type": "single",
+    "src": "/icons/tech/go.svg"
+  },
+  "golang": {
+    "type": "single",
+    "src": "/icons/tech/golang.svg"
+  },
+  "rust": {
+    "type": "single",
+    "src": "/icons/tech/rust.svg"
+  },
+  "sql": {
+    "type": "single",
+    "src": "/icons/tech/sql.svg"
+  },
+  "c#": {
+    "type": "single",
+    "src": "/icons/tech/c#.svg"
+  },
+  "c++": {
+    "type": "single",
+    "src": "/icons/tech/c++.svg"
+  },
+  "astro": {
+    "type": "single",
+    "src": "/icons/tech/astro.svg"
+  }
+}
