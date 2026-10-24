@@ -15,9 +15,8 @@ const data = dictionaries[currentLocale];
 >
   <Navbar />
   
-  <main id="main-content" class="min-h-screen bg-grayscale-1">
-    <div class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-16">
-      <div class="flex flex-col gap-10">
+  <main id="main-content" class="bg-grayscale-1">
+    <div class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-12 flex flex-col gap-10">
       
       <!-- Contact Header -->
       <section class="flex flex-col gap-3">
@@ -96,29 +95,6 @@ const data = dictionaries[currentLocale];
         </form>
       </section>
 
-      <!-- Services, Availability & Verification Section -->
-      <section class="flex flex-col gap-4 p-5 rounded-2xl border border-grayscale-3 dark:border-grayscale-3/40 bg-white dark:bg-grayscale-2/30 text-grayscale-11 text-xs leading-relaxed">
-        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
-          servicios & colaboración.
-        </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
-          <div class="flex flex-col gap-1">
-            <span class="text-[11px] font-mono uppercase tracking-wider text-grayscale-10">Disponibilidad</span>
-            <p class="text-grayscale-12 font-medium text-xs">Open to work</p>
-            <p class="text-[11px] text-grayscale-10">Disponible para proyectos freelance selectos, consultoría técnica de arquitectura y posiciones remotas de tiempo completo.</p>
-          </div>
-          <div class="flex flex-col gap-1">
-            <span class="text-[11px] font-mono uppercase tracking-wider text-grayscale-10">Tiempo de Respuesta</span>
-            <p class="text-grayscale-12 font-medium text-xs">Menos de 24 Horas</p>
-            <p class="text-[11px] text-grayscale-10">Zona horaria de Costa Rica (CST / UTC-6). Todas las consultas profesionales reciben respuesta oportuna.</p>
-          </div>
-          <div class="flex flex-col gap-1">
-            <span class="text-[11px] font-mono uppercase tracking-wider text-grayscale-10">Especialidad</span>
-            <p class="text-grayscale-12 font-medium text-xs">Web & Sistemas</p>
-            <p class="text-[11px] text-grayscale-10">Aplicaciones con Next.js y Astro, arquitectura TypeScript, bases de datos PostgreSQL y diseño centrado en el usuario.</p>
-          </div>
-        </div>
-      </section>
 
       <!-- Socials Section -->
       <section class="flex flex-col gap-5 mt-2">
@@ -232,8 +208,7 @@ const data = dictionaries[currentLocale];
       <!-- Footer -->
       <Footer />
     </div>
-  </div>
-</main>
+  </main>
 </Layout>
 
 <script>
