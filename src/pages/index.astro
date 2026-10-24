@@ -127,13 +127,10 @@ const data = dictionaries.EN;
             data-cuelume-hover="tick"
             data-cuelume-press="page"
             title="Available for new projects and roles"
-            class="open-to-work-link group inline-flex items-center gap-1.5 text-[11.5px] font-mono tracking-tight select-none cursor-pointer"
+            class="open-to-work-link group inline-flex items-center gap-1 text-[11.5px] font-mono tracking-tight select-none cursor-pointer"
           >
-            <span class="relative inline-flex items-center">
-              <span class="text-grayscale-11">Open to work</span>
-              <span class="absolute inset-0 text-emerald-600 dark:text-emerald-400 font-medium modern-green-fade group-hover:opacity-100 transition-opacity" aria-hidden="true">Open to work</span>
-            </span>
-            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200">↗</span>
+            <span class="modern-shimmer-text font-medium">Open to work</span>
+            <span class="text-[10px] text-grayscale-11 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200">↗</span>
           </a>
         </div>
       </section>
@@ -313,22 +310,59 @@ const data = dictionaries.EN;
 </script>
 
 <style>
-  .modern-green-fade {
-    animation: modernGreenFade 3.6s ease-in-out infinite;
-    will-change: opacity;
+  .modern-shimmer-text {
+    background: linear-gradient(
+      110deg,
+      #71717a 0%,
+      #71717a 32%,
+      #059669 48%,
+      #10b981 52%,
+      #71717a 68%,
+      #71717a 100%
+    );
+    background-size: 260% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: modernShimmer 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    display: inline-block;
   }
 
-  @keyframes modernGreenFade {
-    0%, 100% {
-      opacity: 0.15;
+  :global(html.dark) .modern-shimmer-text {
+    background: linear-gradient(
+      110deg,
+      #a1a1aa 0%,
+      #a1a1aa 32%,
+      #34d399 48%,
+      #6ee7b7 52%,
+      #a1a1aa 68%,
+      #a1a1aa 100%
+    );
+    background-size: 260% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: modernShimmer 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    display: inline-block;
+  }
+
+  @keyframes modernShimmer {
+    0% {
+      background-position: 120% 0;
     }
-    50% {
-      opacity: 1;
+    35%, 100% {
+      background-position: -60% 0;
     }
   }
 
-  .open-to-work-link:hover .modern-green-fade {
+  .open-to-work-link:hover .modern-shimmer-text {
     animation-play-state: paused;
-    opacity: 1 !important;
+    background: #059669;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  :global(html.dark) .open-to-work-link:hover .modern-shimmer-text {
+    background: #34d399;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 </style>
