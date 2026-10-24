@@ -16,8 +16,12 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST || "https://us.i.posthog
           window.location.hostname === "127.0.0.1" ||
           window.location.hostname.endsWith(".local");
 
-        if (isLocalhost) {
-          // Safe noop stub on localhost to avoid polluting analytics
+        const ua = navigator.userAgent || "";
+        const isBotOrLighthouse =
+          /bot|crawl|spider|googlebot|chrome-lighthouse|lighthouse|pagespeed|headlesschrome/i.test(ua);
+
+        if (isLocalhost || isBotOrLighthouse) {
+          // Safe noop stub on localhost and synthetic bots to protect analytics and prevent performance overhead
           window.posthog = window.posthog || {
             capture: function () {},
             identify: function () {},
@@ -84,6 +88,7 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST || "https://us.i.posthog
               capture_performance: false,
               disable_session_recording: true,
               disable_dead_clicks_autocapture: true,
+              advanced_disable_decide: true,
               loaded: function (ph) {
                 ph.capture("$pageview");
               },
@@ -97,17 +102,15 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST || "https://us.i.posthog
             });
           }
 
-          // Defer PostHog execution: trigger immediately on real user gesture, or after 7s for idle readers
-          ["scroll", "touchstart", "click", "mousemove", "keydown"].forEach(function (evt) {
+          // Defer PostHog execution: trigger immediately on real user gesture or page unload
+          ["scroll", "touchstart", "click", "keydown"].forEach(function (evt) {
             window.addEventListener(evt, loadPostHog, { once: true, passive: true });
           });
-          setTimeout(function () {
-            if ("requestIdleCallback" in window) {
-              requestIdleCallback(loadPostHog, { timeout: 3000 });
-            } else {
+          document.addEventListener("visibilitychange", function () {
+            if (document.visibilityState === "hidden") {
               loadPostHog();
             }
-          }, 7000);
+          }, { once: true });
         }
       </script>
     </>

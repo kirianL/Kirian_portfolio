@@ -589,9 +589,16 @@ const { name, title } = Astro.props;
 
   function initLiquidBanners() {
     document.querySelectorAll<HTMLElement>(".banner-hero").forEach(mountCut);
-    requestAnimationFrame(() => {
+    
+    const mountAll = () => {
       document.querySelectorAll<HTMLCanvasElement>("canvas.js-liquid-banner").forEach(mountBanner);
-    });
+    };
+
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(mountAll, { timeout: 1200 });
+    } else {
+      setTimeout(mountAll, 100);
+    }
   }
 
   initLiquidBanners();

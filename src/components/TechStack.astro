@@ -63,7 +63,7 @@ const skills = data.skills.list || [];
           aria-selected="true"
           aria-label={currentLocale === "ES" ? "Vista de lista" : "List view"}
           data-cuelume-toggle
-          class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
+          class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer text-grayscale-12"
           title={currentLocale === "ES" ? "Vista de lista" : "List view"}
         >
           <svg
@@ -87,7 +87,7 @@ const skills = data.skills.list || [];
           aria-selected="false"
           aria-label={currentLocale === "ES" ? "Vista de cuadrícula" : "Grid view"}
           data-cuelume-toggle
-          class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200"
+          class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer text-grayscale-10"
           title={currentLocale === "ES" ? "Vista de cuadrícula" : "Grid view"}
         >
           <svg
@@ -339,18 +339,11 @@ const skills = data.skills.list || [];
         indicator.style.transform = `translateX(${listBtn.offsetWidth}px)`;
       }
 
-      // Grayscale colors for active / inactive state
-      const isDark = document.documentElement.classList.contains("dark");
-
-      // Compute styles dynamically based on the root theme variables
-      listBtn.style.color =
-        view === "list"
-          ? "var(--color-grayscale-12)"
-          : "var(--color-grayscale-10)";
-      gridBtn.style.color =
-        view === "grid"
-          ? "var(--color-grayscale-12)"
-          : "var(--color-grayscale-10)";
+      // Grayscale colors for active / inactive state using classes instead of inline style transitions
+      listBtn.classList.toggle("text-grayscale-12", view === "list");
+      listBtn.classList.toggle("text-grayscale-10", view !== "list");
+      gridBtn.classList.toggle("text-grayscale-12", view === "grid");
+      gridBtn.classList.toggle("text-grayscale-10", view !== "grid");
 
       // ARIA
       listBtn.setAttribute("aria-selected", String(view === "list"));
@@ -363,8 +356,20 @@ const skills = data.skills.list || [];
       (localStorage.getItem("tech-stack-view") as "list" | "grid") || "list";
     setView(savedView);
 
-    listBtn.addEventListener("click", () => setView("list"));
-    gridBtn.addEventListener("click", () => setView("grid"));
+    // Add smooth transition only after user interaction
+    const enableTransitions = () => {
+      listBtn.classList.add("transition-colors", "duration-200");
+      gridBtn.classList.add("transition-colors", "duration-200");
+    };
+
+    listBtn.addEventListener("click", () => {
+      enableTransitions();
+      setView("list");
+    });
+    gridBtn.addEventListener("click", () => {
+      enableTransitions();
+      setView("grid");
+    });
   };
 
   setupToggle();
