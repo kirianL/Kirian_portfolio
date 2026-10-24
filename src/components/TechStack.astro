@@ -138,7 +138,7 @@ const skills = data.skills.list || [];
                 </div>
                 <div class="flex flex-wrap gap-x-2.5 gap-y-2.5 items-center">
                   {catSkills.map((skill) => (
-                    <div class="tech-item px-3 py-1.5 rounded-full bg-grayscale-2 dark:bg-grayscale-2/40 border border-grayscale-3 dark:border-grayscale-3/20 hover:bg-grayscale-3 dark:hover:bg-grayscale-3/50 transition-all duration-200 flex items-center gap-2 cursor-default select-none text-grayscale-12 shadow-3xs">
+                    <div class="tech-item tech-pill">
                       <TechIcon
                         name={skill.name}
                         class="w-[14px] h-[14px] shrink-0"
@@ -169,14 +169,14 @@ const skills = data.skills.list || [];
                 </div>
                 <div class="flex flex-wrap gap-3">
                   {catSkills.map((skill) => (
-                    <div class="tech-item group/griditem relative w-11 h-11 rounded-xl border border-grayscale-3 dark:border-grayscale-3/30 bg-white dark:bg-grayscale-2/60 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 flex items-center justify-center cursor-default select-none transition-all duration-200 shadow-3xs">
+                    <div class="tech-item tech-grid-tile group/griditem">
                       <TechIcon
                         name={skill.name}
                         class="w-5 h-5 transition-transform duration-200 group-hover/griditem:scale-110"
                       />
 
                       {/* Tooltip */}
-                      <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 px-2.5 py-1 text-[10px] font-mono tracking-tight bg-grayscale-12 text-grayscale-1 border border-grayscale-3 rounded-lg opacity-0 pointer-events-none group-hover/griditem:opacity-100 group-hover/griditem:-translate-y-0.5 transition-all duration-200 ease-out shadow-lg z-50 whitespace-nowrap after:content-[''] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-[5px] after:border-transparent after:border-t-grayscale-12">
+                      <div class="tech-grid-tooltip">
                         {skill.name}
                       </div>
                     </div>
@@ -192,6 +192,90 @@ const skills = data.skills.list || [];
 </section>
 
 <style is:global>
+  .tech-pill {
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    background-color: var(--color-grayscale-2, #f4f4f5);
+    border: 1px solid var(--color-grayscale-3, #e4e4e7);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: default;
+    user-select: none;
+    color: var(--color-grayscale-12, #09090b);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  }
+  :global(.dark) .tech-pill {
+    background-color: rgba(24, 24, 27, 0.4);
+    border-color: rgba(39, 39, 42, 0.5);
+  }
+  .tech-pill:hover {
+    background-color: var(--color-grayscale-3, #e4e4e7);
+  }
+  :global(.dark) .tech-pill:hover {
+    background-color: rgba(39, 39, 42, 0.7);
+  }
+
+  .tech-grid-tile {
+    position: relative;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-grayscale-3, #e4e4e7);
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  }
+  :global(.dark) .tech-grid-tile {
+    background-color: rgba(24, 24, 27, 0.6);
+    border-color: rgba(39, 39, 42, 0.4);
+  }
+  .tech-grid-tile:hover {
+    border-color: var(--color-grayscale-4, #d4d4d8);
+  }
+  :global(.dark) .tech-grid-tile:hover {
+    border-color: rgba(63, 63, 70, 0.6);
+  }
+
+  .tech-grid-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0.625rem;
+    padding: 0.25rem 0.625rem;
+    font-size: 10px;
+    font-family: monospace;
+    letter-spacing: -0.025em;
+    background-color: var(--color-grayscale-12, #09090b);
+    color: var(--color-grayscale-1, #fafafa);
+    border: 1px solid var(--color-grayscale-3, #27272a);
+    border-radius: 0.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    z-index: 50;
+    white-space: nowrap;
+  }
+  .group\/griditem:hover .tech-grid-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-2px);
+  }
+  .tech-grid-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--color-grayscale-12, #09090b);
+  }
+
   /* Smooth opacity transitions for hover focus effect */
   .tech-item {
     transition:
