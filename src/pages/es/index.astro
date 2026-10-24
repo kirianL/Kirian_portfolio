@@ -126,22 +126,18 @@ const data = dictionaries.ES;
             </span>
           </div>
         </div>
+      </header>
 
-        <!-- Divider -->
-        <div
-          class="border-t border-grayscale-3/50 dark:border-grayscale-3/25 mt-6 mb-5"
-        >
-        </div>
+      <!-- Divider -->
+      <div class="border-t border-grayscale-3/50 dark:border-grayscale-3/25 -mt-8 -mb-8"></div>
 
+      <!-- About / Narrative Section -->
+      <section id="sobre-mi-intro" class="flex flex-col gap-4">
         <!-- Bio -->
-        <div
-          class="flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed"
-        >
-          <div class="flex flex-col gap-3.5" set:html={data.hero.desc} />
-        </div>
+        <p class="flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed" set:html={data.hero.desc} />
 
         <!-- Social icons row with Open to work -->
-        <div class="flex items-center justify-between gap-4 mt-5">
+        <div class="flex items-center justify-between gap-4 mt-2">
           <div class="flex items-center gap-3.5">
             <!-- X (Twitter) -->
             <a
@@ -251,7 +247,7 @@ const data = dictionaries.ES;
             <span class="text-[10px] opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200">↗</span>
           </a>
         </div>
-      </header>
+      </section>
 
       <!-- Work Experience Section -->
       <WorkExperience />
