@@ -6,7 +6,7 @@ import Footer from "../../components/Footer.astro";
 
 <Layout
   title="Sobre mí | Kirian Luna — Ingeniero de Software"
-  description="Soy Kirian Luna, ingeniero de software y creador digital en Limón, Costa Rica. Conoce mi trayectoria, filosofía de ingeniería y proyectos."
+  description="Soy Kirian Luna, ingeniero de software en Limón, Costa Rica. Construyo productos digitales con un enfoque en diseño reflexivo, arquitectura sólida y experiencia de usuario."
   lang="es"
 >
   <Navbar />
@@ -27,57 +27,77 @@ import Footer from "../../components/Footer.astro";
       </div>
 
       <!-- Intro Block -->
-      <section class="flex flex-col gap-3">
+      <section class="flex flex-col gap-3.5">
         <h1 class="text-sm font-semibold text-grayscale-12 font-mono tracking-tight select-none">
           Sobre mí
         </h1>
-        <p class="text-xs sm:text-[13px] text-grayscale-11 leading-relaxed">
-          Soy Kirian Luna, ingeniero de software y creador digital con base en Limón, Costa Rica. Trabajo en la intersección entre ingeniería y diseño de producto: diseño arquitecturas backend, construyo interfaces rápidas y accesibles, y pulo cada interacción hasta que se siente natural, instantánea y sólida. Trabajo en español e inglés.
-        </p>
+        <div class="flex flex-col gap-3 text-xs sm:text-[13px] text-grayscale-11 leading-relaxed">
+          <p>
+            Soy Kirian Luna, ingeniero de software con base en Limón, Costa Rica. Construyo productos digitales con un enfoque en diseño reflexivo, arquitectura sólida y los detalles que hacen que el software se sienta intuitivo y natural de usar.
+          </p>
+          <p>
+            Trabajo a lo largo de todo el stack, desde el diseño de sistemas backend y modelos de datos hasta la creación de interfaces responsivas y el perfeccionamiento de las interacciones con el usuario. Me interesa la intersección entre la ingeniería de software y el diseño de producto: no solo hacer que las cosas funcionen, sino que funcionen bien.
+          </p>
+        </div>
       </section>
 
       <!-- Minimal Two-Column Structured Sections -->
-      <div class="flex flex-col gap-9 text-xs sm:text-[13px] leading-relaxed">
+      <div class="flex flex-col gap-10 text-xs sm:text-[13px] leading-relaxed">
         
-        <!-- Trayectoria -->
-        <section class="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-2 sm:gap-6 items-baseline">
+        <!-- Path -->
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
           <span class="text-xs font-mono text-grayscale-10 select-none">Trayectoria</span>
           <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              Me gradué de Bachillerato en Ingeniería de Sistemas en la <a href="https://www.ulatina.ac.cr/" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Universidad Latina de Costa Rica</a>. Esa base académica en estructuras de software, bases de datos relacionales y protocolos de red consolidó mi interés por crear plataformas digitales robustas y seguras.
+              Cuento con un Bachillerato en Ingeniería de Sistemas de Computación por la <a href="https://www.ulatina.ac.cr/" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Universidad Latina de Costa Rica</a>. Actualmente continúo mi formación académica en ingeniería de software en la Universidad Internacional de las Américas (UIA), al tiempo que curso una carrera en Educación en la Universidad Americana (UAM).
             </p>
             <p>
-              En Sorin Labs diseño y desarrollo aplicaciones web full-stack, herramientas internas y APIs modernas con TypeScript, Next.js, Astro y PostgreSQL, priorizando esquemas escalables, latencias mínimas y un rendimiento sin concesiones.
+              Mi formación académica y experiencia profesional se complementan: disfruto resolver problemas técnicos, comprender cómo las personas interactúan con el software y construir sistemas confiables, fáciles de mantener e intuitivos.
+            </p>
+            <p>
+              En UMP desarrollo soluciones digitales que respaldan a la empresa y a sus clientes. A través de Sorin Labs, mi estudio de software independiente, diseño y construyo aplicaciones full-stack, sitios web corporativos, herramientas internas y APIs a medida. Mi trabajo combina tecnologías web modernas con un fuerte énfasis en usabilidad, rendimiento y mantenibilidad a largo plazo.
             </p>
           </div>
         </section>
 
-        <!-- En paralelo -->
-        <section class="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">En paralelo</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+        <!-- Beyond the work -->
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Más allá del trabajo</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              Fuera del trabajo en equipo, desarrollo proyectos independientes, experimento con micro-interacciones táctiles (como el motor de audio cuelume) y creo iniciativas digitales para la preservación de la identidad caribeña costarricense. En la <a href="/es/" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">página de inicio</a> puedes ver en qué estoy trabajando ahora.
+              Fuera de los proyectos para clientes y equipos, creo herramientas independientes y exploro ideas que resuelven problemas prácticos. Me interesa especialmente el oficio de la web: tipografía, diseño de interacción, accesibilidad y las decisiones de ingeniería detrás de experiencias rápidas y confiables.
+            </p>
+            <p>
+              También me apasiona cómo la tecnología puede abrir oportunidades y respaldar iniciativas significativas en Costa Rica, construyendo a la vez productos capaces de alcanzar una audiencia global.
             </p>
           </div>
         </section>
 
-        <!-- Filosofía -->
-        <section class="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-2 sm:gap-6 items-baseline">
+        <!-- Philosophy -->
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
           <span class="text-xs font-mono text-grayscale-10 select-none">Filosofía</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              Creo que el software debe ser rápido, intencional y duradero. Sin sobrecarga innecesaria de librerías ni complejidad accidental: solo abstracciones limpias, tipado estricto, accesibilidad real y el estándar de 100/100 en experiencia de usuario y velocidad.
+              El buen software es intencional. Valoro las arquitecturas simples, los tipos explícitos, las interfaces accesibles y el rendimiento medido a través de la experiencia real del usuario.
+            </p>
+            <p>
+              Prefiero comprender un problema en profundidad antes de añadir complejidad innecesaria. Cada dependencia, abstracción e interacción debe tener una razón de ser.
+            </p>
+            <p>
+              El objetivo no es usar la mayor cantidad de tecnología, sino construir lo correcto, y construirlo bien.
             </p>
           </div>
         </section>
 
-        <!-- Contacto -->
-        <section class="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-2 sm:gap-6 items-baseline">
+        <!-- Connect -->
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
           <span class="text-xs font-mono text-grayscale-10 select-none">Contacto</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              Colaboro con equipos y startups a nivel global. Para conversar sobre roles de ingeniería, proyectos o consultoría técnica, escríbeme directamente a <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">kirianluna.u@gmail.com</a>, encuéntrame en <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a> y <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">GitHub</a>, o envía un mensaje desde la <a href="/es/contact" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">página de contacto</a>.
+              Estoy disponible para oportunidades en ingeniería de software, colaboraciones y conversaciones sobre la creación de productos útiles.
+            </p>
+            <p>
+              Para consultas profesionales, puedes escribirme a <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">kirianluna.u@gmail.com</a>, conectar conmigo en <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a> o explorar mis proyectos en <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">GitHub</a>. También puedes ponerte en contacto a través de la <a href="/es/contact" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">página de contacto</a>.
             </p>
           </div>
         </section>

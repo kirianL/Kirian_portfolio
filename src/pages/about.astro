@@ -6,7 +6,7 @@ import Footer from "../components/Footer.astro";
 
 <Layout
   title="About | Kirian Luna — Software Engineer"
-  description="I'm Kirian Luna, a software engineer and builder based in Limón, Costa Rica. Learn about my path, philosophy, and current work."
+  description="I'm Kirian Luna, a software engineer based in Limón, Costa Rica. I build digital products with a focus on thoughtful design, sound architecture, and user experience."
   lang="en"
 >
   <Navbar />
@@ -27,57 +27,77 @@ import Footer from "../components/Footer.astro";
       </div>
 
       <!-- Intro Block -->
-      <section class="flex flex-col gap-3">
+      <section class="flex flex-col gap-3.5">
         <h1 class="text-sm font-semibold text-grayscale-12 font-mono tracking-tight select-none">
           About
         </h1>
-        <p class="text-xs sm:text-[13px] text-grayscale-11 leading-relaxed">
-          I'm Kirian Luna, a software engineer and builder based in Limón, Costa Rica. I work across full-stack engineering and product design: I architect backend systems, build responsive and accessible frontends, and keep refining every interaction until it feels fast, natural, and durable. I work in Spanish and English.
-        </p>
+        <div class="flex flex-col gap-3 text-xs sm:text-[13px] text-grayscale-11 leading-relaxed">
+          <p>
+            I'm Kirian Luna, a software engineer based in Limón, Costa Rica. I build digital products with a focus on thoughtful design, sound architecture, and the details that make software feel effortless to use.
+          </p>
+          <p>
+            I work across the stack, from designing backend systems and data models to building responsive interfaces and refining user interactions. I'm interested in the intersection of software engineering and product design: not just making things work, but making them work well.
+          </p>
+        </div>
       </section>
 
       <!-- Minimal Two-Column Structured Sections -->
-      <div class="flex flex-col gap-9 text-xs sm:text-[13px] leading-relaxed">
+      <div class="flex flex-col gap-10 text-xs sm:text-[13px] leading-relaxed">
         
         <!-- Path -->
-        <section class="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-2 sm:gap-6 items-baseline">
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
           <span class="text-xs font-mono text-grayscale-10 select-none">Path</span>
           <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              I earned my Bachelor's Degree in Systems Engineering from <a href="https://www.ulatina.ac.cr/" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Universidad Latina de Costa Rica</a>. That academic foundation in software architectures, relational databases, and network protocols established my passion for building resilient, type-safe digital platforms.
+              I hold a Bachelor's Degree in Computer Systems Engineering from <a href="https://www.ulatina.ac.cr/" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Universidad Latina de Costa Rica</a>. I'm currently continuing my academic journey in software engineering at Universidad Internacional de las Américas (UIA), while also pursuing a degree in Education at Universidad Americana (UAM).
             </p>
             <p>
-              At Sorin Labs, I design and build full-stack web applications, internal tools, and robust APIs. I lead engineering across modern TypeScript, Next.js, Astro, and PostgreSQL, focusing on scalable schemas, sub-second latency, and uncompromising performance.
+              My academic background and professional experience complement each other: I enjoy solving technical problems, understanding how people use software, and building systems that are reliable, maintainable, and intuitive.
+            </p>
+            <p>
+              At UMP, I work on digital solutions that support the company and its clients. Through Sorin Labs, my independent software studio, I design and build full-stack applications, business websites, internal tools, and custom APIs. My work combines modern web technologies with a strong focus on usability, performance, and long-term maintainability.
             </p>
           </div>
         </section>
 
-        <!-- On the side -->
-        <section class="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-2 sm:gap-6 items-baseline">
-          <span class="text-xs font-mono text-grayscale-10 select-none">On the side</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+        <!-- Beyond the work -->
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Beyond the work</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              Outside client and team work, I build independent tools, craft tactile micro-interactions (like the cuelume audio feedback engine), and develop digital cultural initiatives celebrating Costa Rican Caribbean heritage. The <a href="/" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">home page</a> highlights what I'm working on now.
+              Outside client and team projects, I build independent tools and explore ideas that solve practical problems. I'm especially interested in the craft of the web: typography, interaction design, accessibility, and the engineering decisions behind fast, reliable experiences.
+            </p>
+            <p>
+              I'm also interested in how technology can create opportunities and support meaningful projects in Costa Rica, while building products that can reach a wider audience.
             </p>
           </div>
         </section>
 
         <!-- Philosophy -->
-        <section class="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-2 sm:gap-6 items-baseline">
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
           <span class="text-xs font-mono text-grayscale-10 select-none">Philosophy</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              I believe software should be fast, deliberate, and built to last. No unnecessary framework bloat, no gratuitous dependencies—just clean abstractions, strict type safety, accessible DOM semantics, and a 100/100 standard for performance and user experience.
+              Good software is intentional. I value simple architectures, explicit types, accessible interfaces, and performance measured by real user experience.
+            </p>
+            <p>
+              I prefer understanding a problem deeply over adding complexity for its own sake. Every dependency, abstraction, and interaction should have a reason to exist.
+            </p>
+            <p>
+              The goal isn't to use the most technology. It's to build the right thing, well.
             </p>
           </div>
         </section>
 
         <!-- Connect -->
-        <section class="grid grid-cols-1 sm:grid-cols-[110px_1fr] gap-2 sm:gap-6 items-baseline">
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
           <span class="text-xs font-mono text-grayscale-10 select-none">Connect</span>
-          <div class="flex flex-col gap-3 text-grayscale-11">
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
             <p>
-              I collaborate with teams and startups globally. If you'd like to discuss engineering roles, contract projects, or architecture reviews, reach out via email at <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">kirianluna.u@gmail.com</a>, find me on <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a> and <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">GitHub</a>, or send a note through the <a href="/contact" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">contact page</a>.
+              I'm open to software engineering opportunities, collaborations, and conversations about building useful products.
+            </p>
+            <p>
+              For professional inquiries, feel free to reach out at <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">kirianluna.u@gmail.com</a>, connect with me on <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a>, or explore my work on <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">GitHub</a>. You can also get in touch through the <a href="/contact" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">contact page</a>.
             </p>
           </div>
         </section>
