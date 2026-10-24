@@ -5,92 +5,81 @@ import Footer from "../components/Footer.astro";
 ---
 
 <Layout
-  title="Privacy Policy | Kirian Luna"
-  description="Privacy policy and data protection principles for kirian.dev. Details on data handling, analytics, and contact information."
+  title="Privacy | Kirian Luna — Software Engineer"
+  description="Privacy policy and data handling principles for kirian.dev. No tracking cookies, no advertising scripts, and full transparency."
   lang="en"
 >
   <Navbar />
 
   <main id="main-content" class="min-h-screen bg-grayscale-1">
-    <div class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-16 flex flex-col gap-10">
-      <!-- Header -->
-      <section class="flex flex-col gap-3">
-        <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
-          privacy policy.
+    <div class="max-w-xl mx-auto px-6 sm:px-0 pt-28 pb-16 flex flex-col gap-10">
+      
+      <!-- Back Link -->
+      <div>
+        <a
+          href="/"
+          data-cuelume-hover="tick"
+          class="inline-flex items-center gap-1 text-xs font-mono text-grayscale-10 hover:text-grayscale-12 transition-colors select-none"
+        >
+          <span>←</span>
+          <span>Home</span>
+        </a>
+      </div>
+
+      <!-- Intro Block -->
+      <section class="flex flex-col gap-3.5">
+        <h1 class="text-sm font-semibold text-grayscale-12 font-mono tracking-tight select-none">
+          Privacy
         </h1>
-        <p class="text-grayscale-11 text-xs sm:text-sm leading-relaxed">
-          Last updated: October 23, 2026. This policy explains how information is handled when you visit kirian.dev or interact with its services.
+        <p class="text-xs sm:text-[13px] text-grayscale-11 leading-relaxed">
+          This site is a personal portfolio. It sets no tracking cookies, runs no advertising scripts, embeds no third-party behavioral trackers, and collects nothing about you on purpose. This page explains the little that still happens when you visit.
         </p>
       </section>
 
-      <!-- Section: Overview -->
-      <section class="flex flex-col gap-3 text-grayscale-11 text-[13.5px] leading-relaxed">
-        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
-          1. entity identity & scope.
-        </h2>
-        <p>
-          This website (<strong>https://kirian.dev</strong>) is operated by Kirian Luna, an independent software engineer based in Limón, Costa Rica. Your privacy is respected and prioritized through minimal data collection, zero third-party advertising trackers, and transparent engineering practices.
-        </p>
-      </section>
-
-      <!-- Section: Information Collected -->
-      <section class="flex flex-col gap-3 text-grayscale-11 text-[13.5px] leading-relaxed">
-        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
-          2. information collected & purpose.
-        </h2>
-        <div class="flex flex-col gap-3">
-          <div>
-            <h3 class="text-grayscale-12 text-sm font-semibold">Direct Communication Data</h3>
-            <p class="mt-1">
-              When you submit the contact form or send an email, we receive the name, email address, and message content you provide. This data is exclusively used to reply to your inquiry, discuss business opportunities, or provide requested technical information. It is never sold, leased, or distributed to marketing third parties.
+      <!-- Minimal Two-Column Structured Sections -->
+      <div class="flex flex-col gap-10 text-xs sm:text-[13px] leading-relaxed">
+        
+        <!-- Hosting -->
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Hosting</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
+            <p>
+              The site runs on <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Vercel</a>, which processes each request—including your IP address and standard browser headers—to serve the page and protect the infrastructure from abuse. Request logs are kept transiently for error diagnostics and are not used to profile visitors.
             </p>
           </div>
-          <div>
-            <h3 class="text-grayscale-12 text-sm font-semibold">Analytics & Performance Metrics</h3>
-            <p class="mt-1">
-              We employ a privacy-first instance of PostHog to aggregate anonymous aggregate pageviews, referral sources, and high-level engagement. PostHog is configured without cross-site tracking cookies and does not build invasive personal profiles.
+        </section>
+
+        <!-- Your browser -->
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Your browser</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
+            <p>
+              Theme preference (dark or light mode) is stored locally in your browser's localStorage so the site remembers your setting on return visits. Audio preferences for UI feedback are kept in your current session. This data never leaves your device.
             </p>
           </div>
-          <div>
-            <h3 class="text-grayscale-12 text-sm font-semibold">Reaction & Engagement Storage</h3>
-            <p class="mt-1">
-              Article reactions are tallied via secure serverless Redis instances (Upstash). A pseudonymous, non-reversible cryptographic hash of your client IP and User-Agent is stored transiently for rate-limiting and deduplication only; no raw personal identity is linked to blog reactions.
+        </section>
+
+        <!-- Analytics -->
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Analytics</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
+            <p>
+              I use a privacy-respecting instance of <a href="https://posthog.com" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">PostHog</a> to count aggregate page visits and understand general traffic patterns. It operates without cross-site tracking cookies, does not collect personal identifiers, and data is never sold or shared with advertisers.
             </p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- Section: Third-Party Infrastructure -->
-      <section class="flex flex-col gap-3 text-grayscale-11 text-[13.5px] leading-relaxed">
-        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
-          3. third-party infrastructure.
-        </h2>
-        <p>
-          This site relies on reputable, industry-standard infrastructure providers:
-        </p>
-        <ul class="list-disc list-inside space-y-1 text-xs text-grayscale-11">
-          <li><strong>Vercel</strong>: Edge hosting, content delivery network (CDN), and DNS routing.</li>
-          <li><strong>Formspree</strong>: Form submission processing and secure email dispatch.</li>
-          <li><strong>Upstash</strong>: Serverless Redis datastore for anonymous reaction counts.</li>
-          <li><strong>PostHog</strong>: First-party telemetry and aggregated analytics.</li>
-        </ul>
-      </section>
+        <!-- Questions -->
+        <section class="grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-2 sm:gap-6 items-baseline">
+          <span class="text-xs font-mono text-grayscale-10 select-none">Questions</span>
+          <div class="flex flex-col gap-3.5 text-grayscale-11">
+            <p>
+              Links to other sites, such as my projects, <a href="https://github.com/kirianL" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">GitHub</a>, or <a href="https://linkedin.com/in/kirianluna" target="_blank" rel="noopener noreferrer" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">LinkedIn</a>, open those sites under their own privacy policies. For any questions regarding your data or privacy, write to <a href="mailto:kirianluna.u@gmail.com" class="text-grayscale-12 underline underline-offset-4 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">kirianluna.u@gmail.com</a>.
+            </p>
+          </div>
+        </section>
 
-      <!-- Section: User Rights -->
-      <section class="flex flex-col gap-3 text-grayscale-11 text-[13.5px] leading-relaxed">
-        <h2 class="font-figgle text-2xl text-grayscale-12 tracking-tight select-none">
-          4. your rights & data inquiries.
-        </h2>
-        <p>
-          Regardless of your jurisdiction (including GDPR, CCPA, and Costa Rica Law No. 8968 on the Protection of Personal Data), you retain the right to request access to, correction of, or permanent deletion of any personal data you have transmitted via the contact form.
-        </p>
-        <p>
-          To exercise your rights or ask questions regarding this policy, contact Kirian Luna directly at:
-        </p>
-        <p class="font-mono text-xs text-grayscale-12">
-          Email: <a href="mailto:kirianluna.u@gmail.com" class="underline underline-offset-4 hover:text-accent-9">kirianluna.u@gmail.com</a>
-        </p>
-      </section>
+      </div>
 
       <Footer />
     </div>
