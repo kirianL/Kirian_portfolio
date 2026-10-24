@@ -120,16 +120,16 @@ const data = dictionaries.EN;
             </button>
           </div>
 
-          <!-- Minimal Modern Clean Open to Work -->
+          <!-- Minimal Modern Clean Open to Work (No container, animated modern green) -->
           <a
             href="/contact"
             data-cuelume-hover="tick"
             data-cuelume-press="page"
             title="Available for new projects and roles"
-            class="group inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-grayscale-3/70 dark:border-grayscale-3/40 bg-white/60 dark:bg-grayscale-2/40 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 transition-all duration-200 text-[11px] font-mono text-grayscale-10 hover:text-grayscale-12 shadow-3xs select-none"
+            class="open-to-work-link group inline-flex items-center gap-1 text-[11.5px] font-mono tracking-tight select-none cursor-pointer transition-all duration-300"
           >
-            <span>Open to work</span>
-            <span class="text-[10px] text-grayscale-9 group-hover:text-grayscale-12 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200">↗</span>
+            <span class="transition-colors duration-300">Open to work</span>
+            <span class="text-[10px] opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200">↗</span>
           </a>
         </div>
       </header>
@@ -307,3 +307,46 @@ const data = dictionaries.EN;
   setupInteractiveFeatures();
   document.addEventListener('astro:page-load', setupInteractiveFeatures);
 </script>
+
+<style>
+  @keyframes modernGreenFlow {
+    0%, 100% {
+      color: #71717a;
+      filter: drop-shadow(0 0 0px transparent);
+    }
+    50% {
+      color: #059669;
+      filter: drop-shadow(0 0 5px rgba(5, 150, 105, 0.35));
+    }
+  }
+
+  @keyframes modernGreenFlowDark {
+    0%, 100% {
+      color: #a1a1aa;
+      filter: drop-shadow(0 0 0px transparent);
+    }
+    50% {
+      color: #34d399;
+      filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.45));
+    }
+  }
+
+  .open-to-work-link {
+    animation: modernGreenFlow 3.6s ease-in-out infinite;
+  }
+
+  :global(html.dark) .open-to-work-link {
+    animation: modernGreenFlowDark 3.6s ease-in-out infinite;
+  }
+
+  .open-to-work-link:hover {
+    animation-play-state: paused;
+    color: #059669 !important;
+    filter: drop-shadow(0 0 7px rgba(5, 150, 105, 0.5)) !important;
+  }
+
+  :global(html.dark) .open-to-work-link:hover {
+    color: #34d399 !important;
+    filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.65)) !important;
+  }
+</style>
