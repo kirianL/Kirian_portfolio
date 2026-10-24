@@ -5,30 +5,42 @@ const currentLocale = Astro.currentLocale || "en";
 
 let lastUpdateDate = "";
 try {
-  const gitIso = execSync("git log -1 --format=%cI", { encoding: "utf-8" }).trim();
+  const gitIso = execSync("git log -1 --format=%cI", {
+    encoding: "utf-8",
+  }).trim();
   const date = new Date(gitIso);
-  lastUpdateDate = date.toLocaleDateString(currentLocale === "es" ? "es-CR" : "en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  lastUpdateDate = date.toLocaleDateString(
+    currentLocale === "es" ? "es-CR" : "en-US",
+    {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    },
+  );
 } catch {
-  lastUpdateDate = new Date().toLocaleDateString(currentLocale === "es" ? "es-CR" : "en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  lastUpdateDate = new Date().toLocaleDateString(
+    currentLocale === "es" ? "es-CR" : "en-US",
+    {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    },
+  );
 }
 
-const updateLabel = currentLocale === "es" ? "Última actualización" : "Last update";
-const listeningLabel = currentLocale === "es" ? "Escuchando ahora" : "Currently listening";
-const playingLabel = currentLocale === "es" ? "Jugando ahora" : "Currently playing";
+const updateLabel =
+  currentLocale === "es" ? "Última actualización" : "Last update";
+const listeningLabel =
+  currentLocale === "es" ? "Escuchando ahora" : "Currently listening";
+const playingLabel =
+  currentLocale === "es" ? "Jugando ahora" : "Currently playing";
 
 const defaultTrack = {
   title: "Die With A Smile",
   artist: "Lady Gaga, Bruno Mars",
   songUrl: "https://open.spotify.com/track/2plbrEY59IikOBgBGLjaoe",
-  albumImageUrl: "https://i.scdn.co/image/ab67616d0000b2738278b782cba5a98e47f55b93",
+  albumImageUrl:
+    "https://i.scdn.co/image/ab67616d0000b2738278b782cba5a98e47f55b93",
 };
 
 // Fetch initial stats from PostHog at build time
@@ -63,7 +75,7 @@ try {
               "SELECT count(), count(DISTINCT distinct_id) FROM events WHERE event = '$pageview'",
           },
         }),
-      }
+      },
     );
     if (res.ok) {
       const data = await res.json();
@@ -98,15 +110,24 @@ const initialStatsText =
   class="mt-6 text-center text-xs text-grayscale-11 font-mono border-t border-grayscale-3/40 dark:border-grayscale-3/20 pt-8 flex flex-col items-center justify-center gap-1.5"
 >
   <!-- Active State Container (Fluid Dual Activity Stacking for Spotify & Gaming) -->
-  <div id="footer-status-wrapper" class="flex flex-col items-center justify-center gap-y-1.5 text-xs text-center leading-relaxed py-0.5 px-3 max-w-full transition-all duration-300">
+  <div
+    id="footer-status-wrapper"
+    class="flex flex-col items-center justify-center gap-y-1.5 text-xs text-center leading-relaxed py-0.5 px-3 max-w-full transition-all duration-300"
+  >
     <!-- 1. SPOTIFY LIVE ROW -->
     <div
       id="spotify-widget"
       class="hidden transition-all duration-300 flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed max-w-full"
     >
       <!-- Minimalist Spotify Icon -->
-      <svg class="w-3.5 h-3.5 text-[#1DB954] shrink-0 inline-block align-middle" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+      <svg
+        class="w-3.5 h-3.5 text-[#1DB954] shrink-0 inline-block align-middle"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path
+          d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"
+        ></path>
       </svg>
 
       <span class="text-grayscale-11 shrink-0">{listeningLabel}:</span>
@@ -122,18 +143,28 @@ const initialStatsText =
       >
         <!-- Song Title with Centered Tooltip Origin -->
         <span class="relative inline-flex items-center">
-          <span id="spotify-song" class="font-mono tracking-tight text-[#1DB954] dark:text-[#1ED760]">{defaultTrack.title}</span>
+          <span
+            id="spotify-song"
+            class="font-mono tracking-tight text-[#1DB954] dark:text-[#1ED760]"
+            >{defaultTrack.title}</span
+          >
 
           <!-- Floating Spinning Vinyl & Sleeve Popover -->
           <div
             id="spotify-album-preview"
             class="spotify-preview-card pointer-events-none flex flex-col items-center justify-center"
           >
-            <div class="vinyl-preview-wrapper relative flex items-center justify-center">
+            <div
+              class="vinyl-preview-wrapper relative flex items-center justify-center"
+            >
               <!-- Spinning Vinyl Disc (Pure CSS Grooves, 0KB network overhead) -->
-              <div class="vinyl-disc absolute w-[4.6rem] h-[4.6rem] sm:w-[5.2rem] sm:h-[5.2rem] rounded-full flex items-center justify-center">
+              <div
+                class="vinyl-disc absolute w-[4.6rem] h-[4.6rem] sm:w-[5.2rem] sm:h-[5.2rem] rounded-full flex items-center justify-center"
+              >
                 <!-- Center Album Mini Label -->
-                <div class="relative w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden border border-black/50 shadow-inner flex items-center justify-center bg-zinc-950">
+                <div
+                  class="relative w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden border border-black/50 shadow-inner flex items-center justify-center bg-zinc-950"
+                >
                   <img
                     id="spotify-vinyl-img"
                     src={defaultTrack.albumImageUrl}
@@ -143,12 +174,17 @@ const initialStatsText =
                     class="w-full h-full object-cover block"
                     loading="lazy"
                   />
-                  <div class="absolute w-1.5 h-1.5 rounded-full bg-zinc-950 border border-white/40"></div>
+                  <div
+                    class="absolute w-1.5 h-1.5 rounded-full bg-zinc-950 border border-white/40"
+                  >
+                  </div>
                 </div>
               </div>
 
               <!-- Square Album Cover Sleeve (Front Layer) -->
-              <div class="vinyl-sleeve relative z-10 w-20 h-20 sm:w-22 sm:h-22 aspect-square shrink-0 rounded-xl overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.4)] ring-1 ring-black/15 dark:ring-white/20 bg-zinc-950">
+              <div
+                class="vinyl-sleeve relative z-10 w-20 h-20 sm:w-22 sm:h-22 aspect-square shrink-0 rounded-xl overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.4)] ring-1 ring-black/15 dark:ring-white/20 bg-zinc-950"
+              >
                 <img
                   id="spotify-album-img"
                   src={defaultTrack.albumImageUrl}
@@ -163,14 +199,30 @@ const initialStatsText =
           </div>
         </span>
 
-        <span id="spotify-separator" class="text-grayscale-10 font-normal shrink-0">—</span>
-        <span id="spotify-artist" class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono">{defaultTrack.artist}</span>
+        <span
+          id="spotify-separator"
+          class="text-grayscale-10 font-normal shrink-0">—</span
+        >
+        <span
+          id="spotify-artist"
+          class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono"
+          >{defaultTrack.artist}</span
+        >
 
         <!-- Mini animated equalizer bars -->
-        <span id="spotify-equalizer" class="hidden items-end gap-[1.5px] h-2.5 w-2.5 shrink-0 ml-0.5">
-          <span class="w-[1.5px] h-full bg-[#1DB954] rounded-full animate-music-bar-1"></span>
-          <span class="w-[1.5px] h-2/3 bg-[#1DB954] rounded-full animate-music-bar-2"></span>
-          <span class="w-[1.5px] h-4/5 bg-[#1DB954] rounded-full animate-music-bar-3"></span>
+        <span
+          id="spotify-equalizer"
+          class="hidden items-end gap-[1.5px] h-2.5 w-2.5 shrink-0 ml-0.5"
+        >
+          <span
+            class="w-[1.5px] h-full bg-[#1DB954] rounded-full animate-music-bar-1"
+          ></span>
+          <span
+            class="w-[1.5px] h-2/3 bg-[#1DB954] rounded-full animate-music-bar-2"
+          ></span>
+          <span
+            class="w-[1.5px] h-4/5 bg-[#1DB954] rounded-full animate-music-bar-3"
+          ></span>
         </span>
       </a>
     </div>
@@ -181,8 +233,45 @@ const initialStatsText =
       class="hidden transition-all duration-300 flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-xs text-center leading-relaxed max-w-full"
     >
       <!-- Gamepad Icon in Navy / Sky Blue -->
-      <span class="w-3.5 h-3.5 shrink-0 inline-flex items-center justify-center animate-pixel-idle">
-        <svg viewBox="0 0 24 24" class="w-full h-full block" shape-rendering="crispEdges"><rect x="3" y="6" width="18" height="11" fill="#0284c7"/><rect x="5" y="10" width="5" height="2" fill="#0f172a"/><rect x="6" y="8" width="2" height="6" fill="#0f172a"/><rect x="16" y="9" width="2" height="2" fill="#ef4444"/><rect x="18" y="11" width="2" height="2" fill="#38bdf8"/><rect x="14" y="11" width="2" height="2" fill="#eab308"/><rect x="16" y="13" width="2" height="2" fill="#22c55e"/></svg>
+      <span
+        class="w-3.5 h-3.5 shrink-0 inline-flex items-center justify-center animate-pixel-idle"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="w-full h-full block"
+          shape-rendering="crispEdges"
+          ><rect x="3" y="6" width="18" height="11" fill="#0284c7"></rect><rect
+            x="5"
+            y="10"
+            width="5"
+            height="2"
+            fill="#0f172a"></rect><rect
+            x="6"
+            y="8"
+            width="2"
+            height="6"
+            fill="#0f172a"></rect><rect
+            x="16"
+            y="9"
+            width="2"
+            height="2"
+            fill="#ef4444"></rect><rect
+            x="18"
+            y="11"
+            width="2"
+            height="2"
+            fill="#38bdf8"></rect><rect
+            x="14"
+            y="11"
+            width="2"
+            height="2"
+            fill="#eab308"></rect><rect
+            x="16"
+            y="13"
+            width="2"
+            height="2"
+            fill="#22c55e"></rect></svg
+        >
       </span>
 
       <span class="text-grayscale-10 shrink-0">{playingLabel}:</span>
@@ -195,9 +284,18 @@ const initialStatsText =
         data-cuelume-release
         class="game-track-container text-sky-700 dark:text-sky-400 no-underline font-medium inline-flex items-center gap-1.5 cursor-default text-center"
       >
-        <span id="game-name" class="font-mono tracking-tight text-sky-700 dark:text-sky-400 font-semibold"></span>
-        <span id="game-separator" class="text-grayscale-10 font-normal shrink-0 hidden">—</span>
-        <span id="game-details" class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono hidden"></span>
+        <span
+          id="game-name"
+          class="font-mono tracking-tight text-sky-700 dark:text-sky-400 font-semibold"
+        ></span>
+        <span
+          id="game-separator"
+          class="text-grayscale-10 font-normal shrink-0 hidden">—</span
+        >
+        <span
+          id="game-details"
+          class="text-grayscale-11 dark:text-grayscale-10 font-normal font-mono hidden"
+        ></span>
       </span>
     </div>
 
@@ -208,70 +306,162 @@ const initialStatsText =
       class="flex transition-all duration-300 flex-col sm:flex-row items-center justify-center gap-x-1.5 gap-y-0.5 text-[11px] sm:text-xs text-center leading-relaxed max-w-full select-none px-2"
     >
       <!-- Title & Sprite Group -->
-      <div class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0">
-        <span id="dev-status-sprite" class="w-4.5 h-4.5 sm:w-5 sm:h-5 shrink-0 inline-flex items-center justify-center animate-pixel-idle" set:html={defaultDevSprite}></span>
-        <span id="dev-status-badge" class="font-mono text-zinc-900 dark:text-zinc-100 font-semibold whitespace-nowrap">{defaultBadge}</span>
-        <span class="text-grayscale-11 font-mono hidden sm:inline shrink-0">›</span>
+      <div
+        class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0"
+      >
+        <span
+          id="dev-status-sprite"
+          class="w-4.5 h-4.5 sm:w-5 sm:h-5 shrink-0 inline-flex items-center justify-center animate-pixel-idle"
+          set:html={defaultDevSprite}
+        />
+        <span
+          id="dev-status-badge"
+          class="font-mono text-zinc-900 dark:text-zinc-100 font-semibold whitespace-nowrap"
+          >{defaultBadge}</span
+        >
+        <span class="text-grayscale-11 font-mono hidden sm:inline shrink-0"
+          >›</span
+        >
       </div>
 
       <!-- Dialogue text -->
-      <span id="dev-status-dialogue" class="font-mono text-grayscale-11 italic text-center max-w-xs sm:max-w-none text-balance sm:whitespace-nowrap inline-flex items-center justify-center" data-rendered-text={defaultDialogue} title={defaultDialogue}>{defaultDialogue}</span>
+      <span
+        id="dev-status-dialogue"
+        class="font-mono text-grayscale-11 italic text-center max-w-xs sm:max-w-none text-balance sm:whitespace-nowrap inline-flex items-center justify-center"
+        data-rendered-text={defaultDialogue}
+        title={defaultDialogue}>{defaultDialogue}</span
+      >
     </div>
   </div>
 
   <!-- Trust Anchor Navigation -->
-  <div class="flex flex-wrap items-center justify-center gap-2.5 text-[11px] font-mono text-grayscale-11 pt-1">
-    <a href={currentLocale === 'es' ? '/es/about' : '/about'} data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">{currentLocale === 'es' ? 'Sobre mí' : 'About'}</a>
+  <div
+    class="flex flex-wrap items-center justify-center gap-2.5 text-[11px] font-mono text-grayscale-11 pt-1"
+  >
+    <a
+      href={currentLocale === "es" ? "/es/about" : "/about"}
+      data-cuelume-hover="tick"
+      class="hover:text-grayscale-12 transition-colors"
+      >{currentLocale === "es" ? "Sobre mí" : "About"}</a
+    >
     <span class="text-grayscale-5 select-none">·</span>
-    <a href={currentLocale === 'es' ? '/es/privacy' : '/privacy'} data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">{currentLocale === 'es' ? 'Privacidad' : 'Privacy'}</a>
+    <a
+      href={currentLocale === "es" ? "/es/privacy" : "/privacy"}
+      data-cuelume-hover="tick"
+      class="hover:text-grayscale-12 transition-colors"
+      >{currentLocale === "es" ? "Privacidad" : "Privacy"}</a
+    >
     <span class="text-grayscale-5 select-none">·</span>
-    <a href={currentLocale === 'es' ? '/es/contact' : '/contact'} data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">{currentLocale === 'es' ? 'Contacto' : 'Contact'}</a>
+    <a
+      href={currentLocale === "es" ? "/es/contact" : "/contact"}
+      data-cuelume-hover="tick"
+      class="hover:text-grayscale-12 transition-colors"
+      >{currentLocale === "es" ? "Contacto" : "Contact"}</a
+    >
     <span class="text-grayscale-5 select-none">·</span>
-    <a href="/llms.txt" data-cuelume-hover="tick" class="hover:text-grayscale-12 transition-colors">llms.txt</a>
+    <a
+      href="/llms.txt"
+      data-cuelume-hover="tick"
+      class="hover:text-grayscale-12 transition-colors">llms.txt</a
+    >
     <span class="text-grayscale-5 select-none">·</span>
-    <a href="https://github.com/kirianL/Kirian_portfolio" target="_blank" rel="noopener noreferrer" data-cuelume-hover="tick" class="inline-flex items-center gap-1 hover:text-grayscale-12 transition-colors">
-      <svg aria-hidden="true" viewBox="0 0 24 24" class="w-3 h-3 fill-current"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+    <a
+      href="https://github.com/kirianL/Kirian_portfolio"
+      target="_blank"
+      rel="noopener noreferrer"
+      data-cuelume-hover="tick"
+      class="inline-flex items-center gap-1 hover:text-grayscale-12 transition-colors"
+    >
+      <svg aria-hidden="true" viewBox="0 0 24 24" class="w-3 h-3 fill-current"
+        ><path
+          d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"
+        ></path></svg
+      >
       Source
     </a>
   </div>
 
   <!-- Audit Scores Row (Is Agentic & Lighthouse) -->
-  <ul aria-label="Audit scores" class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] font-mono text-grayscale-10 pt-0.5 select-none">
+  <ul
+    aria-label="Audit scores"
+    class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] font-mono text-grayscale-10 pt-0.5 select-none"
+  >
     <li class="flex items-center gap-1.5">
-      <svg aria-hidden="true" class="w-3.5 h-3.5 -rotate-90 shrink-0 text-grayscale-11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
-        <circle cx="8" cy="8" r="6" stroke-dasharray="37.69911184307752 37.69911184307752" stroke-dashoffset="0"></circle>
+      <svg
+        aria-hidden="true"
+        class="w-3.5 h-3.5 -rotate-90 shrink-0 text-grayscale-11"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 16 16"
+      >
+        <circle
+          cx="8"
+          cy="8"
+          r="6"
+          stroke-dasharray="37.69911184307752 37.69911184307752"
+          stroke-dashoffset="0"></circle>
       </svg>
       <span class="text-grayscale-12 font-medium">100</span>
-      <a 
-        href="https://is-agentic.com/scan/kirian.dev" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        data-cuelume-hover="tick" 
-        title="Agent readiness 100/100" 
+      <a
+        href="https://is-agentic.com/scan/kirian.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cuelume-hover="tick"
+        title="Agent readiness 100/100"
         class="underline underline-offset-2 decoration-grayscale-4 hover:decoration-grayscale-11 text-grayscale-11 hover:text-grayscale-12 transition-colors"
       >
         Is Agentic
       </a>
     </li>
     <li class="flex items-center gap-1.5">
-      <svg aria-hidden="true" class="w-3.5 h-3.5 -rotate-90 shrink-0 text-grayscale-11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16">
-        <circle cx="8" cy="8" r="6" stroke-dasharray="6.924777960769379 37.69911184307752" stroke-dashoffset="0"></circle>
-        <circle cx="8" cy="8" r="6" stroke-dasharray="6.924777960769379 37.69911184307752" stroke-dashoffset="-9.42477796076938"></circle>
-        <circle cx="8" cy="8" r="6" stroke-dasharray="6.924777960769379 37.69911184307752" stroke-dashoffset="-18.84955592153876"></circle>
-        <circle cx="8" cy="8" r="6" stroke-dasharray="6.924777960769379 37.69911184307752" stroke-dashoffset="-28.274333882308138"></circle>
+      <svg
+        aria-hidden="true"
+        class="w-3.5 h-3.5 -rotate-90 shrink-0 text-grayscale-11"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 16 16"
+      >
+        <circle
+          cx="8"
+          cy="8"
+          r="6"
+          stroke-dasharray="6.924777960769379 37.69911184307752"
+          stroke-dashoffset="0"></circle>
+        <circle
+          cx="8"
+          cy="8"
+          r="6"
+          stroke-dasharray="6.924777960769379 37.69911184307752"
+          stroke-dashoffset="-9.42477796076938"></circle>
+        <circle
+          cx="8"
+          cy="8"
+          r="6"
+          stroke-dasharray="6.924777960769379 37.69911184307752"
+          stroke-dashoffset="-18.84955592153876"></circle>
+        <circle
+          cx="8"
+          cy="8"
+          r="6"
+          stroke-dasharray="6.924777960769379 37.69911184307752"
+          stroke-dashoffset="-28.274333882308138"></circle>
       </svg>
       <span class="text-grayscale-12 font-medium">100</span>
-      <a 
-        href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fkirian.dev%2F&form_factor=mobile" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        data-cuelume-hover="tick" 
-        title="Google Lighthouse 100" 
+      <a
+        href="https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fkirian.dev%2F&form_factor=mobile"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cuelume-hover="tick"
+        title="Google Lighthouse 100"
         class="underline underline-offset-2 decoration-grayscale-4 hover:decoration-grayscale-11 text-grayscale-11 hover:text-grayscale-12 transition-colors"
       >
         Lighthouse
       </a>
-      <span class="text-grayscale-10 text-[10px]">· {currentLocale === 'es' ? 'puede variar' : 'may vary'}</span>
+      <span class="text-grayscale-10 text-[10px]"
+        >· {currentLocale === "es" ? "puede variar" : "may vary"}</span
+      >
     </li>
   </ul>
 
@@ -293,9 +483,10 @@ const initialStatsText =
     opacity: 0;
     visibility: hidden;
     filter: blur(4px);
-    transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform, opacity, filter;
     z-index: 50;
   }
@@ -324,7 +515,9 @@ const initialStatsText =
       #09090b 92%,
       #000000 100%
     );
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.5);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 8px 24px rgba(0, 0, 0, 0.5);
     transform: translate3d(0, 0, 0) rotate(0deg);
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
@@ -359,24 +552,44 @@ const initialStatsText =
 
   /* Retro Sprite Idle Bobbing */
   @keyframes pixel-bob {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-1.5px); }
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-1.5px);
+    }
   }
   .animate-pixel-idle {
     animation: pixel-bob 2s ease-in-out infinite;
   }
 
   @keyframes music-bar-1 {
-    0%, 100% { height: 25%; }
-    50% { height: 100%; }
+    0%,
+    100% {
+      height: 25%;
+    }
+    50% {
+      height: 100%;
+    }
   }
   @keyframes music-bar-2 {
-    0%, 100% { height: 100%; }
-    50% { height: 35%; }
+    0%,
+    100% {
+      height: 100%;
+    }
+    50% {
+      height: 35%;
+    }
   }
   @keyframes music-bar-3 {
-    0%, 100% { height: 60%; }
-    50% { height: 95%; }
+    0%,
+    100% {
+      height: 60%;
+    }
+    50% {
+      height: 95%;
+    }
   }
   .animate-music-bar-1 {
     animation: music-bar-1 0.8s ease-in-out infinite;
@@ -440,7 +653,10 @@ const initialStatsText =
     try {
       const sep = url.includes("?") ? "&" : "?";
       const fullUrl = `${url}${sep}_t=${Date.now()}`;
-      const res = await fetch(fullUrl, { signal: controller.signal, cache: "no-store" });
+      const res = await fetch(fullUrl, {
+        signal: controller.signal,
+        cache: "no-store",
+      });
       clearTimeout(timer);
       if (res.ok) return await res.json();
     } catch {}
@@ -464,7 +680,16 @@ const initialStatsText =
     const day = crDate.getDay(); // 0 = Sun, 6 = Sat
 
     // 1. Costa Rica & Limón Special Cultural Dates & National Holidays
-    const holidays: Record<string, { badgeEs: string; badgeEn: string; textEs: string; textEn: string; sprite: string }> = {
+    const holidays: Record<
+      string,
+      {
+        badgeEs: string;
+        badgeEn: string;
+        textEs: string;
+        textEn: string;
+        sprite: string;
+      }
+    > = {
       "8-31": {
         badgeEs: "[Kirian: Cultura Afrocaribeña]",
         badgeEn: "[Kirian: Afro-Caribbean Culture]",
@@ -648,10 +873,16 @@ const initialStatsText =
       const songEl = document.getElementById("spotify-song");
       const artistEl = document.getElementById("spotify-artist");
       const sepEl = document.getElementById("spotify-separator");
-      const linkEl = document.getElementById("spotify-link") as HTMLAnchorElement | null;
+      const linkEl = document.getElementById(
+        "spotify-link",
+      ) as HTMLAnchorElement | null;
       const eqEl = document.getElementById("spotify-equalizer");
-      const albumImg = document.getElementById("spotify-album-img") as HTMLImageElement | null;
-      const vinylImg = document.getElementById("spotify-vinyl-img") as HTMLImageElement | null;
+      const albumImg = document.getElementById(
+        "spotify-album-img",
+      ) as HTMLImageElement | null;
+      const vinylImg = document.getElementById(
+        "spotify-vinyl-img",
+      ) as HTMLImageElement | null;
 
       const gameNameEl = document.getElementById("game-name");
       const gameDetailsEl = document.getElementById("game-details");
@@ -684,10 +915,16 @@ const initialStatsText =
       }
 
       // 2. Gaming state directly from live Discord activities
-      let game: { isPlaying: boolean; gameName: string; details?: string } | null = null;
+      let game: {
+        isPlaying: boolean;
+        gameName: string;
+        details?: string;
+      } | null = null;
       if (lanyardData?.activities) {
         const g = lanyardData.activities.find(
-          (a: any) => (a.type === 0 || a.type === 1 || a.type === 5) && a.name !== "Spotify"
+          (a: any) =>
+            (a.type === 0 || a.type === 1 || a.type === 5) &&
+            a.name !== "Spotify",
         );
         if (g && g.name) {
           game = {
@@ -707,8 +944,10 @@ const initialStatsText =
         }
 
         if (activeTrack.albumImageUrl) {
-          if (albumImg && albumImg.src !== activeTrack.albumImageUrl) albumImg.src = activeTrack.albumImageUrl;
-          if (vinylImg && vinylImg.src !== activeTrack.albumImageUrl) vinylImg.src = activeTrack.albumImageUrl;
+          if (albumImg && albumImg.src !== activeTrack.albumImageUrl)
+            albumImg.src = activeTrack.albumImageUrl;
+          if (vinylImg && vinylImg.src !== activeTrack.albumImageUrl)
+            vinylImg.src = activeTrack.albumImageUrl;
         }
 
         if (songEl && songEl.textContent !== activeTrack.title) {
@@ -771,7 +1010,11 @@ const initialStatsText =
         if (devSprite && devInfo.sprite && PIXEL_SPRITES[devInfo.sprite]) {
           devSprite.innerHTML = PIXEL_SPRITES[devInfo.sprite];
         }
-        if (devDialogue && devDialogue.textContent !== devInfo.text && !(devDialogue as any)._decryptTimer) {
+        if (
+          devDialogue &&
+          devDialogue.textContent !== devInfo.text &&
+          !(devDialogue as any)._decryptTimer
+        ) {
           devDialogue.title = devInfo.text;
           decryptMotion(devDialogue, devInfo.text, 14);
         }
@@ -807,8 +1050,14 @@ const initialStatsText =
 
     try {
       // 1. Check Lanyard Discord presence
-      const lanyardRes = await fetchWithTimeout(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`, 3000);
-      const lanyardData = lanyardRes && lanyardRes.success && lanyardRes.data ? lanyardRes.data : null;
+      const lanyardRes = await fetchWithTimeout(
+        `https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`,
+        3000,
+      );
+      const lanyardData =
+        lanyardRes && lanyardRes.success && lanyardRes.data
+          ? lanyardRes.data
+          : null;
 
       // 2. If Discord is not reporting Spotify (e.g. Discord closed/offline), check Spotify Web API directly
       if (!lanyardData?.listening_to_spotify) {
@@ -835,8 +1084,18 @@ const initialStatsText =
   let userInteracted = false;
 
   function connectLanyardSocket() {
-    if (typeof window === "undefined" || !("WebSocket" in window) || socketDisabled || !userInteracted) return;
-    if (lanyardSocket && (lanyardSocket.readyState === WebSocket.OPEN || lanyardSocket.readyState === WebSocket.CONNECTING)) {
+    if (
+      typeof window === "undefined" ||
+      !("WebSocket" in window) ||
+      socketDisabled ||
+      !userInteracted
+    )
+      return;
+    if (
+      lanyardSocket &&
+      (lanyardSocket.readyState === WebSocket.OPEN ||
+        lanyardSocket.readyState === WebSocket.CONNECTING)
+    ) {
       return;
     }
 
@@ -854,7 +1113,10 @@ const initialStatsText =
             if (d && d.heartbeat_interval) {
               if (heartbeatInterval) clearInterval(heartbeatInterval);
               heartbeatInterval = setInterval(() => {
-                if (lanyardSocket && lanyardSocket.readyState === WebSocket.OPEN) {
+                if (
+                  lanyardSocket &&
+                  lanyardSocket.readyState === WebSocket.OPEN
+                ) {
                   lanyardSocket.send(JSON.stringify({ op: 3 }));
                 }
               }, d.heartbeat_interval);
@@ -865,7 +1127,7 @@ const initialStatsText =
               JSON.stringify({
                 op: 2,
                 d: { subscribe_to_id: DISCORD_USER_ID },
-              })
+              }),
             );
           } else if (op === 0) {
             // Event packet (INIT_STATE or PRESENCE_UPDATE)
@@ -893,7 +1155,9 @@ const initialStatsText =
 
       lanyardSocket.onerror = () => {
         socketDisabled = true;
-        try { lanyardSocket?.close(); } catch {}
+        try {
+          lanyardSocket?.close();
+        } catch {}
       };
     } catch {
       socketDisabled = true;
@@ -958,14 +1222,17 @@ const initialStatsText =
             observer.disconnect();
           }
         },
-        { rootMargin: "350px" }
+        { rootMargin: "350px" },
       );
       observer.observe(footerEl);
     }
 
     // 2. Trigger on real user gesture (scroll, touch, click, keydown)
     ["scroll", "touchstart", "click", "keydown"].forEach((evt) => {
-      window.addEventListener(evt, onUserGesture, { once: true, passive: true });
+      window.addEventListener(evt, onUserGesture, {
+        once: true,
+        passive: true,
+      });
     });
   }
 
@@ -1046,8 +1313,12 @@ const initialStatsText =
     // 3. Mobile touch or desktop hover instant revalidation
     const footerWrapper = document.getElementById("footer-status-wrapper");
     if (footerWrapper) {
-      footerWrapper.addEventListener("touchstart", triggerRevalidation, { passive: true });
-      footerWrapper.addEventListener("mouseenter", triggerRevalidation, { passive: true });
+      footerWrapper.addEventListener("touchstart", triggerRevalidation, {
+        passive: true,
+      });
+      footerWrapper.addEventListener("mouseenter", triggerRevalidation, {
+        passive: true,
+      });
     }
   }
 </script>
