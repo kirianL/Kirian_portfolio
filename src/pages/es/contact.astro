@@ -250,13 +250,24 @@ const data = dictionaries[currentLocale];
       e.preventDefault();
       
       const formData = new FormData(form);
+      const payload = {
+        name: String(formData.get('name') || '').trim(),
+        email: String(formData.get('email') || '').trim(),
+        message: String(formData.get('message') || '').trim(),
+        website: String(formData.get('website') || '').trim(),
+      };
+
       submitBtn.textContent = 'Enviando...';
       submitBtn.setAttribute('disabled', 'true');
 
       try {
-        const response = await fetch(form.action, {
-          method: form.method,
-          body: formData,
+        const response = await fetch(form.action || '/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(payload),
         });
 
         const data = await response.json().catch(() => ({}));
