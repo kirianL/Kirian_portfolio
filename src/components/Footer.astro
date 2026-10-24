@@ -787,9 +787,10 @@ const initialStatsText =
   let heartbeatInterval: any = null;
   let socketRetries = 0;
   let socketDisabled = false;
+  let userInteracted = false;
 
   function connectLanyardSocket() {
-    if (typeof window === "undefined" || !("WebSocket" in window) || socketDisabled) return;
+    if (typeof window === "undefined" || !("WebSocket" in window) || socketDisabled || !userInteracted) return;
     if (lanyardSocket && (lanyardSocket.readyState === WebSocket.OPEN || lanyardSocket.readyState === WebSocket.CONNECTING)) {
       return;
     }
@@ -839,7 +840,7 @@ const initialStatsText =
 
       lanyardSocket.onclose = () => {
         if (heartbeatInterval) clearInterval(heartbeatInterval);
-        if (socketRetries < 1) {
+        if (socketRetries < 1 && userInteracted && !socketDisabled) {
           socketRetries++;
           setTimeout(connectLanyardSocket, 15000);
         }
@@ -883,6 +884,40 @@ const initialStatsText =
     } catch {}
   }
 
+  let presenceFetched = false;
+  function runNonCriticalPresence() {
+    if (presenceFetched) return;
+    presenceFetched = true;
+    loadSpotify();
+    loadPostHogStats();
+    if (userInteracted) {
+      connectLanyardSocket();
+    }
+  }
+
+  function onUserGesture() {
+    if (userInteracted) return;
+    userInteracted = true;
+    runNonCriticalPresence();
+    connectLanyardSocket();
+  }
+
+  if (typeof window !== "undefined") {
+    // Trigger on real user gesture (scroll, touch, mouse movement, click)
+    ["scroll", "touchstart", "mousemove", "click", "keydown"].forEach((evt) => {
+      window.addEventListener(evt, onUserGesture, { once: true, passive: true });
+    });
+
+    // Idle fallback after 6 seconds for static idle readers
+    setTimeout(() => {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(runNonCriticalPresence, { timeout: 3000 });
+      } else {
+        runNonCriticalPresence();
+      }
+    }, 6000);
+  }
+
   function init() {
     // 1. Immediately trigger the decrypt animation on page arrival (0ms wait!)
     const devInfo = getDevStatusDialogue();
@@ -915,19 +950,10 @@ const initialStatsText =
       applyPresence((window as any).__lastLanyardData);
     }
 
-    // 4. Defer non-critical network requests so initial paint & LCP are never blocked
-    const fetchPresence = () => {
+    // If user already interacted on a previous page transition, revalidate immediately
+    if (userInteracted) {
       loadSpotify();
       connectLanyardSocket();
-      loadPostHogStats();
-    };
-
-    if (typeof window !== "undefined") {
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(fetchPresence, { timeout: 2500 });
-      } else {
-        setTimeout(fetchPresence, 1000);
-      }
     }
   }
 
@@ -939,6 +965,7 @@ const initialStatsText =
   if (typeof window !== "undefined") {
     let lastPoll = 0;
     const triggerRevalidation = () => {
+      if (!userInteracted) return;
       socketDisabled = false;
       const now = Date.now();
       if (now - lastPoll > 3000) {
@@ -950,14 +977,14 @@ const initialStatsText =
 
     // 1. Passive 45s Polling when active as gentle backup to WebSocket
     setInterval(() => {
-      if (!document.hidden) {
+      if (!document.hidden && userInteracted) {
         loadSpotify();
       }
     }, 45000);
 
     // 2. Mobile Instant Wakeup (Tab switch, App switch, Screen unlock, Page show)
     document.addEventListener("visibilitychange", () => {
-      if (!document.hidden) {
+      if (!document.hidden && userInteracted) {
         triggerRevalidation();
       }
     });

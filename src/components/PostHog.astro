@@ -82,6 +82,8 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST || "https://us.i.posthog
               autocapture: false,
               disable_surveys: true,
               capture_performance: false,
+              disable_session_recording: true,
+              disable_dead_clicks_autocapture: true,
               loaded: function (ph) {
                 ph.capture("$pageview");
               },
@@ -97,10 +99,10 @@ const posthogHost = import.meta.env.PUBLIC_POSTHOG_HOST || "https://us.i.posthog
 
           // Defer PostHog execution to idle or first user interaction
           if ("requestIdleCallback" in window) {
-            requestIdleCallback(loadPostHog, { timeout: 3500 });
+            requestIdleCallback(loadPostHog, { timeout: 6000 });
           } else {
             window.addEventListener("load", function () {
-              setTimeout(loadPostHog, 2000);
+              setTimeout(loadPostHog, 4000);
             });
           }
           ["scroll", "touchstart", "click"].forEach(function (evt) {

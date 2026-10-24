@@ -488,24 +488,27 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
 
   .cr-flag-sheen {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
     pointer-events: none;
     background: linear-gradient(
       115deg,
       transparent 20%,
-      rgba(255, 255, 255, 0.25) 50%,
+      rgba(255, 255, 255, 0.35) 50%,
       transparent 80%
     );
-    background-size: 200% 100%;
+    will-change: transform;
     animation: cr-flag-sheen 4.5s ease-in-out infinite;
   }
 
   @keyframes cr-flag-sheen {
     0% {
-      background-position: 150% 0;
+      transform: translateX(-50%);
     }
     45%, 100% {
-      background-position: -50% 0;
+      transform: translateX(100%);
     }
   }
 </style>
