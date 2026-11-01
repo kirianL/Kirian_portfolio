@@ -127,11 +127,16 @@ const data = dictionaries.EN;
             data-cuelume-hover="tick"
             data-cuelume-press="page"
             title="Available for new projects and roles"
-            class="open-to-work-link group relative inline-flex items-center gap-1 text-[11.5px] font-mono tracking-tight select-none cursor-pointer overflow-hidden py-0.5"
+            class="open-to-work-link group inline-flex items-center gap-1 text-[11.5px] font-mono tracking-tight select-none cursor-pointer py-0.5"
           >
-            <span class="text-grayscale-11 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 font-medium transition-colors">Open to work</span>
+            <!-- Animated Text with Liquid Shimmer Mask -->
+            <span class="relative inline-flex items-center">
+              <span class="text-grayscale-11 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 font-medium transition-colors">Open to work</span>
+              <span class="open-to-work-shimmer absolute inset-0 text-emerald-600 dark:text-emerald-400 font-medium pointer-events-none" aria-hidden="true">Open to work</span>
+            </span>
+
+            <!-- Subtle Arrow -->
             <span class="text-[10px] text-grayscale-11 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200">↗</span>
-            <span class="pointer-events-none absolute inset-0 -translate-x-full modern-shimmer-beam" aria-hidden="true"></span>
           </a>
         </div>
       </section>
@@ -311,37 +316,44 @@ const data = dictionaries.EN;
 </script>
 
 <style>
-  .modern-shimmer-beam {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(16, 185, 129, 0.35) 50%,
-      transparent 100%
-    );
-    will-change: transform;
-    animation: shimmerBeam 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  }
-
-  :global(html.dark) .modern-shimmer-beam {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(52, 211, 153, 0.45) 50%,
-      transparent 100%
-    );
-  }
-
-  @keyframes shimmerBeam {
+  /* Open to work liquid emerald shimmer */
+  @keyframes textShimmerSweep {
     0% {
-      transform: translateX(-150%);
+      -webkit-mask-position: 150% 0;
+      mask-position: 150% 0;
     }
-    35%, 100% {
-      transform: translateX(150%);
+    45%, 100% {
+      -webkit-mask-position: -50% 0;
+      mask-position: -50% 0;
     }
   }
 
-  .open-to-work-link:hover .modern-shimmer-beam {
-    animation-play-state: paused;
+  .open-to-work-shimmer {
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.2) 20%,
+      black 50%,
+      rgba(0, 0, 0, 0.2) 80%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.2) 20%,
+      black 50%,
+      rgba(0, 0, 0, 0.2) 80%,
+      transparent 100%
+    );
+    -webkit-mask-size: 200% 100%;
+    mask-size: 200% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    animation: textShimmerSweep 3.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    will-change: -webkit-mask-position, mask-position;
+  }
+
+  .open-to-work-link:hover .open-to-work-shimmer {
     opacity: 0;
   }
 </style>
