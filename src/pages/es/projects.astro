@@ -3,12 +3,15 @@ import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import Projects from "../../components/Projects.astro";
 import Footer from "../../components/Footer.astro";
+import { projectItemListSchema } from "../../lib/seo";
 ---
 
 <Layout
   title="Proyectos | Kirian Luna"
-  description="Herramientas, APIs y productos construidos o mantenidos por Kirian Luna."
+  description="Proyectos seleccionados de Kirian Luna: plataformas full-stack, experiencias de patrimonio cultural, productos SaaS y landing pages de alto rendimiento."
   lang="es"
+  pageType="CollectionPage"
+  schema={projectItemListSchema}
 >
   <Navbar />
 

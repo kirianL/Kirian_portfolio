@@ -8,7 +8,12 @@ export default defineConfig({
   site: 'https://kirian.dev',
   adapter: vercel(),
   output: 'server',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // Keep error and API routes out of the indexable sitemap.
+      filter: (page) => !page.includes('/404') && !page.includes('/api/'),
+    }),
+  ],
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'hover'

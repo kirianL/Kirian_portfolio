@@ -2,6 +2,25 @@
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import PostHog from '../components/PostHog.astro';
+import {
+  absoluteUrl,
+  defaultBreadcrumbs,
+  organizationSchema,
+  personSchema,
+  resolveAlternates,
+  websiteSchema,
+  PERSON_ID,
+  WEBSITE_ID,
+  withTrailingSlash,
+  type BreadcrumbItem,
+} from '../lib/seo';
+
+type PageType =
+  | 'WebPage'
+  | 'ProfilePage'
+  | 'AboutPage'
+  | 'CollectionPage'
+  | 'ContactPage';
 
 interface Props {
   title: string;
@@ -9,23 +28,100 @@ interface Props {
   lang?: string;
   image?: string;
   loadSerifFonts?: boolean;
+  /** Explicit hreflang pair for pages whose slugs differ per language. */
+  alternates?: { en?: string; es?: string };
+  /** Primary schema.org type for this page. */
+  pageType?: PageType;
+  /** Extra JSON-LD nodes (BlogPosting, ItemList, Service…). */
+  schema?: Record<string, any> | Array<Record<string, any>>;
+  /** @id of the node this page is about. Defaults to the Person node. */
+  mainEntityId?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  ogType?: 'website' | 'article' | 'profile';
+  publishedTime?: string;
+  modifiedTime?: string;
+  articleSection?: string;
+  noindex?: boolean;
+  /** Link to the Markdown version of this page, when one exists. */
+  markdownAlternate?: string;
 }
 
-const { title, description, lang = 'es', image = '/OG/KirianLunaOG.png', loadSerifFonts = false } = Astro.props;
+const {
+  title,
+  description,
+  lang = 'es',
+  image = '/OG/KirianLunaOG.png',
+  loadSerifFonts = false,
+  alternates,
+  pageType = 'WebPage',
+  schema,
+  mainEntityId = PERSON_ID,
+  breadcrumbs,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  articleSection,
+  noindex = false,
+  markdownAlternate,
+} = Astro.props;
 
 const siteURL = Astro.site || new URL(Astro.url.origin);
-const canonicalURL = new URL(Astro.url.pathname, siteURL);
+const canonicalPath = withTrailingSlash(Astro.url.pathname || '/');
+const canonicalURL = new URL(canonicalPath, siteURL);
 const resolvedImageURL = new URL(image, siteURL);
 const imageType = image.endsWith('.jpg') || image.endsWith('.jpeg') ? 'image/jpeg' : image.endsWith('.webp') ? 'image/webp' : 'image/png';
 
-// Dynamic i18n hreflang URLs
-const currentPath = Astro.url.pathname;
-const cleanPath = currentPath.replace(/^\/es(\/|$)/, '/');
-const englishPath = cleanPath;
-const spanishPath = cleanPath === '/' ? '/es/' : `/es${cleanPath.endsWith('/') ? cleanPath.slice(0, -1) : cleanPath}`;
+// Dynamic i18n hreflang URLs. Blog posts use translated slugs, so resolve
+// the known pairs first; a post that only exists in one language must not
+// advertise a counterpart URL that would 404.
+const autoAlternates = resolveAlternates(Astro.url.pathname);
 
-const englishURL = new URL(englishPath, siteURL);
-const spanishURL = new URL(spanishPath, siteURL);
+const englishPath = alternates?.en ?? autoAlternates.en;
+const spanishPath = alternates?.es ?? autoAlternates.es;
+
+const englishURL = englishPath ? new URL(withTrailingSlash(englishPath), siteURL) : undefined;
+const spanishURL = spanishPath ? new URL(withTrailingSlash(spanishPath), siteURL) : undefined;
+const defaultURL = englishURL ?? spanishURL;
+
+const resolvedBreadcrumbs =
+  breadcrumbs ?? defaultBreadcrumbs(Astro.url.pathname, lang === 'es' ? 'es' : 'en');
+
+const breadcrumbSchema =
+  resolvedBreadcrumbs.length > 0
+    ? {
+        '@type': 'BreadcrumbList',
+        '@id': `${canonicalURL.href}#breadcrumb`,
+        itemListElement: resolvedBreadcrumbs.map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: item.name,
+          item: absoluteUrl(item.path),
+        })),
+      }
+    : null;
+
+const pageSchema = {
+  '@type': pageType,
+  '@id': `${canonicalURL.href}#webpage`,
+  url: canonicalURL.href,
+  name: title,
+  description,
+  isPartOf: { '@id': WEBSITE_ID },
+  mainEntity: { '@id': mainEntityId },
+  inLanguage: lang === 'es' ? 'es' : 'en',
+  ...(breadcrumbSchema ? { breadcrumb: { '@id': breadcrumbSchema['@id'] } } : {}),
+};
+
+const extraSchemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
+
+const structuredData = [
+  personSchema,
+  websiteSchema,
+  pageSchema,
+  organizationSchema,
+  ...extraSchemas,
+  ...(breadcrumbSchema ? [breadcrumbSchema] : []),
+];
 
 const fontsHref = loadSerifFonts
   ? "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=Instrument+Serif:ital@0;1&display=optional"
@@ -99,18 +195,25 @@ const fontsHref = loadSerifFonts
     <meta name="description" content={description} />
     <meta name="author" content="Kirian Luna" />
     <meta name="publisher" content="Kirian Luna" />
-    <meta name="keywords" content="Kirian Luna, Ingeniero de Software, Software Engineer, Web Developer Costa Rica, Next.js, React, Astro, TypeScript, Product Designer, SorinLabs" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="keywords" content="Kirian Luna, Ingeniero de Software, Software Engineer, Full-Stack Developer, Web Developer Costa Rica, Next.js, React, Astro, TypeScript, PostgreSQL, Prisma, Sorin Labs" />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
 
     <!-- Canonical & i18n Hreflang & RSS Feed -->
     <link rel="canonical" href={canonicalURL} />
-    <link rel="alternate" hreflang="en" href={englishURL} />
-    <link rel="alternate" hreflang="es" href={spanishURL} />
-    <link rel="alternate" hreflang="x-default" href={englishURL} />
+    {englishURL && <link rel="alternate" hreflang="en" href={englishURL} />}
+    {spanishURL && <link rel="alternate" hreflang="es" href={spanishURL} />}
+    {defaultURL && <link rel="alternate" hreflang="x-default" href={defaultURL} />}
     <link rel="alternate" type="application/rss+xml" title="Kirian Luna Blog RSS" href={new URL(lang === 'es' ? '/es/rss.xml' : '/rss.xml', siteURL)} />
+    {markdownAlternate && (
+      <link rel="alternate" type="text/markdown" title={`${title} (Markdown)`} href={new URL(markdownAlternate, siteURL)} />
+    )}
+    <!-- LLM / agent entry points -->
+    <link rel="alternate" type="text/markdown" title="Kirian Luna — LLM profile (llms.txt)" href={new URL('/llms.txt', siteURL)} />
+    <link rel="alternate" type="text/markdown" title="Kirian Luna — Full LLM profile (llms-full.txt)" href={new URL('/llms-full.txt', siteURL)} />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href={new URL('/sitemap-index.xml', siteURL)} />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="Kirian Luna" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
@@ -122,6 +225,11 @@ const fontsHref = loadSerifFonts
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title} />
     <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_ES'} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {articleSection && <meta property="article:section" content={articleSection} />}
+    <meta property="article:author" content="Kirian Luna" />
 
     <!-- Twitter / X Cards -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -130,106 +238,16 @@ const fontsHref = loadSerifFonts
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={resolvedImageURL} />
     <meta name="twitter:image:alt" content={title} />
-    <meta name="twitter:creator" content="@kirianluna" />
+    <meta name="twitter:site" content="@kiriandev" />
+    <meta name="twitter:creator" content="@kiriandev" />
 
-    <!-- Structured Data JSON-LD Schemas -->
-    <script type="application/ld+json" set:html={JSON.stringify([
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "@id": "https://kirian.dev/#person",
-        "name": "Kirian Luna",
-        "givenName": "Kirian",
-        "familyName": "Luna",
-        "url": "https://kirian.dev",
-        "image": new URL('/OG/KirianLunaOG.png', siteURL).href,
-        "jobTitle": "Ingeniero de Software & Software Engineer",
-        "description": "Kirian Luna is a Software Engineer and systems architect based in Costa Rica, specializing in full-stack web engineering, TypeScript, React, Next.js, and high-performance digital products.",
-        "worksFor": {
-          "@type": "Organization",
-          "name": "SorinLabs"
-        },
-        "sameAs": [
-          "https://github.com/kirianL",
-          "https://linkedin.com/in/kirianluna"
-        ],
-        "knowsAbout": [
-          "Systems Engineering",
-          "Software Engineering",
-          "TypeScript",
-          "React",
-          "Next.js",
-          "Astro",
-          "PostgreSQL",
-          "Prisma ORM",
-          "Node.js",
-          "TailwindCSS",
-          "UI/UX Design",
-          "Search Engine Optimization (SEO)",
-          "Search eXperience Optimization (SXO)"
-        ],
-        "address": {
-          "@type": "PostalAddress",
-          "addressCountry": "Costa Rica"
-        }
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "@id": "https://kirian.dev/#website",
-        "url": "https://kirian.dev",
-        "name": "Kirian Luna Portfolio",
-        "description": "Official portfolio of Kirian Luna, Ingeniero de Software / Software Engineer based in Costa Rica.",
-        "publisher": {
-          "@id": "https://kirian.dev/#person"
-        },
-        "inLanguage": ["en", "es"]
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "ProfilePage",
-        "@id": `${canonicalURL.href}#webpage`,
-        "url": canonicalURL.href,
-        "name": title,
-        "description": description,
-        "isPartOf": {
-          "@id": "https://kirian.dev/#website"
-        },
-        "mainEntity": {
-          "@id": "https://kirian.dev/#person"
-        }
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "@id": "https://kirian.dev/#organization",
-        "name": "Kirian Luna",
-        "alternateName": "SorinLabs",
-        "url": "https://kirian.dev",
-        "logo": new URL('/LogoKirian.png', siteURL).href,
-        "email": "kirianluna.u@gmail.com",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Limón",
-          "addressRegion": "Limón",
-          "postalCode": "70101",
-          "addressCountry": "Costa Rica"
-        },
-        "contactPoint": [
-          {
-            "@type": "ContactPoint",
-            "email": "kirianluna.u@gmail.com",
-            "contactType": "customer service",
-            "availableLanguage": ["English", "Spanish"]
-          }
-        ],
-        "sameAs": [
-          "https://github.com/kirianL",
-          "https://linkedin.com/in/kirianluna",
-          "https://x.com/kirianluna"
-        ]
-      }
-    ])} />
+    <!-- Structured Data JSON-LD: Person + WebSite + Page + Organization + extras -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(
+        structuredData.map((node) => ({ "@context": "https://schema.org", ...node }))
+      )}
+    />
     
     <PostHog />
   </head>

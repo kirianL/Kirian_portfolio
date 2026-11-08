@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import Footer from "../../components/Footer.astro";
 import { dictionaries } from "../../data/data";
+import { professionalServiceSchema } from "../../lib/seo";
 
 const currentLocale = (Astro.currentLocale || "es").toUpperCase() as 'EN' | 'ES';
 const data = dictionaries[currentLocale];
@@ -12,6 +13,8 @@ const data = dictionaries[currentLocale];
   title="Contacto | Kirian Luna"
   description="Ponte en contacto con Kirian Luna. Completa el formulario o conecta a través de mi correo y redes sociales."
   lang="es"
+  pageType="ContactPage"
+  schema={professionalServiceSchema}
 >
   <Navbar />
   

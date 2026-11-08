@@ -7,6 +7,13 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import BlogTOC from '../../components/blog/BlogTOC.astro';
 import BlogReactions from '../../components/blog/BlogReactions.astro';
+import {
+  absoluteUrl,
+  PERSON_ID,
+  ORGANIZATION_ID,
+  WEBSITE_ID,
+  resolveBlogAlternates,
+} from '../../lib/seo';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -27,7 +34,34 @@ const { Content, headings } = await render(post);
 // Calculate exact reading time
 const rawBody = post.body || "";
 const wordCount = rawBody.trim().split(/\s+/).filter(Boolean).length;
-const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
+const readMinutes = Math.max(1, Math.ceil(wordCount / 200));
+const readTime = `${readMinutes} min read`;
+
+const slug = post.id.replace(/^en\//, "");
+const postPath = `/blog/${slug}/`;
+const postUrl = new URL(postPath, Astro.site || Astro.url.origin).href;
+const publishedIso = new Date(post.data.date).toISOString();
+const alternates = resolveBlogAlternates(postPath);
+
+const blogPosting = {
+  "@type": "BlogPosting",
+  "@id": `${postUrl}#article`,
+  "url": postUrl,
+  "headline": post.data.title,
+  "description": post.data.description,
+  "image": absoluteUrl(post.data.image),
+  "datePublished": publishedIso,
+  "dateModified": publishedIso,
+  "author": { "@id": PERSON_ID },
+  "publisher": { "@id": ORGANIZATION_ID },
+  "mainEntityOfPage": { "@id": `${postUrl}#webpage` },
+  "isPartOf": { "@id": WEBSITE_ID },
+  "inLanguage": "en",
+  "articleSection": post.data.category,
+  "keywords": [post.data.category, "software engineering", "web development", "Kirian Luna"].join(", "),
+  "wordCount": wordCount,
+  "timeRequired": `PT${readMinutes}M`,
+};
 
 // Fetch other blog posts for "More writings" section
 const allPosts = await getCollection('blog');
@@ -57,29 +91,21 @@ const morePosts = allPosts
   lang="en"
   image={post.data.image}
   loadSerifFonts={true}
+  pageType="WebPage"
+  schema={blogPosting}
+  mainEntityId={`${postUrl}#article`}
+  alternates={alternates}
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog/" },
+    { name: post.data.title, path: postPath },
+  ]}
+  ogType="article"
+  publishedTime={publishedIso}
+  modifiedTime={publishedIso}
+  articleSection={post.data.category}
+  markdownAlternate={`${postPath.slice(0, -1)}.md`}
 >
-  <script type="application/ld+json" set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": post.data.title,
-    "description": post.data.description,
-    "image": new URL(post.data.image, Astro.site || Astro.url.origin).href,
-    "datePublished": post.data.date,
-    "author": {
-      "@type": "Person",
-      "name": "Kirian Luna",
-      "url": "https://kirian.dev"
-    },
-    "publisher": {
-      "@type": "Person",
-      "name": "Kirian Luna",
-      "url": "https://kirian.dev"
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": new URL(Astro.url.pathname, Astro.site || Astro.url.origin).href
-    }
-  })} />
 
   <Navbar />
 

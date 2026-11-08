@@ -7,14 +7,17 @@ import WorkExperience from "../../components/WorkExperience.astro";
 import TechStack from "../../components/TechStack.astro";
 import Footer from "../../components/Footer.astro";
 import { dictionaries } from "../../data/data";
+import { professionalServiceSchema, projectItemListSchema } from "../../lib/seo";
 
 const data = dictionaries.ES;
 ---
 
 <Layout
   title="Kirian Luna | Ingeniero de Software"
-  description="Portafolio profesional de Kirian Luna, Ingeniero de Software basado en Costa Rica. Especialista en React, Next.js y desarrollo de software moderno."
+  description="Portafolio profesional de Kirian Luna, Ingeniero de Software basado en Costa Rica. Especialista en React, Next.js, Astro y desarrollo full-stack moderno."
   lang="es"
+  pageType="ProfilePage"
+  schema={[professionalServiceSchema, projectItemListSchema]}
 >
   <Navbar />
 
