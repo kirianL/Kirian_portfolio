@@ -68,7 +68,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
   class="fixed top-0 left-0 right-0 z-50 bg-grayscale-1/70 backdrop-blur-md border-b border-grayscale-3/40 dark:border-grayscale-3/20 transition-colors duration-200"
 >
   <div
-    class="max-w-2xl mx-auto px-6 sm:px-0 py-2.5 sm:py-3 flex items-center justify-between"
+    class="max-w-2xl mx-auto px-4 sm:px-0 py-2.5 sm:py-3 flex items-center justify-between gap-2"
   >
     <!-- Brand / Logo Link -->
     <a
@@ -78,7 +78,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
       data-cuelume-hover="tick"
       data-cuelume-press="page"
       data-cuelume-release="release"
-      class="flex items-center gap-2 group text-xs sm:text-sm font-semibold tracking-tight text-grayscale-12 hover:text-accent-9 transition-colors"
+      class="flex items-center gap-2 group text-xs sm:text-sm font-semibold tracking-tight text-grayscale-12 hover:text-accent-9 transition-colors shrink-0"
       aria-label={navLabels.home}
     >
       <img
@@ -86,14 +86,14 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
         alt="Kirian Luna"
         width="32"
         height="32"
-        class="w-7 h-7 sm:w-8 sm:h-8 aspect-square object-contain dark:invert transition-transform group-hover:scale-105 shrink-0"
+        class="w-6 h-6 sm:w-8 sm:h-8 aspect-square object-contain dark:invert transition-transform group-hover:scale-105 shrink-0"
       />
     </a>
 
     <!-- Nav Links + Language Selector -->
-    <div class="flex items-center gap-1.5 sm:gap-5">
+    <div class="flex items-center gap-2 sm:gap-5 min-w-0">
       <div
-        class="flex items-center gap-1.5 sm:gap-4 text-[11px] sm:text-[12.5px] font-medium text-grayscale-11 shrink-0"
+        class="flex items-center gap-2 sm:gap-4 text-[11px] sm:text-[12.5px] font-medium text-grayscale-11 shrink-0"
       >
         <a
           id="nav-link-projects"

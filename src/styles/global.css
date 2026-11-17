@@ -34,6 +34,7 @@
 html,
 body {
   position: relative;
+  overflow-x: clip;
   background-color: var(--color-grayscale-1);
   color: var(--color-grayscale-12);
   font-family: var(--font-sans);
@@ -789,7 +790,6 @@ html.dark .cr-branch-svg {
 /* ULatina hover preview: campus thumbnail slides in to the right of the link */
 .ulatina-link {
   position: relative;
-  white-space: nowrap;
 }
 
 .ulatina-preview {
@@ -833,6 +833,10 @@ html.dark .ulatina-preview {
 }
 
 @media (hover: hover) and (min-width: 768px) {
+  .ulatina-link {
+    white-space: nowrap;
+  }
+
   .ulatina-link:is(:hover, :focus-visible) .ulatina-preview {
     opacity: 1;
     filter: blur(0);

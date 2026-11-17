@@ -24,18 +24,18 @@ const data = dictionaries.EN;
   <Navbar />
 
   <main id="main-content" class="min-h-screen bg-grayscale-1">
-    <div class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-16 flex flex-col gap-14">
+    <div class="max-w-2xl mx-auto px-5 sm:px-0 pt-24 sm:pt-28 pb-14 sm:pb-16 flex flex-col gap-12 sm:gap-14">
       <!-- Header / Identity -->
       <header class="flex flex-col gap-y-0">
         <!-- Banner, Avatar & Identity -->
         <BannerHero name={data.name} title={data.title} />
 
         <!-- Metadata row -->
-        <div class="grid grid-cols-2 sm:flex sm:items-start gap-x-6 gap-y-4 sm:gap-8 mt-6">
+        <div class="grid grid-cols-3 sm:flex sm:items-start gap-x-3 gap-y-4 sm:gap-8 mt-6">
           <!-- Location -->
-          <div class="flex flex-col gap-1.5">
+          <div class="flex flex-col gap-1.5 min-w-0">
             <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-11">Location</span>
-            <span class="cr-location-badge group/cr text-grayscale-12 text-sm flex items-center gap-1.5 cursor-default" data-cuelume-hover="tick">
+            <span class="cr-location-badge group/cr text-grayscale-12 text-[12.5px] sm:text-sm flex items-center gap-1.5 cursor-default whitespace-nowrap" data-cuelume-hover="tick">
               <svg class="w-3.5 h-3.5 text-grayscale-11 transition-transform duration-200 group-hover/cr:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -66,9 +66,9 @@ const data = dictionaries.EN;
           <ExperienceMeta label="Experience" experience={data.experience} />
 
           <!-- Live Clock: CR -->
-          <div class="flex flex-col gap-1.5">
+          <div class="flex flex-col gap-1.5 min-w-0">
             <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-11">Time Zone</span>
-            <span class="text-grayscale-12 text-sm flex items-center gap-1.5 select-none">
+            <span class="text-grayscale-12 text-[12.5px] sm:text-sm flex items-center gap-1.5 select-none whitespace-nowrap">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
               <span id="cr-time">--:--</span>
             </span>
@@ -82,7 +82,7 @@ const data = dictionaries.EN;
       <!-- About / Narrative Section -->
       <section id="about-intro" class="flex flex-col gap-4">
         <!-- Bio (2 concise paragraphs with pencil focus effect) -->
-        <div class="bio-focus-scope relative flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed">
+        <div class="bio-focus-scope relative flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13px] sm:text-[13.5px] leading-[1.65] sm:leading-relaxed">
           <div class="bio-dimmer" aria-hidden="true"></div>
           <p>
             <span class="bio-prose">I'm a Software Engineer from Limón, Costa Rica, focused on building modern digital products that solve real-world </span><span class="bio-pencil-word" data-mark="circle" tabindex="0" role="button" aria-expanded="false">problems<svg class="bio-mark bio-mark--circle" viewBox="0 0 100 40" preserveAspectRatio="none" fill="none" aria-hidden="true"><path pathLength="1" d="M76 5C56 1 22 2 8 12C-3 20 3 30 20 35C39 40 71 37 87 32C101 27 101 17 91 10C83 4 67 1 57 3" /></svg><span class="bio-hand-note" aria-hidden="true">No bloat, just software<br />people actually use.</span></span><span class="bio-prose">. I combine engineering, </span><span class="bio-pencil-word" data-mark="dots" tabindex="0" role="button" aria-expanded="false">design<svg class="bio-mark bio-mark--dots" viewBox="0 0 100 40" preserveAspectRatio="none" fill="none" aria-hidden="true"><circle cx="10" cy="34" r="1.5" /><circle cx="20" cy="35" r="1.5" /><circle cx="30" cy="34" r="1.5" /><circle cx="40" cy="34.5" r="1.5" /><circle cx="50" cy="34" r="1.5" /><circle cx="60" cy="35" r="1.5" /><circle cx="70" cy="34.5" r="1.5" /><circle cx="80" cy="34" r="1.5" /><circle cx="90" cy="35" r="1.5" /></svg><span class="bio-hand-note" aria-hidden="true">Yes, I obsess over 1px<br />and 60fps transitions.</span></span><span class="bio-prose"> and user experience to ship scalable, intuitive systems—graduated in Systems Engineering from </span><a href="https://www.ulatina.ac.cr/" target="_blank" rel="noopener noreferrer" data-cuelume-hover="tick" data-cuelume-press data-cuelume-release class="ulatina-link text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors">Universidad Latina de Costa Rica<span class="ulatina-preview" aria-hidden="true"><img src="/images/ulatina-campus.webp" alt="" width="480" height="320" loading="lazy" decoding="async" /></span></a><span class="bio-prose">.</span>
