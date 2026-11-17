@@ -10,12 +10,34 @@
   background-color: #111113;
 }
 
+.blue {
+  color-scheme: dark;
+  background-color: #1421d6;
+  --gray-1: #1421d6;
+  --gray-2: #1b29df;
+  --gray-3: #2837e8;
+  --gray-4: #3544ee;
+  --gray-5: #4554f2;
+  --gray-6: #5b69f5;
+  --gray-7: #7683f8;
+  --gray-8: #939efa;
+  --gray-9: #a8b2fc;
+  --gray-10: #c4cbfd;
+  --gray-11: #dde2ff;
+  --gray-12: #ffffff;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant blue (&:where(.blue, .blue *));
 
 @theme {
-  --font-sans: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --font-pirata: 'Pirata One', system-ui, sans-serif;
+  --font-sans:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+  --font-pirata: "Pirata One", system-ui, sans-serif;
 
   --text-tiny: 0.625rem;
 
