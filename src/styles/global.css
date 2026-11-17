@@ -123,8 +123,12 @@ html.lenis body {
 
 /* Custom theme mapping to expose Radix colors to Tailwind v4 classes */
 @theme {
-  --font-sans: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
   --font-chillax: "Chillax", sans-serif;
   --font-insomnyacs: "Insomnyacs", sans-serif;
   --font-serif: "Newsreader", "Instrument Serif", Georgia, serif;
@@ -444,13 +448,61 @@ html.dark .cr-branch-svg {
   }
 }
 
-/* Bio Hand-Drawn Pencil Circle + Focus Blur + Handwritten Note */
-.bio-prose,
-.bio-focus-scope a {
-  transition:
-    opacity 720ms cubic-bezier(0.16, 1, 0.3, 1) 160ms,
-    filter 720ms cubic-bezier(0.16, 1, 0.3, 1) 160ms,
-    color 240ms ease;
+/* Bio Hand-Drawn Marks + Dimmer Overlay + Handwritten Note (henribredt.de timing)
+   Enter: 150ms color anticipation → dimmer fades to 0.9 & mark draws → note fades in.
+   Leave: note fades (160ms @ 150ms) → mark retracts in reverse (280ms @ 150ms) → dimmer clears (600ms @ 430ms).
+   Switching fast: dimmer stays steady while the leaving word finishes retracting cleanly above it. */
+.bio-dimmer {
+  position: absolute;
+  inset: -12px;
+  z-index: 20;
+  background: var(--color-grayscale-1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 600ms ease-in-out 430ms;
+}
+
+.bio-focus-scope:has(
+    .bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  )
+  .bio-dimmer {
+  opacity: 0.9;
+  transition-duration: 700ms;
+  transition-delay: 150ms;
+  transition-timing-function: ease-in-out;
+}
+
+.bio-focus-scope:has(
+    .bio-pencil-word[data-mark="underline"]:is(
+        :hover:not(.touch-managed),
+        :focus-visible,
+        .is-active
+      )
+  )
+  .bio-dimmer {
+  transition-duration: 240ms;
+}
+
+.bio-focus-scope:has(
+    .bio-pencil-word[data-mark="dots"]:is(
+        :hover:not(.touch-managed),
+        :focus-visible,
+        .is-active
+      )
+  )
+  .bio-dimmer {
+  transition-duration: 630ms;
+}
+
+.bio-focus-scope:has(
+    .bio-pencil-word[data-mark="double"]:is(
+        :hover:not(.touch-managed),
+        :focus-visible,
+        .is-active
+      )
+  )
+  .bio-dimmer {
+  transition-duration: 860ms;
 }
 
 .bio-pencil-word {
@@ -458,152 +510,340 @@ html.dark .cr-branch-svg {
   display: inline-block;
   color: var(--color-grayscale-12);
   font-weight: 500;
-  cursor: default;
-  z-index: 1;
-  transition:
-    opacity 720ms cubic-bezier(0.16, 1, 0.3, 1) 160ms,
-    filter 720ms cubic-bezier(0.16, 1, 0.3, 1) 160ms,
-    z-index 0s linear 1250ms;
+  cursor: help;
+  z-index: auto;
+  transition: color 180ms ease-out;
+}
+
+.bio-pencil-word.is-leaving {
+  z-index: 30;
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active) {
+  z-index: 32;
+  color: var(--color-grayscale-12);
 }
 
 .bio-pencil-word:focus-visible {
-  outline: 2px solid var(--color-accent-9);
+  outline: 1px dashed var(--color-grayscale-8);
   outline-offset: 4px;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
-.bio-pencil-svg {
+/* Marks: shared */
+.bio-mark {
   position: absolute;
-  inset: -6px -12px;
-  width: calc(100% + 24px);
-  height: calc(100% + 12px);
   pointer-events: none;
   overflow: visible;
+  z-index: 32;
   color: var(--color-grayscale-12);
+  inset: -4px -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 8px);
+}
+
+.bio-mark--circle {
+  left: -12px;
+  right: -12px;
+  width: calc(100% + 24px);
+}
+
+.bio-mark--underline {
+  inset: auto auto -5px 0;
+  width: 100%;
+  height: 10px;
+}
+
+/* Path strokes (circle, underline, double) */
+.bio-mark path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
   opacity: 0;
-  transition: opacity 320ms cubic-bezier(0.16, 1, 0.3, 1) 950ms;
+  transition:
+    stroke-dashoffset 280ms linear 150ms,
+    opacity 0s linear 430ms;
 }
 
-.bio-pencil-path {
-  stroke-dasharray: 540;
-  stroke-dashoffset: 540;
-  transition: stroke-dashoffset 1200ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+/* Double underline: on exit the bottom stroke retracts first (150ms), then the top stroke (290ms) */
+.bio-mark--double path:first-child {
+  transition:
+    stroke-dashoffset 140ms linear 290ms,
+    opacity 0s linear 430ms;
 }
 
+.bio-mark--double path:nth-child(2) {
+  transition:
+    stroke-dashoffset 140ms linear 150ms,
+    opacity 0s linear 290ms;
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark
+  path {
+  stroke-dashoffset: 0;
+  opacity: 1;
+  transition-duration: 700ms, 100ms;
+  transition-delay: 150ms;
+  transition-timing-function: ease-in-out, ease;
+}
+
+.bio-pencil-word[data-mark="underline"]:is(
+    :hover:not(.touch-managed),
+    :focus-visible,
+    .is-active
+  )
+  .bio-mark
+  path {
+  transition-duration: 240ms, 100ms;
+  transition-delay: 150ms;
+}
+
+.bio-pencil-word[data-mark="double"]:is(
+    :hover:not(.touch-managed),
+    :focus-visible,
+    .is-active
+  )
+  .bio-mark
+  path {
+  transition-duration: 360ms, 100ms;
+  transition-delay: 150ms;
+}
+
+.bio-pencil-word[data-mark="double"]:is(
+    :hover:not(.touch-managed),
+    :focus-visible,
+    .is-active
+  )
+  .bio-mark
+  path:nth-child(2) {
+  transition-delay: 650ms;
+}
+
+/* Dots mark: 9 circles appearing sequentially & disappearing in reverse */
+.bio-mark--dots circle {
+  fill: currentColor;
+  opacity: 0;
+  transition: opacity 40ms;
+}
+
+.bio-mark--dots circle:nth-child(1) {
+  transition-delay: 390ms;
+}
+.bio-mark--dots circle:nth-child(2) {
+  transition-delay: 360ms;
+}
+.bio-mark--dots circle:nth-child(3) {
+  transition-delay: 330ms;
+}
+.bio-mark--dots circle:nth-child(4) {
+  transition-delay: 300ms;
+}
+.bio-mark--dots circle:nth-child(5) {
+  transition-delay: 270ms;
+}
+.bio-mark--dots circle:nth-child(6) {
+  transition-delay: 240ms;
+}
+.bio-mark--dots circle:nth-child(7) {
+  transition-delay: 210ms;
+}
+.bio-mark--dots circle:nth-child(8) {
+  transition-delay: 180ms;
+}
+.bio-mark--dots circle:nth-child(9) {
+  transition-delay: 150ms;
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark--dots
+  circle {
+  opacity: 1;
+  transition-duration: 100ms;
+  transition-delay: 150ms;
+}
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark--dots
+  circle:nth-child(2) {
+  transition-delay: 240ms;
+}
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark--dots
+  circle:nth-child(3) {
+  transition-delay: 310ms;
+}
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark--dots
+  circle:nth-child(4) {
+  transition-delay: 365ms;
+}
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark--dots
+  circle:nth-child(5) {
+  transition-delay: 415ms;
+}
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark--dots
+  circle:nth-child(6) {
+  transition-delay: 465ms;
+}
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark--dots
+  circle:nth-child(7) {
+  transition-delay: 520ms;
+}
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark--dots
+  circle:nth-child(8) {
+  transition-delay: 590ms;
+}
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-mark--dots
+  circle:nth-child(9) {
+  transition-delay: 680ms;
+}
+
+/* Handwritten note */
 .bio-hand-note {
   position: absolute;
   top: calc(100% + 18px);
-  left: 65%;
+  left: 40%;
   width: max-content;
   max-width: 260px;
   pointer-events: none;
   z-index: 40;
   font-family: var(--font-hand);
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: 0.015em;
-  word-spacing: 0.08em;
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  word-spacing: 0.06em;
   color: var(--color-grayscale-12);
   opacity: 0;
-  filter: blur(2px);
-  transform: translate3d(-6%, -6px, 0) rotate(-4deg) scale(0.97);
-  transform-origin: top left;
+  visibility: hidden;
+  transform: rotate(-4deg);
+  transform-origin: 0 100%;
+  will-change: opacity;
   transition:
-    opacity 460ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-    transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-    filter 460ms cubic-bezier(0.16, 1, 0.3, 1) 0ms;
+    opacity 160ms cubic-bezier(0.22, 0.61, 0.36, 1) 150ms,
+    visibility 0s linear 310ms;
+}
+
+.bio-pencil-word[data-note-align="end"] .bio-hand-note {
+  left: auto;
+  right: 0;
+  transform-origin: 100% 100%;
 }
 
 @media (max-width: 639px) {
   .bio-hand-note {
-    top: calc(100% + 16px);
+    top: calc(100% + 14px);
     left: 0;
     max-width: 230px;
-    font-size: 18px;
-    line-height: 1.32;
-    transform: translate3d(0, -6px, 0) rotate(-3deg) scale(0.97);
+    font-size: 19px;
+    line-height: 1.25;
   }
 }
 
-@media (hover: hover) {
-  .bio-focus-scope:has(.bio-pencil-word:hover) .bio-prose,
-  .bio-focus-scope:has(.bio-pencil-word:hover) .bio-pencil-word:not(:hover),
-  .bio-focus-scope:has(.bio-pencil-word:hover) a {
-    opacity: 0.28;
-    filter: blur(1.8px);
-    transition:
-      opacity 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-      filter 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-      color 240ms ease;
-  }
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-hand-note {
+  opacity: 1;
+  visibility: visible;
+  transition-duration: 400ms, 0s;
+  transition-delay: 850ms, 0s;
+  transition-timing-function: ease-in-out, linear;
+}
 
-  .bio-pencil-word:hover {
-    z-index: 30;
-    transition:
-      opacity 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-      filter 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-      z-index 0s linear 0ms;
-  }
+.bio-pencil-word[data-mark="underline"]:is(
+    :hover:not(.touch-managed),
+    :focus-visible,
+    .is-active
+  )
+  .bio-hand-note {
+  transition-delay: 390ms, 0s;
+}
 
-  .bio-pencil-word:hover .bio-pencil-svg {
-    opacity: 0.85;
-    transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1) 0ms;
-  }
+.bio-pencil-word[data-mark="dots"]:is(
+    :hover:not(.touch-managed),
+    :focus-visible,
+    .is-active
+  )
+  .bio-hand-note {
+  transition-delay: 780ms, 0s;
+}
 
-  .bio-pencil-word:hover .bio-pencil-path {
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 1450ms cubic-bezier(0.22, 1, 0.36, 1) 0ms;
-  }
+.bio-pencil-word[data-mark="double"]:is(
+    :hover:not(.touch-managed),
+    :focus-visible,
+    .is-active
+  )
+  .bio-hand-note {
+  transition-delay: 1010ms, 0s;
+}
 
-  .bio-pencil-word:hover .bio-hand-note {
+/* ULatina hover preview: campus thumbnail slides in to the right of the link */
+.ulatina-link {
+  position: relative;
+  white-space: nowrap;
+}
+
+.ulatina-preview {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 14px);
+  z-index: 50;
+  width: 168px;
+  aspect-ratio: 3 / 2;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--color-grayscale-1, #fff);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.07),
+    0 8px 24px -6px rgb(0 0 0 / 0.18);
+  pointer-events: none;
+  opacity: 0;
+  filter: blur(3px);
+  transform: translate3d(-8px, -50%, 0) scale(0.96);
+  transform-origin: left center;
+  visibility: hidden;
+  transition:
+    opacity 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 340ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 340ms;
+}
+
+.ulatina-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+html.dark .ulatina-preview {
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.09),
+    0 10px 26px -6px rgb(0 0 0 / 0.5);
+}
+
+@media (hover: hover) and (min-width: 768px) {
+  .ulatina-link:is(:hover, :focus-visible) .ulatina-preview {
     opacity: 1;
     filter: blur(0);
-    transform: translate3d(-6%, 0, 0) rotate(-4deg) scale(1);
+    transform: translate3d(0, -50%, 0) scale(1);
+    visibility: visible;
     transition:
-      opacity 620ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
-      transform 660ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
-      filter 620ms cubic-bezier(0.16, 1, 0.3, 1) 420ms;
+      opacity 380ms cubic-bezier(0.16, 1, 0.3, 1) 40ms,
+      filter 380ms cubic-bezier(0.16, 1, 0.3, 1) 40ms,
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1) 40ms,
+      visibility 0s linear 0s;
   }
-}
-
-.bio-focus-scope:has(.bio-pencil-word:focus-visible) .bio-prose,
-.bio-focus-scope:has(.bio-pencil-word:focus-visible) .bio-pencil-word:not(:focus-visible),
-.bio-focus-scope:has(.bio-pencil-word:focus-visible) a {
-  opacity: 0.28;
-  filter: blur(1.8px);
-  transition:
-    opacity 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-    filter 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-    color 240ms ease;
-}
-
-.bio-pencil-word:focus-visible {
-  z-index: 30;
-  transition:
-    opacity 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-    filter 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-    z-index 0s linear 0ms;
-}
-
-.bio-pencil-word:focus-visible .bio-pencil-svg {
-  opacity: 0.85;
-  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1) 0ms;
-}
-
-.bio-pencil-word:focus-visible .bio-pencil-path {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 1450ms cubic-bezier(0.22, 1, 0.36, 1) 0ms;
-}
-
-.bio-pencil-word:focus-visible .bio-hand-note {
-  opacity: 1;
-  filter: blur(0);
-  transform: translate3d(-6%, 0, 0) rotate(-4deg) scale(1);
-  transition:
-    opacity 620ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
-    transform 660ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
-    filter 620ms cubic-bezier(0.16, 1, 0.3, 1) 420ms;
 }
 
 /* Accessibility & Battery optimization: Respect OS reduced motion preference */
