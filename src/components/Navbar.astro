@@ -286,7 +286,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
   transition:persist="mobile-menu-drawer"
   data-open="false"
   aria-hidden="true"
-  class="mobile-menu-drawer sm:hidden fixed inset-0 z-40 bg-grayscale-1/95 backdrop-blur-xl flex flex-col justify-center px-6"
+  class="mobile-menu-drawer sm:hidden fixed inset-0 z-40 bg-grayscale-1/[0.97] backdrop-blur-md flex flex-col justify-center px-6 overscroll-contain touch-none"
 >
   <nav aria-label={currentLocale === "es" ? "Navegación móvil" : "Mobile navigation"} class="flex flex-col">
     <a
@@ -534,7 +534,6 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
       );
       drawer.setAttribute("data-open", String(open));
       drawer.setAttribute("aria-hidden", String(!open));
-      document.documentElement.style.overflow = open ? "hidden" : "";
     };
 
     const prevMenuAbort = (window as any).__mobileMenuAbort as AbortController | undefined;
@@ -619,84 +618,81 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
 </script>
 
 <style>
-  /* Asymmetric 2-line editorial hamburger -> crisp X morph */
+  /* Asymmetric 2-line editorial hamburger -> centered X morph */
   .burger-line {
     position: absolute;
     right: 6px;
+    top: 50%;
     height: 1.75px;
+    margin-top: -0.875px;
     border-radius: 999px;
     background-color: currentColor;
     pointer-events: none;
     transform-origin: center;
     transition:
-      transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
-      width 300ms cubic-bezier(0.22, 1, 0.36, 1),
-      top 400ms cubic-bezier(0.22, 1, 0.36, 1);
+      transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 280ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .burger-line--top {
     width: 18px;
-    top: 12px;
+    transform: translate3d(0, -3.5px, 0);
   }
 
   .burger-line--bottom {
     width: 12px;
-    top: 19px;
+    transform: translate3d(0, 3.5px, 0);
   }
 
   .mobile-burger-btn[aria-expanded="true"] .burger-line--top {
     width: 18px;
-    top: 15px;
-    transform: rotate(45deg);
+    transform: translate3d(0, 0, 0) rotate(45deg);
   }
 
   .mobile-burger-btn[aria-expanded="true"] .burger-line--bottom {
     width: 18px;
-    top: 15px;
-    transform: rotate(-45deg);
+    transform: translate3d(0, 0, 0) rotate(-45deg);
   }
 
-  /* Curtain overlay: smooth clip-path reveal + gentle reverse staggered link exit */
+  /* Pure GPU compositor overlay (no clip-path / blur-filter repaints on iOS Safari) */
   .mobile-menu-drawer {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    clip-path: inset(0 0 100% 0);
+    transform: translate3d(0, -8px, 0);
+    will-change: opacity, transform;
     transition:
-      clip-path 560ms cubic-bezier(0.22, 1, 0.36, 1) 110ms,
-      opacity 460ms cubic-bezier(0.22, 1, 0.36, 1) 160ms,
-      visibility 0s linear 670ms;
+      opacity 320ms cubic-bezier(0.22, 1, 0.36, 1) 120ms,
+      transform 360ms cubic-bezier(0.22, 1, 0.36, 1) 120ms,
+      visibility 0s linear 480ms;
   }
 
   .mobile-menu-drawer[data-open="true"] {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    clip-path: inset(0 0 0 0);
+    transform: translate3d(0, 0, 0);
     transition:
-      clip-path 500ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
-      opacity 280ms ease 0ms,
+      opacity 260ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
+      transform 340ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
       visibility 0s linear 0s;
   }
 
   .mobile-menu-item {
     opacity: 0;
-    filter: blur(3px);
-    transform: translate3d(0, 12px, 0);
+    transform: translate3d(0, 10px, 0);
+    will-change: opacity, transform;
     transition:
-      opacity 340ms cubic-bezier(0.22, 1, 0.36, 1) calc((3 - var(--item-i, 0)) * 45ms),
-      transform 380ms cubic-bezier(0.22, 1, 0.36, 1) calc((3 - var(--item-i, 0)) * 45ms),
-      filter 340ms cubic-bezier(0.22, 1, 0.36, 1) calc((3 - var(--item-i, 0)) * 45ms);
+      opacity 260ms cubic-bezier(0.22, 1, 0.36, 1) calc((3 - var(--item-i, 0)) * 35ms),
+      transform 300ms cubic-bezier(0.22, 1, 0.36, 1) calc((3 - var(--item-i, 0)) * 35ms);
   }
 
   .mobile-menu-drawer[data-open="true"] .mobile-menu-item {
     opacity: 1;
-    filter: blur(0);
     transform: translate3d(0, 0, 0);
     transition:
-      opacity 380ms cubic-bezier(0.16, 1, 0.3, 1) calc(90ms + var(--item-i, 0) * 55ms),
-      transform 460ms cubic-bezier(0.16, 1, 0.3, 1) calc(90ms + var(--item-i, 0) * 55ms),
-      filter 380ms cubic-bezier(0.16, 1, 0.3, 1) calc(90ms + var(--item-i, 0) * 55ms);
+      opacity 340ms cubic-bezier(0.16, 1, 0.3, 1) calc(70ms + var(--item-i, 0) * 50ms),
+      transform 400ms cubic-bezier(0.16, 1, 0.3, 1) calc(70ms + var(--item-i, 0) * 50ms);
   }
 
   .mobile-menu-dot {
