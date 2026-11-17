@@ -44,7 +44,12 @@ body {
 }
 
 /* Mobile Touch Responsiveness (Eliminates 300ms mobile tap delay) */
-a, button, [role="button"], input, select, textarea {
+a,
+button,
+[role="button"],
+input,
+select,
+textarea {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
@@ -118,12 +123,13 @@ html.lenis body {
 
 /* Custom theme mapping to expose Radix colors to Tailwind v4 classes */
 @theme {
-  --font-sans: "Inter", sans-serif;
-  --font-mono: "GeistMono", monospace;
+  --font-sans: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-chillax: "Chillax", sans-serif;
   --font-insomnyacs: "Insomnyacs", sans-serif;
   --font-serif: "Newsreader", "Instrument Serif", Georgia, serif;
   --font-figgle: "Newsreader", "Instrument Serif", Georgia, serif;
+  --font-hand: "Caveat", cursive;
 }
 
 .font-name {
@@ -194,23 +200,34 @@ html.lenis body {
       scrollbar-gutter: stable;
     }
   }
-  
+
   body {
     background-color: var(--color-grayscale-1);
     color: var(--color-grayscale-12);
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 }
 
 /* Retain project page transitions and micro-interactions */
 .project-card {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
-  box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 1px 2px -1px, rgba(0, 0, 0, 0.02) 0px 2px 4px 0px;
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s ease;
+  box-shadow:
+    rgba(0, 0, 0, 0.04) 0px 0px 0px 1px,
+    rgba(0, 0, 0, 0.04) 0px 1px 2px -1px,
+    rgba(0, 0, 0, 0.02) 0px 2px 4px 0px;
 }
 
 .project-card:hover {
   transform: translateY(-2px);
-  box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 4px 12px -2px, rgba(0, 0, 0, 0.04) 0px 2px 6px 0px;
+  box-shadow:
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px,
+    rgba(0, 0, 0, 0.06) 0px 4px 12px -2px,
+    rgba(0, 0, 0, 0.04) 0px 2px 6px 0px;
 }
 
 .contact-link {
@@ -219,7 +236,7 @@ html.lenis body {
 }
 
 .contact-link::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 100%;
   transform: scaleX(0);
@@ -330,12 +347,12 @@ html.lenis body {
     #002b7f 100%
   );
   background-size: 220% 100%;
-  background-position: 100% 50%;
+  background-position: var(--cr-x, 50%) 50%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  transition: opacity 220ms cubic-bezier(0.2, 0, 0, 1);
+  transition: opacity 180ms ease-out;
 }
 
 html.dark .cr-location-flag-layer {
@@ -351,20 +368,242 @@ html.dark .cr-location-flag-layer {
   );
 }
 
-@keyframes crFlagSweep {
-  0% {
-    background-position: 100% 50%;
+@media (hover: hover) {
+  .cr-location-badge:hover .cr-location-flag-layer {
+    opacity: 1;
   }
-  100% {
-    background-position: 0% 50%;
+}
+
+/* Costa Rica -> Puerto Limón Floating Branch Connector */
+.cr-limon-branch {
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0.65rem;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.3rem;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 160ms ease-out,
+    transform 180ms ease-out;
+}
+
+.cr-branch-svg {
+  width: 15px;
+  height: 15px;
+  color: color-mix(in srgb, #059669 40%, var(--color-grayscale-7));
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+html.dark .cr-branch-svg {
+  color: color-mix(in srgb, #34d399 45%, var(--color-grayscale-7));
+}
+
+.cr-branch-path {
+  stroke-dasharray: 28;
+  stroke-dashoffset: 28;
+  transition: stroke-dashoffset 180ms ease-out;
+}
+
+.cr-limon-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--color-grayscale-12);
+  transition: color 180ms ease-out;
+}
+
+@media (hover: hover) {
+  .cr-location-badge:hover .cr-limon-branch {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .cr-location-badge:hover .cr-branch-path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 220ms cubic-bezier(0.22, 1, 0.36, 1) 20ms;
+  }
+
+  .cr-location-badge:hover .cr-limon-label {
+    color: #059669;
+    transition: color 480ms ease-out 160ms;
+  }
+
+  html.dark .cr-location-badge:hover .cr-limon-label {
+    color: #34d399;
+  }
+}
+
+/* Bio Hand-Drawn Pencil Circle + Focus Blur + Handwritten Note */
+.bio-prose,
+.bio-focus-scope a {
+  transition:
+    opacity 720ms cubic-bezier(0.16, 1, 0.3, 1) 160ms,
+    filter 720ms cubic-bezier(0.16, 1, 0.3, 1) 160ms,
+    color 240ms ease;
+}
+
+.bio-pencil-word {
+  position: relative;
+  display: inline-block;
+  color: var(--color-grayscale-12);
+  font-weight: 500;
+  cursor: default;
+  z-index: 1;
+  transition:
+    opacity 720ms cubic-bezier(0.16, 1, 0.3, 1) 160ms,
+    filter 720ms cubic-bezier(0.16, 1, 0.3, 1) 160ms,
+    z-index 0s linear 1250ms;
+}
+
+.bio-pencil-word:focus-visible {
+  outline: 2px solid var(--color-accent-9);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.bio-pencil-svg {
+  position: absolute;
+  inset: -6px -12px;
+  width: calc(100% + 24px);
+  height: calc(100% + 12px);
+  pointer-events: none;
+  overflow: visible;
+  color: var(--color-grayscale-12);
+  opacity: 0;
+  transition: opacity 320ms cubic-bezier(0.16, 1, 0.3, 1) 950ms;
+}
+
+.bio-pencil-path {
+  stroke-dasharray: 540;
+  stroke-dashoffset: 540;
+  transition: stroke-dashoffset 1200ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+}
+
+.bio-hand-note {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 65%;
+  width: max-content;
+  max-width: 260px;
+  pointer-events: none;
+  z-index: 40;
+  font-family: var(--font-hand);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.015em;
+  word-spacing: 0.08em;
+  color: var(--color-grayscale-12);
+  opacity: 0;
+  filter: blur(2px);
+  transform: translate3d(-6%, -6px, 0) rotate(-4deg) scale(0.97);
+  transform-origin: top left;
+  transition:
+    opacity 460ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+    filter 460ms cubic-bezier(0.16, 1, 0.3, 1) 0ms;
+}
+
+@media (max-width: 639px) {
+  .bio-hand-note {
+    top: calc(100% + 16px);
+    left: 0;
+    max-width: 230px;
+    font-size: 18px;
+    line-height: 1.32;
+    transform: translate3d(0, -6px, 0) rotate(-3deg) scale(0.97);
   }
 }
 
 @media (hover: hover) {
-  .cr-location-badge:hover .cr-location-flag-layer {
-    opacity: 1;
-    animation: crFlagSweep 1.35s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate;
+  .bio-focus-scope:has(.bio-pencil-word:hover) .bio-prose,
+  .bio-focus-scope:has(.bio-pencil-word:hover) .bio-pencil-word:not(:hover),
+  .bio-focus-scope:has(.bio-pencil-word:hover) a {
+    opacity: 0.28;
+    filter: blur(1.8px);
+    transition:
+      opacity 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+      filter 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+      color 240ms ease;
   }
+
+  .bio-pencil-word:hover {
+    z-index: 30;
+    transition:
+      opacity 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+      filter 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+      z-index 0s linear 0ms;
+  }
+
+  .bio-pencil-word:hover .bio-pencil-svg {
+    opacity: 0.85;
+    transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1) 0ms;
+  }
+
+  .bio-pencil-word:hover .bio-pencil-path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1450ms cubic-bezier(0.22, 1, 0.36, 1) 0ms;
+  }
+
+  .bio-pencil-word:hover .bio-hand-note {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(-6%, 0, 0) rotate(-4deg) scale(1);
+    transition:
+      opacity 620ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
+      transform 660ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
+      filter 620ms cubic-bezier(0.16, 1, 0.3, 1) 420ms;
+  }
+}
+
+.bio-focus-scope:has(.bio-pencil-word:focus-visible) .bio-prose,
+.bio-focus-scope:has(.bio-pencil-word:focus-visible) .bio-pencil-word:not(:focus-visible),
+.bio-focus-scope:has(.bio-pencil-word:focus-visible) a {
+  opacity: 0.28;
+  filter: blur(1.8px);
+  transition:
+    opacity 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+    filter 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+    color 240ms ease;
+}
+
+.bio-pencil-word:focus-visible {
+  z-index: 30;
+  transition:
+    opacity 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+    filter 680ms cubic-bezier(0.16, 1, 0.3, 1) 0ms,
+    z-index 0s linear 0ms;
+}
+
+.bio-pencil-word:focus-visible .bio-pencil-svg {
+  opacity: 0.85;
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1) 0ms;
+}
+
+.bio-pencil-word:focus-visible .bio-pencil-path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1450ms cubic-bezier(0.22, 1, 0.36, 1) 0ms;
+}
+
+.bio-pencil-word:focus-visible .bio-hand-note {
+  opacity: 1;
+  filter: blur(0);
+  transform: translate3d(-6%, 0, 0) rotate(-4deg) scale(1);
+  transition:
+    opacity 620ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
+    transform 660ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
+    filter 620ms cubic-bezier(0.16, 1, 0.3, 1) 420ms;
 }
 
 /* Accessibility & Battery optimization: Respect OS reduced motion preference */

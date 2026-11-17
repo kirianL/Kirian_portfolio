@@ -2,6 +2,8 @@
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import BannerHero from "../../components/BannerHero.astro";
+import EmailMeta from "../../components/EmailMeta.astro";
+import ExperienceMeta from "../../components/ExperienceMeta.astro";
 import Projects from "../../components/Projects.astro";
 import WorkExperience from "../../components/WorkExperience.astro";
 import TechStack from "../../components/TechStack.astro";
@@ -17,7 +19,7 @@ const data = dictionaries.ES;
   description="Portafolio profesional de Kirian Luna, Ingeniero de Software basado en Costa Rica. Especialista en React, Next.js, Astro y desarrollo full-stack moderno."
   lang="es"
   pageType="ProfilePage"
-  schema={[professionalServiceSchema, projectItemListSchema]}
+  schema={professionalServiceSchema}
 >
   <Navbar />
 
@@ -40,13 +42,14 @@ const data = dictionaries.ES;
               class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-11"
               >Ubicación</span
             >
-            <span class="text-grayscale-12 text-sm flex items-center gap-1.5">
+            <span class="cr-location-badge group/cr text-grayscale-12 text-sm flex items-center gap-1.5 cursor-default" data-cuelume-hover="tick">
               <svg
-                class="w-3.5 h-3.5 text-grayscale-11"
+                class="w-3.5 h-3.5 text-grayscale-11 transition-transform duration-200 group-hover/cr:-translate-y-0.5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 stroke-width="2"
+                aria-hidden="true"
               >
                 <path
                   stroke-linecap="round"
@@ -58,60 +61,30 @@ const data = dictionaries.ES;
                   stroke-linejoin="round"
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
-              {data.location}
+              <span class="cr-location-text font-medium">
+                <span>{data.location}</span>
+                <span class="cr-location-flag-layer" aria-hidden="true">{data.location}</span>
+                <span class="cr-limon-branch" aria-hidden="true">
+                  <svg class="cr-branch-svg" viewBox="0 0 16 16" fill="none">
+                    <path
+                      class="cr-branch-path"
+                      d="M1.5 0V8.5C1.5 11.2614 3.73858 13.5 6.5 13.5H15.5"
+                      stroke="currentColor"
+                      stroke-width="1.2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <span class="cr-limon-label">Puerto Limón</span>
+                </span>
+              </span>
             </span>
           </div>
 
           <!-- Email -->
-          <div class="flex flex-col gap-1.5">
-            <span
-              class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-11"
-              >Correo</span
-            >
-            <a
-              href={`mailto:${data.contact.email}`}
-              class="text-grayscale-12 text-sm flex items-center gap-1.5 hover:text-accent-9 transition-colors"
-            >
-              <svg
-                class="w-3.5 h-3.5 text-grayscale-11"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                ></path>
-              </svg>
-              {data.contact.email}
-            </a>
-          </div>
+          <EmailMeta label="Correo" email={data.contact.email} />
 
           <!-- Experience -->
-          <div class="flex flex-col gap-1.5">
-            <span
-              class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-11"
-              >Experiencia</span
-            >
-            <span class="text-grayscale-12 text-sm flex items-center gap-1.5">
-              <svg
-                class="w-3.5 h-3.5 text-grayscale-11"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                ></path>
-              </svg>
-              {data.experience}
-            </span>
-          </div>
+          <ExperienceMeta label="Experiencia" experience={data.experience} />
 
           <!-- Live Clock: CR -->
           <div class="flex flex-col gap-1.5">
@@ -136,32 +109,16 @@ const data = dictionaries.ES;
 
       <!-- About / Narrative Section -->
       <section id="sobre-mi-intro" class="flex flex-col gap-4">
-        <!-- Bio -->
-        <p class="flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed" set:html={data.hero.desc} />
+        <!-- Bio (máximo 2 párrafos con efecto lápiz) -->
+        <div class="bio-focus-scope flex flex-col gap-3.5 tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed">
+          <p>
+            <span class="bio-prose">Soy Ingeniero de Software de Limón, Costa Rica, enfocado en construir productos digitales que </span><span class="bio-pencil-word" tabindex="0"><span>resuelven problemas reales</span><svg class="bio-pencil-svg" viewBox="0 0 220 56" preserveAspectRatio="none" aria-hidden="true"><path class="bio-pencil-path" d="M 18 14 C 55 3, 165 2, 204 17 C 222 25, 212 45, 174 49 C 118 55, 36 53, 14 40 C -2 30, 8 11, 52 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg><span class="bio-hand-note" aria-hidden="true">Sin relleno, solo software<br />que la gente sí usa.</span></span><span class="bio-prose">. Combino ingeniería, </span><span class="bio-pencil-word" tabindex="0"><span>diseño y experiencia</span><svg class="bio-pencil-svg" viewBox="0 0 220 56" preserveAspectRatio="none" aria-hidden="true"><path class="bio-pencil-path" d="M 18 14 C 55 3, 165 2, 204 17 C 222 25, 212 45, 174 49 C 118 55, 36 53, 14 40 C -2 30, 8 11, 52 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg><span class="bio-hand-note" aria-hidden="true">Sí, me obsesiono con 1px<br />y transiciones a 60fps.</span></span><span class="bio-prose"> para crear soluciones escalables e intuitivas—graduado de Ingeniería en Sistemas por la </span><a href="https://www.ulatina.ac.cr/" target="_blank" rel="noopener noreferrer" data-cuelume-hover="tick" data-cuelume-press data-cuelume-release class="text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors">Universidad Latina de Costa Rica</a><span class="bio-prose">.</span>
+          </p>
 
-        <!-- Resumen de servicios y disponibilidad (contenido SSR significativo) -->
-        <p class="tracking-tight text-grayscale-11 text-[13.5px] leading-relaxed">
-          Me especializo en ingeniería web full-stack con TypeScript, React 19, Next.js, Astro, Node.js, PostgreSQL y Prisma—abarcando modelado de datos relacionales, APIs REST, caché con Redis, autenticación JWT y control de acceso basado en roles (RBAC). También optimizo Core Web Vitals, rendimiento en Lighthouse y accesibilidad WCAG 2.1, y estoy disponible para proyectos por alcance fijo, consultoría técnica y puestos remotos de tiempo completo en español e inglés.
-        </p>
-
-        <ul class="flex flex-col gap-2 text-[12.5px] text-grayscale-11 leading-relaxed list-disc pl-4">
-          <li>
-            <strong class="text-grayscale-12 font-medium">Aplicaciones web full-stack:</strong> plataformas SaaS completas, paneles autogestionables, motores de reservas y sitios editoriales construidos con TypeScript, React 19, Next.js App Router y Astro para máxima mantenibilidad y velocidad.
-          </li>
-          <li>
-            <strong class="text-grayscale-12 font-medium">Arquitectura backend y bases de datos:</strong> esquemas normalizados en PostgreSQL, migraciones con Prisma ORM, caché y rate limiting con Redis, autenticación JWT, control de acceso por roles (RBAC), reportes PDF/Excel y registros de auditoría.
-          </li>
-          <li>
-            <strong class="text-grayscale-12 font-medium">Rendimiento y accesibilidad:</strong> optimización de Core Web Vitals, objetivos Lighthouse 100/100, HTML semántico, navegación por teclado, soporte de movimiento reducido y entrega bilingüe en español e inglés.
-          </li>
-          <li>
-            <strong class="text-grayscale-12 font-medium">Modalidades y disponibilidad:</strong> proyectos por hitos y alcance fijo (desde USD $1,200), consultoría mensual de arquitectura e ingeniería o roles remotos de tiempo completo (CST / UTC-6, respuesta en menos de 24 horas hábiles).
-          </li>
-        </ul>
-
-        <p class="tracking-tight text-grayscale-11 text-[13px] leading-relaxed">
-          Cada proyecto que construyo se entrega con contratos estrictos en TypeScript, arquitectura de URLs limpia y presupuestos de rendimiento medibles—desde plataformas SaaS multi-tenant como GigBlades y sistemas académicos institucionales con RBAC y auditoría, hasta plataformas editoriales y culturales para Limón.
-        </p>
+          <p>
+            <span class="bio-prose">Me especializo en TypeScript, React 19, Next.js, Astro, Node.js, PostgreSQL y Prisma—construyendo plataformas SaaS, APIs REST con RBAC e </span><span class="bio-pencil-word" tabindex="0"><span>interfaces rápidas y accesibles</span><svg class="bio-pencil-svg" viewBox="0 0 220 56" preserveAspectRatio="none" aria-hidden="true"><path class="bio-pencil-path" d="M 18 14 C 55 3, 165 2, 204 17 C 222 25, 212 45, 174 49 C 118 55, 36 53, 14 40 C -2 30, 8 11, 52 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg><span class="bio-hand-note" aria-hidden="true">¡También sé programar!<br />(incluso sin IA, solo más lento)</span></span><span class="bio-prose">. Disponible para proyectos por alcance fijo, consultoría y roles remotos en español e inglés.</span>
+          </p>
+        </div>
 
         <!-- Social icons row with Open to work -->
         <div class="flex items-center justify-between gap-4 mt-2">

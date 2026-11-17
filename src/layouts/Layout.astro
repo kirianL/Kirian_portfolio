@@ -137,8 +137,8 @@ const structuredData = [
 ];
 
 const fontsHref = loadSerifFonts
-  ? "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=Instrument+Serif:ital@0;1&display=optional"
-  : "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=optional";
+  ? "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=Instrument+Serif:ital@0;1&display=swap"
+  : "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;600&display=swap";
 ---
 
 <!doctype html>
@@ -293,6 +293,43 @@ const fontsHref = loadSerifFonts
 
       initCuelume();
       document.addEventListener("astro:page-load", initCuelume);
+
+      const initCrLocationHover = () => {
+        if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+        document.querySelectorAll<HTMLElement>(".cr-location-badge").forEach((el) => {
+          if ((el as any).__crBound) return;
+          (el as any).__crBound = true;
+          el.addEventListener("pointermove", (e) => {
+            if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
+            const rect = el.getBoundingClientRect();
+            if (!rect.width) return;
+            const pct = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+            el.style.setProperty("--cr-x", `${pct.toFixed(1)}%`);
+          });
+        });
+      };
+
+      initCrLocationHover();
+      document.addEventListener("astro:page-load", initCrLocationHover);
+
+      if (!(window as any).__expMetaScrollBound) {
+        (window as any).__expMetaScrollBound = true;
+        document.addEventListener("click", (e) => {
+          const target = e.target;
+          if (!(target instanceof Element)) return;
+          const expBtn = target.closest("[data-exp-meta-btn]");
+          if (expBtn) {
+            const section = document.getElementById("experiencia");
+            if (section) {
+              section.scrollIntoView({ behavior: "smooth", block: "start" });
+              const firstFolder = section.querySelector('.minimal-folder-item[data-open="false"] .folder-trigger-btn');
+              if (firstFolder instanceof HTMLElement) {
+                firstFolder.click();
+              }
+            }
+          }
+        });
+      }
     </script>
 
     <!-- Lenis Smooth Scroll Engine -->

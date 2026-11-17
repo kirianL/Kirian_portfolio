@@ -140,7 +140,7 @@ const skills = data.skills.list || [];
                 </div>
                 <div class="stack-items-wrap flex flex-wrap items-center">
                   {catSkills.map((skill) => (
-                    <div class="tech-item group/griditem">
+                    <div class="tech-item group/griditem" data-tooltip={skill.name}>
                       <TechIcon
                         name={skill.name}
                         class="tech-icon-svg shrink-0"
@@ -148,9 +148,6 @@ const skills = data.skills.list || [];
                       <span class="tech-label text-[12.5px] font-medium leading-none tracking-tight">
                         {skill.name}
                       </span>
-                      <div class="tech-grid-tooltip">
-                        {skill.name}
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -211,9 +208,6 @@ const skills = data.skills.list || [];
     width: 14px;
     height: 14px;
   }
-  .tech-stack-section.view-list .tech-grid-tooltip {
-    display: none;
-  }
 
   .tech-stack-section.view-grid .stack-row-inner {
     display: block;
@@ -260,7 +254,8 @@ const skills = data.skills.list || [];
     border-color: rgba(63, 63, 70, 0.6);
   }
 
-  .tech-grid-tooltip {
+  .tech-stack-section.view-grid .tech-item::after {
+    content: attr(data-tooltip);
     position: absolute;
     bottom: 100%;
     left: 50%;
@@ -281,18 +276,9 @@ const skills = data.skills.list || [];
     z-index: 50;
     white-space: nowrap;
   }
-  .group\/griditem:hover .tech-grid-tooltip {
+  .tech-stack-section.view-grid .tech-item:hover::after {
     opacity: 1;
     transform: translateX(-50%) translateY(-2px);
-  }
-  .tech-grid-tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 5px solid transparent;
-    border-top-color: var(--color-grayscale-12, #09090b);
   }
 
   /* Smooth opacity transitions for hover focus effect */

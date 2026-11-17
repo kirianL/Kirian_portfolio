@@ -1,0 +1,162 @@
+---
+interface Props {
+  label: string;
+  experience: string;
+}
+
+const { label, experience } = Astro.props;
+---
+
+<div class="flex flex-col gap-1.5">
+  <span class="text-[10px] font-medium uppercase tracking-[0.12em] text-grayscale-11">
+    {label}
+  </span>
+
+  <button
+    type="button"
+    data-exp-meta-btn
+    data-cuelume-hover="tick"
+    data-cuelume-press
+    aria-label={`${label}: ${experience}`}
+    class="exp-meta-btn text-grayscale-12 text-sm inline-flex items-center gap-1.5 w-fit cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1e40af] dark:focus-visible:ring-[#60a5fa] focus-visible:ring-offset-2"
+  >
+    <!-- Leading Icon Slot (User -> </> Morph) -->
+    <span class="relative inline-flex items-center justify-center w-3.5 h-3.5 shrink-0">
+      <svg
+        class="exp-svg-user w-3.5 h-3.5 text-grayscale-11"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+
+      <svg
+        class="exp-svg-code w-3.5 h-3.5 text-[#1e40af] dark:text-[#60a5fa] absolute inset-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m16 18 6-6-6-6" />
+        <path d="m8 6-6 6 6 6" />
+      </svg>
+    </span>
+
+    <!-- Text + Floating Year Range Branch -->
+    <span class="relative inline-flex items-center">
+      <span>{experience}</span>
+
+      <span class="exp-branch" aria-hidden="true">
+        <svg class="exp-branch-svg" viewBox="0 0 16 16" fill="none">
+          <path
+            class="exp-branch-path"
+            d="M1.5 0V8.5C1.5 11.2614 3.73858 13.5 6.5 13.5H15.5"
+            stroke="currentColor"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span class="exp-branch-text">2024 → 2026</span>
+      </span>
+    </span>
+  </button>
+</div>
+
+<style is:global>
+  .exp-svg-user,
+  .exp-svg-code {
+    transition:
+      opacity 240ms cubic-bezier(0.2, 0, 0, 1),
+      transform 260ms cubic-bezier(0.2, 0, 0, 1),
+      filter 240ms cubic-bezier(0.2, 0, 0, 1),
+      color 200ms ease;
+  }
+
+  .exp-svg-code {
+    opacity: 0;
+    transform: scale(0.25);
+    filter: blur(4px);
+    pointer-events: none;
+  }
+
+  .exp-branch {
+    position: absolute;
+    top: calc(100% + 1px);
+    left: 0.45rem;
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 0.3rem;
+    pointer-events: none;
+    z-index: 20;
+    opacity: 0;
+    transform: translateY(-2px);
+    transition:
+      opacity 160ms ease-out,
+      transform 180ms ease-out;
+  }
+
+  .exp-branch-svg {
+    width: 15px;
+    height: 15px;
+    color: color-mix(in srgb, #1e40af 45%, var(--color-grayscale-7));
+    flex-shrink: 0;
+    margin-bottom: 4px;
+  }
+
+  html.dark .exp-branch-svg {
+    color: color-mix(in srgb, #60a5fa 45%, var(--color-grayscale-7));
+  }
+
+  .exp-branch-path {
+    stroke-dasharray: 28;
+    stroke-dashoffset: 28;
+    transition: stroke-dashoffset 180ms ease-out;
+  }
+
+  .exp-branch-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    color: #1e40af;
+  }
+
+  html.dark .exp-branch-text {
+    color: #60a5fa;
+  }
+
+  @media (hover: hover) {
+    .exp-meta-btn:hover .exp-svg-user {
+      opacity: 0;
+      transform: scale(0.25);
+      filter: blur(4px);
+    }
+
+    .exp-meta-btn:hover .exp-svg-code {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+
+    .exp-meta-btn:hover .exp-branch {
+      opacity: 1;
+      transform: translateY(0);
+      transition:
+        opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .exp-meta-btn:hover .exp-branch-path {
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 220ms cubic-bezier(0.22, 1, 0.36, 1) 20ms;
+    }
+  }
+</style>
