@@ -41,13 +41,14 @@ const skills = data.skills.list || [];
       <h2
         class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none"
       >
-        stack.
+        {currentLocale === "ES" ? "tecnologías." : "stack."}
       </h2>
 
       <!-- View Switcher — smooth pill toggle, quiet & bordered -->
       <div
         class="stack-switcher relative flex items-center bg-grayscale-2 dark:bg-grayscale-2/60 border border-grayscale-3 dark:border-grayscale-3/40 rounded-full p-[2px] select-none"
         role="tablist"
+        aria-label={currentLocale === "ES" ? "Cambiar vista de tecnologías" : "Switch tech stack view"}
       >
         <!-- Sliding white indicator -->
         <div
@@ -61,6 +62,7 @@ const skills = data.skills.list || [];
           type="button"
           role="tab"
           aria-selected="true"
+          tabindex="0"
           aria-label={currentLocale === "ES" ? "Vista de lista" : "List view"}
           data-cuelume-toggle
           class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer text-grayscale-12"
@@ -85,6 +87,7 @@ const skills = data.skills.list || [];
           type="button"
           role="tab"
           aria-selected="false"
+          tabindex="-1"
           aria-label={currentLocale === "ES" ? "Vista de cuadrícula" : "Grid view"}
           data-cuelume-toggle
           class="relative z-10 w-8 h-7 rounded-full flex items-center justify-center cursor-pointer text-grayscale-10"
@@ -120,15 +123,14 @@ const skills = data.skills.list || [];
 
           return (
             <div class="stack-category-row">
-              {/* === LIST VIEW === */}
               <div
                 class:list={[
-                  "list-container py-5 sm:grid sm:grid-cols-[10.5rem_1fr] gap-x-8 items-center border-t border-grayscale-3 dark:border-grayscale-3/30",
+                  "stack-row-inner py-5 gap-x-8 items-center border-t border-grayscale-3 dark:border-grayscale-3/30",
                   isLast &&
                     "border-b border-grayscale-3 dark:border-grayscale-3/30",
                 ]}
               >
-                <div class="flex items-center gap-2 select-none mb-3 sm:mb-0">
+                <div class="stack-cat-header flex items-center gap-2 select-none">
                   <span class="text-grayscale-11 dark:text-grayscale-11 font-mono text-[11px] leading-none font-medium">
                     {cat.num}
                   </span>
@@ -136,46 +138,16 @@ const skills = data.skills.list || [];
                     {cat.name}
                   </span>
                 </div>
-                <div class="flex flex-wrap gap-x-2.5 gap-y-2.5 items-center">
+                <div class="stack-items-wrap flex flex-wrap items-center">
                   {catSkills.map((skill) => (
-                    <div class="tech-item tech-pill">
+                    <div class="tech-item group/griditem">
                       <TechIcon
                         name={skill.name}
-                        class="w-[14px] h-[14px] shrink-0"
+                        class="tech-icon-svg shrink-0"
                       />
-                      <span class="text-[12.5px] font-medium leading-none tracking-tight">
+                      <span class="tech-label text-[12.5px] font-medium leading-none tracking-tight">
                         {skill.name}
                       </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* === GRID VIEW === */}
-              <div
-                class:list={[
-                  "grid-container hidden py-5 border-t border-grayscale-3 dark:border-grayscale-3/30",
-                  isLast &&
-                    "border-b border-grayscale-3 dark:border-grayscale-3/30",
-                ]}
-              >
-                <div class="flex items-center gap-2 select-none mb-4">
-                  <span class="text-grayscale-11 dark:text-grayscale-11 font-mono text-[11px] leading-none font-medium">
-                    {cat.num}
-                  </span>
-                  <span class="text-grayscale-11 dark:text-grayscale-11 text-[13px] leading-none font-normal">
-                    {cat.name}
-                  </span>
-                </div>
-                <div class="flex flex-wrap gap-3">
-                  {catSkills.map((skill) => (
-                    <div class="tech-item tech-grid-tile group/griditem">
-                      <TechIcon
-                        name={skill.name}
-                        class="w-5 h-5 transition-transform duration-200 group-hover/griditem:scale-110"
-                      />
-
-                      {/* Tooltip */}
                       <div class="tech-grid-tooltip">
                         {skill.name}
                       </div>
@@ -192,7 +164,27 @@ const skills = data.skills.list || [];
 </section>
 
 <style is:global>
-  .tech-pill {
+  .tech-stack-section.view-list .stack-row-inner {
+    display: block;
+  }
+  @media (min-width: 640px) {
+    .tech-stack-section.view-list .stack-row-inner {
+      display: grid;
+      grid-template-columns: 10.5rem 1fr;
+    }
+  }
+  .tech-stack-section.view-list .stack-cat-header {
+    margin-bottom: 0.75rem;
+  }
+  @media (min-width: 640px) {
+    .tech-stack-section.view-list .stack-cat-header {
+      margin-bottom: 0;
+    }
+  }
+  .tech-stack-section.view-list .stack-items-wrap {
+    gap: 0.625rem;
+  }
+  .tech-stack-section.view-list .tech-item {
     padding: 0.375rem 0.75rem;
     border-radius: 9999px;
     background-color: var(--color-grayscale-2, #f4f4f5);
@@ -205,18 +197,45 @@ const skills = data.skills.list || [];
     color: var(--color-grayscale-12, #09090b);
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   }
-  :global(.dark) .tech-pill {
+  :global(.dark) .tech-stack-section.view-list .tech-item {
     background-color: rgba(24, 24, 27, 0.4);
     border-color: rgba(39, 39, 42, 0.5);
   }
-  .tech-pill:hover {
+  .tech-stack-section.view-list .tech-item:hover {
     background-color: var(--color-grayscale-3, #e4e4e7);
   }
-  :global(.dark) .tech-pill:hover {
+  :global(.dark) .tech-stack-section.view-list .tech-item:hover {
     background-color: rgba(39, 39, 42, 0.7);
   }
+  .tech-stack-section.view-list .tech-icon-svg {
+    width: 14px;
+    height: 14px;
+  }
+  .tech-stack-section.view-list .tech-grid-tooltip {
+    display: none;
+  }
 
-  .tech-grid-tile {
+  .tech-stack-section.view-grid .stack-row-inner {
+    display: block;
+  }
+  .tech-stack-section.view-grid .stack-cat-header {
+    margin-bottom: 1rem;
+  }
+  .tech-stack-section.view-grid .stack-items-wrap {
+    gap: 0.75rem;
+  }
+  .tech-stack-section.view-grid .tech-label {
+    display: none;
+  }
+  .tech-stack-section.view-grid .tech-icon-svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.2s ease;
+  }
+  .tech-stack-section.view-grid .tech-item:hover .tech-icon-svg {
+    transform: scale(1.1);
+  }
+  .tech-stack-section.view-grid .tech-item {
     position: relative;
     width: 2.75rem;
     height: 2.75rem;
@@ -230,14 +249,14 @@ const skills = data.skills.list || [];
     user-select: none;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   }
-  :global(.dark) .tech-grid-tile {
+  :global(.dark) .tech-stack-section.view-grid .tech-item {
     background-color: rgba(24, 24, 27, 0.6);
     border-color: rgba(39, 39, 42, 0.4);
   }
-  .tech-grid-tile:hover {
+  .tech-stack-section.view-grid .tech-item:hover {
     border-color: var(--color-grayscale-4, #d4d4d8);
   }
-  :global(.dark) .tech-grid-tile:hover {
+  :global(.dark) .tech-stack-section.view-grid .tech-item:hover {
     border-color: rgba(63, 63, 70, 0.6);
   }
 
@@ -257,7 +276,7 @@ const skills = data.skills.list || [];
     border-radius: 0.5rem;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.2s cubic-bezier(0, 0, 0.2, 1);
+    transition: opacity 0.2s cubic-bezier(0, 0, 0.2, 1), transform 0.2s cubic-bezier(0, 0, 0.2, 1);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
     z-index: 50;
     white-space: nowrap;
@@ -287,35 +306,13 @@ const skills = data.skills.list || [];
   }
 
   /* Fade out other items only when an active item is hovered */
-  .list-container:hover .tech-item:not(:hover),
-  .grid-container:hover .tech-item:not(:hover) {
+  .stack-items-wrap:hover .tech-item:not(:hover) {
     opacity: 0.45;
   }
 
   .tech-item:hover {
     opacity: 1 !important;
     transform: translateY(-1px);
-  }
-
-  /* View toggle animations */
-  .tech-stack-section.view-list .list-container {
-    display: grid !important;
-  }
-  .tech-stack-section.view-list .grid-container {
-    display: none !important;
-  }
-  .tech-stack-section.view-grid .list-container {
-    display: none !important;
-  }
-  .tech-stack-section.view-grid .grid-container {
-    display: block !important;
-  }
-
-  /* Mobile: list view is block, not grid */
-  @media (max-width: 639px) {
-    .tech-stack-section.view-list .list-container {
-      display: block !important;
-    }
   }
 </style>
 
@@ -348,6 +345,8 @@ const skills = data.skills.list || [];
       // ARIA
       listBtn.setAttribute("aria-selected", String(view === "list"));
       gridBtn.setAttribute("aria-selected", String(view === "grid"));
+      listBtn.setAttribute("tabindex", view === "list" ? "0" : "-1");
+      gridBtn.setAttribute("tabindex", view === "grid" ? "0" : "-1");
 
       localStorage.setItem("tech-stack-view", view);
     };
@@ -369,6 +368,17 @@ const skills = data.skills.list || [];
     gridBtn.addEventListener("click", () => {
       enableTransitions();
       setView("grid");
+    });
+    [listBtn, gridBtn].forEach((btn, index, arr) => {
+      btn.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          e.preventDefault();
+          const nextBtn = arr[(index + 1) % arr.length];
+          enableTransitions();
+          setView(nextBtn === listBtn ? "list" : "grid");
+          nextBtn.focus();
+        }
+      });
     });
   };
 

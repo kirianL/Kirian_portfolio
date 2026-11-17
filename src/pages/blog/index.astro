@@ -143,22 +143,25 @@ const blogItemList = {
           </div>
 
           <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-1">
+            <label for="subscribe-email" class="sr-only">Email address</label>
             <input 
+              id="subscribe-email"
               type="email" 
               required 
+              autocomplete="email"
               placeholder="you@domain.com" 
-              class="flex-1 w-full px-3.5 py-2 text-xs rounded-lg border border-grayscale-3/70 bg-white dark:bg-grayscale-2 text-grayscale-12 placeholder:text-grayscale-9 focus:outline-hidden focus:border-accent-9 transition-colors"
+              class="flex-1 w-full px-3.5 py-2 text-[16px] sm:text-xs rounded-lg border border-grayscale-3/70 bg-white dark:bg-grayscale-2 text-grayscale-12 placeholder:text-grayscale-9 focus-visible:outline-none focus-visible:border-accent-9 focus-visible:ring-2 focus-visible:ring-accent-9/30 transition-colors"
             />
             <button 
               type="submit" 
               data-cuelume-hover="tick"
               data-cuelume-press="scan"
-              class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer select-none shrink-0"
+              class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-medium rounded-lg hover:opacity-90 active:scale-[0.96] transition-[opacity,transform] cursor-pointer select-none shrink-0"
             >
               Subscribe
             </button>
           </form>
-          <p id="subscribe-message" class="text-xs font-mono hidden"></p>
+          <p id="subscribe-message" role="status" aria-live="polite" class="text-xs font-mono hidden"></p>
         </section>
 
         <!-- Footer -->

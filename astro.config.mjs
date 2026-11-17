@@ -8,6 +8,9 @@ export default defineConfig({
   site: 'https://kirian.dev',
   adapter: vercel(),
   output: 'server',
+  build: {
+    inlineStylesheets: 'never',
+  },
   integrations: [
     sitemap({
       // Keep error and API routes out of the indexable sitemap.

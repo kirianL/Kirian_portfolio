@@ -65,7 +65,20 @@ const {
   markdownAlternate,
 } = Astro.props;
 
-const siteURL = Astro.site || new URL(Astro.url.origin);
+let requestHost = '';
+if (!Astro.isPrerendered) {
+  try {
+    requestHost =
+      Astro.request.headers.get('x-forwarded-host') ||
+      Astro.request.headers.get('host') ||
+      '';
+  } catch {}
+}
+const cleanHost = requestHost.split(',')[0].trim().split(':')[0];
+const isKnownHost = cleanHost === 'kirian.dev' || cleanHost === 'www.kirian.dev';
+const siteURL = isKnownHost
+  ? new URL(`https://${cleanHost}`)
+  : (Astro.site || new URL(Astro.url.origin));
 const canonicalPath = withTrailingSlash(Astro.url.pathname || '/');
 const canonicalURL = new URL(canonicalPath, siteURL);
 const resolvedImageURL = new URL(image, siteURL);
@@ -255,7 +268,7 @@ const fontsHref = loadSerifFonts
     <!-- Accessibility: Skip to Main Content Link -->
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-grayscale-12 focus:text-grayscale-1 focus:rounded-lg focus:shadow-md focus:text-xs focus:font-mono focus:outline-none"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-grayscale-12 focus:text-grayscale-1 focus:rounded-lg focus:shadow-md focus:text-xs focus:font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-9 focus-visible:ring-offset-2"
     >
       {lang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content'}
     </a>
@@ -290,6 +303,19 @@ const fontsHref = loadSerifFonts
       let rafId: number | null = null;
 
       const initLenis = () => {
+        if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          if (rafId !== null) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+          if (lenis) {
+            lenis.destroy();
+            lenis = null;
+            (window as any).__lenis = null;
+          }
+          return;
+        }
+
         if (lenis) {
           lenis.resize();
           return;

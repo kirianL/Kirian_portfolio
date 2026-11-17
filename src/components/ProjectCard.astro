@@ -15,7 +15,7 @@ const { name, description, link, image } = Astro.props;
   href={link} 
   target="_blank" 
   rel="noopener noreferrer" 
-  class="group project-card flex items-center gap-4 p-2.5 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 transition-all duration-200 shadow-xs"
+  class="group project-card flex items-center gap-4 p-2.5 rounded-xl bg-white dark:bg-grayscale-2 border border-grayscale-3 dark:border-grayscale-3/40 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 transition-[transform,box-shadow,border-color] duration-200 shadow-xs"
 >
   <div class="flex items-center justify-center w-14 h-14 rounded-lg bg-grayscale-2 shrink-0 overflow-hidden border border-grayscale-3 dark:border-grayscale-3/60">
     {typeof image === 'string' ? (
@@ -42,7 +42,7 @@ const { name, description, link, image } = Astro.props;
     stroke-width="2" 
     stroke-linecap="round" 
     stroke-linejoin="round" 
-    class="w-3.5 h-3.5 text-grayscale-10 shrink-0 group-hover:text-grayscale-12 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200"
+    class="w-3.5 h-3.5 text-grayscale-10 shrink-0 group-hover:text-grayscale-12 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-[color,transform] duration-200"
   >
     <path d="M7 7h10v10"></path>
     <path d="M7 17 17 7"></path>

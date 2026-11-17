@@ -49,7 +49,7 @@ const { name, title } = Astro.props;
   }
 
   .js-banner-gutter {
-    fill: #ffffff;
+    fill: var(--color-grayscale-1, #ffffff);
   }
 
   .js-banner-rim {
@@ -62,11 +62,11 @@ const { name, title } = Astro.props;
   }
 
   :global(html.dark) .js-banner-gutter {
-    fill: #8a8b94;
+    fill: var(--color-grayscale-1, #111113);
   }
 
   :global(html.dark) .js-banner-rim {
-    stroke: #8a8b94;
+    stroke: var(--color-grayscale-5, #363a3f);
   }
 </style>
 

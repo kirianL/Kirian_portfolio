@@ -100,7 +100,7 @@ const defaultFolderStyle = {
             <!-- Folder Row Trigger -->
             <button
               type="button"
-              class="folder-trigger-btn w-full flex items-center justify-between gap-3 text-left py-1 select-none cursor-pointer focus-visible:outline-none group/btn"
+              class="folder-trigger-btn w-full flex items-center justify-between gap-3 text-left py-1 select-none cursor-pointer rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-9 focus-visible:ring-offset-2 group/btn"
               data-cuelume-hover="tick"
               data-cuelume-press
               aria-expanded={isInitiallyOpen ? "true" : "false"}
@@ -192,14 +192,14 @@ const defaultFolderStyle = {
                         style={`--stagger-delay: ${expIndex * 60}ms;`}
                       >
                         <!-- Left Column: Period -->
-                        <div class="text-grayscale-10 text-xs font-mono select-none pt-0.5 sm:block hidden whitespace-nowrap">
+                        <div class="text-grayscale-10 text-xs font-mono pt-0.5 sm:block hidden whitespace-nowrap">
                           {exp.period}
                         </div>
 
                         <!-- Right Column: Role Title, Company Badge, Description & Stack -->
                         <div class="flex flex-col gap-2">
                           <!-- Mobile Period -->
-                          <div class="sm:hidden text-[10px] font-mono uppercase tracking-wider text-grayscale-10 select-none mb-0.5 whitespace-nowrap">
+                          <div class="sm:hidden text-[10px] font-mono uppercase tracking-wider text-grayscale-10 mb-0.5 whitespace-nowrap">
                             {exp.period}
                           </div>
 
@@ -244,7 +244,7 @@ const defaultFolderStyle = {
 
                           <!-- Tech Stack (Clean Minimalist Editorial) -->
                           {exp.stack && exp.stack.length > 0 && (
-                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pl-5 pt-0.5 text-[11px] font-mono text-grayscale-10 select-none">
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 pl-5 pt-0.5 text-[11px] font-mono text-grayscale-10">
                               {exp.stack.map((tech: string) => (
                                 <span class="hover:text-grayscale-12 transition-colors duration-150">
                                   {tech}

@@ -277,22 +277,25 @@ const morePosts = allPosts
               Recibe notificaciones cuando publique nuevos artículos sobre diseño, ingeniería y rendimiento web. Cero spam, cancela cuando quieras.
             </p>
             <form id="subscribe-form" class="flex flex-col sm:flex-row gap-2 mt-1">
+              <label for="subscribe-email" class="sr-only">Correo electrónico</label>
               <input 
+                id="subscribe-email"
                 type="email" 
                 required 
+                autocomplete="email"
                 placeholder="tu@email.com" 
-                class="flex-1 w-full px-3 py-2 text-xs rounded-lg border border-grayscale-3 bg-white dark:bg-black/20 text-grayscale-12 focus:outline-none focus:border-accent-9 transition-colors font-mono"
+                class="flex-1 w-full px-3 py-2 text-[16px] sm:text-xs rounded-lg border border-grayscale-3 bg-white dark:bg-black/20 text-grayscale-12 focus-visible:outline-none focus-visible:border-accent-9 focus-visible:ring-2 focus-visible:ring-accent-9/30 transition-colors font-mono"
               />
               <button 
                 type="submit" 
                 data-cuelume-press
                 data-cuelume-release
-                class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-mono uppercase font-medium rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+                class="w-full sm:w-auto px-4 py-2 text-xs bg-grayscale-12 text-grayscale-1 font-mono font-medium rounded-lg hover:opacity-90 active:scale-[0.96] transition-[opacity,transform] cursor-pointer"
               >
                 Suscribirse
               </button>
             </form>
-            <p id="subscribe-message" class="text-xs font-mono hidden"></p>
+            <p id="subscribe-message" role="status" aria-live="polite" class="text-xs font-mono hidden"></p>
           </section>
 
           <!-- Footer -->

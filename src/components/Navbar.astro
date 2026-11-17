@@ -93,7 +93,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
     <!-- Nav Links + Language Selector -->
     <div class="flex items-center gap-1.5 sm:gap-5">
       <div
-        class="flex items-center gap-2 sm:gap-4 text-[11px] sm:text-[12.5px] font-medium text-grayscale-11 shrink-0"
+        class="flex items-center gap-1.5 sm:gap-4 text-[11px] sm:text-[12.5px] font-medium text-grayscale-11 shrink-0"
       >
         <a
           id="nav-link-projects"
@@ -132,7 +132,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           rel="noopener noreferrer"
           data-cuelume-hover="tick"
           data-cuelume-press="scan"
-          class="hover:text-grayscale-12 transition-colors hidden sm:flex items-center gap-0.5 group/agency"
+          class="hover:text-grayscale-12 transition-colors flex items-center gap-0.5 group/agency"
         >
           <span id="nav-text-agency">{navLabels.agency}</span>
           <svg
@@ -145,7 +145,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
             stroke-width="2.5"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="w-2.5 h-2.5 opacity-60 group-hover/agency:opacity-100 group-hover/agency:translate-x-0.5 group-hover/agency:-translate-y-0.5 transition-all duration-200"
+            class="w-2.5 h-2.5 opacity-60 group-hover/agency:opacity-100 group-hover/agency:translate-x-0.5 group-hover/agency:-translate-y-0.5 transition-[transform,opacity] duration-200"
             ><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg
           >
         </a>
@@ -161,7 +161,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
           title={currentLocale === "es" ? "Cambiar modo de color" : "Toggle color theme"}
           data-cuelume-hover="tick"
           data-cuelume-toggle
-          class="group flex items-center justify-center p-1 text-grayscale-10 hover:text-grayscale-12 shrink-0 transition-all duration-200 cursor-pointer focus:outline-hidden active:scale-90"
+          class="group flex items-center justify-center min-w-7 min-h-7 p-1.5 rounded-md text-grayscale-10 hover:text-grayscale-12 shrink-0 transition-[color,transform] duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-9 focus-visible:ring-offset-2 active:scale-[0.96]"
         >
           <!-- Sun Icon (visible in dark mode) -->
           <svg
@@ -219,7 +219,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
             data-cuelume-toggle
             aria-label="Switch to English"
             title="English"
-            class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 ${currentLocale === "en" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
+            class={`px-1.5 sm:px-2 py-0.5 rounded-md transition-[color,background-color,box-shadow] duration-150 ${currentLocale === "en" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs" : "hover:text-grayscale-12"}`}
           >
             EN
           </a>
@@ -232,7 +232,7 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
             data-cuelume-toggle
             aria-label="Español (Costa Rica)"
             title="Español (Costa Rica)"
-            class={`cr-tico-btn px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-200 flex items-center justify-center ${currentLocale === "es" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 shadow-3xs" : "opacity-70 hover:opacity-100"}`}
+            class={`cr-tico-btn px-1.5 sm:px-2 py-0.5 rounded-md transition-[opacity,background-color,box-shadow] duration-200 flex items-center justify-center ${currentLocale === "es" ? "bg-white dark:bg-grayscale-3 text-grayscale-12 shadow-3xs" : "opacity-70 hover:opacity-100"}`}
           >
             <!-- Costa Rica Minimalist Micro Flag -->
             <span
@@ -361,18 +361,18 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
     if (enBtn) {
       enBtn.href = enTarget;
       if (!isEs) {
-        enBtn.className = "px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs";
+        enBtn.className = "px-1.5 sm:px-2 py-0.5 rounded-md transition-[color,background-color,box-shadow] duration-150 bg-white dark:bg-grayscale-3 text-grayscale-12 font-bold shadow-3xs";
       } else {
-        enBtn.className = "px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-150 hover:text-grayscale-12 text-grayscale-10";
+        enBtn.className = "px-1.5 sm:px-2 py-0.5 rounded-md transition-[color,background-color,box-shadow] duration-150 hover:text-grayscale-12 text-grayscale-10";
       }
     }
 
     if (esBtn) {
       esBtn.href = esTarget;
       if (isEs) {
-        esBtn.className = "cr-tico-btn px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-200 flex items-center justify-center bg-white dark:bg-grayscale-3 text-grayscale-12 shadow-3xs";
+        esBtn.className = "cr-tico-btn px-1.5 sm:px-2 py-0.5 rounded-md transition-[opacity,background-color,box-shadow] duration-200 flex items-center justify-center bg-white dark:bg-grayscale-3 text-grayscale-12 shadow-3xs";
       } else {
-        esBtn.className = "cr-tico-btn px-1.5 sm:px-2 py-0.5 rounded-md transition-all duration-200 flex items-center justify-center opacity-70 hover:opacity-100";
+        esBtn.className = "cr-tico-btn px-1.5 sm:px-2 py-0.5 rounded-md transition-[opacity,background-color,box-shadow] duration-200 flex items-center justify-center opacity-70 hover:opacity-100";
       }
     }
   };
