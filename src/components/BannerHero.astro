@@ -37,6 +37,11 @@ const { name, title } = Astro.props;
 
   .js-liquid-frame {
     transform: translateZ(0);
+    background-image: radial-gradient(ellipse 75% 95% at 62% 58%, rgb(53 84 224 / 0.14), transparent 72%);
+  }
+
+  :global(html.dark) .js-liquid-frame {
+    background-image: radial-gradient(ellipse 75% 95% at 62% 58%, rgb(68 112 255 / 0.18), transparent 72%);
   }
 
   .banner-hero-id {
@@ -70,7 +75,8 @@ const { name, title } = Astro.props;
   }
 </style>
 
-<script>
+<script is:inline>
+(() => {
   const VS = `#version 300 es
   in vec2 aPosition;
   out vec2 vUV;
@@ -154,20 +160,18 @@ const { name, title } = Astro.props;
     finalColor = vec4(pow(color, vec3(0.454545)), 1.0);
   }`;
 
-  type RGB = [number, number, number];
-
   const PALETTES = {
     dark: { accent: "#4470FF", base: "#16171D" },
     light: { accent: "#3554E0", base: "#F4F5F8" },
-  } as const;
+  };
 
   const THEME_BLEND_MS = 780;
 
-  function srgbToLinear(channel: number) {
+  function srgbToLinear(channel) {
     return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
   }
 
-  function hexToSrgb(hex: string): RGB {
+  function hexToSrgb(hex) {
     const value = hex.replace("#", "");
     return [
       Number.parseInt(value.slice(0, 2), 16) / 255,
@@ -176,11 +180,11 @@ const { name, title } = Astro.props;
     ];
   }
 
-  function toLinear(rgb: RGB): RGB {
+  function toLinear(rgb) {
     return [srgbToLinear(rgb[0]), srgbToLinear(rgb[1]), srgbToLinear(rgb[2])];
   }
 
-  function linearToOklab(rgb: RGB): RGB {
+  function linearToOklab(rgb) {
     const l = Math.cbrt(0.4122214708 * rgb[0] + 0.5363325363 * rgb[1] + 0.0514459929 * rgb[2]);
     const m = Math.cbrt(0.2119034982 * rgb[0] + 0.6806995451 * rgb[1] + 0.1073969566 * rgb[2]);
     const s = Math.cbrt(0.0883024619 * rgb[0] + 0.2817188376 * rgb[1] + 0.6299787005 * rgb[2]);
@@ -191,7 +195,7 @@ const { name, title } = Astro.props;
     ];
   }
 
-  function oklabToLinear(lab: RGB): RGB {
+  function oklabToLinear(lab) {
     const l = lab[0] + 0.3963377774 * lab[1] + 0.2158037573 * lab[2];
     const m = lab[0] - 0.1055613458 * lab[1] - 0.0638541728 * lab[2];
     const s = lab[0] - 0.0897129288 * lab[1] - 1.2914855480 * lab[2];
@@ -205,7 +209,7 @@ const { name, title } = Astro.props;
     ];
   }
 
-  function mixRgb(from: RGB, to: RGB, t: number): RGB {
+  function mixRgb(from, to, t) {
     return [
       from[0] + (to[0] - from[0]) * t,
       from[1] + (to[1] - from[1]) * t,
@@ -213,11 +217,11 @@ const { name, title } = Astro.props;
     ];
   }
 
-  function easeOutCubic(t: number) {
+  function easeOutCubic(t) {
     return 1 - (1 - t) ** 3;
   }
 
-  function blendProgress(age: number) {
+  function blendProgress(age) {
     return easeOutCubic(Math.min(1, age / (THEME_BLEND_MS / 1000)));
   }
 
@@ -233,7 +237,7 @@ const { name, title } = Astro.props;
     };
   }
 
-  function compile(gl: WebGL2RenderingContext, type: number, source: string) {
+  function compile(gl, type, source) {
     const shader = gl.createShader(type);
     if (!shader) return null;
     gl.shaderSource(shader, source);
@@ -246,7 +250,7 @@ const { name, title } = Astro.props;
     return shader;
   }
 
-  function mountBanner(canvas: HTMLCanvasElement) {
+  function mountBanner(canvas) {
     if (canvas.dataset.liquidReady === "1") return;
 
     const gl = canvas.getContext("webgl2", {
@@ -318,12 +322,12 @@ const { name, title } = Astro.props;
     };
     pushColors();
 
-    const sampleColors = (t: number) => ({
+    const sampleColors = (t) => ({
       accent: mixRgb(fromColors.accent, target.accent, t),
       base: mixRgb(fromColors.base, target.base, t),
     });
 
-    const stepBlend = (dt: number) => {
+    const stepBlend = (dt) => {
       if (!blending) return;
       blendAge += dt;
       const t = blendProgress(blendAge);
@@ -337,7 +341,7 @@ const { name, title } = Astro.props;
     };
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dpr = 1;
+    const dpr = 0.75;
     let visible = true;
     let pageVisible = document.visibilityState !== "hidden";
     let animId = 0;
@@ -375,7 +379,7 @@ const { name, title } = Astro.props;
       });
     };
 
-    const loop = (now: number) => {
+    const loop = (now) => {
       if (!visible || !pageVisible || reduceMotion) {
         animId = 0;
         return;
@@ -421,14 +425,7 @@ const { name, title } = Astro.props;
 
     resize();
     draw();
-
-    const startAnimation = () => {
-      play();
-    };
-    ["scroll", "touchstart", "mousemove", "click"].forEach((evt) => {
-      window.addEventListener(evt, startAnimation, { once: true, passive: true });
-    });
-    setTimeout(startAnimation, 3500);
+    play();
 
     queueMicrotask(() => {
       const nextDark = isDarkTheme();
@@ -470,7 +467,7 @@ const { name, title } = Astro.props;
     };
     document.addEventListener("visibilitychange", onVisibility);
 
-    const onLost = (event: Event) => {
+    const onLost = (event) => {
       event.preventDefault();
       cancelAnimationFrame(animId);
       animId = 0;
@@ -497,7 +494,7 @@ const { name, title } = Astro.props;
     document.addEventListener("astro:before-swap", dispose, { once: true });
   }
 
-  function cutPath(w: number, h: number, cutW: number, cutH: number, inset: number) {
+  function cutPath(w, h, cutW, cutH, inset) {
     const radius = 18;
     const r = Math.max(8, radius - inset);
     const c = radius + inset;
@@ -526,17 +523,17 @@ const { name, title } = Astro.props;
     ].join(" ");
   }
 
-  function ringPath(w: number, h: number, cutW: number, cutH: number, outer: number, inner: number) {
+  function ringPath(w, h, cutW, cutH, outer, inner) {
     return `${cutPath(w, h, cutW, cutH, outer)} ${cutPath(w, h, cutW, cutH, inner)}`;
   }
 
-  function mountCut(banner: HTMLElement) {
+  function mountCut(banner) {
     if (banner.dataset.cutReady === "1") return;
 
-    const frame = banner.querySelector<HTMLElement>(".js-liquid-frame");
-    const gutter = banner.querySelector<SVGPathElement>(".js-banner-gutter");
-    const rim = banner.querySelector<SVGPathElement>(".js-banner-rim");
-    const id = banner.querySelector<HTMLElement>(".banner-hero-id");
+    const frame = banner.querySelector(".js-liquid-frame");
+    const gutter = banner.querySelector(".js-banner-gutter");
+    const rim = banner.querySelector(".js-banner-rim");
+    const id = banner.querySelector(".banner-hero-id");
     if (!frame || !gutter || !rim || !id) return;
 
     banner.dataset.cutReady = "1";
@@ -588,19 +585,14 @@ const { name, title } = Astro.props;
   }
 
   function initLiquidBanners() {
-    document.querySelectorAll<HTMLElement>(".banner-hero").forEach(mountCut);
-    
-    const mountAll = () => {
-      document.querySelectorAll<HTMLCanvasElement>("canvas.js-liquid-banner").forEach(mountBanner);
-    };
-
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(mountAll, { timeout: 1200 });
-    } else {
-      setTimeout(mountAll, 100);
-    }
+    document.querySelectorAll(".banner-hero").forEach(mountCut);
+    document.querySelectorAll("canvas.js-liquid-banner").forEach(mountBanner);
   }
 
   initLiquidBanners();
-  document.addEventListener("astro:page-load", initLiquidBanners);
+  if (!window.__liquidBannerBound) {
+    window.__liquidBannerBound = true;
+    document.addEventListener("astro:page-load", initLiquidBanners);
+  }
+})();
 </script>
