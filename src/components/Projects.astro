@@ -179,7 +179,12 @@ const isProjectsPage = pathname.endsWith('/projects') || pathname.endsWith('/pro
               class="project-grid-thumb"
             >
               <div class="w-full h-full overflow-hidden rounded-lg">
-                {typeof project.image === 'string' ? (
+                {!project.image ? (
+                  <div class="w-full h-full flex flex-col items-center justify-center gap-1.5 bg-grayscale-2 dark:bg-grayscale-3/40 text-grayscale-11 px-4 text-center">
+                    <span class="text-sm font-medium text-grayscale-12">{project.name}</span>
+                    <span class="text-[11px] font-mono text-grayscale-10 truncate max-w-full">{project.link.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
+                  </div>
+                ) : typeof project.image === 'string' ? (
                   <img src={project.image} alt={project.name} width="320" height="200" loading="lazy" class="w-full h-full object-cover group-hover/grid:scale-[1.02] transition-transform duration-500 ease-out" />
                 ) : (
                   <Image src={project.image} alt={project.name} class="w-full h-full object-cover group-hover/grid:scale-[1.02] transition-transform duration-500 ease-out" width={320} height={200} format="webp" />

@@ -320,10 +320,20 @@ export const projects: ProjectSummary[] = [
     name: "Puerto Limón",
     description:
       "Interactive editorial platform preserving the Afro-Caribbean identity of Puerto Limón, Costa Rica.",
-    url: "https://landing-puerto-lim-n-w29u.vercel.app/",
+    url: "https://archivopuertolimon.vercel.app/",
     year: "2025-2026",
     role: "Research · Content Curation · UX/UI · Web Development",
     stack: ["Next.js", "TailwindCSS", "Framer Motion", "Leaflet"],
+  },
+  {
+    slug: "mantenimiento",
+    name: "Mantenimiento",
+    description:
+      "Web system for managing and resolving internal maintenance requests.",
+    url: "https://procesosing.vercel.app/",
+    year: "2026",
+    role: "UX/UI Design · Full-Stack Development",
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
   },
   {
     slug: "brisas-del-rio",

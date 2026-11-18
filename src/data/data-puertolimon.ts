@@ -67,7 +67,7 @@ export const puertoLimonDetails = {
       name: "Xavier Sandí Castillo",
       link: "https://www.instagram.com/amkras_/",
     },
-    link: "https://landing-puerto-lim-n-w29u.vercel.app/",
+    link: "https://archivopuertolimon.vercel.app/",
   },
   EN: {
     slug: "puerto-limon",
@@ -129,7 +129,7 @@ export const puertoLimonDetails = {
       name: "Xavier Sandí Castillo",
       link: "https://www.instagram.com/amkras_/",
     },
-    link: "https://landing-puerto-lim-n-w29u.vercel.app/",
+    link: "https://archivopuertolimon.vercel.app/",
   },
   PT: {
     slug: "puerto-limon",
@@ -192,6 +192,6 @@ export const puertoLimonDetails = {
       name: "Xavier Sandí Castillo",
       link: "https://www.instagram.com/amkras_/",
     },
-    link: "https://landing-puerto-lim-n-w29u.vercel.app/",
+    link: "https://archivopuertolimon.vercel.app/",
   },
 };

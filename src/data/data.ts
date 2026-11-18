@@ -3,6 +3,7 @@ import { brisasDelRioDetails } from "./data-brisasdelrio";
 import { youngLegendsDetails } from "./data-younglegends";
 import { umpMusicDetails } from "./data-umpmusic";
 import { gigBladesDetails } from "./data-gigblades";
+import { mantenimientoDetails } from "./data-mantenimiento";
 
 export type Language = "ES" | "EN";
 
@@ -181,6 +182,7 @@ const es = {
     list: [
       gigBladesDetails.ES,
       puertoLimonDetails.ES,
+      mantenimientoDetails.ES,
       brisasDelRioDetails.ES,
       youngLegendsDetails.ES,
       umpMusicDetails.ES,
@@ -421,6 +423,7 @@ const en: typeof es = {
     list: [
       gigBladesDetails.EN,
       puertoLimonDetails.EN,
+      mantenimientoDetails.EN,
       brisasDelRioDetails.EN,
       youngLegendsDetails.EN,
       umpMusicDetails.EN,
