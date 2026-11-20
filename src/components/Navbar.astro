@@ -628,10 +628,8 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
     border-radius: 999px;
     background-color: currentColor;
     pointer-events: none;
-    transform-origin: center;
-    transition:
-      transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
-      width 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform-origin: left center;
+    transition: transform 200ms var(--ease-out);
   }
 
   .burger-line--top {
@@ -640,21 +638,21 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
   }
 
   .burger-line--bottom {
-    width: 12px;
-    transform: translate3d(0, 3.5px, 0);
+    width: 18px;
+    transform: translate3d(0, 3.5px, 0) scaleX(0.67);
   }
 
   .mobile-burger-btn[aria-expanded="true"] .burger-line--top {
-    width: 18px;
     transform: translate3d(0, 0, 0) rotate(45deg);
+    transform-origin: center;
   }
 
   .mobile-burger-btn[aria-expanded="true"] .burger-line--bottom {
-    width: 18px;
-    transform: translate3d(0, 0, 0) rotate(-45deg);
+    transform: translate3d(0, 0, 0) rotate(-45deg) scaleX(1);
+    transform-origin: center;
   }
 
-  /* Pure GPU compositor overlay (no clip-path / blur-filter repaints on iOS Safari) */
+  /* Pure GPU compositor overlay (one entrance per container, simultaneous fast exit) */
   .mobile-menu-drawer {
     opacity: 0;
     visibility: hidden;
@@ -662,9 +660,9 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
     transform: translate3d(0, -8px, 0);
     will-change: opacity, transform;
     transition:
-      opacity 320ms cubic-bezier(0.22, 1, 0.36, 1) 120ms,
-      transform 360ms cubic-bezier(0.22, 1, 0.36, 1) 120ms,
-      visibility 0s linear 480ms;
+      opacity 160ms var(--ease-out) 0ms,
+      transform 160ms var(--ease-out) 0ms,
+      visibility 0s linear 160ms;
   }
 
   .mobile-menu-drawer[data-open="true"] {
@@ -673,26 +671,14 @@ if (blogMapping[pathname] || blogMapping[`${pathname}/`]) {
     pointer-events: auto;
     transform: translate3d(0, 0, 0);
     transition:
-      opacity 260ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
-      transform 340ms cubic-bezier(0.22, 1, 0.36, 1) 0ms,
+      opacity 220ms var(--ease-drawer) 0ms,
+      transform 220ms var(--ease-drawer) 0ms,
       visibility 0s linear 0s;
   }
 
   .mobile-menu-item {
-    opacity: 0;
-    transform: translate3d(0, 10px, 0);
-    will-change: opacity, transform;
-    transition:
-      opacity 260ms cubic-bezier(0.22, 1, 0.36, 1) calc((3 - var(--item-i, 0)) * 35ms),
-      transform 300ms cubic-bezier(0.22, 1, 0.36, 1) calc((3 - var(--item-i, 0)) * 35ms);
-  }
-
-  .mobile-menu-drawer[data-open="true"] .mobile-menu-item {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition:
-      opacity 340ms cubic-bezier(0.16, 1, 0.3, 1) calc(70ms + var(--item-i, 0) * 50ms),
-      transform 400ms cubic-bezier(0.16, 1, 0.3, 1) calc(70ms + var(--item-i, 0) * 50ms);
+    transform: none;
   }
 
   .mobile-menu-dot {
