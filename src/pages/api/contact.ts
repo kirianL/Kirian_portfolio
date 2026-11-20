@@ -2,6 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from "astro";
 import { Resend } from "resend";
+import { checkRateLimit } from "../../lib/redis";
 
 const apiKey = process.env.RESEND_API_KEY;
 const resend = apiKey ? new Resend(apiKey) : null;
@@ -10,8 +11,28 @@ const RECIPIENT_EMAIL = "kirianluna.u@gmail.com";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export const POST: APIRoute = async ({ request }) => {
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+      clientAddress ||
+      "unknown";
+    const allowed = await checkRateLimit(`contact:${ip}`, 5, 600);
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please try again later." }),
+        { status: 429, headers: { "Content-Type": "application/json" } }
+      );
+    }
     let name = "";
     let email = "";
     let message = "";
@@ -71,10 +92,9 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const sanitizedMessage = message
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+    const sanitizedName = escapeHtml(name);
+    const sanitizedEmail = escapeHtml(email);
+    const sanitizedMessage = escapeHtml(message);
 
     const htmlContent = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 580px; margin: 0 auto; padding: 28px 24px; color: #18181b; background-color: #ffffff; border: 1px solid #e4e4e7; border-radius: 14px;">
@@ -87,11 +107,11 @@ export const POST: APIRoute = async ({ request }) => {
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
           <tr>
             <td style="padding: 6px 0; color: #71717a; width: 75px; vertical-align: top;">From:</td>
-            <td style="padding: 6px 0; color: #09090b; font-weight: 500;">${name}</td>
+            <td style="padding: 6px 0; color: #09090b; font-weight: 500;">${sanitizedName}</td>
           </tr>
           <tr>
             <td style="padding: 6px 0; color: #71717a; vertical-align: top;">Email:</td>
-            <td style="padding: 6px 0;"><a href="mailto:${email}" style="color: #059669; text-decoration: none;">${email}</a></td>
+            <td style="padding: 6px 0;"><a href="mailto:${sanitizedEmail}" style="color: #059669; text-decoration: none;">${sanitizedEmail}</a></td>
           </tr>
           <tr>
             <td style="padding: 6px 0; color: #71717a; vertical-align: top;">Date:</td>

@@ -290,6 +290,7 @@ const en: typeof es = {
   },
   hero: {
     greeting: "I'm Kirian,",
+    role: "Software Engineer",
     desc: "<span>I’m a Software Engineer from Limón, Costa Rica, focused on building modern digital products that <strong class=\"text-grayscale-12 font-medium\">solve real problems and create value for users and businesses</strong>. I combine engineering, design, and user experience to create <strong class=\"text-grayscale-12 font-medium\">scalable, performant, intuitive, and thoughtfully crafted solutions</strong>. I hold a degree in Systems Engineering from <a href=\"https://www.ulatina.ac.cr/\" target=\"_blank\" rel=\"noopener noreferrer\" data-cuelume-hover=\"tick\" data-cuelume-press data-cuelume-release class=\"text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300 font-medium transition-colors\">Universidad Latina de Costa Rica</a> and am currently furthering my education in Software Engineering and Teaching. My approach goes beyond writing code: I understand the problem, design effective solutions, and turn ideas into <strong class=\"text-grayscale-12 font-medium\">functional, reliable, and purposeful digital products</strong>, collaborating with teams and companies both in Costa Rica and internationally.</span>",
     based: "Based in Costa Rica",
     ctaProjects: "View my work",

@@ -3,7 +3,7 @@ title: "Digitalizing a Cultural Identity: The Challenge of Doing Justice to Lim�
 description: "How to represent the cultural richness of Limón on an interactive web platform without simplifying its history and social context."
 date: "June 13, 2026"
 category: "Culture / Design"
-image: "/blog-limon-identity.jpg"
+image: "/blog/cover-cultural-identity.jpg"
 ---
 
 As a web developer, I spend most of my days solving technical challenges: optimizing performance, structuring information architecture, fine-tuning user interfaces, and ensuring accessibility. Yet, when I set out to develop a digital platform inspired by Limón, I quickly realized that the most demanding question had very little to do with code.

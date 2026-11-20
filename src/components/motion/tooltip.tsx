@@ -85,8 +85,8 @@ function buildVariants(side: Side): Variants {
         stiffness: 380,
         damping: 30,
         mass: 0.7,
-        opacity: { duration: 0.14, ease: EASE_OUT },
-        filter: { duration: 0.18, ease: EASE_OUT },
+        opacity: { duration: 0.14, ease: EASE_OUT as [number, number, number, number] },
+        filter: { duration: 0.18, ease: EASE_OUT as [number, number, number, number] },
       },
     },
     exit: {
@@ -95,15 +95,15 @@ function buildVariants(side: Side): Variants {
       filter: "blur(3px)",
       x: (o.x ?? 0) * 0.6,
       y: (o.y ?? 0) * 0.6,
-      transition: { duration: 0.12, ease: EASE_OUT },
+      transition: { duration: 0.12, ease: EASE_OUT as [number, number, number, number] },
     },
   };
 }
 
 const REDUCED_VARIANTS: Variants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: 0.14, ease: EASE_OUT } },
-  exit: { opacity: 0, transition: { duration: 0.1, ease: EASE_OUT } },
+  animate: { opacity: 1, transition: { duration: 0.14, ease: EASE_OUT as [number, number, number, number] } },
+  exit: { opacity: 0, transition: { duration: 0.1, ease: EASE_OUT as [number, number, number, number] } },
 };
 
 // Once any tooltip has just closed, neighbouring tooltips open without the

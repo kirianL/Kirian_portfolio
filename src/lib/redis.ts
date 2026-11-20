@@ -15,6 +15,10 @@ const SLUG_PATTERN = /^[a-z0-9-]+$/;
 // Canonical map to share reactions between language versions of the same article
 const CANONICAL_SLUG_MAP: Record<string, string> = {
   "digitalizar-una-identidad-cultural": "digitalizing-a-cultural-identity",
+  "sistemas-de-diseno-que-escalan": "design-systems-that-scale",
+  "rendimiento-web-mas-alla-de-lighthouse": "web-performance-beyond-lighthouse",
+  "arquitectura-de-software-pragmatica": "pragmatic-software-architecture",
+  "micro-interacciones-con-proposito": "micro-interactions-with-purpose",
 };
 
 export function getCanonicalSlug(slug: string): string {
@@ -23,6 +27,41 @@ export function getCanonicalSlug(slug: string): string {
 
 export function isValidReactionSlug(slug: string): boolean {
   return SLUG_PATTERN.test(slug);
+}
+
+const rateLimitMemory = new Map<string, { count: number; resetAt: number }>();
+
+/**
+ * Simple sliding/fixed window rate limiter backed by Upstash Redis with in-memory fallback.
+ * Returns true if the request is allowed, false if rate-limited.
+ */
+export async function checkRateLimit(
+  key: string,
+  limit: number,
+  windowSeconds: number
+): Promise<boolean> {
+  const redis = getRedisClient();
+  if (redis) {
+    try {
+      const redisKey = `ratelimit:${key}`;
+      const count = await redis.incr(redisKey);
+      if (count === 1) {
+        await redis.expire(redisKey, windowSeconds);
+      }
+      return count <= limit;
+    } catch {
+      // Fall through to in-memory fallback on Redis error
+    }
+  }
+
+  const now = Date.now();
+  const entry = rateLimitMemory.get(key);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMemory.set(key, { count: 1, resetAt: now + windowSeconds * 1000 });
+    return true;
+  }
+  entry.count += 1;
+  return entry.count <= limit;
 }
 
 const FALLBACK_URL = "https://grown-dog-236687.upstash.io";

@@ -6,7 +6,15 @@ import { getCollection } from 'astro:content';
 import { absoluteUrl, PERSON_ID } from '../../../lib/seo';
 
 const title = "Blog | Kirian Luna";
-const description = "Ideas sobre ingeniería de software, diseño de producto y arquitectura web.";
+const description = "Notas sobre interfaces rápidas, sistemas y software desde Limón.";
+
+const categoryColors: Record<string, string> = {
+  "Ingeniería UI": "text-violet-600 dark:text-violet-400",
+  "Arquitectura": "text-sky-600 dark:text-sky-400",
+  "Rendimiento": "text-amber-600 dark:text-amber-400",
+  "Sistemas de Diseño": "text-orange-600 dark:text-orange-400",
+  "Cultura / Diseño": "text-emerald-600 dark:text-emerald-400",
+};
 
 // Fetch Spanish posts from Content Collection
 const allPosts = await getCollection('blog');
@@ -17,14 +25,16 @@ const posts = allPosts
     const wordCount = rawBody.trim().split(/\s+/).filter(Boolean).length;
     const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min de lectura`;
 
+    const slug = post.id.replace(/^es\//, '');
     return {
+      slug,
       title: post.data.title,
       description: post.data.description,
       date: post.data.date,
       category: post.data.category,
       image: post.data.image,
       readTime,
-      link: `/es/blog/${post.id.replace(/^es\//, '')}/`
+      link: `/es/blog/${slug}/`
     };
   })
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -61,21 +71,28 @@ const blogItemList = {
   <Navbar />
   
   <main id="main-content" class="bg-grayscale-1">
-    <div class="max-w-2xl mx-auto px-6 sm:px-0 pt-28 pb-6 flex flex-col gap-10">
+    <div class="max-w-2xl mx-auto px-4 sm:px-0 pt-24 sm:pt-28 pb-8 flex flex-col gap-8 sm:gap-10">
         
         <!-- Blog Header -->
         <header class="flex flex-col gap-2">
-          <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
-            blog.
-          </h1>
+          <div class="flex items-baseline justify-between gap-4">
+            <h1 class="font-figgle text-3xl text-grayscale-12 tracking-tight select-none">
+              blog.
+            </h1>
+            <span class="text-[11px] font-mono tabular-nums text-grayscale-10">
+              {posts.length} artículos
+            </span>
+          </div>
           <p class="text-grayscale-11 text-xs leading-normal">
             {description}
           </p>
         </header>
 
-        <!-- Editorial Article Grid (Designed for scale, clear imagery, neutral hovers) -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-          {posts.map((post) => (
+        <!-- Open Editorial Grid (no card boxes — images & type breathe on the canvas) -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 gap-x-7 gap-y-10 w-full">
+          {posts.map((post, index) => {
+            const catColor = categoryColors[post.category] ?? "text-grayscale-11";
+            return (
             <article class="flex flex-col">
               <a 
                 href={post.link} 
@@ -83,54 +100,46 @@ const blogItemList = {
                 data-cuelume-hover="tick" 
                 data-cuelume-press="page" 
                 data-cuelume-release="release"
-                class="group flex flex-col h-full p-2.5 rounded-2xl bg-white dark:bg-grayscale-2/30 border border-grayscale-3/70 dark:border-grayscale-3/30 hover:border-grayscale-4 dark:hover:border-grayscale-4/60 shadow-3xs hover:shadow-2xs transition-all duration-300"
+                class="group flex flex-col gap-3.5 active:scale-[0.985] transition-transform duration-200 ease-[cubic-bezier(0.2,0,0,1)]"
               >
-                <!-- Framed Preview Image (Crisp, clearly visible, balanced aspect ratio) -->
+                <!-- Free 16:9 Artwork -->
                 {post.image && (
-                  <div class="w-full aspect-[16/10] overflow-hidden rounded-xl bg-grayscale-2 border border-grayscale-3/60 dark:border-grayscale-3/40 shrink-0">
+                  <div
+                    transition:name={`blog-cover-${post.slug}`}
+                    class="w-full aspect-video overflow-hidden rounded-xl bg-grayscale-2 outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 shadow-[0_2px_10px_-2px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.35)] group-hover:shadow-[0_10px_28px_-6px_rgba(0,0,0,0.12)] dark:group-hover:shadow-[0_10px_28px_-6px_rgba(0,0,0,0.5)] transition-shadow duration-300 ease-[cubic-bezier(0.2,0,0,1)]"
+                  >
                     <img 
                       src={post.image} 
                       alt={post.title} 
-                      width="600"
-                      height="375"
+                      width="1200"
+                      height="675"
                       class="w-full h-full object-cover" 
-                      loading="lazy"
+                      loading={index < 2 ? "eager" : "lazy"}
                     />
                   </div>
                 )}
 
-                <!-- Card Content -->
-                <div class="flex flex-col flex-1 pt-3.5 pb-1 px-1">
-                  <!-- Metadata Row: Date & Category -->
-                  <div class="flex items-center justify-between text-[11px] font-mono text-grayscale-10 mb-2">
-                    <time>{post.date}</time>
-                    <span class="px-2 py-0.5 rounded-md bg-grayscale-2 dark:bg-grayscale-3/40 border border-grayscale-3/60 dark:border-grayscale-3/30 text-[10px] text-grayscale-11 font-medium select-none">
+                <!-- Editorial Text Block (directly on canvas) -->
+                <div class="flex flex-col gap-1.5 px-0.5">
+                  <div class="flex items-center justify-between gap-2 text-[11px] font-mono">
+                    <span class:list={["font-medium tracking-tight", catColor]}>
                       {post.category}
                     </span>
+                    <time class="text-grayscale-10 tabular-nums">{post.date}</time>
                   </div>
 
-                  <!-- Title: Crisp & neutral (no blue hover) -->
-                  <h2 class="text-grayscale-12 font-medium text-[15px] leading-snug tracking-tight">
+                  <h2 class="text-grayscale-12 font-medium text-[15px] leading-snug tracking-tight text-balance group-hover:text-grayscale-11 transition-colors duration-200">
                     {post.title}
                   </h2>
 
-                  <!-- Description -->
-                  <p class="text-grayscale-11 text-xs leading-relaxed line-clamp-2 mt-2">
+                  <p class="text-grayscale-11 text-xs leading-relaxed line-clamp-2">
                     {post.description}
                   </p>
-
-                  <!-- Bottom row: Reading time & neutral indicator -->
-                  <div class="mt-auto pt-3.5 flex items-center justify-between text-[11px] font-mono text-grayscale-10">
-                    <span>{post.readTime}</span>
-                    <span class="text-grayscale-11 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1 select-none">
-                      Leer artículo
-                      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-2.5 h-2.5" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </span>
-                  </div>
                 </div>
               </a>
             </article>
-          ))}
+            );
+          })}
         </section>
 
         <!-- Newsletter Section (Clean & Minimal) -->
@@ -150,7 +159,7 @@ const blogItemList = {
               required 
               autocomplete="email"
               placeholder="tu@correo.com" 
-              class="flex-1 w-full px-3.5 py-2 text-[16px] sm:text-xs rounded-lg border border-grayscale-3/70 bg-white dark:bg-grayscale-2 text-grayscale-12 placeholder:text-grayscale-9 focus-visible:outline-none focus-visible:border-accent-9 focus-visible:ring-2 focus-visible:ring-accent-9/30 transition-colors"
+              class="flex-1 w-full px-3.5 py-2 text-[16px] sm:text-xs rounded-lg border border-grayscale-3/70 bg-white dark:bg-grayscale-2 text-grayscale-12 placeholder:text-grayscale-9 focus-visible:outline-none focus:outline-none focus-visible:border-grayscale-6 dark:focus-visible:border-grayscale-6 transition-colors"
             />
             <button 
               type="submit" 

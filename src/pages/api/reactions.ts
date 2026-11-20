@@ -1,7 +1,7 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
-import { getReactions, incrementReaction, updateReaction, DEFAULT_REACTION_COUNTS } from "../../lib/redis";
+import { getReactions, incrementReaction, updateReaction, checkRateLimit, DEFAULT_REACTION_COUNTS } from "../../lib/redis";
 
 export const GET: APIRoute = async ({ request }) => {
   try {
@@ -41,8 +41,20 @@ export const GET: APIRoute = async ({ request }) => {
   }
 };
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+      clientAddress ||
+      "unknown";
+    const allowed = await checkRateLimit(`reactions:${ip}`, 30, 60);
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please try again later." }),
+        { status: 429, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     const body = await request.json().catch(() => ({}));
     const { slug, type, previousType } = body || {};
 

@@ -18,7 +18,10 @@ export default async function handler(req: any, res: any) {
     
     if (!audienceId) {
       const audiencesList = await resend.audiences.list();
-      const existingAudience = audiencesList.data?.find(aud => aud.name === 'Blog Subscribers');
+      const audiences = (audiencesList.data as any)?.data ?? audiencesList.data;
+      const existingAudience = Array.isArray(audiences)
+        ? audiences.find((aud: { name?: string; id?: string }) => aud.name === 'Blog Subscribers')
+        : undefined;
       if (existingAudience) {
         audienceId = existingAudience.id;
       }

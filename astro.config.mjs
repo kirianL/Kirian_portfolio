@@ -9,7 +9,7 @@ export default defineConfig({
   adapter: vercel(),
   output: 'server',
   build: {
-    inlineStylesheets: 'never',
+    inlineStylesheets: 'auto',
   },
   integrations: [
     sitemap({

@@ -42,6 +42,22 @@ export const blogAlternates: Record<
     en: "/blog/digitalizing-a-cultural-identity/",
     es: "/es/blog/digitalizar-una-identidad-cultural/",
   },
+  "design-systems-that-scale": {
+    en: "/blog/design-systems-that-scale/",
+    es: "/es/blog/sistemas-de-diseno-que-escalan/",
+  },
+  "web-performance-beyond-lighthouse": {
+    en: "/blog/web-performance-beyond-lighthouse/",
+    es: "/es/blog/rendimiento-web-mas-alla-de-lighthouse/",
+  },
+  "pragmatic-software-architecture": {
+    en: "/blog/pragmatic-software-architecture/",
+    es: "/es/blog/arquitectura-de-software-pragmatica/",
+  },
+  "micro-interactions-with-purpose": {
+    en: "/blog/micro-interactions-with-purpose/",
+    es: "/es/blog/micro-interacciones-con-proposito/",
+  },
 };
 
 export function resolveBlogAlternates(pathname: string) {
