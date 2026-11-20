@@ -316,6 +316,27 @@ html.lenis body {
   object-fit: unset;
 }
 
+/* Blog cover images: prevent flicker by ensuring smooth cross-fade when
+   navigating back to /blog. The main cover morphs from the article position;
+   other grid images (which have no matching old snapshot) should fade in
+   without slide animation to avoid the double-animation flicker. */
+::view-transition-group(blog-cover-*) {
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  z-index: 10;
+}
+
+::view-transition-old(blog-cover-*),
+::view-transition-new(blog-cover-*) {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  mix-blend-mode: normal;
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
 ::view-transition-group(root) {
   animation: none !important;
   z-index: 1;

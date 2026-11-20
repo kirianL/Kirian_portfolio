@@ -336,6 +336,14 @@ const fontsHref = loadSerifFonts
     <script>
       import Lenis from "lenis";
 
+      // Manual scroll restoration: we manage scroll ourselves via Lenis on
+      // every navigation. The browser's default history scroll restoration
+      // fights with the view-transition snapshot capture and causes visible
+      // image flicker/jumps when navigating back to a page (e.g. /blog).
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+
       let lenis: Lenis | null = null;
       let rafId: number | null = null;
 
