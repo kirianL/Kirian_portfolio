@@ -105,7 +105,7 @@ const blogItemList = {
                 <!-- Free 16:9 Artwork -->
                 {post.image && (
                   <div
-                    transition:name={`blog-cover-${post.slug}`}
+                    data-blog-cover={post.slug}
                     class="w-full aspect-video overflow-hidden rounded-xl bg-grayscale-2 outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 shadow-[0_2px_10px_-2px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.35)] group-hover:shadow-[0_10px_28px_-6px_rgba(0,0,0,0.12)] dark:group-hover:shadow-[0_10px_28px_-6px_rgba(0,0,0,0.5)] transition-shadow duration-300 ease-[cubic-bezier(0.2,0,0,1)]"
                   >
                     <img 

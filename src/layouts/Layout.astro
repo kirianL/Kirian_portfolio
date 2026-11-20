@@ -189,6 +189,85 @@ const fontsHref = loadSerifFonts
 
     <ClientRouter />
 
+    <script is:inline>
+      (function () {
+        if (window.__blogVtInit) return;
+        window.__blogVtInit = true;
+
+        let activeSlug = null;
+
+        function clearVtNames(doc) {
+          doc.querySelectorAll("[data-blog-cover], [data-blog-hero-cover]").forEach(function (el) {
+            el.style.viewTransitionName = "";
+          });
+        }
+
+        function getBlogSlug(pathname) {
+          const match = pathname.match(/^\/(?:es\/)?blog\/([^/]+)\/?$/);
+          return match ? match[1] : null;
+        }
+
+        function isBlogIndex(pathname) {
+          return /^\/(?:es\/)?blog\/?$/.test(pathname);
+        }
+
+        document.addEventListener("astro:before-preparation", function (e) {
+          activeSlug = null;
+          clearVtNames(document);
+
+          // Shared-element cover morph on desktop (>= 640px) only;
+          // mobile uses a clean cross-fade to avoid off-screen clipping/white gaps.
+          if (window.innerWidth < 640) return;
+
+          const fromPath = window.location.pathname;
+          const toPath = e.to && e.to.pathname ? e.to.pathname : "";
+
+          // Index -> Article
+          if (isBlogIndex(fromPath)) {
+            const targetSlug = getBlogSlug(toPath);
+            if (targetSlug) {
+              const cardCover = document.querySelector('[data-blog-cover="' + targetSlug + '"]');
+              if (cardCover) {
+                cardCover.style.viewTransitionName = "blog-cover-active";
+                activeSlug = targetSlug;
+              }
+            }
+            return;
+          }
+
+          // Article -> Index
+          if (isBlogIndex(toPath)) {
+            const heroCover = document.querySelector("[data-blog-hero-cover]");
+            if (heroCover) {
+              const currentSlug = heroCover.getAttribute("data-blog-hero-cover");
+              if (currentSlug) {
+                heroCover.style.viewTransitionName = "blog-cover-active";
+                activeSlug = currentSlug;
+              }
+            }
+          }
+        });
+
+        document.addEventListener("astro:before-swap", function (e) {
+          if (!activeSlug || !e.newDocument) return;
+          clearVtNames(e.newDocument);
+
+          const target =
+            e.newDocument.querySelector('[data-blog-hero-cover="' + activeSlug + '"]') ||
+            e.newDocument.querySelector('[data-blog-cover="' + activeSlug + '"]');
+
+          if (target) {
+            target.style.viewTransitionName = "blog-cover-active";
+          }
+        });
+
+        document.addEventListener("astro:page-load", function () {
+          activeSlug = null;
+          clearVtNames(document);
+        });
+      })();
+    </script>
+
     <!-- Performance & Preconnect (Zero-CLS Font Loading) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

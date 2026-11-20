@@ -290,19 +290,6 @@ html.lenis body {
 /* ==========================================================================
    Page Transitions — Ultra-Smooth Fluid Cross-Fade & Persistent Navbar
    ========================================================================== */
-::view-transition-group(*) {
-  animation-duration: 280ms;
-  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
-  z-index: 10;
-}
-
-::view-transition-old(*),
-::view-transition-new(*) {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
 ::view-transition-group(main-navbar) {
   animation: none !important;
   z-index: 100 !important;
@@ -311,30 +298,22 @@ html.lenis body {
 ::view-transition-old(main-navbar),
 ::view-transition-new(main-navbar) {
   animation: none !important;
-  height: auto;
-  width: auto;
-  object-fit: unset;
 }
 
-/* Blog cover images: prevent flicker by ensuring smooth cross-fade when
-   navigating back to /blog. The main cover morphs from the article position;
-   other grid images (which have no matching old snapshot) should fade in
-   without slide animation to avoid the double-animation flicker. */
-::view-transition-group(blog-cover-*) {
+/* Active blog cover shared-element morph (desktop only, 1:1 16:9 ratio) */
+::view-transition-group(blog-cover-active) {
   animation-duration: 280ms;
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
   z-index: 10;
 }
 
-::view-transition-old(blog-cover-*),
-::view-transition-new(blog-cover-*) {
+::view-transition-old(blog-cover-active),
+::view-transition-new(blog-cover-active) {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  mix-blend-mode: normal;
-  will-change: opacity, transform;
-  backface-visibility: hidden;
-  transform: translateZ(0);
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 
 ::view-transition-group(root) {
@@ -344,16 +323,10 @@ html.lenis body {
 
 ::view-transition-old(root) {
   animation: 150ms cubic-bezier(0.2, 0, 0, 1) both vtFadeOut;
-  height: auto;
-  width: auto;
-  object-fit: unset;
 }
 
 ::view-transition-new(root) {
   animation: 200ms cubic-bezier(0.2, 0, 0, 1) both vtFadeIn;
-  height: auto;
-  width: auto;
-  object-fit: unset;
 }
 
 @media (prefers-reduced-motion: reduce) {
