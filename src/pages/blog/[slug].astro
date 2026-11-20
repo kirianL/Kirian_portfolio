@@ -235,7 +235,6 @@ const morePosts = allPosts
                     >
                       {p.image && (
                         <div
-                          transition:name={`blog-cover-${p.slug}`}
                           class="w-full aspect-video overflow-hidden rounded-xl bg-grayscale-2 outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 shadow-[0_2px_10px_-2px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.35)] shrink-0"
                         >
                           <img src={p.image} alt={p.title} width="1200" height="675" class="w-full h-full object-cover" loading="lazy" />
