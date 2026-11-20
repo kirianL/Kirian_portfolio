@@ -31,10 +31,6 @@ const categoryColors: Record<string, { text: string; dot: string }> = {
   },
 };
 
-const categories = Array.from(new Set(posts.map((p) => p.category)));
-const latestPost = posts[0];
-const archivePosts = posts.slice(1);
-
 // Fetch English posts from Content Collection
 const allPosts = await getCollection('blog');
 const posts = allPosts
@@ -57,6 +53,13 @@ const posts = allPosts
     };
   })
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+const categories = Array.from(new Set(posts.map((p) => p.category)));
+const latestPost = posts[0];
+const archivePosts = posts.slice(1);
+const leadColor = latestPost
+  ? (categoryColors[latestPost.category] ?? { text: "text-grayscale-11", dot: "bg-grayscale-9" })
+  : { text: "text-grayscale-11", dot: "bg-grayscale-9" };
 
 const blogItemList = {
   '@type': 'ItemList',
@@ -136,9 +139,7 @@ const blogItemList = {
         </header>
 
         <!-- Lead Essay (Horizontal Editorial Split on Desktop, Stacked on Mobile) -->
-        {latestPost && (() => {
-          const leadColor = categoryColors[latestPost.category] ?? { text: "text-grayscale-11", dot: "bg-grayscale-9" };
-          return (
+        {latestPost && (
             <article class="blog-item" data-category={latestPost.category}>
               <a
                 href={latestPost.link}
@@ -188,8 +189,7 @@ const blogItemList = {
                 </div>
               </a>
             </article>
-          );
-        })()}
+        )}
 
         <!-- Editorial Archive Index (Scannable rows with inline 16:9 artwork) -->
         {archivePosts.length > 0 && (
