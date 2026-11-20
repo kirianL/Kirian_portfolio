@@ -19,7 +19,7 @@ export default defineConfig({
   ],
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: 'hover'
+    defaultStrategy: 'viewport'
   },
   i18n: {
     defaultLocale: 'en',

@@ -322,11 +322,40 @@ html.lenis body {
 }
 
 ::view-transition-old(root) {
-  animation: 150ms cubic-bezier(0.2, 0, 0, 1) both vtFadeOut;
+  animation: 120ms cubic-bezier(0.2, 0, 0, 1) both vtFadeOut;
 }
 
 ::view-transition-new(root) {
-  animation: 200ms cubic-bezier(0.2, 0, 0, 1) both vtFadeIn;
+  animation: 160ms cubic-bezier(0.2, 0, 0, 1) both vtFadeIn;
+}
+
+/* Instant 0ms top navigation progress bar */
+#nav-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 200;
+  pointer-events: none;
+  background: currentColor;
+  color: var(--color-grayscale-12, #18181b);
+  opacity: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 280ms cubic-bezier(0.2, 0, 0, 1), opacity 150ms ease;
+}
+
+#nav-progress[data-state="loading"] {
+  opacity: 0.75;
+  transform: scaleX(0.72);
+  transition: transform 420ms cubic-bezier(0.2, 0, 0, 1), opacity 80ms ease;
+}
+
+#nav-progress[data-state="done"] {
+  opacity: 0;
+  transform: scaleX(1);
+  transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), opacity 180ms ease 60ms;
 }
 
 @media (prefers-reduced-motion: reduce) {

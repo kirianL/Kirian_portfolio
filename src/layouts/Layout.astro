@@ -212,6 +212,13 @@ const fontsHref = loadSerifFonts
         }
 
         document.addEventListener("astro:before-preparation", function (e) {
+          var bar = document.getElementById("nav-progress");
+          if (bar) {
+            bar.removeAttribute("data-state");
+            void bar.offsetWidth;
+            bar.setAttribute("data-state", "loading");
+          }
+
           activeSlug = null;
           clearVtNames(document);
 
@@ -262,6 +269,10 @@ const fontsHref = loadSerifFonts
         });
 
         document.addEventListener("astro:page-load", function () {
+          var bar = document.getElementById("nav-progress");
+          if (bar && bar.getAttribute("data-state") === "loading") {
+            bar.setAttribute("data-state", "done");
+          }
           activeSlug = null;
           clearVtNames(document);
         });
@@ -352,6 +363,7 @@ const fontsHref = loadSerifFonts
       {lang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content'}
     </a>
 
+    <div id="nav-progress" aria-hidden="true" transition:persist="nav-progress"></div>
     <slot />
 
     <!-- cuelume interaction sounds & audio engine -->
