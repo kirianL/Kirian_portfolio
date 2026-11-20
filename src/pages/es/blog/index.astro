@@ -112,29 +112,25 @@ const blogItemList = {
           </div>
 
           <!-- Topic Filter Bar -->
-          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-1 px-1 no-scrollbar" role="tablist" aria-label="Filtrar artículos por tema">
+          <div class="flex items-center gap-4 overflow-x-auto pb-1 no-scrollbar border-b border-grayscale-3/50 dark:border-grayscale-3/25" role="tablist" aria-label="Filtrar artículos por tema">
             <button
               type="button"
               data-filter="all"
               aria-selected="true"
-              class="blog-filter-btn shrink-0 px-2.5 py-1 rounded-full text-[11px] font-mono transition-[background-color,color] duration-150 bg-grayscale-12 text-grayscale-1 cursor-pointer select-none"
+              class="blog-filter-btn shrink-0 pb-2 text-[11px] font-mono transition-colors duration-150 text-grayscale-12 border-b border-grayscale-12 -mb-px cursor-pointer select-none"
             >
               Todos
             </button>
-            {categories.map((cat) => {
-              const style = categoryColors[cat] ?? { text: "text-grayscale-11", dot: "bg-grayscale-9" };
-              return (
-                <button
-                  type="button"
-                  data-filter={cat}
-                  aria-selected="false"
-                  class="blog-filter-btn shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono text-grayscale-10 hover:text-grayscale-12 hover:bg-grayscale-2/70 dark:hover:bg-grayscale-3/30 transition-[background-color,color] duration-150 cursor-pointer select-none"
-                >
-                  <span class:list={["w-1.5 h-1.5 rounded-full", style.dot]} aria-hidden="true"></span>
-                  {cat}
-                </button>
-              );
-            })}
+            {categories.map((cat) => (
+              <button
+                type="button"
+                data-filter={cat}
+                aria-selected="false"
+                class="blog-filter-btn shrink-0 pb-2 text-[11px] font-mono text-grayscale-10 hover:text-grayscale-12 border-b border-transparent -mb-px transition-colors duration-150 cursor-pointer select-none"
+              >
+                {cat}
+              </button>
+            ))}
           </div>
         </header>
 
@@ -167,8 +163,7 @@ const blogItemList = {
 
                 <div class="sm:col-span-5 flex flex-col gap-2.5">
                   <div class="flex items-center justify-between gap-2 text-[11px] font-mono">
-                    <span class:list={["inline-flex items-center gap-1.5 font-medium", leadColor.text]}>
-                      <span class:list={["w-1.5 h-1.5 rounded-full", leadColor.dot]} aria-hidden="true"></span>
+                    <span class:list={["font-medium", leadColor.text]}>
                       {latestPost.category}
                     </span>
                     <span class="text-grayscale-9 tabular-nums">01</span>
@@ -211,8 +206,7 @@ const blogItemList = {
                     <div class="flex flex-col gap-1.5 min-w-0 flex-1">
                       <div class="flex items-center gap-2.5 text-[11px] font-mono">
                         <span class="text-grayscale-9 tabular-nums">{issueNum}</span>
-                        <span class:list={["inline-flex items-center gap-1.5 font-medium", catStyle.text]}>
-                          <span class:list={["w-1 h-1 rounded-full", catStyle.dot]} aria-hidden="true"></span>
+                        <span class:list={["font-medium", catStyle.text]}>
                           {post.category}
                         </span>
                       </div>
@@ -307,9 +301,10 @@ const blogItemList = {
         buttons.forEach((b) => {
           const isActive = b === btn;
           b.setAttribute('aria-selected', isActive ? 'true' : 'false');
-          b.classList.toggle('bg-grayscale-12', isActive);
-          b.classList.toggle('text-grayscale-1', isActive);
+          b.classList.toggle('text-grayscale-12', isActive);
+          b.classList.toggle('border-grayscale-12', isActive);
           b.classList.toggle('text-grayscale-10', !isActive);
+          b.classList.toggle('border-transparent', !isActive);
         });
 
         items.forEach((item) => {
