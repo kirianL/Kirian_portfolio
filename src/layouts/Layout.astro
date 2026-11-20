@@ -219,15 +219,27 @@ const fontsHref = loadSerifFonts
             bar.setAttribute("data-state", "loading");
           }
 
+          // Pause Lenis during transition so momentum doesn't fight snapshot capture
+          if (window.__lenis && typeof window.__lenis.stop === "function") {
+            window.__lenis.stop();
+          }
+
           activeSlug = null;
           clearVtNames(document);
+
+          const fromPath = window.location.pathname;
+          const toPath = e.to && e.to.pathname ? e.to.pathname : "";
+
+          // Save /blog scroll position when opening an article so returning feels native
+          if (isBlogIndex(fromPath) && getBlogSlug(toPath)) {
+            try {
+              sessionStorage.setItem("portfolio_blog_scroll", String(window.scrollY || 0));
+            } catch {}
+          }
 
           // Shared-element cover morph on desktop (>= 640px) only;
           // mobile uses a clean cross-fade to avoid off-screen clipping/white gaps.
           if (window.innerWidth < 640) return;
-
-          const fromPath = window.location.pathname;
-          const toPath = e.to && e.to.pathname ? e.to.pathname : "";
 
           // Index -> Article
           if (isBlogIndex(fromPath)) {
@@ -272,6 +284,9 @@ const fontsHref = loadSerifFonts
           var bar = document.getElementById("nav-progress");
           if (bar && bar.getAttribute("data-state") === "loading") {
             bar.setAttribute("data-state", "done");
+          }
+          if (window.__lenis && typeof window.__lenis.start === "function") {
+            window.__lenis.start();
           }
           activeSlug = null;
           clearVtNames(document);
@@ -490,6 +505,19 @@ const fontsHref = loadSerifFonts
           window.scrollTo({ top: targetY, left: 0, behavior: "instant" });
           return;
         }
+
+        const isBlogIndexPath = /^\/(?:es\/)?blog\/?$/.test(window.location.pathname);
+        const savedBlogScroll = isBlogIndexPath ? sessionStorage.getItem("portfolio_blog_scroll") : null;
+        if (savedBlogScroll !== null) {
+          sessionStorage.removeItem("portfolio_blog_scroll");
+          const targetY = parseInt(savedBlogScroll, 10) || 0;
+          if (lenis) {
+            lenis.scrollTo(targetY, { immediate: true });
+          }
+          window.scrollTo({ top: targetY, left: 0, behavior: "instant" });
+          return;
+        }
+
         if (lenis) {
           lenis.scrollTo(0, { immediate: true });
         }

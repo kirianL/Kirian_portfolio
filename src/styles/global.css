@@ -302,13 +302,30 @@ html.lenis body {
 
 /* Active blog cover shared-element morph (desktop only, 1:1 16:9 ratio) */
 ::view-transition-group(blog-cover-active) {
-  animation-duration: 280ms;
+  animation-duration: 260ms;
   animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
   z-index: 10;
 }
 
-::view-transition-old(blog-cover-active),
+::view-transition-image-pair(blog-cover-active) {
+  isolation: isolate;
+}
+
+::view-transition-old(blog-cover-active) {
+  animation: none;
+  opacity: 0;
+  mix-blend-mode: normal;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
 ::view-transition-new(blog-cover-active) {
+  animation: none;
+  opacity: 1;
+  mix-blend-mode: normal;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -321,12 +338,18 @@ html.lenis body {
   z-index: 1;
 }
 
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
 ::view-transition-old(root) {
   animation: 120ms cubic-bezier(0.2, 0, 0, 1) both vtFadeOut;
+  mix-blend-mode: normal;
 }
 
 ::view-transition-new(root) {
-  animation: 160ms cubic-bezier(0.2, 0, 0, 1) both vtFadeIn;
+  animation: 150ms cubic-bezier(0.2, 0, 0, 1) both vtFadeIn;
+  mix-blend-mode: normal;
 }
 
 /* Instant 0ms top navigation progress bar */
