@@ -172,6 +172,13 @@ function toSentenceCase(name: string): string {
   return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
 }
 
+/** Per-game square badge colors. */
+function getGameIconTheme(name: string | null): { bg: string | null; color: string } {
+  const key = normalizeGameName(name ?? "");
+  if (key === "fortnite") return { bg: "#38bdf8", color: "#ffffff" };
+  return { bg: null, color: "#ff4655" };
+}
+
 function getGameIconPath(name: string | null): string | null {
   if (!name) return null;
   const key = normalizeGameName(name);
@@ -475,6 +482,8 @@ export default function CentralHero({
   // Real game logo SVG path data (from Simple Icons), keyed by lowercased game name.
   const [gameIconPath, setGameIconPath] = useState<string | null>(null);
   const [gameIconViewBox, setGameIconViewBox] = useState("0 0 24 24");
+  const [gameIconBg, setGameIconBg] = useState<string | null>(null);
+  const [gameIconColor, setGameIconColor] = useState("#ff4655");
   const [bioOpen, setBioOpen] = useState(false);
 
   const scopeRef = useRef<HTMLDivElement | null>(null);
@@ -561,6 +570,9 @@ export default function CentralHero({
         ? VALORANT_ICON.viewBox
         : "0 0 24 24",
     );
+    const theme = getGameIconTheme(gamingName);
+    setGameIconBg(theme.bg);
+    setGameIconColor(theme.color);
     if (!gamingName || staticPath) return;
     const slug = gamingName.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
     if (!slug) return;
@@ -793,9 +805,10 @@ export default function CentralHero({
                       width="16"
                       height="16"
                       className="shrink-0 self-center rounded-[3px] border border-white/30 p-[2px]"
+                      style={gameIconBg ? { backgroundColor: gameIconBg } : undefined}
                       aria-hidden="true"
                     >
-                      <path fill="#ff4655" d={gameIconPath} />
+                      <path fill={gameIconColor} d={gameIconPath} />
                     </svg>
                   ) : (
                     <span className="shrink-0 self-center inline-flex items-center justify-center w-4 h-4 rounded-[3px] border border-white/30 text-[10px] font-bold text-[#f5f5f5]">
@@ -805,7 +818,7 @@ export default function CentralHero({
                   <span>{toSentenceCase(gamingName)}</span>
                 </span>
               )}
-              {crTimeInfo.statusLine && (
+              {crTimeInfo.statusLine && !gamingName && (
                 <span className="cr-status-line text-[17px] text-[#f5f5f59e] leading-snug">
                   {crTimeInfo.statusLine}
                 </span>
