@@ -100,7 +100,11 @@ export default function App() {
     const reducedMotion = window.matchMedia?.(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (reducedMotion) return;
+    // Native touch scrolling is smoother than any JS smoothing on mobile, and
+    // avoids fighting the browser chrome as it hides/shows during scroll.
+    const isTouch = window.matchMedia?.("(pointer: coarse)").matches ||
+      "ontouchstart" in window;
+    if (reducedMotion || isTouch) return;
 
     const lenis = new Lenis({
       duration: 1.0,

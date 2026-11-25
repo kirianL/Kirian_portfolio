@@ -20,7 +20,7 @@ export default function NotFoundPage() {
   });
 
   return (
-    <main id="main-content" className="bg-grayscale-1 min-h-[100dvh]">
+    <main id="main-content" className="bg-grayscale-1 min-h-[100svh]">
       <div className="max-w-2xl mx-auto px-6 py-12 sm:py-24">
         <header className="flex flex-col items-start gap-5 pb-6">
           <Link

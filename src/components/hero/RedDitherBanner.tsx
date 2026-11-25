@@ -232,7 +232,7 @@ export default function RedDitherBanner() {
 
   return (
     <div
-      className="red-dither-banner pointer-events-none absolute inset-x-0 top-0 z-0 h-[22dvh] min-h-[140px] max-h-[280px] overflow-hidden select-none"
+      className="red-dither-banner pointer-events-none absolute inset-x-0 top-0 z-0 h-[22svh] min-h-[140px] max-h-[280px] overflow-hidden select-none"
       aria-hidden="true"
     >
       <canvas ref={canvasRef} className="js-red-dither-canvas block w-full h-full" />
