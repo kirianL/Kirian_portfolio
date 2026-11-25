@@ -21,7 +21,7 @@ const LABEL_OFFSET = 14;
 const WIDE_QUERY = "(min-width: 1100px)";
 const ALL_LABELS = ["A", "B", "C", "D", "E", "F", "G", "H"] as const;
 /** Fraction of its distance to the grid origin each cell folds back on exit. */
-const EXIT_MORPH = 0.28;
+const EXIT_MORPH = 0.12;
 
 interface Layout {
   groups: readonly number[];
@@ -153,15 +153,21 @@ export default function GitHubActivityNote({ lang, active }: GitHubActivityNoteP
   const plan = wide ? PLANS.wide : PLANS.compact;
   const daysShown = plan.slots.length;
 
+  // Skip the state update when the fetch resolves to identical data — a
+  // mid-animation re-render of ~90 SVG paths is a visible hitch.
+  const applyData = (next: ContributionsData) => {
+    setData((prev) =>
+      JSON.stringify(prev) === JSON.stringify(next) ? prev : next,
+    );
+    setResolved(true);
+  };
+
   // Warm the cache once the hero settles so the first hover is already populated.
   useEffect(() => {
     if (hasRequestedRef.current || typeof window === "undefined") return;
     const timer = window.setTimeout(() => {
       hasRequestedRef.current = true;
-      fetchContributions().then((next) => {
-        setData(next);
-        setResolved(true);
-      });
+      fetchContributions().then(applyData);
     }, 2600);
     return () => window.clearTimeout(timer);
   }, []);
@@ -172,8 +178,7 @@ export default function GitHubActivityNote({ lang, active }: GitHubActivityNoteP
     let cancelled = false;
     fetchContributions().then((next) => {
       if (cancelled) return;
-      setData(next);
-      setResolved(true);
+      applyData(next);
     });
     return () => {
       cancelled = true;

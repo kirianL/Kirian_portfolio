@@ -101,6 +101,7 @@ export default function Navbar() {
       <nav
         id="main-navbar"
         className="fixed top-0 left-0 right-0 z-50 bg-grayscale-1/70 backdrop-blur-md border-b border-grayscale-3/40 dark:border-grayscale-3/20 transition-colors duration-200"
+        style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
         <div className="max-w-2xl mx-auto px-4 sm:px-0 py-2.5 sm:py-3 flex items-center justify-between gap-2">
           {/* Brand / Logo Link */}

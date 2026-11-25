@@ -68,26 +68,31 @@
     return v;
   }
 
+  // Coarse 3-octave variant for the domain-warping calls: q and r only bend the
+  // field, so the two finest octaves are invisible there. Cuts 8 of 25 noise
+  // evals per pixel with no visible change.
+  float fbmWarp(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    mat2 rot = mat2(0.80, 0.60, -0.60, 0.80);
+    for (int i = 0; i < 3; i++) {
+      v += a * noise(p);
+      p = rot * p * 2.02 + vec2(17.1, 31.7);
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  // Closed-form 4x4 Bayer threshold: interleaved bits of the cell coords.
+  // Replaces a 16-branch if-chain with a handful of ALU ops.
   float bayer4x4(vec2 pos) {
     int x = int(mod(pos.x, 4.0));
     int y = int(mod(pos.y, 4.0));
-    int idx = x + y * 4;
-    if (idx == 0) return 0.0 / 16.0;
-    if (idx == 1) return 8.0 / 16.0;
-    if (idx == 2) return 2.0 / 16.0;
-    if (idx == 3) return 10.0 / 16.0;
-    if (idx == 4) return 12.0 / 16.0;
-    if (idx == 5) return 4.0 / 16.0;
-    if (idx == 6) return 14.0 / 16.0;
-    if (idx == 7) return 6.0 / 16.0;
-    if (idx == 8) return 3.0 / 16.0;
-    if (idx == 9) return 11.0 / 16.0;
-    if (idx == 10) return 1.0 / 16.0;
-    if (idx == 11) return 9.0 / 16.0;
-    if (idx == 12) return 15.0 / 16.0;
-    if (idx == 13) return 7.0 / 16.0;
-    if (idx == 14) return 13.0 / 16.0;
-    return 5.0 / 16.0;
+    int v = (((x & 1) ^ (y & 1)) << 3)
+          | ((y & 1) << 2)
+          | ((((x >> 1) & 1) ^ ((y >> 1) & 1)) << 1)
+          | ((y >> 1) & 1);
+    return float(v) / 16.0;
   }
 
   void main() {
@@ -97,12 +102,12 @@
     vec2 p = vec2((vUV.x - 0.5) * aspect, vUV.y) * 2.8 + vec2(t * 0.06, 0.0);
 
     vec2 q = vec2(
-      fbm(p + vec2(0.0, 0.0) + t * 0.4),
-      fbm(p + vec2(5.2, 1.3) - t * 0.3)
+      fbmWarp(p + vec2(0.0, 0.0) + t * 0.4),
+      fbmWarp(p + vec2(5.2, 1.3) - t * 0.3)
     );
     vec2 r = vec2(
-      fbm(p + 3.2 * q + vec2(1.7, 9.2) + t * 0.25),
-      fbm(p + 3.2 * q + vec2(8.3, 2.8) - t * 0.2)
+      fbmWarp(p + 3.2 * q + vec2(1.7, 9.2) + t * 0.25),
+      fbmWarp(p + 3.2 * q + vec2(8.3, 2.8) - t * 0.2)
     );
     float f = fbm(p + 2.6 * r);
 
@@ -138,6 +143,7 @@
         alpha: false,
         antialias: false,
         powerPreference: "low-power",
+        desynchronized: true,
       });
       if (!gl) return;
 
@@ -179,11 +185,20 @@
       const uTime = gl.getUniformLocation(prog, "uTime");
       const uRes = gl.getUniformLocation(prog, "uResolution");
 
+      // CSS-pixel size drives the shader's dither pitch and aspect, so cells stay
+      // exactly 3px on screen regardless of render resolution.
+      let cssW = 1;
+      let cssH = 1;
+
       const resize = () => {
         const rect = canvas.getBoundingClientRect();
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        // Cap at 1x: the fbm stack is ~25 noise evals per pixel, so every extra
+        // device pixel repeats the full cost. The dithered look upscales cleanly.
+        const dpr = Math.min(window.devicePixelRatio || 1, 1);
         const w = Math.max(1, Math.floor(rect.width * dpr));
         const h = Math.max(1, Math.floor(rect.height * dpr));
+        cssW = Math.max(1, rect.width);
+        cssH = Math.max(1, rect.height);
         if (canvas.width !== w || canvas.height !== h) {
           canvas.width = w;
           canvas.height = h;
@@ -205,7 +220,7 @@
         resize();
         gl.useProgram(prog);
         gl.uniform1f(uTime, reducedMotion ? 12.0 : (now - start) * 0.001);
-        gl.uniform2f(uRes, canvas.width, canvas.height);
+        gl.uniform2f(uRes, cssW, cssH);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         if (!reducedMotion) {
           rafId = requestAnimationFrame(draw);

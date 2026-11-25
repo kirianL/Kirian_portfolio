@@ -169,6 +169,7 @@ function getCostaRicaScheduleStatus(date: Date, lang: "EN" | "ES"): string {
 }
 
 interface CostaRicaTimeInfo {
+  dateLine: string;
   timeLine: string;
   offsetText: string;
   countryCode: string | null;
@@ -186,6 +187,13 @@ function getCostaRicaTimeInfo(lang: "EN" | "ES"): CostaRicaTimeInfo {
       hourCycle: "h23",
     }).format(now);
 
+    const dateStr = new Intl.DateTimeFormat(lang === "ES" ? "es-CR" : "en-US", {
+      timeZone: "America/Costa_Rica",
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    }).format(now);
+
     const viewerTimeZone = getViewerTimeZone();
 
     const crMs = getZonedWallClockMs(now, "America/Costa_Rica");
@@ -194,6 +202,7 @@ function getCostaRicaTimeInfo(lang: "EN" | "ES"): CostaRicaTimeInfo {
     const diffMinutes = Math.round((viewerMs - crMs) / 60000);
 
     return {
+      dateLine: dateStr,
       timeLine: `${timeStr} (UTC-6)`,
       offsetText: formatViewerOffsetText(diffMinutes, lang),
       countryCode: getCountryCodeFromTimeZone(viewerTimeZone),
@@ -201,6 +210,7 @@ function getCostaRicaTimeInfo(lang: "EN" | "ES"): CostaRicaTimeInfo {
     };
   } catch {
     return {
+      dateLine: "",
       timeLine: lang === "ES" ? "Hora actual (UTC-6)" : "Local time (UTC-6)",
       offsetText: "",
       countryCode: null,
@@ -333,6 +343,7 @@ export default function CentralHero({
 
   const scopeRef = useRef<HTMLDivElement | null>(null);
   const leaveTimerRef = useRef<number | null>(null);
+  const moveRafRef = useRef(0);
 
   useEffect(() => {
     setCrTimeInfo(getCostaRicaTimeInfo(lang));
@@ -351,6 +362,9 @@ export default function CentralHero({
     return () => {
       if (leaveTimerRef.current) {
         window.clearTimeout(leaveTimerRef.current);
+      }
+      if (moveRafRef.current) {
+        cancelAnimationFrame(moveRafRef.current);
       }
     };
   }, []);
@@ -372,7 +386,13 @@ export default function CentralHero({
   );
 
   const onMove = useCallback((wordEl: HTMLElement, clientX: number, clientY: number) => {
-    positionHandNote(wordEl, scopeRef.current, clientX, clientY);
+    // pointermove fires far faster than frames; positionHandNote reads layout
+    // (getBoundingClientRect/offsetWidth), so coalesce to one run per frame.
+    if (moveRafRef.current) return;
+    moveRafRef.current = requestAnimationFrame(() => {
+      moveRafRef.current = 0;
+      positionHandNote(wordEl, scopeRef.current, clientX, clientY);
+    });
   }, []);
 
   const onDeactivate = useCallback((id: string) => {
@@ -402,7 +422,7 @@ export default function CentralHero({
   return (
     <div
       ref={scopeRef}
-      className="bio-focus-scope bio-focus-scope--hero hero-responsive-scale relative z-10 w-full max-w-[540px] mx-auto px-6 sm:px-0 py-4 sm:py-6 flex flex-col"
+      className={`bio-focus-scope bio-focus-scope--hero hero-responsive-scale relative z-10 w-full max-w-[540px] mx-auto px-6 sm:px-0 py-4 sm:py-6 flex flex-col${activeId ? " is-dimmed" : ""}`}
     >
       <div className="bio-dimmer" aria-hidden="true" />
 
@@ -516,6 +536,9 @@ export default function CentralHero({
             {basedInLocation}
             <CircleMarkSvg />
             <span className="bio-hand-note bio-hand-note--costa-rica flex flex-col gap-0.5" aria-hidden="true">
+              {crTimeInfo.dateLine && (
+                <span className="cr-date-line">{crTimeInfo.dateLine}</span>
+              )}
               <span>{crTimeInfo.timeLine}</span>
               {crTimeInfo.offsetText && (
                 <span className="inline-flex items-center gap-1.5">

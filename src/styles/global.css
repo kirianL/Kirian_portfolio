@@ -543,44 +543,33 @@ html.dark .cr-branch-svg {
   transition: opacity 600ms ease-in-out 430ms;
 }
 
-.bio-focus-scope:has(
-    .bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
-  )
-  .bio-dimmer {
+/* The dimmer is driven by the .is-dimmed class set from React state (activeId),
+   not by :has(:hover/:focus-visible/.is-active). CSS state and React state could
+   desync — e.g. :focus-visible lingering or .is-active surviving a missed
+   pointerleave — leaving this 90%-opacity overlay stuck over the hero. */
+.bio-focus-scope.is-dimmed .bio-dimmer {
   opacity: 0.9;
   transition-duration: 700ms;
   transition-delay: 150ms;
   transition-timing-function: ease-in-out;
 }
 
-.bio-focus-scope:has(
-    .bio-pencil-word[data-mark="underline"]:is(
-        :hover:not(.touch-managed),
-        :focus-visible,
-        .is-active
-      )
+.bio-focus-scope.is-dimmed:has(
+    .bio-pencil-word[data-mark="underline"].is-active
   )
   .bio-dimmer {
   transition-duration: 240ms;
 }
 
-.bio-focus-scope:has(
-    .bio-pencil-word[data-mark="dots"]:is(
-        :hover:not(.touch-managed),
-        :focus-visible,
-        .is-active
-      )
+.bio-focus-scope.is-dimmed:has(
+    .bio-pencil-word[data-mark="dots"].is-active
   )
   .bio-dimmer {
   transition-duration: 630ms;
 }
 
-.bio-focus-scope:has(
-    .bio-pencil-word[data-mark="double"]:is(
-        :hover:not(.touch-managed),
-        :focus-visible,
-        .is-active
-      )
+.bio-focus-scope.is-dimmed:has(
+    .bio-pencil-word[data-mark="double"].is-active
   )
   .bio-dimmer {
   transition-duration: 860ms;
@@ -818,6 +807,78 @@ html.dark .cr-branch-svg {
 /* Costa Rica time note: give the status line room and balance its wraps. */
 .bio-hand-note--costa-rica {
   max-width: 330px;
+
+  /* Exit mirrors the GitHub grid collapse: lines fold toward the note's
+     top-left corner in staggered bands while the card stays opaque, then
+     hides in the last beat. Entrance is untouched (handled by .bio-hand-note). */
+  --cr-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --cr-exit-stagger: 170ms;
+  --cr-exit-dur: 380ms;
+  --cr-exit-total: 640ms;
+  transition:
+    opacity 190ms var(--cr-ease-in-out) calc(var(--cr-exit-total) - 190ms),
+    visibility 0s linear var(--cr-exit-total);
+}
+
+/* Each line folds back toward the note's top-left origin on exit — the same
+   move the grid cells make toward theirs. nth-last-child ordering means the
+   bottom line (farthest from the origin) leaves first, the top line last. */
+.bio-hand-note--costa-rica > span {
+  --cr-wave: 0.5;
+  --cr-mx: -9px;
+  --cr-my: -10px;
+  --cr-delay: calc(var(--cr-exit-stagger) * (1 - var(--cr-wave)));
+  --cr-dur: var(--cr-exit-dur);
+  --cr-ease: var(--cr-ease-in-out);
+
+  opacity: 0;
+  transform: translate(var(--cr-mx), var(--cr-my)) scale(0.9);
+  transform-origin: 0 0;
+  transition-property: opacity, transform;
+  transition-duration: var(--cr-dur);
+  transition-timing-function: var(--cr-ease);
+  transition-delay: var(--cr-delay);
+}
+
+.bio-hand-note--costa-rica > span:nth-last-child(1) {
+  --cr-wave: 1;
+  --cr-mx: -15px;
+  --cr-my: -19px;
+}
+
+.bio-hand-note--costa-rica > span:nth-last-child(2) {
+  --cr-wave: 0.66;
+  --cr-mx: -11px;
+  --cr-my: -13px;
+}
+
+.bio-hand-note--costa-rica > span:nth-last-child(3) {
+  --cr-wave: 0.33;
+  --cr-mx: -7px;
+  --cr-my: -8px;
+}
+
+.bio-hand-note--costa-rica > span:nth-last-child(4) {
+  --cr-wave: 0;
+  --cr-mx: -3px;
+  --cr-my: -4px;
+}
+
+/* On hover the lines are simply present: the card's own fade-in covers them. */
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-hand-note--costa-rica
+  > span {
+  --cr-delay: 0ms;
+  --cr-dur: 180ms;
+  --cr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  opacity: 1;
+  transform: none;
+}
+
+.cr-date-line {
+  font-size: 16px;
+  color: #f5f5f7a;
 }
 
 .cr-status-line {
@@ -1399,7 +1460,7 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 
 @media (min-width: 2000px) {
   .hero-responsive-scale {
-    scale: 1.4;
+    scale: 1.36;
   }
 }
 
@@ -1457,11 +1518,11 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   --gh-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   /* Wait for the circled word's pencil mark to finish before revealing the graph. */
   --gh-intent: 850ms;
-  --gh-enter-stagger: 900ms;
-  --gh-enter-dur: 640ms;
-  --gh-exit-stagger: 400ms;
-  --gh-exit-dur: 480ms;
-  --gh-exit-total: 880ms;
+  --gh-enter-stagger: 560ms;
+  --gh-enter-dur: 520ms;
+  --gh-exit-stagger: 300ms;
+  --gh-exit-dur: 420ms;
+  --gh-exit-total: 720ms;
 
   top: 50%;
   left: calc(100% + 90px);
@@ -1545,6 +1606,19 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   overflow: visible;
 }
 
+/* The pencil trace-in plays once per entrance as an animation on the highlight
+   rings only (~2 paths), so it never un-draws on exit: closing cells stay fully
+   drawn while they fold and fade. Regular cells skip stroke-dashoffset entirely —
+   repainting ~80 strokes per frame was the main cause of dropped frames. */
+@keyframes gh-cell-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Cells trace in and fill from the top-left corner as one soft diagonal wave,
    then close in reverse. Only the variables change between the two directions. */
 .gh-grid-cell,
@@ -1558,18 +1632,21 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   --gh-ease: var(--gh-ease-in-out);
 
   opacity: 0;
-  fill-opacity: 0.1;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 1;
-  stroke-dashoffset: 1;
+  stroke-dashoffset: 0;
   /* On exit each cell folds back toward the grid's top-left origin: --mx/--my
-     carry its distance to that corner, so the whole grid collapses as one shape. */
+     carry its distance to that corner, so the whole grid collapses as one shape.
+     transform is a composited property: the compositor handles it without
+     layout or paint. */
   transform: translate(calc(var(--mx, 0px) * -1), calc(var(--my, 0px) * -1))
-    scale(0.72);
+    scale(0.9);
   transform-box: fill-box;
   transform-origin: center;
-  transition-property: opacity, stroke-dashoffset, fill-opacity, transform;
+  /* Exit only animates composited properties (opacity + transform);
+     the whole cell — fill and stroke — fades together via opacity. */
+  transition-property: opacity, transform;
   transition-duration: var(--gh-dur);
   transition-timing-function: var(--gh-ease);
   transition-delay: var(--gh-delay);
@@ -1582,9 +1659,15 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   --gh-ease: var(--gh-ease-out);
 
   opacity: 1;
-  fill-opacity: 1;
-  stroke-dashoffset: 0;
-  transform: scale(1);
+  transform: none;
+}
+
+/* Only the highlight rings trace in stroke-by-stroke: two paths repainting is
+   cheap, eighty was not. */
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .gh-grid-ring {
+  animation: gh-cell-draw var(--gh-enter-dur) var(--gh-ease-out) both;
+  animation-delay: calc(var(--gh-intent) + var(--gh-enter-stagger) * var(--wave, 0));
 }
 
 .gh-grid-badge,
@@ -1714,10 +1797,14 @@ main[class*="bg-[#0a0a0a]"] ::selection {
     --gh-exit-total: 160ms;
   }
 
+  .bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+    :is(.gh-grid-cell, .gh-grid-ring) {
+    animation: none;
+  }
+
   .gh-grid-cell,
   .gh-grid-ring {
     stroke-dashoffset: 0;
-    fill-opacity: 1;
     transform: none;
   }
 }
