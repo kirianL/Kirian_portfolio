@@ -114,57 +114,25 @@ function random(seed: number): () => number {
 }
 
 /**
- * Hand-sketched rounded square: four slightly bowed sides, soft pencil corners and a
- * small overshoot where the pencil closes the loop. One open path so it can be traced in.
+ * Perfect rounded square with smooth corners - clean geometry for precise pencil tracing.
  */
 function pencilSquare(x: number, y: number, size: number, seed: string): string {
-  const next = random(seedFrom(seed));
-  const wobble = (amount: number) => (next() * 2 - 1) * amount;
   const f = (value: number) => Number(value.toFixed(2));
-  const s = size;
-  const r = s * 0.3;
-
-  type Point = { x: number; y: number };
-  const tl: Point = { x: x + wobble(0.3), y: y + wobble(0.3) };
-  const tr: Point = { x: x + s + wobble(0.3), y: y + wobble(0.3) };
-  const br: Point = { x: x + s + wobble(0.3), y: y + s + wobble(0.3) };
-  const bl: Point = { x: x + wobble(0.3), y: y + s + wobble(0.3) };
-
-  const toward = (from: Point, to: Point, distance: number): Point => {
-    const dx = to.x - from.x;
-    const dy = to.y - from.y;
-    const length = Math.hypot(dx, dy) || 1;
-    return { x: from.x + (dx / length) * distance, y: from.y + (dy / length) * distance };
-  };
-  const pt = (p: Point) => `${f(p.x)} ${f(p.y)}`;
-
-  // One bowed side between the rounded ends, then a soft quadratic corner.
-  const side = (a: Point, b: Point, corner: Point, next: Point) => {
-    const start = toward(a, b, r);
-    const end = toward(b, a, r);
-    const dx = end.x - start.x;
-    const dy = end.y - start.y;
-    const length = Math.hypot(dx, dy) || 1;
-    const bow = wobble(0.5);
-    const control: Point = {
-      x: (start.x + end.x) / 2 + (-dy / length) * bow,
-      y: (start.y + end.y) / 2 + (dx / length) * bow,
-    };
-    const exit = toward(corner, next, r);
-    return `Q${pt(control)} ${pt(end)} Q${pt(corner)} ${pt(exit)}`;
-  };
-
-  const begin = toward(tl, tr, r);
-  const overshoot: Point = { x: begin.x + 0.9 + wobble(0.3), y: tl.y - 0.4 + wobble(0.2) };
+  const r = size * 0.22; // Rounded corner radius (22% of size)
+  const x2 = x + size;
+  const y2 = y + size;
 
   return [
-    `M${f(tl.x - 0.2)} ${f(tl.y + r)}`,
-    `Q${pt(tl)} ${pt(begin)}`,
-    side(tl, tr, tr, br),
-    side(tr, br, br, bl),
-    side(br, bl, bl, tl),
-    `L${pt(toward(bl, tl, s - r * 1.2))}`,
-    `L${pt(overshoot)}`,
+    `M${f(x + r)} ${f(y)}`,           // Start top-left corner
+    `L${f(x2 - r)} ${f(y)}`,           // Top edge
+    `Q${f(x2)} ${f(y)} ${f(x2)} ${f(y + r)}`,  // Top-right corner
+    `L${f(x2)} ${f(y2 - r)}`,          // Right edge
+    `Q${f(x2)} ${f(y2)} ${f(x2 - r)} ${f(y2)}`, // Bottom-right corner
+    `L${f(x + r)} ${f(y2)}`,           // Bottom edge
+    `Q${f(x)} ${f(y2)} ${f(x)} ${f(y2 - r)}`,   // Bottom-left corner
+    `L${f(x)} ${f(y + r)}`,            // Left edge
+    `Q${f(x)} ${f(y)} ${f(x + r)} ${f(y)}`,     // Top-left corner (close)
+    `Z`,
   ].join(" ");
 }
 
