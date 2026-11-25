@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import { bind, setVolume } from "cuelume";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import HomePage from "@/pages/HomePage";
 import ProjectsPage from "@/pages/ProjectsPage";
 import AboutPage from "@/pages/AboutPage";
@@ -174,6 +175,8 @@ export default function App() {
         <Route path="/es/about/" element={<AboutPage lang="es" />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
+      <SpeedInsights />
     </>
   );
 }
