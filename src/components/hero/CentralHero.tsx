@@ -46,6 +46,7 @@ import VE from "country-flag-icons/react/3x2/VE";
 import PillButton from "@/components/ui/PillButton";
 import RoleTicker from "@/components/hero/RoleTicker";
 import GitHubActivityNote from "@/components/hero/GitHubActivityNote";
+import LifePhotosNote from "@/components/hero/LifePhotosNote";
 import { getViewerTimeZone, getCountryCodeFromTimeZone } from "@/lib/viewer-locale";
 
 export interface CentralHeroProps {
@@ -66,6 +67,11 @@ export interface CentralHeroProps {
     linkLabel: string;
     after: string;
     url: string;
+  };
+  lifeLine: {
+    before: string;
+    word: string;
+    after: string;
   };
   reachOutPrefix: string;
   email: string;
@@ -261,6 +267,35 @@ function positionHandNote(
     return;
   }
 
+  // Photo strip floats above the word/cursor instead of below it.
+  if (note.dataset.note === "photos") {
+    const isMobile = window.matchMedia("(max-width: 639px)").matches;
+    const scopeRect = scope.getBoundingClientRect();
+    const noteWidth = note.offsetWidth;
+
+    if (clientX !== undefined && clientY !== undefined && !isMobile) {
+      delete word.dataset.noteAlign;
+      const viewportLeft = Math.max(
+        12,
+        Math.min(clientX + 20, window.innerWidth - noteWidth - 12),
+      );
+      const aboveY = Math.max(8, clientY - note.offsetHeight - 14);
+      note.style.left = `${viewportLeft - wordRect.left}px`;
+      note.style.top = `${aboveY - wordRect.top}px`;
+      note.style.bottom = "auto";
+    } else {
+      note.style.removeProperty("left");
+      note.style.removeProperty("top");
+      note.style.removeProperty("bottom");
+      const startOffset = isMobile ? 0 : wordRect.width * 0.4;
+      const overflows =
+        wordRect.left + startOffset + noteWidth > scopeRect.right + 8;
+      if (overflows) word.dataset.noteAlign = "end";
+      else delete word.dataset.noteAlign;
+    }
+    return;
+  }
+
   const scopeRect = scope.getBoundingClientRect();
   const isMobile = window.matchMedia("(max-width: 639px)").matches;
   const noteWidth = note.offsetWidth;
@@ -323,6 +358,7 @@ export default function CentralHero({
   companyUrl,
   lines,
   githubLine,
+  lifeLine,
   reachOutPrefix,
   email,
   ctaPrimaryLabel,
@@ -580,6 +616,62 @@ export default function CentralHero({
         {lines.map((line, idx) => (
           <p key={idx}>{line}</p>
         ))}
+
+        <p>
+          {lifeLine.before}{" "}
+          <span
+            tabIndex={0}
+            data-mark="circle"
+            data-cuelume-hover="tick"
+            onPointerEnter={(e) => {
+              if (e.pointerType === "touch") return;
+              e.currentTarget.classList.remove("touch-managed");
+              onActivate("life", e.currentTarget, e.clientX, e.clientY);
+            }}
+            onPointerMove={(e) => {
+              if (e.pointerType !== "touch") {
+                onMove(e.currentTarget, e.clientX, e.clientY);
+              }
+            }}
+            onPointerLeave={(e) => {
+              if (e.pointerType !== "touch") {
+                onDeactivate("life");
+              }
+            }}
+            onPointerDown={(e) => {
+              if (e.pointerType === "touch") {
+                e.currentTarget.classList.add("touch-managed");
+                if (activeId === "life") {
+                  onDeactivate("life");
+                } else {
+                  onActivate("life", e.currentTarget);
+                }
+              }
+            }}
+            onFocus={(e) => {
+              if (e.currentTarget.matches(":focus-visible")) {
+                onActivate("life", e.currentTarget);
+              }
+            }}
+            onBlur={() => onDeactivate("life")}
+            className={getPencilWordClasses(
+              "life",
+              handlers,
+              "!cursor-help text-[#f5f5f59e] hover:text-[#f5f5f5] transition-colors duration-200",
+            )}
+          >
+            {lifeLine.word}
+            <CircleMarkSvg />
+            <span
+              className="bio-hand-note bio-hand-note--photos"
+              data-note="photos"
+              aria-hidden="true"
+            >
+              <LifePhotosNote active={activeId === "life"} />
+            </span>
+          </span>
+          {lifeLine.after}
+        </p>
 
         <p>
           {githubLine.before}{" "}

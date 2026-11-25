@@ -815,6 +815,14 @@ html.dark .cr-branch-svg {
   --cr-exit-stagger: 170ms;
   --cr-exit-dur: 380ms;
   --cr-exit-total: 640ms;
+
+  /* Entrance mirrors the exit wave: lines unfold from the folded pose with
+     stagger * wave delay (top line first — the reverse of the exit order),
+     timed to land as the card's own fade-in completes (~850ms circle-mark
+     delay + 400ms fade). */
+  --cr-in-base: 800ms;
+  --cr-in-stagger: 110ms;
+  --cr-in-dur: 400ms;
   transition:
     opacity 190ms var(--cr-ease-in-out) calc(var(--cr-exit-total) - 190ms),
     visibility 0s linear var(--cr-exit-total);
@@ -864,16 +872,81 @@ html.dark .cr-branch-svg {
   --cr-my: -4px;
 }
 
-/* On hover the lines are simply present: the card's own fade-in covers them. */
+/* On hover the lines unfold from the folded pose in the reverse wave order,
+   staggered so the unfold is visible while the card fades in. */
 .bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
   .bio-hand-note--costa-rica
   > span {
-  --cr-delay: 0ms;
-  --cr-dur: 180ms;
-  --cr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --cr-delay: calc(var(--cr-in-base) + var(--cr-in-stagger) * var(--cr-wave));
+  --cr-dur: var(--cr-in-dur);
+  --cr-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   opacity: 1;
   transform: none;
+}
+
+/* Life photos note: polaroid-style row of canvases that resolve from big
+   pixels to crisp frames (see LifePhotosNote.tsx). */
+.bio-hand-note--photos {
+  /* Floats above the word: JS sets inline top for cursor-follow; this
+     bottom-anchored fallback covers keyboard/touch activation. */
+  top: auto;
+  bottom: calc(100% + 14px);
+  width: max-content;
+  max-width: none;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(16, 16, 19, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.life-photos {
+  display: flex;
+  gap: 8px;
+}
+
+.life-photo {
+  display: block;
+  width: 124px;
+}
+
+.life-photo:nth-child(1) {
+  transform: rotate(-2deg);
+}
+
+.life-photo:nth-child(2) {
+  transform: rotate(1.6deg) translateY(2px);
+}
+
+.life-photo:nth-child(3) {
+  transform: rotate(-1.2deg);
+}
+
+/* Lock each canvas to its photo's real aspect ratio so the note height is
+   correct before the pixel reveal draws its first frame. */
+.life-photo:nth-child(1) canvas {
+  aspect-ratio: 978 / 1414;
+}
+
+.life-photo:nth-child(2) canvas {
+  aspect-ratio: 1647 / 2726;
+}
+
+.life-photo:nth-child(3) canvas {
+  aspect-ratio: 853 / 1280;
+}
+
+.life-photo canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  background: #101013;
+  border-radius: 8px;
+  /* Slight lift so portrait shots don't sink into the dark card. */
+  filter: brightness(1.07) saturate(1.06);
 }
 
 .cr-date-line {
@@ -912,6 +985,21 @@ html.dark .cr-branch-svg {
 
   .bio-hand-note--costa-rica {
     max-width: 270px;
+  }
+
+  .bio-hand-note--photos {
+    top: auto;
+    bottom: calc(100% + 12px);
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .life-photos {
+    gap: 6px;
+  }
+
+  .life-photo {
+    width: 78px;
   }
 
   .cr-status-line {
@@ -1670,11 +1758,27 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   animation-delay: calc(var(--gh-intent) + var(--gh-enter-stagger) * var(--wave, 0));
 }
 
-.gh-grid-badge,
 .gh-grid-row {
   opacity: 0;
   transition: opacity var(--gh-exit-dur) var(--gh-ease-in-out)
     calc(var(--gh-exit-stagger) * (1 - var(--wave-exit, var(--wave, 0))));
+}
+
+/* Number badges fold with their cell: same --mx/--my vector, same timing.
+   Without the transform they used to fade in place while the square flew
+   toward the corner, which read as a stuck leftover. */
+.gh-grid-badge {
+  opacity: 0;
+  transform: translate(calc(var(--mx, 0px) * -1), calc(var(--my, 0px) * -1))
+    scale(0.9);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition-property: opacity, transform;
+  transition-duration: var(--gh-exit-dur);
+  transition-timing-function: var(--gh-ease-in-out);
+  transition-delay: calc(
+    var(--gh-exit-stagger) * (1 - var(--wave-exit, var(--wave, 0)))
+  );
 }
 
 .bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
@@ -1683,6 +1787,11 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   transition-duration: 420ms;
   transition-timing-function: var(--gh-ease-out);
   transition-delay: calc(var(--gh-intent) + var(--gh-enter-stagger) * var(--wave, 0) + 240ms);
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .gh-grid-badge {
+  transform: none;
 }
 
 .gh-grid-cell {
@@ -1803,7 +1912,8 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   }
 
   .gh-grid-cell,
-  .gh-grid-ring {
+  .gh-grid-ring,
+  .gh-grid-badge {
     stroke-dashoffset: 0;
     transform: none;
   }

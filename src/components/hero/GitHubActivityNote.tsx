@@ -291,6 +291,8 @@ export default function GitHubActivityNote({ lang, active }: GitHubActivityNoteP
                       {
                         "--wave": seat.wave,
                         "--wave-exit": seat.exitWave,
+                        "--mx": `${seat.mx}px`,
+                        "--my": `${seat.my}px`,
                       } as React.CSSProperties
                     }
                     x={seat.x + CELL / 2}

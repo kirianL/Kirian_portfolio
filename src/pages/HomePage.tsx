@@ -107,6 +107,19 @@ export default function HomePage({ lang }: HomePageProps) {
                   "As a designer, I pay close attention to small details and aim for visuals that feel considered, not flashy.",
                 ]
           }
+          lifeLine={
+            isEs
+              ? {
+                  before: "Fuera del código, trato de aprovechar al máximo la",
+                  word: "vida",
+                  after: ".",
+                }
+              : {
+                  before: "Outside of code, I try to make the most of",
+                  word: "life",
+                  after: ".",
+                }
+          }
           githubLine={{
             before: isEs ? "El resto de ese trabajo vive en" : "The rest of that work lives on",
             linkLabel: "GitHub",
