@@ -94,12 +94,6 @@ const initBioNotes = () => {
       }
     }, { signal });
 
-    word.addEventListener("pointermove", (e) => {
-      if (e.pointerType !== "touch") {
-        positionNote(word, e.clientX, e.clientY);
-      }
-    }, { signal });
-
     word.addEventListener("pointerleave", (e) => {
       if (e.pointerType !== "touch") close();
     }, { signal });
@@ -134,16 +128,30 @@ const initBioNotes = () => {
     }, { signal });
   });
 
-  document.addEventListener("pointermove", (e) => {
-    if (e.pointerType === "touch") return;
+  // One rAF-throttled listener positions every open note, so layout is touched at most
+  // once per frame no matter how fast the pointer moves.
+  let pointerFrame = 0;
+  let lastPointer: PointerEvent | null = null;
+
+  const flushPointer = () => {
+    pointerFrame = 0;
+    const e = lastPointer;
+    lastPointer = null;
+    if (!e) return;
+
     const targetWord = (e.target as Element | null)?.closest?.<HTMLElement>(".bio-pencil-word");
-    if (targetWord) {
-      positionNote(targetWord, e.clientX, e.clientY);
-    }
+    if (targetWord) positionNote(targetWord, e.clientX, e.clientY);
     document.querySelectorAll<HTMLElement>(".bio-pencil-word.is-active, .bio-pencil-word.is-leaving").forEach((word) => {
       if (word !== targetWord) positionNote(word, e.clientX, e.clientY);
     });
+  };
+
+  document.addEventListener("pointermove", (e) => {
+    if (e.pointerType === "touch") return;
+    lastPointer = e;
+    if (!pointerFrame) pointerFrame = window.requestAnimationFrame(flushPointer);
   }, { passive: true, signal });
+  signal.addEventListener("abort", () => window.cancelAnimationFrame(pointerFrame));
 
   document.addEventListener("pointerdown", (e) => {
     const target = e.target as Node | null;

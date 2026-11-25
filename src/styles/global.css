@@ -1449,8 +1449,19 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 }
 
 
-/* â”€â”€ GitHub activity card: contribution graph in the hero's pencil language â”€â”€ */
+/* GitHub activity note: contribution graph in the hero's pencil language.
+   Every timing below derives from these tokens, so the whole sequence is tuned in one place. */
 .bio-hand-note--grid {
+  --gh-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --gh-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Wait for the circled word's pencil mark to finish before revealing the graph. */
+  --gh-intent: 850ms;
+  --gh-enter-stagger: 900ms;
+  --gh-enter-dur: 640ms;
+  --gh-exit-stagger: 300ms;
+  --gh-exit-dur: 340ms;
+  --gh-exit-total: 680ms;
+
   top: 50%;
   left: calc(100% + 90px);
   right: auto;
@@ -1458,16 +1469,18 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   max-width: none;
   transform: translateY(-50%);
   transform-origin: 0 50%;
-  /* Hold the panel visible while the cells close, then fade it away last. */
+  will-change: opacity;
+  /* Stay opaque while the cells close, then hide in the last beat. */
   transition:
-    opacity 340ms ease 1560ms,
-    visibility 0s linear 1900ms;
+    opacity 200ms var(--gh-ease-in-out) calc(var(--gh-exit-total) - 200ms),
+    visibility 0s linear var(--gh-exit-total);
 }
 
 .bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
   .bio-hand-note--grid {
-  transition-duration: 400ms, 0s;
-  transition-delay: 850ms, 0s;
+  transition-duration: 220ms, 0s;
+  transition-delay: var(--gh-intent), 0s;
+  transition-timing-function: var(--gh-ease-out), linear;
 }
 
 .bio-pencil-word[data-note-placement="below"] .bio-hand-note--grid {
@@ -1480,34 +1493,32 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 
 .gh-activity {
   display: block;
+  contain: layout style;
 }
 
 .gh-card {
   display: block;
-  padding: 0;
-  border: 0;
-  background: none;
   font-family: var(--font-hero-sans);
   color: #f5f5f5;
 }
 
+/* Header and footer text leave with the cells instead of lingering after them. */
 .gh-card-head,
 .gh-card-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  /* Fade out with the cells instead of lingering after them. */
   opacity: 0;
-  transition: opacity 520ms cubic-bezier(0.4, 0, 0.2, 1) 480ms;
+  transition: opacity var(--gh-exit-dur) var(--gh-ease-in-out) 60ms;
 }
 
 .bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
-  .gh-card-head,
-.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
-  .gh-card-foot {
+  :is(.gh-card-head, .gh-card-foot) {
   opacity: 1;
-  transition-delay: 780ms;
+  transition-duration: 480ms;
+  transition-timing-function: var(--gh-ease-out);
+  transition-delay: calc(var(--gh-intent) + 160ms);
 }
 
 .gh-card-head {
@@ -1523,8 +1534,6 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 
 .gh-card-body {
   display: block;
-  padding: 0;
-  border: 0;
 }
 
 .gh-grid {
@@ -1535,40 +1544,61 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   overflow: visible;
 }
 
-/* Seats fill from the top-left corner as one soft diagonal wave. */
+/* Cells trace in and fill from the top-left corner as one soft diagonal wave,
+   then close in reverse. Only the variables change between the two directions. */
 .gh-grid-cell,
-.gh-grid-cross,
 .gh-grid-ring {
+  --gh-delay: calc(var(--gh-exit-stagger) * (1 - var(--wave, 0)));
+  --gh-dur: var(--gh-exit-dur);
+  --gh-ease: var(--gh-ease-in-out);
+
   opacity: 0;
   fill-opacity: 0.1;
-  fill-rule: nonzero;
   stroke-linecap: round;
   stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   transform: scale(0.92);
   transform-box: fill-box;
   transform-origin: center;
-  /* Reverse wave on exit: the last cell drawn is the first one to close. */
-  transition:
-    opacity 460ms cubic-bezier(0.4, 0, 0.2, 1) calc(120ms + (1 - var(--wave, 0)) * 700ms),
-    stroke-dashoffset 700ms cubic-bezier(0.4, 0, 0.2, 1) calc(120ms + (1 - var(--wave, 0)) * 700ms),
-    fill-opacity 780ms cubic-bezier(0.4, 0, 0.2, 1) calc(120ms + (1 - var(--wave, 0)) * 700ms),
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1) calc(120ms + (1 - var(--wave, 0)) * 700ms);
+  transition-property: opacity, stroke-dashoffset, fill-opacity, transform;
+  transition-duration: var(--gh-dur);
+  transition-timing-function: var(--gh-ease);
+  transition-delay: var(--gh-delay);
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  :is(.gh-grid-cell, .gh-grid-ring) {
+  --gh-delay: calc(var(--gh-intent) + var(--gh-enter-stagger) * var(--wave, 0));
+  --gh-dur: var(--gh-enter-dur);
+  --gh-ease: var(--gh-ease-out);
+
+  opacity: 1;
+  fill-opacity: 1;
+  stroke-dashoffset: 0;
+  transform: scale(1);
 }
 
 .gh-grid-badge,
 .gh-grid-row {
   opacity: 0;
-  transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + (1 - var(--wave, 0)) * 520ms);
+  transition: opacity var(--gh-exit-dur) var(--gh-ease-in-out)
+    calc(var(--gh-exit-stagger) * (1 - var(--wave, 0)));
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  :is(.gh-grid-badge, .gh-grid-row) {
+  opacity: 1;
+  transition-duration: 420ms;
+  transition-timing-function: var(--gh-ease-out);
+  transition-delay: calc(var(--gh-intent) + var(--gh-enter-stagger) * var(--wave, 0) + 240ms);
 }
 
 .gh-grid-cell {
   stroke-width: 1;
 }
 
-/* Level 0 is a plain black seat; 1–4 are GitHub's green ramp as tinted, outlined seats. */
+/* Level 0 is a plain black cell; 1–4 are tinted, outlined blues. */
 .gh-grid-cell[data-level="0"] {
   fill: #000;
   stroke: rgba(255, 255, 255, 0.09);
@@ -1590,12 +1620,6 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   stroke: #7ab8ff;
 }
 
-.gh-grid-cross {
-  fill: none;
-  stroke: rgba(245, 245, 245, 0.4);
-  stroke-width: 1.1;
-}
-
 .gh-grid-ring {
   fill: none;
   stroke: rgba(245, 245, 245, 0.85);
@@ -1614,21 +1638,6 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   fill: rgba(245, 245, 245, 0.4);
   font-family: var(--font-hero-sans);
   font-size: 9px;
-}
-
-.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
-  :is(.gh-grid-cell, .gh-grid-cross, .gh-grid-ring) {
-  opacity: 1;
-  stroke-dashoffset: 0;
-  fill-opacity: 1;
-  transform: scale(1);
-  transition-delay: calc(480ms + var(--wave, 0) * 1300ms);
-}
-
-.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
-  :is(.gh-grid-badge, .gh-grid-row) {
-  opacity: 1;
-  transition-delay: calc(1100ms + var(--wave, 0) * 1100ms);
 }
 
 .gh-card-foot {
@@ -1683,5 +1692,24 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 
   .gh-total {
     font-size: 11.5px;
+  }
+}
+
+/* Reduced motion: a short cross-fade, no tracing, no travel, no stagger. */
+@media (prefers-reduced-motion: reduce) {
+  .bio-hand-note--grid {
+    --gh-intent: 0ms;
+    --gh-enter-stagger: 0ms;
+    --gh-enter-dur: 160ms;
+    --gh-exit-stagger: 0ms;
+    --gh-exit-dur: 160ms;
+    --gh-exit-total: 160ms;
+  }
+
+  .gh-grid-cell,
+  .gh-grid-ring {
+    stroke-dashoffset: 0;
+    fill-opacity: 1;
+    transform: none;
   }
 }

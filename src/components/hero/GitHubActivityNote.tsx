@@ -93,47 +93,32 @@ function useWideLayout(): boolean {
   return wide;
 }
 
-/** Tiny deterministic PRNG so the pencil wobble is stable across renders. */
-function seedFrom(value: string): number {
-  let hash = 2166136261;
-  for (let i = 0; i < value.length; i += 1) {
-    hash ^= value.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function random(seed: number): () => number {
-  let state = seed >>> 0;
-  return () => {
-    state = (state + 0x6d2b79f5) >>> 0;
-    let t = Math.imul(state ^ (state >>> 15), 1 | state);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/**
- * Perfect rounded square with smooth corners - clean geometry for precise pencil tracing.
- */
-function pencilSquare(x: number, y: number, size: number, seed: string): string {
+/** Rounded square as one closed path, so the stroke can be traced in with a dash offset. */
+function roundedSquare(x: number, y: number, size: number): string {
   const f = (value: number) => Number(value.toFixed(2));
-  const r = size * 0.22; // Rounded corner radius (22% of size)
+  const r = size * 0.22;
   const x2 = x + size;
   const y2 = y + size;
 
   return [
-    `M${f(x + r)} ${f(y)}`,           // Start top-left corner
-    `L${f(x2 - r)} ${f(y)}`,           // Top edge
-    `Q${f(x2)} ${f(y)} ${f(x2)} ${f(y + r)}`,  // Top-right corner
-    `L${f(x2)} ${f(y2 - r)}`,          // Right edge
-    `Q${f(x2)} ${f(y2)} ${f(x2 - r)} ${f(y2)}`, // Bottom-right corner
-    `L${f(x + r)} ${f(y2)}`,           // Bottom edge
-    `Q${f(x)} ${f(y2)} ${f(x)} ${f(y2 - r)}`,   // Bottom-left corner
-    `L${f(x)} ${f(y + r)}`,            // Left edge
-    `Q${f(x)} ${f(y)} ${f(x + r)} ${f(y)}`,     // Top-left corner (close)
-    `Z`,
+    `M${f(x + r)} ${f(y)}`,
+    `L${f(x2 - r)} ${f(y)}`,
+    `Q${f(x2)} ${f(y)} ${f(x2)} ${f(y + r)}`,
+    `L${f(x2)} ${f(y2 - r)}`,
+    `Q${f(x2)} ${f(y2)} ${f(x2 - r)} ${f(y2)}`,
+    `L${f(x + r)} ${f(y2)}`,
+    `Q${f(x)} ${f(y2)} ${f(x)} ${f(y2 - r)}`,
+    `L${f(x)} ${f(y + r)}`,
+    `Q${f(x)} ${f(y)} ${f(x + r)} ${f(y)}`,
+    "Z",
   ].join(" ");
+}
+
+/** Diagonal distance from the top-left corner (0–1): drives the corner-to-corner wave. */
+function waveAt(x: number, y: number, plan: Plan): number {
+  const across = x / Math.max(plan.planWidth, 1);
+  const down = y / Math.max(plan.planHeight, 1);
+  return Math.min(1, across * 0.62 + down * 0.38);
 }
 
 interface Seat {
@@ -143,7 +128,7 @@ interface Seat {
   level: ContributionDay["level"];
   x: number;
   y: number;
-  index: number;
+  wave: number;
   path: string;
 }
 
@@ -203,8 +188,8 @@ export default function GitHubActivityNote({ lang, active }: GitHubActivityNoteP
         level: day.level,
         x: slot.x,
         y: slot.y,
-        index: offset + i,
-        path: pencilSquare(slot.x, slot.y, CELL, day.date),
+        wave: waveAt(slot.x, slot.y, plan),
+        path: roundedSquare(slot.x, slot.y, CELL),
       });
     });
 
@@ -249,46 +234,31 @@ export default function GitHubActivityNote({ lang, active }: GitHubActivityNoteP
             aria-hidden="true"
             focusable="false"
           >
-            {seats.map((seat) => {
-              // Diagonal distance from the top-left corner: cells fill as a soft wave,
-              // instead of a rigid row-by-row sweep.
-              const wave = Math.min(
-                1,
-                (seat.x / Math.max(plan.planWidth, 1)) * 0.62 +
-                  (seat.y / Math.max(plan.planHeight, 1)) * 0.38,
-              );
-              return (
+            {seats.map((seat) => (
               <path
                 key={seat.key}
                 className="gh-grid-cell"
                 data-level={seat.level}
-                style={{ "--w": seat.index, "--wave": wave } as React.CSSProperties}
+                style={{ "--wave": seat.wave } as React.CSSProperties}
                 d={seat.path}
                 pathLength={1}
               >
                 <title>{`${seat.date}: ${seat.count}`}</title>
               </path>
-              );
-            })}
+            ))}
 
-            {highlighted.map((seat) => {
-              const wave = Math.min(
-                1,
-                (seat.x / Math.max(plan.planWidth, 1)) * 0.62 +
-                  (seat.y / Math.max(plan.planHeight, 1)) * 0.38,
-              );
-              return (
+            {highlighted.map((seat) => (
               <g key={`hl-${seat.key}`}>
                 <path
                   className="gh-grid-ring"
-                  style={{ "--wave": wave } as React.CSSProperties}
-                  d={pencilSquare(seat.x - 1.6, seat.y - 1.6, CELL + 3.2, `${seat.date}-ring`)}
+                  style={{ "--wave": seat.wave } as React.CSSProperties}
+                  d={roundedSquare(seat.x - 1.6, seat.y - 1.6, CELL + 3.2)}
                   pathLength={1}
                 />
                 {seat.count > 0 ? (
                   <text
                     className="gh-grid-badge"
-                    style={{ "--wave": wave } as React.CSSProperties}
+                    style={{ "--wave": seat.wave } as React.CSSProperties}
                     x={seat.x + CELL / 2}
                     y={seat.y + CELL / 2 + 3}
                     textAnchor="middle"
@@ -297,8 +267,7 @@ export default function GitHubActivityNote({ lang, active }: GitHubActivityNoteP
                   </text>
                 ) : null}
               </g>
-              );
-            })}
+            ))}
 
             {plan.labels.map((rowLabel, row) => (
               <text
