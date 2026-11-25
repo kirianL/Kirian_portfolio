@@ -1152,6 +1152,169 @@ html.dark .cr-branch-svg {
   transition-delay: 1010ms, 0s;
 }
 
+/* QS Stars note — identical interaction and line-unfold to the Costa Rica
+   note, but with dedicated .ulatina-* classes (no generic note classes).
+   Portalled to body; JS positions it with the same cursor-follow formula. */
+.ulatina-note {
+  /* Same tokens as the Costa Rica note. */
+  --ul-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ul-exit-stagger: 170ms;
+  --ul-exit-dur: 380ms;
+  --ul-exit-total: 640ms;
+  --ul-in-base: 800ms;
+  --ul-in-stagger: 110ms;
+  --ul-in-dur: 400ms;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  width: max-content;
+  max-width: 330px;
+  padding: 2px 0;
+  pointer-events: none;
+  font-family: var(--font-hand);
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  word-spacing: 0.06em;
+  color: #f5f5f5;
+  opacity: 0;
+  visibility: hidden;
+  transform: rotate(-4deg);
+  transform-origin: 0 100%;
+  will-change: opacity;
+  transition:
+    opacity 190ms var(--ul-ease-in-out) calc(var(--ul-exit-total) - 190ms),
+    visibility 0s linear var(--ul-exit-total);
+}
+
+.ulatina-note.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 400ms cubic-bezier(0.16, 1, 0.3, 1) var(--ul-in-base),
+    visibility 0s linear 0s;
+}
+
+.ulatina-note > span {
+  --ul-wave: 0.5;
+  --ul-mx: -9px;
+  --ul-my: -10px;
+  --ul-delay: calc(var(--ul-exit-stagger) * (1 - var(--ul-wave)));
+  --ul-dur: var(--ul-exit-dur);
+  --ul-ease: var(--ul-ease-in-out);
+
+  display: block;
+  opacity: 0;
+  transform: translate(var(--ul-mx), var(--ul-my)) scale(0.9);
+  transform-origin: 0 0;
+  transition-property: opacity, transform;
+  transition-duration: var(--ul-dur);
+  transition-timing-function: var(--ul-ease);
+  transition-delay: var(--ul-delay);
+}
+
+.ulatina-note > span:nth-last-child(1) {
+  --ul-wave: 1;
+  --ul-mx: -15px;
+  --ul-my: -19px;
+}
+
+.ulatina-note > span:nth-last-child(2) {
+  --ul-wave: 0.66;
+  --ul-mx: -11px;
+  --ul-my: -13px;
+}
+
+.ulatina-note > span:nth-last-child(3) {
+  --ul-wave: 0.33;
+  --ul-mx: -7px;
+  --ul-my: -8px;
+}
+
+.ulatina-note.is-visible > span {
+  --ul-delay: calc(var(--ul-in-base) + var(--ul-in-stagger) * var(--ul-wave));
+  --ul-dur: var(--ul-in-dur);
+  --ul-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  opacity: 1;
+  transform: none;
+}
+
+.ulatina-note-label {
+  font-size: 16px;
+  color: rgba(245, 245, 245, 0.72);
+}
+
+.ulatina-note-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.ulatina-note-star {
+  width: 16px;
+  height: 16px;
+  overflow: visible;
+}
+
+.ulatina-note-star path {
+  fill: #facc15;
+  stroke: #facc15;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  /* Exit: retract right-to-left, same stagger language as the stars. */
+  transition:
+    stroke-dashoffset 240ms var(--ul-ease-in-out) calc((4 - var(--i)) * 60ms),
+    opacity 0s linear var(--ul-exit-total);
+}
+
+.ulatina-note.is-visible .ulatina-note-star path {
+  stroke-dashoffset: 0;
+  opacity: 1;
+  /* Enter: trace in one by one after the label line unfolds. */
+  transition:
+    stroke-dashoffset 260ms cubic-bezier(0.22, 1, 0.36, 1)
+      calc(var(--ul-in-base) + 200ms + var(--i) * 70ms),
+    opacity 0s linear calc(var(--ul-in-base) + 200ms);
+}
+
+.ulatina-note-stars-caption {
+  vertical-align: middle;
+}
+
+.ulatina-note-rank {
+  font-size: 21px;
+}
+
+.ulatina-note-source {
+  max-width: 100%;
+  font-size: 17px;
+  color: #f5f5f59e;
+  text-wrap: balance;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+@media (max-width: 639px) {
+  .ulatina-note {
+    font-size: 19px;
+    max-width: 270px;
+  }
+
+  .ulatina-note-source {
+    font-size: 16px;
+  }
+}
 
 /* Accessibility & Battery optimization: Respect OS reduced motion preference */
 @media (prefers-reduced-motion: reduce) {

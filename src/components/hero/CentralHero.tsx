@@ -365,30 +365,39 @@ function positionHandNote(
     return;
   }
 
-  // QS Stars note is portalled to body (the "ver más" disclosure clips its
-  // subtree), so its coordinates are viewport-fixed, not word-relative.
+  // QS Stars note follows the cursor with the exact same calculation as the
+  // Costa Rica note. It is portalled (position: fixed), so the word-relative
+  // offsets used there become viewport coordinates here — the on-screen result
+  // is identical: left = clientX + 20, top = clientY + 20, clamped to the edge.
   if (note.dataset.note === "ulatina") {
     const noteWidth = note.offsetWidth;
     const noteHeight = note.offsetHeight;
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    const fitsRight = wordRect.right + 24 + noteWidth <= window.innerWidth - 16;
 
-    let left: number;
-    let top: number;
-    if (!isMobile && fitsRight) {
-      left = wordRect.right + 24;
-      top = wordRect.top + wordRect.height / 2 - noteHeight / 2;
+    if (clientX !== undefined && clientY !== undefined && !isMobile) {
+      delete word.dataset.noteAlign;
+      const viewportLeft = Math.max(
+        12,
+        Math.min(clientX + 20, window.innerWidth - noteWidth - 12),
+      );
+      const viewportTop = Math.max(
+        8,
+        Math.min(clientY + 20, window.innerHeight - noteHeight - 12),
+      );
+      note.style.left = `${viewportLeft}px`;
+      note.style.top = `${viewportTop}px`;
     } else {
-      left = Math.max(12, Math.min(wordRect.left, window.innerWidth - noteWidth - 12));
+      note.style.left = `${Math.max(
+        12,
+        Math.min(wordRect.left, window.innerWidth - noteWidth - 12),
+      )}px`;
       const rawTop = wordRect.bottom + 14;
-      top =
+      note.style.top = `${
         rawTop + noteHeight > window.innerHeight - 12
           ? Math.max(12, wordRect.top - noteHeight - 14)
-          : rawTop;
+          : rawTop
+      }px`;
     }
-
-    note.style.left = `${left}px`;
-    note.style.top = `${top}px`;
     return;
   }
 
