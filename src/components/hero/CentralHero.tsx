@@ -1,10 +1,48 @@
 import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  AR, AU, BE, BO, BR, CA, CH, CL, CN, CO, CR, DE, DK, DO, EC, ES,
-  FR, GB, GT, HN, IE, IN, IT, JP, KR, MX, NI, NL, NO, NZ, PA, PE,
-  PL, PT, PY, SE, SG, SV, US, UY, VE,
-} from "country-flag-icons/react/3x2";
+// Import only the flags we actually use - the barrel import pulls every flag
+// into the bundle and fails to resolve in clean CI installs.
+import AR from "country-flag-icons/react/3x2/AR";
+import AU from "country-flag-icons/react/3x2/AU";
+import BE from "country-flag-icons/react/3x2/BE";
+import BO from "country-flag-icons/react/3x2/BO";
+import BR from "country-flag-icons/react/3x2/BR";
+import CA from "country-flag-icons/react/3x2/CA";
+import CH from "country-flag-icons/react/3x2/CH";
+import CL from "country-flag-icons/react/3x2/CL";
+import CN from "country-flag-icons/react/3x2/CN";
+import CO from "country-flag-icons/react/3x2/CO";
+import CR from "country-flag-icons/react/3x2/CR";
+import DE from "country-flag-icons/react/3x2/DE";
+import DK from "country-flag-icons/react/3x2/DK";
+import DO from "country-flag-icons/react/3x2/DO";
+import EC from "country-flag-icons/react/3x2/EC";
+import ES from "country-flag-icons/react/3x2/ES";
+import FR from "country-flag-icons/react/3x2/FR";
+import GB from "country-flag-icons/react/3x2/GB";
+import GT from "country-flag-icons/react/3x2/GT";
+import HN from "country-flag-icons/react/3x2/HN";
+import IE from "country-flag-icons/react/3x2/IE";
+import IN from "country-flag-icons/react/3x2/IN";
+import IT from "country-flag-icons/react/3x2/IT";
+import JP from "country-flag-icons/react/3x2/JP";
+import KR from "country-flag-icons/react/3x2/KR";
+import MX from "country-flag-icons/react/3x2/MX";
+import NI from "country-flag-icons/react/3x2/NI";
+import NL from "country-flag-icons/react/3x2/NL";
+import NO from "country-flag-icons/react/3x2/NO";
+import NZ from "country-flag-icons/react/3x2/NZ";
+import PA from "country-flag-icons/react/3x2/PA";
+import PE from "country-flag-icons/react/3x2/PE";
+import PL from "country-flag-icons/react/3x2/PL";
+import PT from "country-flag-icons/react/3x2/PT";
+import PY from "country-flag-icons/react/3x2/PY";
+import SE from "country-flag-icons/react/3x2/SE";
+import SG from "country-flag-icons/react/3x2/SG";
+import SV from "country-flag-icons/react/3x2/SV";
+import US from "country-flag-icons/react/3x2/US";
+import UY from "country-flag-icons/react/3x2/UY";
+import VE from "country-flag-icons/react/3x2/VE";
 import PillButton from "@/components/ui/PillButton";
 import RoleTicker from "@/components/hero/RoleTicker";
 import GitHubActivityNote from "@/components/hero/GitHubActivityNote";
