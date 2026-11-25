@@ -1497,6 +1497,17 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  /* Fade out with the cells instead of lingering after them. */
+  opacity: 0;
+  transition: opacity 520ms cubic-bezier(0.4, 0, 0.2, 1) 480ms;
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .gh-card-head,
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .gh-card-foot {
+  opacity: 1;
+  transition-delay: 780ms;
 }
 
 .gh-card-head {
