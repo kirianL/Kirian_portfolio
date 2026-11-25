@@ -166,6 +166,12 @@ function normalizeGameName(name: string): string {
   return name.trim().toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+/** Sentence case: only the first word capitalized. */
+function toSentenceCase(name: string): string {
+  const text = name.trim().toLowerCase();
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : "";
+}
+
 function getGameIconPath(name: string | null): string | null {
   if (!name) return null;
   const key = normalizeGameName(name);
@@ -780,6 +786,7 @@ export default function CentralHero({
               )}
               {gamingName && (
                 <span className="cr-gaming-line text-[17px] text-[#f5f5f5] leading-snug inline-flex items-center gap-1.5 flex-wrap">
+                  <span>{lang === "ES" ? "Kirian está jugando" : "Kirian is playing"}</span>
                   {gameIconPath ? (
                     <svg
                       viewBox={gameIconViewBox}
@@ -795,11 +802,7 @@ export default function CentralHero({
                       {gamingName?.charAt(0)?.toUpperCase() ?? "?"}
                     </span>
                   )}
-                  <span>
-                    {lang === "ES"
-                      ? `Kirian está jugando ${gamingName} ahora mismo`
-                      : `Kirian is playing ${gamingName} right now`}
-                  </span>
+                  <span>{toSentenceCase(gamingName)}</span>
                 </span>
               )}
               {crTimeInfo.statusLine && (
