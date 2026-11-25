@@ -815,6 +815,25 @@ html.dark .cr-branch-svg {
     visibility 0s linear 310ms;
 }
 
+/* Costa Rica time note: give the status line room and balance its wraps. */
+.bio-hand-note--costa-rica {
+  max-width: 330px;
+}
+
+.cr-status-line {
+  max-width: 100%;
+  text-wrap: balance;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
+/* Editorial bio: avoid orphaned last words and keep line breaks readable. */
+.hero-editorial-bio p {
+  text-wrap: pretty;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+
 .bio-pencil-word[data-note-align="end"] .bio-hand-note {
   left: auto;
   right: 0;
@@ -828,6 +847,14 @@ html.dark .cr-branch-svg {
     max-width: 230px;
     font-size: 19px;
     line-height: 1.25;
+  }
+
+  .bio-hand-note--costa-rica {
+    max-width: 270px;
+  }
+
+  .cr-status-line {
+    font-size: 16px;
   }
 }
 

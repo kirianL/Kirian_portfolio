@@ -477,7 +477,7 @@ export default function CentralHero({
           >
             {basedInLocation}
             <CircleMarkSvg />
-            <span className="bio-hand-note flex flex-col gap-0.5" aria-hidden="true">
+            <span className="bio-hand-note bio-hand-note--costa-rica flex flex-col gap-0.5" aria-hidden="true">
               <span>{crTimeInfo.timeLine}</span>
               {crTimeInfo.offsetText && (
                 <span className="inline-flex items-center gap-1.5">
@@ -492,7 +492,7 @@ export default function CentralHero({
                 </span>
               )}
               {crTimeInfo.statusLine && (
-                <span className="text-[18px] text-[#f5f5f59e] leading-snug">
+                <span className="cr-status-line text-[17px] text-[#f5f5f59e] leading-snug">
                   {crTimeInfo.statusLine}
                 </span>
               )}
@@ -502,7 +502,7 @@ export default function CentralHero({
       </div>
 
       {/* Staggered Editorial Bio */}
-      <div className="flex flex-col gap-3 font-hero-sans">
+      <div className="hero-editorial-bio flex flex-col gap-3 font-hero-sans">
         <p>
           {rolePrefix}{" "}
           <a
@@ -569,7 +569,7 @@ export default function CentralHero({
             >
               <GitHubActivityNote lang={lang} active={activeId === "github"} />
             </span>
-          </a>{" "}
+          </a>
           {githubLine.after}
         </p>
 
