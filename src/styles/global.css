@@ -1458,9 +1458,13 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   --gh-intent: 850ms;
   --gh-enter-stagger: 900ms;
   --gh-enter-dur: 640ms;
-  --gh-exit-stagger: 300ms;
-  --gh-exit-dur: 340ms;
-  --gh-exit-total: 680ms;
+  --gh-exit-stagger: 360ms;
+  --gh-exit-dur: 420ms;
+  --gh-exit-total: 780ms;
+  /* Morph: how far a cell drifts back toward the origin while it closes. */
+  --gh-exit-shift: 5px;
+  /* How far each cell retracts toward the origin as it closes. */
+  --gh-exit-shift: 4px;
 
   top: 50%;
   left: calc(100% + 90px);
@@ -1558,7 +1562,12 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   stroke-linejoin: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  transform: scale(0.92);
+  /* On exit each cell drifts back toward the top-left origin as it closes. */
+  transform: translate(
+      calc(var(--wave, 0) * var(--gh-exit-shift) * -1),
+      calc(var(--wave, 0) * var(--gh-exit-shift) * -1)
+    )
+    scale(0.88);
   transform-box: fill-box;
   transform-origin: center;
   transition-property: opacity, stroke-dashoffset, fill-opacity, transform;
@@ -1710,6 +1719,10 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   .gh-grid-ring {
     stroke-dashoffset: 0;
     fill-opacity: 1;
-    transform: none;
+    transform: translate(
+        calc(var(--wave, 0) * var(--gh-exit-shift) * -1),
+        calc(var(--wave, 0) * var(--gh-exit-shift) * -1)
+      )
+      scale(0.86);
   }
 }
