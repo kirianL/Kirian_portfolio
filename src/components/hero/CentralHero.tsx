@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 // Import only the flags we actually use - the barrel import pulls every flag
 // into the bundle and fails to resolve in clean CI installs.
 import AR from "country-flag-icons/react/3x2/AR";
@@ -47,6 +48,7 @@ import PillButton from "@/components/ui/PillButton";
 import RoleTicker from "@/components/hero/RoleTicker";
 import GitHubActivityNote from "@/components/hero/GitHubActivityNote";
 import LifePhotosNote from "@/components/hero/LifePhotosNote";
+import ULatinaNote from "@/components/hero/ULatinaNote";
 import { getViewerTimeZone, getCountryCodeFromTimeZone } from "@/lib/viewer-locale";
 
 export interface CentralHeroProps {
@@ -133,14 +135,13 @@ function formatViewerOffsetText(diffMinutes: number, lang: "EN" | "ES"): string 
   return lang === "ES" ? `está ${amount} atrás` : `is ${amount} behind`;
 }
 
-/** Human-readable elapsed play time for a Discord activity. */
-function formatElapsed(ms: number, lang: "EN" | "ES"): string {
+/** Compact duration for a Discord activity (e.g. "1h 42m"). */
+function formatDuration(ms: number): string {
   if (!Number.isFinite(ms) || ms < 0) ms = 0;
   const totalMin = Math.floor(ms / 60000);
   const hours = Math.floor(totalMin / 60);
   const mins = totalMin % 60;
-  const amount = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
-  return lang === "ES" ? `jugando hace ${amount}` : `playing for ${amount}`;
+  return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
 }
 
 function getCostaRicaScheduleStatus(date: Date, lang: "EN" | "ES"): string {
@@ -251,9 +252,13 @@ function positionHandNote(
   scope: HTMLElement | null,
   clientX?: number,
   clientY?: number,
+  portalledNote?: HTMLElement | null,
 ) {
   if (!scope) return;
-  const note = word.querySelector<HTMLElement>(".bio-hand-note");
+  const note =
+    word.dataset.tracedNote === "ulatina"
+      ? portalledNote ?? null
+      : word.querySelector<HTMLElement>(".bio-hand-note");
   if (!note) return;
 
   const wordRect = word.getBoundingClientRect();
@@ -308,6 +313,33 @@ function positionHandNote(
     return;
   }
 
+  // QS Stars note is portalled to body (the "ver más" disclosure clips its
+  // subtree), so its coordinates are viewport-fixed, not word-relative.
+  if (note.dataset.note === "ulatina") {
+    const noteWidth = note.offsetWidth;
+    const noteHeight = note.offsetHeight;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    const fitsRight = wordRect.right + 24 + noteWidth <= window.innerWidth - 16;
+
+    let left: number;
+    let top: number;
+    if (!isMobile && fitsRight) {
+      left = wordRect.right + 24;
+      top = wordRect.top + wordRect.height / 2 - noteHeight / 2;
+    } else {
+      left = Math.max(12, Math.min(wordRect.left, window.innerWidth - noteWidth - 12));
+      const rawTop = wordRect.bottom + 14;
+      top =
+        rawTop + noteHeight > window.innerHeight - 12
+          ? Math.max(12, wordRect.top - noteHeight - 14)
+          : rawTop;
+    }
+
+    note.style.left = `${left}px`;
+    note.style.top = `${top}px`;
+    return;
+  }
+
   const scopeRect = scope.getBoundingClientRect();
   const isMobile = window.matchMedia("(max-width: 639px)").matches;
   const noteWidth = note.offsetWidth;
@@ -342,7 +374,7 @@ function CircleMarkSvg() {
     >
       <path
         pathLength={1}
-        d="M76 5C56 1 22 2 8 12C-3 20 3 30 20 35C39 40 71 37 87 32C101 27 101 17 91 10C83 4 67 1 57 3"
+        d="M76 5C56 1 22 2 8 12C-3 20 3 30 20 35C39 40 71 37 87 32C101 27 101 17 91 10C83 4 67 1 57 3Z"
       />
     </svg>
   );
@@ -398,6 +430,7 @@ export default function CentralHero({
   const [bioOpen, setBioOpen] = useState(false);
 
   const scopeRef = useRef<HTMLDivElement | null>(null);
+  const ulatinaNoteRef = useRef<HTMLDivElement | null>(null);
   const leaveTimerRef = useRef<number | null>(null);
   const moveRafRef = useRef(0);
 
@@ -495,6 +528,7 @@ export default function CentralHero({
         scopeRef.current,
         clientX,
         clientY,
+        ulatinaNoteRef.current,
       );
       setLeavingId(null);
       setActiveId(id);
@@ -513,6 +547,7 @@ export default function CentralHero({
         scopeRef.current,
         clientX,
         clientY,
+        ulatinaNoteRef.current,
       );
     });
   }, []);
@@ -676,14 +711,38 @@ export default function CentralHero({
                 </span>
               )}
               {gamingName && (
-                <span className="cr-gaming-line text-[17px] text-[#f5f5f5] leading-snug">
+                <span className="cr-gaming-line text-[17px] text-[#f5f5f5] leading-snug inline-flex items-center gap-1.5 flex-wrap">
+                  <svg
+                    viewBox="0 0 16 16"
+                    width="14"
+                    height="14"
+                    className="shrink-0 self-center"
+                    aria-hidden="true"
+                  >
+                    <rect
+                      x="0.5"
+                      y="0.5"
+                      width="15"
+                      height="15"
+                      rx="3"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      opacity="0.55"
+                    />
+                    <path
+                      d="M4.5 5 L8 11 L11.5 5"
+                      fill="none"
+                      stroke="#ff4655"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                   <span>
                     {lang === "ES"
-                      ? `Kirian está jugando ${gamingName}`
-                      : `Kirian is playing ${gamingName}`}
-                    {gamingStart
-                      ? ` · ${formatElapsed(now - gamingStart, lang)}`
-                      : ""}
+                      ? `Kirian está jugando ${gamingName}${gamingStart ? ` hace ${formatDuration(now - gamingStart)}` : ""}`
+                      : `Kirian is playing ${gamingName}${gamingStart ? ` for ${formatDuration(now - gamingStart)}` : ""}`}
                   </span>
                 </span>
               )}
@@ -760,6 +819,7 @@ export default function CentralHero({
                       <span
                         tabIndex={0}
                         data-mark="circle"
+                        data-traced-note="ulatina"
                         data-cuelume-hover="tick"
                         onPointerEnter={(e) => {
                           if (e.pointerType === "touch") return;
@@ -800,20 +860,6 @@ export default function CentralHero({
                       >
                         {ulatinaWord}
                         <CircleMarkSvg />
-                        <span
-                          className="bio-hand-note bio-hand-note--costa-rica flex flex-col gap-0.5"
-                          aria-hidden="true"
-                        >
-                          <span>
-                            {lang === "ES" ? "5 estrellas · QS Stars" : "5 stars · QS Stars"}
-                          </span>
-                          <span>Top #120 {lang === "ES" ? "en Latinoamérica" : "in Latin America"}</span>
-                          <span>
-                            {lang === "ES"
-                              ? "según QS World University Rankings"
-                              : "per QS World University Rankings"}
-                          </span>
-                        </span>
                       </span>
                       {after}
                     </p>
@@ -986,6 +1032,16 @@ export default function CentralHero({
         </PillButton>
       </nav>
     </div>
+
+    {typeof document !== "undefined" &&
+      createPortal(
+        <ULatinaNote
+          ref={ulatinaNoteRef}
+          lang={lang}
+          active={activeId === "ulatina"}
+        />,
+        document.body,
+      )}
     </>
   );
 }
