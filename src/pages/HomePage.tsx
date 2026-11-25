@@ -97,12 +97,14 @@ export default function HomePage({ lang }: HomePageProps) {
                   "De Costa Rica, con más de 2 años de experiencia construyendo productos digitales y plataformas web.",
                   "En los últimos años he desarrollado plataformas SaaS, APIs REST con RBAC e interfaces accesibles con TypeScript, React 19, Next.js, Astro y PostgreSQL.",
                   "Trabajo casi siempre en TypeScript de punta a punta: sistemas de diseño en el cliente, modelos de datos y APIs REST en el servidor.",
+                  "Como diseñador, presto mucha atención a los detalles pequeños y busco visuales que se sientan cuidados, no llamativos.",
                 ]
               : [
                   "Graduated in Systems Engineering from Universidad Latina de Costa Rica.",
                   "From Costa Rica with 2+ years of experience building digital products and web platforms.",
                   "Over the last few years, I've built SaaS platforms, REST APIs with RBAC, and accessible interfaces using TypeScript, React 19, Next.js, Astro, and PostgreSQL.",
                   "I work mostly in TypeScript end to end: design systems on the client, data models and REST APIs on the server.",
+                  "As a designer, I pay close attention to small details and aim for visuals that feel considered, not flashy.",
                 ]
           }
           githubLine={{
