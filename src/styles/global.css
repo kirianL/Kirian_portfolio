@@ -1458,6 +1458,16 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   max-width: none;
   transform: translateY(-50%);
   transform-origin: 0 50%;
+  /* Hold the panel visible while the cells close, then fade it away last. */
+  transition:
+    opacity 340ms ease 1560ms,
+    visibility 0s linear 1900ms;
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  .bio-hand-note--grid {
+  transition-duration: 400ms, 0s;
+  transition-delay: 850ms, 0s;
 }
 
 .bio-pencil-word[data-note-placement="below"] .bio-hand-note--grid {
@@ -1529,17 +1539,18 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   transform: scale(0.92);
   transform-box: fill-box;
   transform-origin: center;
+  /* Reverse wave on exit: the last cell drawn is the first one to close. */
   transition:
-    opacity 520ms cubic-bezier(0.4, 0, 0.2, 1) 480ms,
-    stroke-dashoffset 950ms cubic-bezier(0.4, 0, 0.2, 1) 480ms,
-    fill-opacity 1100ms cubic-bezier(0.4, 0, 0.2, 1) 480ms,
-    transform 950ms cubic-bezier(0.22, 1, 0.36, 1) 480ms;
+    opacity 460ms cubic-bezier(0.4, 0, 0.2, 1) calc(120ms + (1 - var(--wave, 0)) * 700ms),
+    stroke-dashoffset 700ms cubic-bezier(0.4, 0, 0.2, 1) calc(120ms + (1 - var(--wave, 0)) * 700ms),
+    fill-opacity 780ms cubic-bezier(0.4, 0, 0.2, 1) calc(120ms + (1 - var(--wave, 0)) * 700ms),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1) calc(120ms + (1 - var(--wave, 0)) * 700ms);
 }
 
 .gh-grid-badge,
 .gh-grid-row {
   opacity: 0;
-  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1) 820ms;
+  transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1) calc(80ms + (1 - var(--wave, 0)) * 520ms);
 }
 
 .gh-grid-cell {
