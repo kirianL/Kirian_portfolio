@@ -213,7 +213,7 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
                   <img
                     src={showSpanishWork ? item.imageEs : item.imageEn}
                     alt={title}
-                    loading="eager"
+                    loading={item.id === WORK_ITEMS[0].id ? "eager" : "lazy"}
                     decoding="async"
                     draggable={false}
                     className="w-full h-full object-cover object-top transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02] select-none"

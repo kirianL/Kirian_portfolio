@@ -166,7 +166,9 @@ export default function RedDitherBanner() {
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Keep the animated field crisp while limiting the fragment-shader workload
+      // on high-density screens, where every extra pixel repeats the full noise stack.
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       const w = Math.max(1, Math.floor(rect.width * dpr));
       const h = Math.max(1, Math.floor(rect.height * dpr));
       if (canvas.width !== w || canvas.height !== h) {
@@ -189,7 +191,6 @@ export default function RedDitherBanner() {
 
     const draw = (now: number) => {
       if (!visible) return;
-      resize();
       gl.useProgram(prog);
       gl.uniform1f(uTime, reducedMotion ? 12.0 : (now - start) * 0.001);
       gl.uniform2f(uRes, canvas.width, canvas.height);

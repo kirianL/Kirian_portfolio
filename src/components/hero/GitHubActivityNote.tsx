@@ -20,6 +20,8 @@ const STEP = CELL + GAP;
 const LABEL_OFFSET = 14;
 const WIDE_QUERY = "(min-width: 1100px)";
 const ALL_LABELS = ["A", "B", "C", "D", "E", "F", "G", "H"] as const;
+/** Fraction of its distance to the grid origin each cell folds back on exit. */
+const EXIT_MORPH = 0.28;
 
 interface Layout {
   groups: readonly number[];
@@ -130,6 +132,11 @@ interface Seat {
   y: number;
   wave: number;
   path: string;
+  /** How far the cell travels toward the grid origin while closing (user units). */
+  mx: number;
+  my: number;
+  /** Wave quantized into exit bands so cells close in readable diagonal steps. */
+  exitWave: number;
 }
 
 interface GitHubActivityNoteProps {
@@ -190,6 +197,9 @@ export default function GitHubActivityNote({ lang, active }: GitHubActivityNoteP
         y: slot.y,
         wave: waveAt(slot.x, slot.y, plan),
         path: roundedSquare(slot.x, slot.y, CELL),
+        mx: slot.x * EXIT_MORPH,
+        my: slot.y * EXIT_MORPH,
+        exitWave: Math.round(waveAt(slot.x, slot.y, plan) * 4) / 4,
       });
     });
 
@@ -239,7 +249,14 @@ export default function GitHubActivityNote({ lang, active }: GitHubActivityNoteP
                 key={seat.key}
                 className="gh-grid-cell"
                 data-level={seat.level}
-                style={{ "--wave": seat.wave } as React.CSSProperties}
+                style={
+                  {
+                    "--wave": seat.wave,
+                    "--wave-exit": seat.exitWave,
+                    "--mx": `${seat.mx}px`,
+                    "--my": `${seat.my}px`,
+                  } as React.CSSProperties
+                }
                 d={seat.path}
                 pathLength={1}
               >
@@ -251,14 +268,26 @@ export default function GitHubActivityNote({ lang, active }: GitHubActivityNoteP
               <g key={`hl-${seat.key}`}>
                 <path
                   className="gh-grid-ring"
-                  style={{ "--wave": seat.wave } as React.CSSProperties}
+                  style={
+                    {
+                      "--wave": seat.wave,
+                      "--wave-exit": seat.exitWave,
+                      "--mx": `${seat.mx}px`,
+                      "--my": `${seat.my}px`,
+                    } as React.CSSProperties
+                  }
                   d={roundedSquare(seat.x - 1.6, seat.y - 1.6, CELL + 3.2)}
                   pathLength={1}
                 />
                 {seat.count > 0 ? (
                   <text
                     className="gh-grid-badge"
-                    style={{ "--wave": seat.wave } as React.CSSProperties}
+                    style={
+                      {
+                        "--wave": seat.wave,
+                        "--wave-exit": seat.exitWave,
+                      } as React.CSSProperties
+                    }
                     x={seat.x + CELL / 2}
                     y={seat.y + CELL / 2 + 3}
                     textAnchor="middle"

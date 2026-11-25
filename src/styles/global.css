@@ -1453,18 +1453,15 @@ main[class*="bg-[#0a0a0a]"] ::selection {
    Every timing below derives from these tokens, so the whole sequence is tuned in one place. */
 .bio-hand-note--grid {
   --gh-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --gh-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Strong ease-in-out (easeInOutQuint-like) so exits accelerate like a collapse. */
+  --gh-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   /* Wait for the circled word's pencil mark to finish before revealing the graph. */
   --gh-intent: 850ms;
   --gh-enter-stagger: 900ms;
   --gh-enter-dur: 640ms;
-  --gh-exit-stagger: 360ms;
-  --gh-exit-dur: 420ms;
-  --gh-exit-total: 780ms;
-  /* Morph: how far a cell drifts back toward the origin while it closes. */
-  --gh-exit-shift: 5px;
-  /* How far each cell retracts toward the origin as it closes. */
-  --gh-exit-shift: 4px;
+  --gh-exit-stagger: 400ms;
+  --gh-exit-dur: 480ms;
+  --gh-exit-total: 880ms;
 
   top: 50%;
   left: calc(100% + 90px);
@@ -1552,7 +1549,11 @@ main[class*="bg-[#0a0a0a]"] ::selection {
    then close in reverse. Only the variables change between the two directions. */
 .gh-grid-cell,
 .gh-grid-ring {
-  --gh-delay: calc(var(--gh-exit-stagger) * (1 - var(--wave, 0)));
+  /* Exit runs in five diagonal bands (wave quantized in the component) so each
+     step is readable while still overlapping the next one smoothly. */
+  --gh-delay: calc(
+    var(--gh-exit-stagger) * (1 - var(--wave-exit, var(--wave, 0)))
+  );
   --gh-dur: var(--gh-exit-dur);
   --gh-ease: var(--gh-ease-in-out);
 
@@ -1562,12 +1563,10 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   stroke-linejoin: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  /* On exit each cell drifts back toward the top-left origin as it closes. */
-  transform: translate(
-      calc(var(--wave, 0) * var(--gh-exit-shift) * -1),
-      calc(var(--wave, 0) * var(--gh-exit-shift) * -1)
-    )
-    scale(0.88);
+  /* On exit each cell folds back toward the grid's top-left origin: --mx/--my
+     carry its distance to that corner, so the whole grid collapses as one shape. */
+  transform: translate(calc(var(--mx, 0px) * -1), calc(var(--my, 0px) * -1))
+    scale(0.72);
   transform-box: fill-box;
   transform-origin: center;
   transition-property: opacity, stroke-dashoffset, fill-opacity, transform;
@@ -1592,7 +1591,7 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 .gh-grid-row {
   opacity: 0;
   transition: opacity var(--gh-exit-dur) var(--gh-ease-in-out)
-    calc(var(--gh-exit-stagger) * (1 - var(--wave, 0)));
+    calc(var(--gh-exit-stagger) * (1 - var(--wave-exit, var(--wave, 0))));
 }
 
 .bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
@@ -1719,10 +1718,6 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   .gh-grid-ring {
     stroke-dashoffset: 0;
     fill-opacity: 1;
-    transform: translate(
-        calc(var(--wave, 0) * var(--gh-exit-shift) * -1),
-        calc(var(--wave, 0) * var(--gh-exit-shift) * -1)
-      )
-      scale(0.86);
+    transform: none;
   }
 }

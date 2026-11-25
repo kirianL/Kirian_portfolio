@@ -1,13 +1,14 @@
 import * as React from "react";
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import { bind, setVolume } from "cuelume";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import HomePage from "@/pages/HomePage";
-import ProjectsPage from "@/pages/ProjectsPage";
-import AboutPage from "@/pages/AboutPage";
-import NotFoundPage from "@/pages/NotFoundPage";
+
+const ProjectsPage = lazy(() => import("@/pages/ProjectsPage"));
+const AboutPage = lazy(() => import("@/pages/AboutPage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 function initPostHogOnce() {
   const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY;
@@ -161,20 +162,22 @@ export default function App() {
         {isEs ? "Saltar al contenido principal" : "Skip to main content"}
       </a>
 
-      <Routes>
-        <Route path="/" element={<HomePage lang="en" />} />
-        <Route path="/es" element={<HomePage lang="es" />} />
-        <Route path="/es/" element={<HomePage lang="es" />} />
-        <Route path="/projects" element={<ProjectsPage lang="en" />} />
-        <Route path="/projects/" element={<ProjectsPage lang="en" />} />
-        <Route path="/es/projects" element={<ProjectsPage lang="es" />} />
-        <Route path="/es/projects/" element={<ProjectsPage lang="es" />} />
-        <Route path="/about" element={<AboutPage lang="en" />} />
-        <Route path="/about/" element={<AboutPage lang="en" />} />
-        <Route path="/es/about" element={<AboutPage lang="es" />} />
-        <Route path="/es/about/" element={<AboutPage lang="es" />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<HomePage lang="en" />} />
+          <Route path="/es" element={<HomePage lang="es" />} />
+          <Route path="/es/" element={<HomePage lang="es" />} />
+          <Route path="/projects" element={<ProjectsPage lang="en" />} />
+          <Route path="/projects/" element={<ProjectsPage lang="en" />} />
+          <Route path="/es/projects" element={<ProjectsPage lang="es" />} />
+          <Route path="/es/projects/" element={<ProjectsPage lang="es" />} />
+          <Route path="/about" element={<AboutPage lang="en" />} />
+          <Route path="/about/" element={<AboutPage lang="en" />} />
+          <Route path="/es/about" element={<AboutPage lang="es" />} />
+          <Route path="/es/about/" element={<AboutPage lang="es" />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
 
       <SpeedInsights />
     </>
