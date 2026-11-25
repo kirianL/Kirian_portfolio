@@ -37,7 +37,7 @@ function useMeasuredWidth() {
 }
 
 const pillClassName =
-  "mt-0.5 inline-flex items-center overflow-hidden rounded-[4px] bg-white/[0.05] px-2 py-[2px] font-hero-sans text-[11px] font-normal leading-[16px] text-[#f5f5f59e] whitespace-nowrap select-none";
+  "mt-0.5 inline-flex items-center overflow-hidden rounded-[4px] bg-white/[0.05] px-2 py-[3px] font-hero-sans text-[12px] font-normal leading-[17px] text-[#f5f5f59e] whitespace-nowrap select-none";
 
 export default function RoleTicker({ roles }: RoleTickerProps) {
   const [index, setIndex] = useState(0);
@@ -85,8 +85,8 @@ export default function RoleTicker({ roles }: RoleTickerProps) {
         transition={{ type: "spring", stiffness: 180, damping: 24 }}
         className={pillClassName}
       >
-        <span ref={measureRef} className="inline-flex">
-          <AnimatePresence mode="wait" initial={false}>
+        <span ref={measureRef} className="relative inline-flex">
+          <AnimatePresence mode="popLayout" initial={false}>
             <motion.span
               key={currentRole}
               initial={{ y: 10, opacity: 0, filter: "blur(4px)" }}

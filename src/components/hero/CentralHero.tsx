@@ -62,6 +62,8 @@ export interface CentralHeroProps {
   companyName: string;
   companyUrl: string;
   lines: string[];
+  /** Exact phrase in the first bio line that becomes the education pencil-word. */
+  ulatinaWord: string;
   githubLine: {
     before: string;
     linkLabel: string;
@@ -129,6 +131,16 @@ function formatViewerOffsetText(diffMinutes: number, lang: "EN" | "ES"): string 
     return lang === "ES" ? `está ${amount} adelante` : `is ${amount} ahead`;
   }
   return lang === "ES" ? `está ${amount} atrás` : `is ${amount} behind`;
+}
+
+/** Human-readable elapsed play time for a Discord activity. */
+function formatElapsed(ms: number, lang: "EN" | "ES"): string {
+  if (!Number.isFinite(ms) || ms < 0) ms = 0;
+  const totalMin = Math.floor(ms / 60000);
+  const hours = Math.floor(totalMin / 60);
+  const mins = totalMin % 60;
+  const amount = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+  return lang === "ES" ? `jugando hace ${amount}` : `playing for ${amount}`;
 }
 
 function getCostaRicaScheduleStatus(date: Date, lang: "EN" | "ES"): string {
@@ -357,6 +369,7 @@ export default function CentralHero({
   companyName,
   companyUrl,
   lines,
+  ulatinaWord,
   githubLine,
   lifeLine,
   reachOutPrefix,
@@ -368,6 +381,8 @@ export default function CentralHero({
   onCopyEmail,
 }: CentralHeroProps) {
   const navLabel = lang === "ES" ? "Acciones principales" : "Hero actions";
+  const seeMoreLabel = lang === "ES" ? "ver más" : "see more";
+  const seeLessLabel = lang === "ES" ? "ver menos" : "see less";
   const twitterNote =
     lang === "ES"
       ? "Sí, le sigo diciendo\nTwitter aún."
@@ -376,6 +391,11 @@ export default function CentralHero({
   const [crTimeInfo, setCrTimeInfo] = useState(() => getCostaRicaTimeInfo(lang));
   const [activeId, setActiveId] = useState<string | null>(null);
   const [leavingId, setLeavingId] = useState<string | null>(null);
+  // Discord/Lanyard gaming presence shown inside the Costa Rica note.
+  const [gamingName, setGamingName] = useState<string | null>(null);
+  const [gamingStart, setGamingStart] = useState<number | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+  const [bioOpen, setBioOpen] = useState(false);
 
   const scopeRef = useRef<HTMLDivElement | null>(null);
   const leaveTimerRef = useRef<number | null>(null);
@@ -393,6 +413,62 @@ export default function CentralHero({
     }, 10000);
     return () => window.clearInterval(interval);
   }, [activeId, lang]);
+
+  // Detect an active game via Discord/Lanyard while the Costa Rica note is open.
+  useEffect(() => {
+    if (activeId !== "costa-rica") {
+      setGamingName(null);
+      setGamingStart(null);
+      return;
+    }
+    const DISCORD_USER_ID = "609201692935847978";
+    let cancelled = false;
+    const apply = (data: any) => {
+      if (cancelled) return;
+      const game = (data?.activities ?? []).find(
+        (a: any) =>
+          (a?.type === 0 || a?.type === 5) &&
+          typeof a?.name === "string" &&
+          a.name.length > 0 &&
+          a.name !== "Spotify",
+      );
+      if (game) {
+        setGamingName(game.name);
+        setGamingStart(
+          typeof game?.timestamps?.start === "number"
+            ? game.timestamps.start
+            : null,
+        );
+      } else {
+        setGamingName(null);
+        setGamingStart(null);
+      }
+    };
+
+    const load = async () => {
+      try {
+        const cached = (window as any).__lastLanyardData;
+        if (cached) apply(cached);
+        const res = await fetch(
+          `https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`,
+          { cache: "no-store" },
+        );
+        const json = await res.json();
+        if (json?.success) apply(json.data);
+      } catch {
+        /* keep previous state */
+      }
+    };
+
+    load();
+    const poll = window.setInterval(load, 30000);
+    const tick = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(poll);
+      window.clearInterval(tick);
+    };
+  }, [activeId]);
 
   useEffect(() => {
     return () => {
@@ -414,7 +490,12 @@ export default function CentralHero({
       if (id === "costa-rica") {
         setCrTimeInfo(getCostaRicaTimeInfo(lang));
       }
-      positionHandNote(wordEl, scopeRef.current, clientX, clientY);
+      positionHandNote(
+        wordEl,
+        scopeRef.current,
+        clientX,
+        clientY,
+      );
       setLeavingId(null);
       setActiveId(id);
     },
@@ -427,7 +508,12 @@ export default function CentralHero({
     if (moveRafRef.current) return;
     moveRafRef.current = requestAnimationFrame(() => {
       moveRafRef.current = 0;
-      positionHandNote(wordEl, scopeRef.current, clientX, clientY);
+      positionHandNote(
+        wordEl,
+        scopeRef.current,
+        clientX,
+        clientY,
+      );
     });
   }, []);
 
@@ -456,9 +542,10 @@ export default function CentralHero({
   };
 
   return (
+    <>
     <div
       ref={scopeRef}
-      className={`bio-focus-scope bio-focus-scope--hero hero-responsive-scale relative z-10 w-full max-w-[540px] mx-auto px-6 sm:px-0 py-4 sm:py-6 flex flex-col${activeId ? " is-dimmed" : ""}`}
+      className={`bio-focus-scope bio-focus-scope--hero hero-responsive-scale relative z-10 w-full mx-auto px-6 sm:px-0 py-4 sm:py-6 flex flex-col${activeId ? " is-dimmed" : ""}`}
     >
       <div className="bio-dimmer" aria-hidden="true" />
 
@@ -508,11 +595,11 @@ export default function CentralHero({
       {/* Identity Block (Instrument Serif + Pronunciation + Vertical Role Ticker) */}
       <div className="flex flex-col items-start mb-6">
         <div className="flex flex-wrap items-baseline gap-x-2.5">
-          <h1 className="font-hero-serif tracking-[-0.01em] select-none leading-[1.15]">
+          <h1 className="font-hero-serif tracking-[0.01em] select-none leading-[1.08]">
             {name}
           </h1>
           <span
-            className="font-hero-sans text-[12.5px] font-normal text-[#f5f5f59e] tracking-[0.02em] select-none"
+            className="font-hero-sans text-[13px] font-normal text-[#f5f5f59e] tracking-[0.02em] select-none"
             aria-hidden="true"
           >
             {pronunciation}
@@ -521,7 +608,7 @@ export default function CentralHero({
 
         <RoleTicker roles={roles} />
 
-        <p className="mt-2 inline-flex items-center gap-1.5 font-hero-sans text-[12.5px] font-normal leading-normal tracking-normal text-[#f5f5f59e]">
+        <p className="mt-2 inline-flex items-center gap-1.5 font-hero-sans text-[13.5px] font-normal leading-normal tracking-normal text-[#f5f5f59e]">
           <span>{basedInPrefix}</span>
           <CR
             title="Costa Rica"
@@ -588,6 +675,18 @@ export default function CentralHero({
                   <span>{crTimeInfo.offsetText}</span>
                 </span>
               )}
+              {gamingName && (
+                <span className="cr-gaming-line text-[17px] text-[#f5f5f5] leading-snug">
+                  <span>
+                    {lang === "ES"
+                      ? `Kirian está jugando ${gamingName}`
+                      : `Kirian is playing ${gamingName}`}
+                    {gamingStart
+                      ? ` · ${formatElapsed(now - gamingStart, lang)}`
+                      : ""}
+                  </span>
+                </span>
+              )}
               {crTimeInfo.statusLine && (
                 <span className="cr-status-line text-[17px] text-[#f5f5f59e] leading-snug">
                   {crTimeInfo.statusLine}
@@ -599,7 +698,7 @@ export default function CentralHero({
       </div>
 
       {/* Staggered Editorial Bio */}
-      <div className="hero-editorial-bio flex flex-col gap-3 font-hero-sans">
+      <div className="hero-editorial-bio flex flex-col gap-3.5 font-hero-sans">
         <p>
           {rolePrefix}{" "}
           <a
@@ -613,9 +712,117 @@ export default function CentralHero({
           </a>
         </p>
 
-        {lines.map((line, idx) => (
-          <p key={idx}>{line}</p>
-        ))}
+        {/* Plain bio lines collapse behind "ver más"; the interactive
+            pencil-word lines (life, github) and contact stay outside the
+            panel because their hand notes are absolutely positioned and
+            would be clipped by the panel's overflow:hidden. */}
+        <div className="bio-acc" data-open={bioOpen ? "true" : "false"}>
+          <button
+            type="button"
+            id="bio-acc-toggle"
+            className="bio-acc-head"
+            aria-expanded={bioOpen}
+            aria-controls="bio-acc-panel"
+            onClick={() => setBioOpen((open) => !open)}
+          >
+            <span>{bioOpen ? seeLessLabel : seeMoreLabel}</span>
+            <span className="bio-acc-chevron" aria-hidden="true">
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4 6.5L8 10.5L12 6.5" />
+              </svg>
+            </span>
+          </button>
+          <div
+            id="bio-acc-panel"
+            className="bio-acc-panel"
+            role="region"
+            aria-labelledby="bio-acc-toggle"
+            aria-hidden={!bioOpen}
+          >
+            <div className="bio-acc-panel-inner">
+              <div className="bio-acc-lines flex flex-col gap-2.5">
+                {lines.map((line, idx) => {
+                  const wordIndex = idx === 0 ? line.indexOf(ulatinaWord) : -1;
+                  if (wordIndex < 0) return <p key={idx}>{line}</p>;
+
+                  const before = line.slice(0, wordIndex);
+                  const after = line.slice(wordIndex + ulatinaWord.length);
+                  return (
+                    <p key={idx}>
+                      {before}
+                      <span
+                        tabIndex={0}
+                        data-mark="circle"
+                        data-cuelume-hover="tick"
+                        onPointerEnter={(e) => {
+                          if (e.pointerType === "touch") return;
+                          e.currentTarget.classList.remove("touch-managed");
+                          onActivate("ulatina", e.currentTarget, e.clientX, e.clientY);
+                        }}
+                        onPointerMove={(e) => {
+                          if (e.pointerType !== "touch") {
+                            onMove(e.currentTarget, e.clientX, e.clientY);
+                          }
+                        }}
+                        onPointerLeave={(e) => {
+                          if (e.pointerType !== "touch") {
+                            onDeactivate("ulatina");
+                          }
+                        }}
+                        onPointerDown={(e) => {
+                          if (e.pointerType === "touch") {
+                            e.currentTarget.classList.add("touch-managed");
+                            if (activeId === "ulatina") {
+                              onDeactivate("ulatina");
+                            } else {
+                              onActivate("ulatina", e.currentTarget);
+                            }
+                          }
+                        }}
+                        onFocus={(e) => {
+                          if (e.currentTarget.matches(":focus-visible")) {
+                            onActivate("ulatina", e.currentTarget);
+                          }
+                        }}
+                        onBlur={() => onDeactivate("ulatina")}
+                        className={getPencilWordClasses(
+                          "ulatina",
+                          handlers,
+                          "!cursor-help text-[#f5f5f59e] hover:text-[#f5f5f5] transition-colors duration-200",
+                        )}
+                      >
+                        {ulatinaWord}
+                        <CircleMarkSvg />
+                        <span
+                          className="bio-hand-note bio-hand-note--costa-rica flex flex-col gap-0.5"
+                          aria-hidden="true"
+                        >
+                          <span>
+                            {lang === "ES" ? "5 estrellas · QS Stars" : "5 stars · QS Stars"}
+                          </span>
+                          <span>Top #120 {lang === "ES" ? "en Latinoamérica" : "in Latin America"}</span>
+                          <span>
+                            {lang === "ES"
+                              ? "según QS World University Rankings"
+                              : "per QS World University Rankings"}
+                          </span>
+                        </span>
+                      </span>
+                      {after}
+                    </p>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
 
         <p>
           {lifeLine.before}{" "}
@@ -779,5 +986,6 @@ export default function CentralHero({
         </PillButton>
       </nav>
     </div>
+    </>
   );
 }

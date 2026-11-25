@@ -13,7 +13,7 @@ interface PillButtonProps {
 }
 
 const baseStyles =
-  "group inline-flex items-center justify-center gap-1.5 h-[35px] px-3.5 rounded-[9px] font-hero-sans text-[13.5px] font-medium leading-none tracking-[-0.005em] transition-[background-color,color,border-color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] select-none cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad] hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.97]";
+  "group inline-flex items-center justify-center gap-1.5 h-[38px] px-4 rounded-[10px] font-hero-sans text-[14px] font-medium leading-none tracking-[-0.005em] transition-[background-color,color,border-color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] select-none cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad] hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.97]";
 
 export default function PillButton({
   variant = "primary-light",

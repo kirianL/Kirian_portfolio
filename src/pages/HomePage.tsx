@@ -68,7 +68,7 @@ export default function HomePage({ lang }: HomePageProps) {
       className="relative w-full bg-[#0a0a0a] text-[#f5f5f5] overflow-x-clip"
     >
       {/* First Viewport: Dithered Banner + Centered Hero */}
-      <section className="relative min-h-[100svh] w-full flex flex-col justify-center items-center pt-[22svh] pb-10">
+      <section className="hero-section relative min-h-[100svh] w-full flex flex-col justify-center items-center pt-[22svh] lg:pt-[13svh] pb-10">
         <RedDitherBanner />
         <CentralHero
           lang={isEs ? "ES" : "EN"}
@@ -107,6 +107,7 @@ export default function HomePage({ lang }: HomePageProps) {
                   "As a designer, I pay close attention to small details and aim for visuals that feel considered, not flashy.",
                 ]
           }
+          ulatinaWord="Universidad Latina de Costa Rica"
           lifeLine={
             isEs
               ? {
