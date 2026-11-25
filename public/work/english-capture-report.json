@@ -1,0 +1,75 @@
+[
+  {
+    "id": "koragrid",
+    "warnings": [
+      {
+        "text": "Request demo",
+        "word": "que"
+      },
+      {
+        "text": "Real-time energy telemetry and ESG control",
+        "word": "con"
+      },
+      {
+        "text": "Request demo",
+        "word": "que"
+      }
+    ]
+  },
+  {
+    "id": "customerup",
+    "warnings": [
+      {
+        "text": "Connect with your customers in",
+        "word": "con"
+      },
+      {
+        "text": "Customerup helps you build personalized journeys from San José for every channel, with clarity, speed, and full control over your audience s",
+        "word": "con"
+      }
+    ]
+  },
+  {
+    "id": "kora-finance",
+    "warnings": [
+      {
+        "text": "Connect CR Banking",
+        "word": "con"
+      },
+      {
+        "text": "Kora connects your corporate accounts across BAC, BCR, BN, and SINPE with real-time MONEX FX rates, automated reconciliation, and dual-curre",
+        "word": "con"
+      },
+      {
+        "text": "Connect CR Banking",
+        "word": "con"
+      }
+    ]
+  },
+  {
+    "id": "alder-psicologia",
+    "warnings": [
+      {
+        "text": "Book Consultation",
+        "word": "con"
+      },
+      {
+        "text": "Consistent weekly sessions help you organize your thoughts before burnout sets in.",
+        "word": "con"
+      },
+      {
+        "text": "Lasting emotional stability built with practical tools and human support.",
+        "word": "las"
+      }
+    ]
+  },
+  {
+    "id": "mp-legal",
+    "warnings": [
+      {
+        "text": "Contact",
+        "word": "con"
+      }
+    ]
+  }
+]

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @import "./theme.css";
 
 :root {
@@ -82,33 +82,16 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Minimalist Custom Scrollbar */
+/* Hide Scrollbar (preserve scroll behavior) */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  display: none;
+  width: 0;
+  height: 0;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-grayscale-4);
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-grayscale-6);
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-/* Standard scrollbar for Firefox & modern browsers */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-grayscale-4) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .root {
@@ -140,6 +123,27 @@ html.lenis body {
   --font-serif: "Newsreader", "Instrument Serif", Georgia, serif;
   --font-figgle: "Newsreader", "Instrument Serif", Georgia, serif;
   --font-hand: "Caveat", cursive;
+  --font-hero-sans: Inter, "Inter Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-hero-serif: "Instrument Serif", "Instrument Serif Fallback", Georgia, serif;
+}
+
+@layer components {
+  .font-hero-sans {
+    font-family: Inter, "Inter Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 15px;
+    font-weight: 450;
+    line-height: 19px;
+    letter-spacing: 0.16px;
+    color: #f5f5f5b8;
+  }
+
+  .font-hero-serif {
+    font-family: "Instrument Serif", "Instrument Serif Fallback", Georgia, serif;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 46px;
+    color: #d1c5ad;
+  }
 }
 
 .font-name {
@@ -202,13 +206,6 @@ html.lenis body {
     font-size: 16px;
     background-color: var(--color-grayscale-1);
     color: var(--color-grayscale-12);
-  }
-
-  /* Stabilize scrollbar width on desktop only (mobile has overlay scrollbars) */
-  @media (hover: hover) and (pointer: fine) {
-    html {
-      scrollbar-gutter: stable;
-    }
   }
 
   body {
@@ -293,7 +290,7 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   Page Transitions — Ultra-Smooth Fluid Cross-Fade & Persistent Navbar
+   Page Transitions â€” Ultra-Smooth Fluid Cross-Fade & Persistent Navbar
    ========================================================================== */
 ::view-transition-group(main-navbar) {
   animation: none !important;
@@ -462,7 +459,7 @@ html.dark .cr-location-flag-layer {
   }
 }
 
-/* Costa Rica -> Puerto Limón Floating Branch Connector */
+/* Costa Rica -> Puerto LimÃ³n Floating Branch Connector */
 .cr-limon-branch {
   position: absolute;
   top: calc(100% + 1px);
@@ -533,8 +530,8 @@ html.dark .cr-branch-svg {
 }
 
 /* Bio Hand-Drawn Marks + Dimmer Overlay + Handwritten Note (henribredt.de timing)
-   Enter: 150ms color anticipation → dimmer fades to 0.9 & mark draws → note fades in.
-   Leave: note fades (160ms @ 150ms) → mark retracts in reverse (280ms @ 150ms) → dimmer clears (600ms @ 430ms).
+   Enter: 150ms color anticipation â†’ dimmer fades to 0.9 & mark draws â†’ note fades in.
+   Leave: note fades (160ms @ 150ms) â†’ mark retracts in reverse (280ms @ 150ms) â†’ dimmer clears (600ms @ 430ms).
    Switching fast: dimmer stays steady while the leaving word finishes retracting cleanly above it. */
 .bio-dimmer {
   position: absolute;
@@ -942,5 +939,700 @@ html.dark .ulatina-preview {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Navbar & Mobile Menu Drawer
+   ========================================================================== */
+.burger-line {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  height: 1.75px;
+  margin-top: -0.875px;
+  border-radius: 999px;
+  background-color: currentColor;
+  pointer-events: none;
+  transform-origin: left center;
+  transition: transform 200ms var(--ease-out);
+}
+
+.burger-line--top {
+  width: 18px;
+  transform: translate3d(0, -3.5px, 0);
+}
+
+.burger-line--bottom {
+  width: 18px;
+  transform: translate3d(0, 3.5px, 0) scaleX(0.67);
+}
+
+.mobile-burger-btn[aria-expanded="true"] .burger-line--top {
+  transform: translate3d(0, 0, 0) rotate(45deg);
+  transform-origin: center;
+}
+
+.mobile-burger-btn[aria-expanded="true"] .burger-line--bottom {
+  transform: translate3d(0, 0, 0) rotate(-45deg) scaleX(1);
+  transform-origin: center;
+}
+
+.mobile-menu-drawer {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(0, -8px, 0);
+  will-change: opacity, transform;
+  transition:
+    opacity 160ms var(--ease-out) 0ms,
+    transform 160ms var(--ease-out) 0ms,
+    visibility 0s linear 160ms;
+}
+
+.mobile-menu-drawer[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity 220ms var(--ease-drawer) 0ms,
+    transform 220ms var(--ease-drawer) 0ms,
+    visibility 0s linear 0s;
+}
+
+.mobile-menu-item {
+  opacity: 1;
+  transform: none;
+}
+
+.mobile-menu-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: transparent;
+  transition: background-color 200ms ease, transform 200ms ease;
+}
+
+.mobile-menu-item[data-active="true"] .mobile-menu-dot {
+  background-color: var(--color-accent-9, #3554e0);
+  transform: scale(1.1);
+}
+
+/* Costa Rica Micro-Flag Animation */
+.cr-flag-container {
+  position: relative;
+  transform-origin: center center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: cr-flag-wave 4.5s ease-in-out infinite;
+}
+
+.cr-tico-btn:hover .cr-flag-container {
+  transform: translateY(-0.5px) scale(1.06);
+}
+
+@keyframes cr-flag-wave {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-0.35px) rotate(-1deg);
+  }
+  66% {
+    transform: translateY(0.2px) rotate(1deg);
+  }
+}
+
+.cr-flag-sheen {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 80%
+  );
+  will-change: transform;
+  animation: cr-flag-sheen 4.5s ease-in-out infinite;
+}
+
+@keyframes cr-flag-sheen {
+  0% {
+    transform: translateX(-50%);
+  }
+  45%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ==========================================================================
+   Footer â€” Spotify Vinyl Preview, Equalizer & Sprite Idle Bobbing
+   ========================================================================== */
+.spotify-preview-card {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translate(-50%, 6px) scale(0.94);
+  opacity: 0;
+  visibility: hidden;
+  filter: blur(4px);
+  transition:
+    opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+  z-index: 50;
+}
+
+.spotify-track-container:hover .spotify-preview-card {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translate(-50%, 0px) scale(1) !important;
+  filter: blur(0px) !important;
+}
+
+.vinyl-disc {
+  background: radial-gradient(
+    circle,
+    #18181b 0%,
+    #18181b 26%,
+    #09090b 29%,
+    #27272a 32%,
+    #09090b 37%,
+    #27272a 43%,
+    #09090b 50%,
+    #27272a 58%,
+    #09090b 68%,
+    #18181b 80%,
+    #09090b 92%,
+    #000000 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.5);
+  transform: translate3d(0, 0, 0) rotate(0deg);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  z-index: 1;
+}
+
+.vinyl-sleeve {
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.spotify-track-container:hover .vinyl-sleeve {
+  transform: translate3d(-14px, 0, 0);
+}
+
+.spotify-track-container:hover .vinyl-disc {
+  transform: translate3d(22px, 0, 0) rotate(360deg);
+  animation: vinyl-spin 3s linear infinite;
+  animation-delay: 0.22s;
+}
+
+@keyframes vinyl-spin {
+  from {
+    transform: translate3d(22px, 0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(22px, 0, 0) rotate(360deg);
+  }
+}
+
+@keyframes pixel-bob {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+.animate-pixel-idle {
+  animation: pixel-bob 2s ease-in-out infinite;
+}
+
+@keyframes music-bar-1 {
+  0%,
+  100% {
+    height: 25%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+@keyframes music-bar-2 {
+  0%,
+  100% {
+    height: 100%;
+  }
+  50% {
+    height: 35%;
+  }
+}
+
+@keyframes music-bar-3 {
+  0%,
+  100% {
+    height: 60%;
+  }
+  50% {
+    height: 95%;
+  }
+}
+
+.animate-music-bar-1 {
+  animation: music-bar-1 0.8s ease-in-out infinite;
+}
+
+.animate-music-bar-2 {
+  animation: music-bar-2 0.7s ease-in-out infinite;
+}
+
+.animate-music-bar-3 {
+  animation: music-bar-3 0.9s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Projects List & Grid Views
+   ========================================================================== */
+.project-grid-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--color-grayscale-3, #e4e4e7);
+  background-color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  transition: border-color 0.2s ease;
+}
+
+.dark .project-grid-thumb {
+  border-color: rgba(39, 39, 42, 0.4);
+  background-color: rgba(24, 24, 27, 0.3);
+}
+
+.project-grid-thumb:hover {
+  border-color: var(--color-grayscale-4, #d4d4d8);
+}
+
+.dark .project-grid-thumb:hover {
+  border-color: rgba(63, 63, 70, 0.5);
+}
+
+.projects-section.view-list .projects-unified-view {
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.2s ease;
+}
+
+.projects-section.view-list .project-grid-thumb {
+  display: none;
+}
+
+.projects-section.view-list .project-item-row {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-grayscale-3, #e4e4e7);
+}
+
+.dark .projects-section.view-list .project-item-row {
+  border-bottom-color: rgba(39, 39, 42, 0.3);
+}
+
+.projects-section.view-list .projects-unified-view:hover .project-item-row:not(:hover) {
+  opacity: 0.45;
+}
+
+.projects-section.view-list .project-item-row:hover {
+  opacity: 1 !important;
+}
+
+.projects-section.view-grid .projects-unified-view {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  column-gap: 1.5rem;
+  row-gap: 2rem;
+}
+
+@media (min-width: 640px) {
+  .projects-section.view-grid .projects-unified-view {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.projects-section.view-grid .project-item-header {
+  margin-top: 0.75rem;
+}
+
+.project-item-row.filtered-out {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Hero Role Ticker â€” Subtle Emerald Shimmer for "Limonense"
+   ========================================================================== */
+.role-limonense-glow {
+  color: #34d399;
+  background-image: linear-gradient(
+    110deg,
+    #34d399 20%,
+    #a7f3d0 50%,
+    #34d399 80%
+  );
+  background-size: 220% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.28));
+  animation: limonense-shimmer 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s 1 forwards;
+}
+
+@keyframes limonense-shimmer {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+/* Dark-hero scope overrides for bio-pencil-word so it stays crisp on #0a0a0a */
+.bio-focus-scope--hero .bio-dimmer {
+  background: #0a0a0a;
+}
+
+.bio-focus-scope--hero .bio-pencil-word {
+  color: #f5f5f59e;
+  font-weight: 450;
+  cursor: pointer;
+}
+
+.bio-focus-scope--hero .bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active),
+.bio-focus-scope--hero .bio-pencil-word.is-leaving {
+  color: #f5f5f5;
+}
+
+.bio-focus-scope--hero .bio-mark,
+.bio-focus-scope--hero .bio-hand-note {
+  color: #f5f5f5;
+}
+
+/* Minimalist high-contrast text selection */
+::selection {
+  background-color: rgba(0, 133, 255, 0.16);
+  color: #09090b;
+}
+
+.dark ::selection {
+  background-color: rgba(209, 197, 173, 0.24);
+  color: #ffffff;
+}
+
+.bio-focus-scope--hero ::selection,
+main[class*="bg-[#0a0a0a]"] ::selection {
+  background-color: rgba(209, 197, 173, 0.24);
+  color: #ffffff;
+}
+
+/* Explicit cascade-ordered scaling for CentralHero (avoids Tailwind v4 arbitrary-breakpoint order) */
+.hero-responsive-scale {
+  transform-origin: center;
+}
+
+@media (min-width: 1024px) {
+  .hero-responsive-scale {
+    scale: 1.05;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-responsive-scale {
+    scale: 1.15;
+  }
+}
+
+@media (min-width: 1600px) {
+  .hero-responsive-scale {
+    scale: 1.22;
+  }
+}
+
+@media (min-width: 2000px) {
+  .hero-responsive-scale {
+    scale: 1.4;
+  }
+}
+
+/* Selected Work Carousel â€” aligns flush left with the scaled Hero column */
+:root {
+  --work-col-width: 540px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --work-col-width: calc(540px * 1.05);
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --work-col-width: calc(540px * 1.15);
+  }
+}
+
+@media (min-width: 1600px) {
+  :root {
+    --work-col-width: calc(540px * 1.22);
+  }
+}
+
+@media (min-width: 2000px) {
+  :root {
+    --work-col-width: calc(540px * 1.4);
+  }
+}
+
+.work-col-header {
+  width: 100%;
+  max-width: var(--work-col-width);
+}
+
+.work-carousel-track {
+  padding-left: max(1.5rem, calc((100% - var(--work-col-width)) / 2));
+  padding-right: 4rem;
+}
+
+@media (min-width: 640px) {
+  .work-carousel-track {
+    padding-left: max(0px, calc((100% - var(--work-col-width)) / 2));
+  }
+}
+
+
+/* â”€â”€ GitHub activity card: contribution graph in the hero's pencil language â”€â”€ */
+.bio-hand-note--grid {
+  top: 50%;
+  left: calc(100% + 90px);
+  right: auto;
+  width: max-content;
+  max-width: none;
+  transform: translateY(-50%);
+  transform-origin: 0 50%;
+}
+
+.bio-pencil-word[data-note-placement="below"] .bio-hand-note--grid {
+  top: calc(100% + 16px);
+  left: -6px;
+  right: auto;
+  transform: none;
+  transform-origin: 0 0;
+}
+
+.gh-activity {
+  display: block;
+}
+
+.gh-card {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-hero-sans);
+  color: #f5f5f5;
+}
+
+.gh-card-head,
+.gh-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.gh-card-head {
+  margin-bottom: 12px;
+}
+
+.gh-total {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.gh-card-body {
+  display: block;
+  padding: 0;
+  border: 0;
+}
+
+.gh-grid {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: calc(100vw - 92px);
+  overflow: visible;
+}
+
+/* Seats fill from the top-left corner as one soft diagonal wave. */
+.gh-grid-cell,
+.gh-grid-cross,
+.gh-grid-ring {
+  opacity: 0;
+  fill-opacity: 0.1;
+  fill-rule: nonzero;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transform: scale(0.92);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 520ms cubic-bezier(0.4, 0, 0.2, 1) 480ms,
+    stroke-dashoffset 950ms cubic-bezier(0.4, 0, 0.2, 1) 480ms,
+    fill-opacity 1100ms cubic-bezier(0.4, 0, 0.2, 1) 480ms,
+    transform 950ms cubic-bezier(0.22, 1, 0.36, 1) 480ms;
+}
+
+.gh-grid-badge,
+.gh-grid-row {
+  opacity: 0;
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1) 820ms;
+}
+
+.gh-grid-cell {
+  stroke-width: 1;
+}
+
+/* Level 0 is a plain black seat; 1–4 are GitHub's green ramp as tinted, outlined seats. */
+.gh-grid-cell[data-level="0"] {
+  fill: #000;
+  stroke: rgba(255, 255, 255, 0.09);
+}
+.gh-grid-cell[data-level="1"] {
+  fill: rgba(37, 70, 160, 0.4);
+  stroke: #2b4a9e;
+}
+.gh-grid-cell[data-level="2"] {
+  fill: rgba(37, 99, 235, 0.38);
+  stroke: #2f6fdf;
+}
+.gh-grid-cell[data-level="3"] {
+  fill: rgba(59, 130, 246, 0.4);
+  stroke: #3b82f6;
+}
+.gh-grid-cell[data-level="4"] {
+  fill: rgba(96, 165, 250, 0.45);
+  stroke: #7ab8ff;
+}
+
+.gh-grid-cross {
+  fill: none;
+  stroke: rgba(245, 245, 245, 0.4);
+  stroke-width: 1.1;
+}
+
+.gh-grid-ring {
+  fill: none;
+  stroke: rgba(245, 245, 245, 0.85);
+  stroke-width: 1.4;
+}
+
+.gh-grid-badge {
+  fill: #f5f5f5;
+  font-family: var(--font-hero-sans);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.gh-grid-row {
+  fill: rgba(245, 245, 245, 0.4);
+  font-family: var(--font-hero-sans);
+  font-size: 9px;
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  :is(.gh-grid-cell, .gh-grid-cross, .gh-grid-ring) {
+  opacity: 1;
+  stroke-dashoffset: 0;
+  fill-opacity: 1;
+  transform: scale(1);
+  transition-delay: calc(480ms + var(--wave, 0) * 1300ms);
+}
+
+.bio-pencil-word:is(:hover:not(.touch-managed), :focus-visible, .is-active)
+  :is(.gh-grid-badge, .gh-grid-row) {
+  opacity: 1;
+  transition-delay: calc(1100ms + var(--wave, 0) * 1100ms);
+}
+
+.gh-card-foot {
+  margin-top: 12px;
+  font-size: 9.5px;
+  color: #f5f5f57a;
+}
+
+.gh-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.gh-legend-cell {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 2.5px;
+  border: 1px solid transparent;
+}
+
+.gh-legend-cell[data-level="0"] {
+  background: #000;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.gh-legend-cell[data-level="1"] {
+  background: rgba(37, 70, 160, 0.4);
+  border-color: #2b4a9e;
+}
+.gh-legend-cell[data-level="2"] {
+  background: rgba(37, 99, 235, 0.38);
+  border-color: #2f6fdf;
+}
+.gh-legend-cell[data-level="3"] {
+  background: rgba(59, 130, 246, 0.4);
+  border-color: #3b82f6;
+}
+.gh-legend-cell[data-level="4"] {
+  background: rgba(96, 165, 250, 0.45);
+  border-color: #7ab8ff;
+}
+
+@media (max-width: 767px) {
+  .bio-hand-note--grid {
+    top: calc(100% + 14px);
+    left: -6px;
+    transform: none;
+    transform-origin: 0 0;
+    scale: 0.85;
+  }
+
+  .gh-total {
+    font-size: 11.5px;
   }
 }

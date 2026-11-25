@@ -1,0 +1,150 @@
+---
+import PillButton from "../ui/PillButton.astro";
+import RoleTicker from "./RoleTicker.tsx";
+
+interface Props {
+  lang: "EN" | "ES";
+  name: string;
+  pronunciation: string;
+  roles: string[];
+  basedInLine: string;
+  socialLabel: string;
+  socialUrl: string;
+  rolePrefix: string;
+  companyName: string;
+  companyUrl: string;
+  lines: string[];
+  reachOutPrefix: string;
+  email: string;
+  ctaPrimaryLabel: string;
+  ctaPrimaryHref: string;
+  ctaSecondaryLabel: string;
+  ctaSecondaryHref: string;
+}
+
+const {
+  lang,
+  name,
+  pronunciation,
+  roles,
+  basedInLine,
+  socialLabel,
+  socialUrl,
+  rolePrefix,
+  companyName,
+  companyUrl,
+  lines,
+  reachOutPrefix,
+  email,
+  ctaPrimaryLabel,
+  ctaPrimaryHref,
+  ctaSecondaryLabel,
+  ctaSecondaryHref,
+} = Astro.props;
+
+const navLabel = lang === "ES" ? "Acciones principales" : "Hero actions";
+---
+
+<div class="relative z-10 w-full max-w-[540px] mx-auto px-6 sm:px-0 py-4 sm:py-6 flex flex-col origin-center lg:scale-[1.05] xl:scale-[1.12] min-[1920px]:scale-[1.25]">
+  <!-- Minimalist top bar (clean left, social right) -->
+  <div class="flex items-center justify-end mb-8 sm:mb-10">
+    <a
+      href={socialUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-cuelume-hover="tick"
+      class="font-hero-sans text-[14px] text-[#f5f5f59e] hover:text-[#f5f5f5] hover:-translate-y-[1px] transition-[color,transform] duration-200"
+    >
+      {socialLabel}
+    </a>
+  </div>
+
+  <!-- Saad Basheer Identity Block (Instrument Serif + Pronunciation + Vertical Role Ticker) -->
+  <div class="flex flex-col items-start mb-6">
+    <div class="flex flex-wrap items-baseline gap-x-2.5">
+      <h1 class="font-hero-serif tracking-[-0.01em] select-none leading-[1.15]">
+        {name}
+      </h1>
+      <span class="font-hero-sans text-[12.5px] font-normal text-[#f5f5f59e] tracking-[0.02em] select-none" aria-hidden="true">
+        {pronunciation}
+      </span>
+    </div>
+
+    <!-- Smooth top-to-bottom role transition badge (exact saadb.me pill) -->
+    <RoleTicker roles={roles} client:load />
+
+    <p class="mt-2 font-hero-sans text-[12.5px] font-normal leading-normal tracking-normal text-[#f5f5f59e]">
+      {basedInLine}
+    </p>
+  </div>
+
+  <!-- Staggered Editorial Bio (Inter 15px / 450 / 19px / 0.16px / #f5f5f5b8) -->
+  <div class="flex flex-col gap-3 font-hero-sans">
+    <p>
+      {rolePrefix}{" "}
+      <a
+        href={companyUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cuelume-hover="tick"
+        class="text-[#00a2f4] hover:text-[#38bdf8] hover:underline underline-offset-4 transition-colors duration-200"
+      >
+        @{companyName}
+      </a>
+    </p>
+
+    {lines.map((line) => <p>{line}</p>)}
+
+    <p class="flex flex-wrap items-center gap-1.5 pt-0.5">
+      <span>{reachOutPrefix}</span>
+      <button
+        type="button"
+        data-copy-email={email}
+        data-cuelume-hover="tick"
+        data-cuelume-press
+        title={email}
+        class="inline-flex items-center gap-1.5 text-[#f5f5f5] hover:text-[#d1c5ad] transition-colors duration-200 cursor-pointer group font-medium"
+      >
+        <svg
+          class="w-3.5 h-3.5 text-[#f5f5f57a] group-hover:text-[#d1c5ad] group-hover:-translate-y-[1px] group-hover:-rotate-6 transition-[color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect width="20" height="16" x="2" y="4" rx="2" />
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        </svg>
+        <span class="underline decoration-white/20 underline-offset-4 group-hover:decoration-[#d1c5ad]/60 transition-[text-decoration-color] duration-200">
+          {email}
+        </span>
+      </button>
+    </p>
+  </div>
+
+  <!-- Dual Nachi-style Buttons with Visible Icon & Hover Micro-animations -->
+  <nav aria-label="Hero actions" class="flex flex-wrap items-center gap-2.5 mt-6 sm:mt-7">
+    <PillButton variant="primary-light" href={ctaPrimaryHref}>
+      <span>{ctaPrimaryLabel}</span>
+      <svg
+        class="w-3.5 h-3.5 transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[2px] group-hover:-translate-y-[2px] shrink-0"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.1"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M7 17L17 7M7 7h10v10" />
+      </svg>
+    </PillButton>
+
+    <PillButton variant="secondary-dark" href={ctaSecondaryHref}>
+      <span>{ctaSecondaryLabel}</span>
+    </PillButton>
+  </nav>
+</div>

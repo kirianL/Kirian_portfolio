@@ -1,29 +1,13 @@
 {
   "rewrites": [
     {
-      "source": "/blog/:slug",
-      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
-      "destination": "/blog/:slug.md"
-    },
-    {
-      "source": "/blog/:slug/",
-      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
-      "destination": "/blog/:slug.md"
-    },
-    {
-      "source": "/es/blog/:slug",
-      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
-      "destination": "/es/blog/:slug.md"
-    },
-    {
-      "source": "/es/blog/:slug/",
-      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
-      "destination": "/es/blog/:slug.md"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
     {
-      "source": "/_astro/(.*)",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

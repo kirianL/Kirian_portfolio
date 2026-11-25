@@ -1,0 +1,24 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+}
+
+const {
+  src = "/profile.webp",
+  alt = "Kirian Luna",
+} = Astro.props;
+---
+
+<div class="w-12 h-12 rounded-xl overflow-hidden bg-[#171717] ring-1 ring-white/15 shrink-0 select-none">
+  <img
+    src={src}
+    alt={alt}
+    width="48"
+    height="48"
+    loading="eager"
+    decoding="async"
+    fetchpriority="high"
+    class="w-full h-full object-cover object-[center_28%]"
+  />
+</div>

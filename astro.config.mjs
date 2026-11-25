@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
@@ -12,6 +13,7 @@ export default defineConfig({
     inlineStylesheets: 'auto',
   },
   integrations: [
+    react(),
     sitemap({
       // Keep error and API routes out of the indexable sitemap.
       filter: (page) => !page.includes('/404') && !page.includes('/api/'),

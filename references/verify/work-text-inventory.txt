@@ -1,0 +1,162 @@
+﻿
+=== koragrid
+  / -> http://localhost:4401/es scrollY=0 (20 text nodes)
+    [ 18, 162] KoraGrid
+    [ 20, 252] Plataforma
+    [ 20, 345] Arquitectura
+    [ 20, 451] Desaf├¡os
+    [ 20, 531] Industrias
+    [ 20, 624] Precios
+    [ 21, 809] ES
+    [ 21, 838] EN
+    [ 20, 891] Hablar con ingenier├¡a
+    [ 20,1049] Solicitar demo
+    [118, 360] Telemetr├¡a energ├®tica y control ESG en tiempo real
+    [247, 363] Monitoreo el├®ctrico inteligente para empresas en Costa Rica. Reduzca picos de demanda y audite su huella de carbono sin procesos manuales.
+    [368, 527] Solicitar demo
+    [368, 657] Ver arquitectura
+    [480, 340] Planta Alajuela en l├¡nea:
+    [480, 562] sin picos de demanda.
+    [576, 403] Zonas francas
+    [576, 521] Hoteler├¡a
+    [576, 614] Agroindustria
+    [576, 835] Costa Rica
+  /en -> http://localhost:4401/en scrollY=0 (20 text nodes)
+    [ 18, 162] KoraGrid
+    [ 20, 252] Platform
+    [ 20, 331] Architecture
+    [ 20, 438] Challenges
+    [ 20, 531] Industries
+    [ 20, 624] Pricing
+    [ 21, 821] ES
+    [ 21, 850] EN
+    [ 20, 903] Talk to engineering
+    [ 20,1049] Request demo
+    [118, 367] Real-time energy telemetry and ESG control
+    [247, 351] Smart electrical monitoring for industrial operations in Costa Rica. Cut peak demand charges and audit your carbon footprint without manual spreadsheets.
+    [368, 523] Request demo
+    [368, 653] View architecture
+    [480, 340] Alajuela plant online:
+    [480, 542] zero demand spikes.
+    [576, 403] Free Zones
+    [576, 505] Hospitality
+    [576, 606] Agribusiness
+    [576, 835] Costa Rica
+
+=== customerup
+  / -> http://localhost:4402/ scrollY=0 (20 text nodes)
+    [ 10,  72] ├Ültimas noticias ÔÇö la sincronizaci├│n en tiempo real para comercios del GAM ya est├í activa.
+    [ 10, 859] (+506) 2201 4890
+    [ 10, 992] Avenida Escaz├║, San Jos├®, Costa Rica
+    [ 62, 102] Customerup
+    [ 64, 388] Nosotros
+    [ 64, 481] Plataforma
+    [ 64, 586] Servicios
+    [ 64, 680] Perspectivas
+    [ 64, 799] FAQ
+    [ 64,1009] Ingresar
+    [ 64,1101] Probar gratis
+    [167,  72] Conecta con tus clientes en
+    [234, 155] Costa Rica
+    [234,  72] usando datos propios.
+    [398,  72] Customerup te ayuda a crear recorridos personalizados desde San Jos├® para cada canal, con claridad, rapidez y control total sobre las se├▒ales de tu audiencia.
+    [523,  96] Empezar ahora
+    [523, 283] Agendar demo
+    [665, 999] ├Ültima campa├▒a de producto
+    [690, 999] Dise├▒a, previsualiza y colabora en nuestra plataforma de activaci├│n hecha para equipos de datos en Costa Rica.
+    [765, 999] Correo
+
+=== kora-finance
+  / -> http://localhost:4403/ scrollY=0 (22 text nodes)
+    [ 34,  92] Kora
+    [ 35, 151] Funciones
+    [ 35, 242] Impacto
+    [ 35, 320] Planes
+    [ 35, 387] Bancos CR
+    [ 34,1155] Ingresar
+    [ 84, 111] Funciones
+    [ 86,1192] ÔåÆ
+    [140, 111] Impacto
+    [142,1192] ÔåÆ
+    [196, 111] Planes
+    [198,1192] ÔåÆ
+    [251, 111] Bancos CR
+    [253,1192] ÔåÆ
+    [323, 608] Ingresar a
+    [323, 676] Kora
+    [379, 592] Conectar banca CR
+    [126,  91] Tesorer├¡a moderna en
+    [198, 161] Colones
+    [201, 404] y SINPE.
+    [300,  91] Kora conecta tus cuentas del BAC, BCR, BN y SINPE empresarial con tipo de cambio MONEX en tiempo real, conciliaci├│n autom├ítica y liquidez en colones y d├│lares.
+    [418, 111] Conectar banca CR
+
+=== alder-psicologia
+  / -> http://localhost:4404/ scrollY=0 (51 text nodes)
+    [ 19, 106] Alder Psicolog├¡a
+    [ 19, 252] Servicios
+    [ 19, 344] Enfoque
+    [ 19, 433] Equipo
+    [ 19, 513] Preguntas
+    [ 19, 909] Portal de pacientes
+    [ 19,1077] Agendar sesi├│n
+    [134, 603] Psicolog├¡a cl├¡nica
+    [161, 465] Comprende tu mente,
+    [212, 459] sana a tu propio ritmo.
+    [283, 408] Terapia individual, de pareja y familiar, presencial en San Jos├® o en l├¡nea.
+    [331, 491] Agendar consulta
+    [331, 683] Explorar terapias
+    [561, 126] Psic├│loga cl├¡nica principal
+    [578, 126] Dra. Ena Rivaldo
+    [607, 126] Seguimiento emocional
+    [607, 391] Semanal
+    [687, 134] DOM
+    [687, 182] LUN
+    [687, 226] MAR
+    [687, 274] MI├ë
+    [687, 319] JUE
+    [687, 366] VIE
+    [687, 409] S├üB
+    [406, 510] Resultados cl├¡nicos
+    [406, 714] PHQ-9
+    [406, 778] ┬À┬À┬À
+    [486, 604] 86%
+    [602, 498] Las sesiones semanales constantes ayudan a ordenar pensamientos antes de llegar al desgaste.
+    [602, 509] Nuestros pacientes sienten escucha genuina y respaldo cl├¡nico desde la primera sesi├│n.
+    [602, 505] El 86% de las personas reporta alivio medible en ansiedad y estado de ├ínimo en 8 sesiones.
+    [602, 506] Psicoterapia basada en evidencia (TCC y EMDR) adaptada a tu ritmo e historia.
+    [592, 506] Estabilidad emocional duradera construida con herramientas pr├ícticas y acompa├▒amiento humano.
+    [403, 844] Bienestar emocional
+    [454, 866] Calma
+    [454, 964] 80%
+    [454,1029] ├ünimo bajo
+    [454,1127] 46%
+    [480, 866] Ansiedad
+    [480, 964] 57%
+    [480,1029] Agotamiento
+    [480,1127] 16%
+    [514, 844] Etapas de atenci├│n
+    [549, 894] Evaluaci├│n inicial
+    [565, 894] Entrevista cl├¡nica de 50 min
+    [556,1073] Completado
+    [603, 894] Plan terap├®utico
+    [619, 894] Objetivos personalizados
+    [610,1107] Activo
+    [658, 898] Supervisor cl├¡nico
+    [671, 898] Dr. Albert Rivaldo
+
+=== mp-legal
+  / -> http://localhost:4405/ scrollY=0 (13 text nodes)
+    [ 24,  71] M&P
+    [ 25, 127] M├®ndez & Palacios
+    [ 37, 127] Grupo de Servicios Privados
+    [ 30, 406] Servicios
+    [ 30, 511] Temas clave
+    [ 30, 638] Nosotros
+    [ 30, 742] Contacto
+    [ 30, 944] +506 2201-8450
+    [ 30,1100] Cont├íctenos
+    [127,  98] Protegemos y
+    [193,  98] preservamos
+    [200,  98] lo que usted construy├│
+    [693,  98] Asesor├¡a legal y financiera para clientes privados y empresas ÔÇö m├ís de 30 a├▒os de trayectoria en la regi├│n
