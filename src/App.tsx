@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect, useRef } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import { bind, setVolume } from "cuelume";
+import { installSoundUnlock } from "@/lib/sound";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import HomePage from "@/pages/HomePage";
 
@@ -80,7 +81,11 @@ export default function App() {
     try {
       setVolume(1.6);
     } catch {}
+    // Wake the shared AudioContext on the first real gesture so the first
+    // hover/press is never silent (cuelume drops sounds before activation).
+    const removeUnlock = installSoundUnlock();
     initPostHogOnce();
+    return removeUnlock;
   }, []);
 
   // Re-bind cuelume declarative sound attributes on route changes

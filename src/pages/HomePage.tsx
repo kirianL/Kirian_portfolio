@@ -1,5 +1,5 @@
 import * as React from "react";
-import { play } from "cuelume";
+import { playSound } from "@/lib/sound";
 import RedDitherBanner from "@/components/hero/RedDitherBanner";
 import CentralHero from "@/components/hero/CentralHero";
 import SelectedWorkCarousel from "@/components/home/SelectedWorkCarousel";
@@ -33,9 +33,7 @@ export default function HomePage({ lang }: HomePageProps) {
     navigator.clipboard
       .writeText(email)
       .then(() => {
-        try {
-          play("success");
-        } catch {}
+        playSound("success");
       })
       .catch(() => {});
   };
