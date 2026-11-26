@@ -16,7 +16,7 @@ const LOGOS: Record<string, string> = {
   "Sorin Labs": sorinLabsLogo,
 };
 
-function LogoSlot({ name, color }: { name: string; color?: string }) {
+function LogoSlot({ name }: { name: string }) {
   const src = LOGOS[name];
   return (
     <span className="work-history-logo">
@@ -29,7 +29,7 @@ function LogoSlot({ name, color }: { name: string; color?: string }) {
           draggable={false}
         />
       ) : (
-        <span className={`work-history-logo-fallback ${color ?? ""}`}>
+        <span className="work-history-logo-fallback">
           {name.charAt(0)}
         </span>
       )}
@@ -62,7 +62,7 @@ export default function WorkHistorySection({ lang }: WorkHistorySectionProps) {
             return (
               <li key={`${exp.company}-${i}`} className="work-history-item">
                 <div className="work-history-row">
-                  <LogoSlot name={exp.company} color={exp.companyColor} />
+                  <LogoSlot name={exp.company} />
                   <button
                     type="button"
                     className="work-history-name work-history-name--button"
