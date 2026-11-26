@@ -1,6 +1,7 @@
 import { splitText } from "kugiri";
 import type { SplitOptions, TextSplit } from "kugiri";
 import { useLayoutEffect, useRef } from "react";
+import { VT_END_EVENT, isReturningFlight } from "@/lib/viewTransition";
 
 /**
  * Entry motion built on kugiri.
@@ -117,16 +118,19 @@ let readyGate: Promise<void> | null = null;
  */
 function transitionGate() {
   if (typeof document === "undefined") return Promise.resolve();
+  // A return is a restored page: it must already look finished when it is
+  // captured, so nothing is held back for the flight to end.
+  if (isReturningFlight()) return Promise.resolve();
   if (document.documentElement.dataset.vt !== "flying") return Promise.resolve();
   return new Promise<void>((resolve) => {
     let settled = false;
     const done = () => {
       if (settled) return;
       settled = true;
-      window.removeEventListener("portfolio:vt-end", done);
+      window.removeEventListener(VT_END_EVENT, done);
       resolve();
     };
-    window.addEventListener("portfolio:vt-end", done);
+    window.addEventListener(VT_END_EVENT, done);
     window.setTimeout(done, 1600);
   });
 }
@@ -217,12 +221,14 @@ function revealBlocks(targets: HTMLElement[], opts: RiseOptions) {
   if ((opts.start ?? "view") === "now") {
     void revealReady().then(play);
   } else if (typeof IntersectionObserver === "undefined") {
-    play();
+    void revealReady().then(play);
   } else {
     observer = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
-        play();
+        // Even a block that is already on screen waits for the shared-element
+        // flight to land, so the page composes after the image, not under it.
+        void revealReady().then(play);
       },
       { rootMargin: "0px 0px 12% 0px", threshold: 0 },
     );
@@ -248,6 +254,7 @@ export function useRiseIn<T extends HTMLElement = HTMLDivElement>(
     const el = ref.current;
     const opts = optionsRef.current;
     if (!el || opts.disabled || prefersReducedMotion()) return;
+    if (isReturningFlight()) return;
 
     const targets = opts.selector
       ? Array.from(el.querySelectorAll<HTMLElement>(opts.selector))
@@ -289,6 +296,7 @@ export function useLineReveal<T extends HTMLElement = HTMLDivElement>(
     const el = ref.current;
     const opts = optionsRef.current;
     if (!el || opts.disabled || prefersReducedMotion()) return;
+    if (isReturningFlight()) return;
 
     // A block with live children is React's, not ours: give it the block rise
     // rather than trading its nodes for a nicer split.

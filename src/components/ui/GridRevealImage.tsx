@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { VT_END_EVENT, isReturningFlight } from "@/lib/viewTransition";
 
 interface GridRevealImageProps {
   src: string;
@@ -7,6 +8,14 @@ interface GridRevealImageProps {
   className?: string;
   estimatedDuration?: number;
   style?: React.CSSProperties;
+  /**
+   * Paint a cached copy of the photo synchronously on mount.
+   *
+   * A shared-element transition captures the page right after it mounts. This
+   * card is the destination of that flight, so its canvas must already hold the
+   * photo at capture time — otherwise the browser snapshots an empty box.
+   */
+  prime?: boolean;
 }
 
 const CELLS = 180;
@@ -25,6 +34,8 @@ const INSTANT_MS = 150;
 
 // Sources already revealed in this session never animate again.
 const revealedSources = new Set<string>();
+// The decoded bitmap for each source, so a remount can paint it synchronously.
+const decodedImages = new Map<string, HTMLImageElement>();
 
 type Cell = {
   x: number;
@@ -378,6 +389,7 @@ export default function GridRevealImage({
   className = "",
   estimatedDuration = 6000,
   style,
+  prime = false,
 }: GridRevealImageProps) {
   const ratio = Number.isFinite(aspect) && aspect > 0 ? aspect : 1;
   const frameRef = useRef<HTMLDivElement>(null);
@@ -385,188 +397,280 @@ export default function GridRevealImage({
   const durationRef = useRef(estimatedDuration);
   durationRef.current = estimatedDuration;
 
-  useEffect(() => {
+  // Runs during the commit, before the browser can snapshot the page, so a
+  // card that is the destination of a shared-element flight is never empty.
+  useLayoutEffect(() => {
+    if (!prime) return;
     const canvas = canvasRef.current;
     const frame = frameRef.current;
-    if (!canvas || !frame) return;
-
+    const image = src ? decodedImages.get(src) : null;
+    if (!canvas || !frame || !image?.naturalWidth) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    const { root, branches } = buildTree(ratio);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = frame.getBoundingClientRect();
+    const width = Math.max(1, Math.round(rect.width * dpr));
+    const height = Math.max(1, Math.round(rect.height * dpr));
+    canvas.width = width;
+    canvas.height = height;
+    const fit = coverRect(image.naturalWidth, image.naturalHeight, width, height);
+    ctx.drawImage(image, fit.dx, fit.dy, fit.dw, fit.dh);
+  }, [prime, src]);
 
-    const scene: Scene = {
-      ctx,
-      root,
-      width: 0,
-      height: 0,
-      scale: 1,
-      dark: false,
-      clock: 0,
-      split: 0,
-      fade: 0,
-      hasColors: false,
-      image: null,
-    };
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    const init = () => {
+      const canvas = canvasRef.current;
+      const frame = frameRef.current;
+      if (!canvas || !frame) return;
 
-    let loadedAt = -1;
-    let cancelled = false;
-    let frameId = 0;
-    let last = 0;
-    let elapsed = 0;
-    let eased = 0;
-    let split = 0;
-    let stopped = false;
-    let visible = true;
-    let instant = false;
-    const startedAt = performance.now();
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
 
-    const render = (s: number, now: number) => {
-      scene.dark = document.documentElement.classList.contains("dark");
-      scene.split = s;
-      scene.fade = loadedAt < 0 ? 0 : smoothstep(0, COLOR_MS, now - loadedAt);
-      drawScene(scene);
-    };
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const { root, branches } = buildTree(ratio);
 
-    const repaint = () => {
-      if (!reduce) return render(scene.split, performance.now());
-      const settled = loadedAt < 0 ? performance.now() : loadedAt + COLOR_MS;
-      render(scene.image ? 1 : WAIT_CAP, settled);
-    };
+      const scene: Scene = {
+        ctx,
+        root,
+        width: 0,
+        height: 0,
+        scale: 1,
+        dark: false,
+        clock: 0,
+        split: 0,
+        fade: 0,
+        hasColors: false,
+        image: null,
+      };
 
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const rect = frame.getBoundingClientRect();
-      const w = Math.max(1, Math.round(rect.width * dpr));
-      const h = Math.max(1, Math.round(rect.height * dpr));
-      scene.scale = dpr;
-      if (w === scene.width && h === scene.height) return;
-      scene.width = w;
-      scene.height = h;
-      canvas.width = w;
-      canvas.height = h;
-      repaint();
-    };
+      // The card the flight is landing on must already be a photo — both when the
+      // browser snapshots the page and after it lands. Without this the grid
+      // reveal would restart and flip the landed image back to tiles.
+      const primed = prime ? decodedImages.get(src) : undefined;
+      if (primed?.naturalWidth) {
+        const paint = () => {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const rect = frame.getBoundingClientRect();
+          const width = Math.max(1, Math.round(rect.width * dpr));
+          const height = Math.max(1, Math.round(rect.height * dpr));
+          if (width === scene.width && height === scene.height) return;
+          scene.scale = dpr;
+          scene.width = width;
+          scene.height = height;
+          scene.image = primed;
+          scene.hasColors = true;
+          scene.split = 1;
+          scene.fade = 1;
+          canvas.width = width;
+          canvas.height = height;
+          drawScene(scene);
+        };
+        paint();
+        const resizeObserver =
+          typeof ResizeObserver === "function" ? new ResizeObserver(paint) : null;
+        resizeObserver?.observe(frame);
+        return () => resizeObserver?.disconnect();
+      }
 
-    resize();
-    const observer =
-      typeof ResizeObserver === "function" ? new ResizeObserver(resize) : null;
-    observer?.observe(frame);
+      let loadedAt = -1;
+      let cancelled = false;
+      let frameId = 0;
+      let last = 0;
+      let elapsed = 0;
+      let eased = 0;
+      let split = 0;
+      let stopped = false;
+      let visible = true;
+      let instant = false;
+      const startedAt = performance.now();
 
-    const load = (url: string, withCors: boolean) => {
-      const el = new Image();
-      if (withCors) el.crossOrigin = "anonymous";
-      el.decoding = "async";
-      el.onload = () => {
-        if (cancelled) return;
-        if (!el.naturalWidth || !el.naturalHeight) return;
-        scene.image = el;
-        // A cache hit (or an image already revealed this session) skips the
-        // whole reveal — paint the crisp frame immediately and stop.
-        instant =
-          revealedSources.has(src) ||
-          performance.now() - startedAt < INSTANT_MS;
-        scene.hasColors = readAverages(el, root, branches, instant ? 1 : scene.split);
+      const render = (s: number, now: number) => {
+        scene.dark = document.documentElement.classList.contains("dark");
+        scene.split = s;
+        scene.fade = loadedAt < 0 ? 0 : smoothstep(0, COLOR_MS, now - loadedAt);
+        drawScene(scene);
+      };
 
-        if (instant) {
-          revealedSources.add(src);
-          loadedAt = performance.now() - COLOR_MS; // full-opacity photo
-          if (reduce) {
-            repaint();
-          } else {
-            render(1, performance.now());
+      const repaint = () => {
+        if (!reduce) return render(scene.split, performance.now());
+        const settled = loadedAt < 0 ? performance.now() : loadedAt + COLOR_MS;
+        render(scene.image ? 1 : WAIT_CAP, settled);
+      };
+
+      const resize = () => {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const rect = frame.getBoundingClientRect();
+        const w = Math.max(1, Math.round(rect.width * dpr));
+        const h = Math.max(1, Math.round(rect.height * dpr));
+        scene.scale = dpr;
+        if (w === scene.width && h === scene.height) return;
+        scene.width = w;
+        scene.height = h;
+        canvas.width = w;
+        canvas.height = h;
+        repaint();
+      };
+
+      resize();
+      const observer =
+        typeof ResizeObserver === "function" ? new ResizeObserver(resize) : null;
+      observer?.observe(frame);
+
+      const load = (url: string, withCors: boolean) => {
+        const el = new Image();
+        // Same-origin files never taint the canvas, so they are requested exactly
+        // like a plain <img>. That keeps one cache entry and one decoded frame
+        // shared with the detail hero — which the view transition has to paint
+        // before the flight can start.
+        const sameOrigin = !/^(https?:)?\/\//i.test(url) || url.startsWith(location.origin);
+        if (withCors && !sameOrigin) el.crossOrigin = "anonymous";
+        el.decoding = "async";
+        el.onload = () => {
+          if (cancelled) return;
+          if (!el.naturalWidth || !el.naturalHeight) return;
+          scene.image = el;
+          decodedImages.set(url, el);
+          // A cache hit (or an image already revealed this session) skips the
+          // whole reveal — paint the crisp frame immediately and stop.
+          instant =
+            revealedSources.has(src) ||
+            performance.now() - startedAt < INSTANT_MS;
+          // With no reveal to run the photo covers the tile grid at once, so the
+          // sampled colours are never shown — skip the decode and readback that a
+          // large cover would otherwise cost inside the transition's update step.
+          scene.hasColors = instant
+            ? true
+            : readAverages(el, root, branches, scene.split);
+
+          if (instant) {
+            revealedSources.add(src);
+            loadedAt = performance.now() - COLOR_MS; // full-opacity photo
+            if (reduce) {
+              repaint();
+            } else {
+              render(1, performance.now());
+              stopped = true;
+              cancelAnimationFrame(frameId);
+            }
+            return;
+          }
+
+          loadedAt = performance.now();
+          if (reduce) repaint();
+        };
+        el.onerror = () => {
+          if (cancelled) return;
+          if (withCors) load(url, false);
+        };
+        el.src = url;
+      };
+
+      if (src) load(src, true);
+
+      if (reduce) {
+        repaint();
+        return () => {
+          cancelled = true;
+          observer?.disconnect();
+        };
+      }
+
+      const tick = (now: number) => {
+        if (stopped) return;
+        frameId = requestAnimationFrame(tick);
+        if (!last) last = now;
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        elapsed += dt;
+        scene.clock = elapsed;
+
+        const ready = scene.image !== null;
+        let target: number;
+
+        if (ready) {
+          target = 1;
+        } else {
+          target = selfPaced(elapsed * 1000, durationRef.current);
+        }
+
+        eased += (target - eased) * (1 - Math.exp(-dt * 5.5));
+        const wanted = Math.min(eased, ready ? 1 : WAIT_CAP);
+        split += (wanted - split) * (1 - Math.exp(-dt * 4));
+        render(split, now);
+
+        if (ready && !instant && eased > 0.995 && now - loadedAt > COLOR_MS) {
+          if (split > 0.9995) {
+            render(1, now);
+            revealedSources.add(src);
             stopped = true;
             cancelAnimationFrame(frameId);
           }
-          return;
         }
-
-        loadedAt = performance.now();
-        if (reduce) repaint();
       };
-      el.onerror = () => {
-        if (cancelled) return;
-        if (withCors) load(url, false);
+
+      const start = () => {
+        if (stopped) return;
+        last = 0;
+        cancelAnimationFrame(frameId);
+        frameId = requestAnimationFrame(tick);
       };
-      el.src = url;
-    };
 
-    if (src) load(src, true);
+      const visibility =
+        typeof IntersectionObserver === "function"
+          ? new IntersectionObserver(
+              ([entry]) => {
+                if (entry.isIntersecting === visible) return;
+                visible = entry.isIntersecting;
+                if (visible) start();
+                else cancelAnimationFrame(frameId);
+              },
+              { rootMargin: "150px" },
+            )
+          : null;
+      visibility?.observe(frame);
 
-    if (reduce) {
-      repaint();
+      start();
+
       return () => {
         cancelled = true;
+        cancelAnimationFrame(frameId);
         observer?.disconnect();
+        visibility?.disconnect();
+      };
+    };
+
+    // A flight is running and this canvas is not its destination: hold every
+    // allocation and decode until the image has landed. Five canvas surfaces
+    // built in one commit is exactly the kind of long task that drops frames
+    // out of the transition.
+    if (
+      !prime &&
+      !isReturningFlight() &&
+      document.documentElement.dataset.vt === "flying"
+    ) {
+      let started = false;
+      const onEnd = () => {
+        if (started) return;
+        started = true;
+        cleanup = init();
+      };
+      window.addEventListener(VT_END_EVENT, onEnd, { once: true });
+      return () => {
+        started = true;
+        window.removeEventListener(VT_END_EVENT, onEnd);
+        cleanup?.();
       };
     }
 
-    const tick = (now: number) => {
-      if (stopped) return;
-      frameId = requestAnimationFrame(tick);
-      if (!last) last = now;
-      const dt = Math.min((now - last) / 1000, 0.05);
-      last = now;
-      elapsed += dt;
-      scene.clock = elapsed;
-
-      const ready = scene.image !== null;
-      let target: number;
-
-      if (ready) {
-        target = 1;
-      } else {
-        target = selfPaced(elapsed * 1000, durationRef.current);
-      }
-
-      eased += (target - eased) * (1 - Math.exp(-dt * 5.5));
-      const wanted = Math.min(eased, ready ? 1 : WAIT_CAP);
-      split += (wanted - split) * (1 - Math.exp(-dt * 4));
-      render(split, now);
-
-      if (ready && !instant && eased > 0.995 && now - loadedAt > COLOR_MS) {
-        if (split > 0.9995) {
-          render(1, now);
-          revealedSources.add(src);
-          stopped = true;
-          cancelAnimationFrame(frameId);
-        }
-      }
-    };
-
-    const start = () => {
-      if (stopped) return;
-      last = 0;
-      cancelAnimationFrame(frameId);
-      frameId = requestAnimationFrame(tick);
-    };
-
-    const visibility =
-      typeof IntersectionObserver === "function"
-        ? new IntersectionObserver(
-            ([entry]) => {
-              if (entry.isIntersecting === visible) return;
-              visible = entry.isIntersecting;
-              if (visible) start();
-              else cancelAnimationFrame(frameId);
-            },
-            { rootMargin: "150px" },
-          )
-        : null;
-    visibility?.observe(frame);
-
-    start();
-
+    cleanup = init();
     return () => {
-      cancelled = true;
-      cancelAnimationFrame(frameId);
-      observer?.disconnect();
-      visibility?.disconnect();
+      cleanup?.();
     };
-  }, [src, ratio]);
+  }, [src, ratio, prime]);
 
   return (
     <div

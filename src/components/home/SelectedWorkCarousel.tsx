@@ -1,11 +1,20 @@
 import * as React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GridRevealImage from "@/components/ui/GridRevealImage";
 import { rememberScrollNow } from "@/lib/scrollMemory";
-import { navigateWithTransition, markSharedElement } from "@/lib/viewTransition";
+import { warmImage } from "@/lib/warmImage";
+import {
+  navigateWithTransition,
+  markSharedElement,
+  isPendingSharedCard,
+} from "@/lib/viewTransition";
 import { useLineReveal, useRiseIn } from "@/lib/reveal";
 import MetaBadges from "@/components/work/MetaBadges";
+
+// The track offset survives a client-side navigation, so a card that was
+// clicked while the carousel was scrolled comes back to the same spot.
+const carouselOffsets: Record<string, number> = {};
 
 export interface SelectedWorkItem {
   id: string;
@@ -87,6 +96,12 @@ interface WorkCardProps {
 }
 
 function WorkCard({ item, isEs, showSpanishWork, index, onOpen }: WorkCardProps) {
+  const to = isEs ? `/es/work/${item.id}` : `/work/${item.id}`;
+  // This card is the target of a flight that is still in the air: it has to be
+  // painted at capture and stay still when the image lands, so it skips the
+  // entrance and primes its canvas.
+  const isFlightTarget = isPendingSharedCard(to);
+
   // Cards rise one after another as they enter the track's visible area; a
   // card dragged in from the right gets its own reveal then.
   const ref = useRiseIn<HTMLElement>({
@@ -94,21 +109,24 @@ function WorkCard({ item, isEs, showSpanishWork, index, onOpen }: WorkCardProps)
     delay: 40 + index * 60,
     distance: 16,
     duration: 700,
+    disabled: isFlightTarget,
   });
 
   const title = isEs ? item.titleEs : item.title;
   const role = isEs ? item.roleEs : item.role;
-  const to = isEs ? `/es/work/${item.id}` : `/work/${item.id}`;
+  // Same file the detail hero paints, decoded while the pointer is on its way.
+  const coverSrc = showSpanishWork ? item.imageEs : item.imageEn;
 
   const cardInner = (
     <>
       <div className="rounded-[14px] p-2.5 sm:p-3 bg-white/[0.035] border border-white/[0.07] transition-[border-color,background-color] duration-200 group-hover:border-white/[0.15] group-hover:bg-white/[0.05]">
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[10px] bg-[#141414] ring-1 ring-white/[0.06] work-thumb">
           <GridRevealImage
-            src={showSpanishWork ? item.imageEs : item.imageEn}
+            src={coverSrc}
             alt={title}
             aspect={16 / 10}
             className="work-thumb-reveal work-shared-image"
+            prime={isFlightTarget}
           />
           <span
             className="work-view-icon pointer-events-none absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] translate-y-1 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
@@ -159,6 +177,9 @@ function WorkCard({ item, isEs, showSpanishWork, index, onOpen }: WorkCardProps)
       data-work-card=""
       href={to}
       onClick={(e) => onOpen(e, to)}
+      onPointerEnter={() => warmImage(coverSrc)}
+      onFocus={() => warmImage(coverSrc)}
+      onTouchStart={() => warmImage(coverSrc)}
       draggable={false}
       data-cuelume-hover="tick"
       className="group block w-[82vw] sm:w-[430px] lg:w-[460px] min-[2000px]:w-[540px] shrink-0 select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad] rounded-[14px]"
@@ -220,6 +241,31 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
     window.addEventListener("resize", updateScrollButtons);
     return () => window.removeEventListener("resize", updateScrollButtons);
   }, [updateScrollButtons]);
+
+  // Restore the horizontal offset during the commit. A shared-element flight
+  // captures the page the moment it mounts, so the card that is flying back has
+  // to already sit where the user left it — not at the start of the track.
+  useLayoutEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const restored = carouselOffsets[lang] ?? 0;
+    if (restored > 0) el.scrollLeft = restored;
+    updateScrollButtons();
+  }, [lang, updateScrollButtons]);
+
+  const saveFrameRef = useRef(0);
+
+  const handleTrackScroll = useCallback(() => {
+    updateScrollButtons();
+    const el = trackRef.current;
+    if (!el) return;
+    cancelAnimationFrame(saveFrameRef.current);
+    saveFrameRef.current = requestAnimationFrame(() => {
+      carouselOffsets[lang] = el.scrollLeft;
+    });
+  }, [lang, updateScrollButtons]);
+
+  useEffect(() => () => cancelAnimationFrame(saveFrameRef.current), []);
 
   const scrollByCard = (direction: -1 | 1) => {
     const el = trackRef.current;
@@ -331,7 +377,7 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
       {/* Horizontal Draggable Track aligned flush left with hero column, peeking off right */}
       <div
         ref={trackRef}
-        onScroll={updateScrollButtons}
+        onScroll={handleTrackScroll}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}

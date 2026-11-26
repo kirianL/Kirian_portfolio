@@ -3,6 +3,8 @@ import type { CSSProperties } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { WORK_ITEMS } from "@/components/home/SelectedWorkCarousel";
 import MetaBadges from "@/components/work/MetaBadges";
+import { readRememberedScroll } from "@/lib/scrollMemory";
+import { navigateWithTransition } from "@/lib/viewTransition";
 import { useLineReveal, useRiseIn } from "@/lib/reveal";
 
 interface WorkDetailProps {
@@ -58,10 +60,21 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
 
   // Return to whichever page the project was opened from (home, projects…).
   // Only fall back to home when the detail was opened directly in a new tab.
+  const homePath = isEs ? "/es" : "/";
+  const projectHref = isEs ? `/es/work/${slug}` : `/work/${slug}`;
+
   const goBack = () => {
     const idx = (window.history.state as { idx?: number } | null)?.idx;
-    if (typeof idx === "number" && idx > 0) navigate(-1);
-    else navigate(isEs ? "/es" : "/");
+    if (typeof idx === "number" && idx > 0) {
+      // Fly the hero back into the card it came from, on the page exactly as it
+      // was left: same scroll, same carousel offset, same card.
+      navigateWithTransition(() => navigate(-1), {
+        scrollY: readRememberedScroll(homePath) ?? 0,
+        sharedHref: item ? projectHref : undefined,
+      });
+      return;
+    }
+    navigate(homePath);
   };
 
   if (!item) {
