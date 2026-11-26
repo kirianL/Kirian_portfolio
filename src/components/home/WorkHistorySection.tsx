@@ -1,25 +1,38 @@
 import * as React from "react";
 import { dictionaries } from "@/data/data";
+import umpLogo from "@/assets/Logos/UMP.svg";
+import sorinLabsLogo from "@/assets/Logos/SorinLabs/LogoBlanco.svg";
 
 interface WorkHistorySectionProps {
   lang: "en" | "es";
 }
 
 /**
- * Compact editorial Work history list.
- * Clicking a company name smoothly expands a panel with short, concrete
- * improvements and minimalist tool tags — no cards, no gradients, no slop.
+ * Company logos keyed by the exact `company` value in experienceList.
+ * Logos are white SVGs so they stay legible on the dark editorial background.
  */
-const LOGOS: Record<string, React.ReactNode> = {};
+const LOGOS: Record<string, string> = {
+  "Ultimate Media Productions": umpLogo,
+  "Sorin Labs": sorinLabsLogo,
+};
 
 function LogoSlot({ name, color }: { name: string; color?: string }) {
-  const custom = LOGOS[name];
-  if (custom) {
-    return <span className="work-history-logo">{custom}</span>;
-  }
+  const src = LOGOS[name];
   return (
-    <span className={`work-history-logo work-history-logo--fallback ${color ?? ""}`}>
-      {name.charAt(0)}
+    <span className="work-history-logo">
+      {src ? (
+        <img
+          className="work-history-logo-img"
+          src={src}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+        />
+      ) : (
+        <span className={`work-history-logo-fallback ${color ?? ""}`}>
+          {name.charAt(0)}
+        </span>
+      )}
     </span>
   );
 }
