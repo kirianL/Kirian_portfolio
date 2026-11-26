@@ -1,6 +1,12 @@
 import * as React from "react";
 import { lazy, Suspense, useEffect, useRef } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigationType,
+} from "react-router-dom";
 import Lenis from "lenis";
 import { bind, setVolume } from "cuelume";
 import { installSoundUnlock } from "@/lib/sound";
@@ -74,9 +80,16 @@ function initPostHogOnce() {
 }
 
 export default function App() {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const { pathname, key: locationKey } = location;
+  const navigationType = useNavigationType();
   const isEs = pathname === "/es" || pathname.startsWith("/es/");
   const lenisRef = useRef<Lenis | null>(null);
+  // Remember where the user was on each history entry, so going back from a
+  // project detail returns to the exact scroll position instead of the hero.
+  const scrollByKeyRef = useRef<Record<string, number>>({});
+  const currentKeyRef = useRef(locationKey);
+  currentKeyRef.current = locationKey;
 
   useEffect(() => {
     try {
@@ -141,23 +154,46 @@ export default function App() {
     };
   }, []);
 
+  // Track the scroll position of the entry we're currently on.
+  useEffect(() => {
+    const rememberScroll = () => {
+      scrollByKeyRef.current[currentKeyRef.current] = window.scrollY;
+    };
+    window.addEventListener("scroll", rememberScroll, { passive: true });
+    return () => window.removeEventListener("scroll", rememberScroll);
+  }, []);
+
   // Scroll restoration + PostHog pageview on route change
   useEffect(() => {
     const savedScroll = sessionStorage.getItem("portfolio_lang_scroll");
+    let targetY = 0;
+
     if (savedScroll !== null) {
-      const targetY = parseInt(savedScroll, 10) || 0;
+      // Language switch keeps the user's exact position across translations.
+      targetY = parseInt(savedScroll, 10) || 0;
       sessionStorage.removeItem("portfolio_lang_scroll");
-      lenisRef.current?.scrollTo(targetY, { immediate: true });
-      window.scrollTo({ top: targetY, left: 0, behavior: "instant" });
-    } else {
-      lenisRef.current?.scrollTo(0, { immediate: true });
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    } else if (navigationType === "POP") {
+      // Back/forward (including "Back" from a project detail): restore the
+      // position we had on that history entry, not the top of the page.
+      targetY = scrollByKeyRef.current[locationKey] ?? 0;
     }
+
+    lenisRef.current?.scrollTo(targetY, { immediate: true });
+    window.scrollTo({ top: targetY, left: 0, behavior: "instant" });
+    // A second pass after layout settles catches late font/image shifts.
+    const rafId = requestAnimationFrame(() => {
+      if (navigationType === "POP" && savedScroll === null) {
+        const y = scrollByKeyRef.current[locationKey] ?? targetY;
+        lenisRef.current?.scrollTo(y, { immediate: true });
+        window.scrollTo({ top: y, left: 0, behavior: "instant" });
+      }
+    });
 
     if ((window as any).posthog?.capture) {
       (window as any).posthog.capture("$pageview");
     }
-  }, [pathname]);
+    return () => cancelAnimationFrame(rafId);
+  }, [pathname, locationKey, navigationType]);
 
   return (
     <>
