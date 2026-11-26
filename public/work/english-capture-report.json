@@ -3,10 +3,6 @@
     "id": "koragrid",
     "warnings": [
       {
-        "text": "Request demo",
-        "word": "que"
-      },
-      {
         "text": "Real-time energy telemetry and ESG control",
         "word": "con"
       },
@@ -65,11 +61,6 @@
   },
   {
     "id": "mp-legal",
-    "warnings": [
-      {
-        "text": "Contact",
-        "word": "con"
-      }
-    ]
+    "warnings": []
   }
 ]

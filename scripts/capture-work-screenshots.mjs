@@ -317,8 +317,15 @@ async function captureTarget(browser, target) {
     const page = await context.newPage();
     page.setDefaultTimeout(20000);
 
+    // Deterministic reveals + no browser chrome (header/nav) in "cover" mode.
+    // Hiding in-flow headers reflows the hero up; fixed headers simply vanish.
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const COVER = process.env.COVER === "1";
+    const HIDE_HEADER = `header, header.site-nav, header.site-header, .skip-link { display: none !important; }`;
+
     console.log(`[${target.id}] ES loading...`);
     await page.goto(esUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
+    if (COVER) await page.addStyleTag({ content: HIDE_HEADER });
     await withTimeout(page.evaluate(() => document.fonts?.ready), 6000, "fonts ES");
     await withTimeout(ensureImagesLoaded(page), 8000, "images ES").catch((e) =>
       console.warn(`[${target.id}] ${e.message} (continuing)`)
@@ -334,6 +341,7 @@ async function captureTarget(browser, target) {
     if (target.hasNativeEnToggle) {
       // The project has real i18n: navigate to /en instead of clicking a toggle.
       await page.goto(enUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
+      if (COVER) await page.addStyleTag({ content: HIDE_HEADER });
       await delay(800);
       console.log(`[${target.id}] loaded native EN route ${enUrl}`);
     } else if (target.enTranslations?.length) {
