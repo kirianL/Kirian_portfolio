@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
 import { play } from "cuelume";
 import RedDitherBanner from "@/components/hero/RedDitherBanner";
 import CentralHero from "@/components/hero/CentralHero";
@@ -29,18 +28,6 @@ export default function HomePage({ lang }: HomePageProps) {
     schema: professionalServiceSchema,
   });
 
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastVisible, setToastVisible] = useState(false);
-  const toastTimerRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (toastTimerRef.current) {
-        clearTimeout(toastTimerRef.current);
-      }
-    };
-  }, []);
-
   const handleCopyEmail = (email: string) => {
     if (!email || !navigator.clipboard?.writeText) return;
     navigator.clipboard
@@ -49,16 +36,6 @@ export default function HomePage({ lang }: HomePageProps) {
         try {
           play("success");
         } catch {}
-        setToastMessage(
-          isEs
-            ? "¡Correo copiado al portapapeles!"
-            : "Email copied to clipboard!",
-        );
-        setToastVisible(true);
-        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-        toastTimerRef.current = window.setTimeout(() => {
-          setToastVisible(false);
-        }, 2500);
       })
       .catch(() => {});
   };
@@ -145,34 +122,6 @@ export default function HomePage({ lang }: HomePageProps) {
 
       {/* Third Section: compact Work history */}
       <WorkHistorySection lang={lang} />
-
-      {/* Floating Toast Notification */}
-      <div
-        id={isEs ? "copy-toast-es" : "copy-toast"}
-        role="status"
-        aria-live="polite"
-        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-[opacity,transform] duration-300 ease-out flex items-center gap-2 px-3.5 py-2 rounded-full bg-zinc-100 text-zinc-900 text-xs font-medium shadow-lg border border-black/10 select-none ${
-          toastVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-3"
-        }`}
-      >
-        <svg
-          className="w-3.5 h-3.5 text-emerald-600 shrink-0"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2.5}
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-        <span>{toastMessage}</span>
-      </div>
     </main>
   );
 }
