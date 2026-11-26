@@ -46,7 +46,14 @@ export default function WorkHistorySection({ lang }: WorkHistorySectionProps) {
   const improvementsLabel = isEs ? "Mejoras" : "Improvements";
   const toolsLabel = isEs ? "Herramientas" : "Tools";
 
-  const [expandedIndex, setExpandedIndex] = React.useState<number | null>(null);
+  // Sorin Labs starts open on first entry so its improvements + tools are
+  // visible immediately, matching the intended editorial layout.
+  const [expandedIndex, setExpandedIndex] = React.useState<number | null>(() => {
+    const sorinIndex = data.experienceList.findIndex(
+      (e) => e.company === "Sorin Labs",
+    );
+    return sorinIndex >= 0 ? sorinIndex : null;
+  });
 
   return (
     <section

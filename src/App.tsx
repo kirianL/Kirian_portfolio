@@ -6,6 +6,8 @@ import { bind, setVolume } from "cuelume";
 import { installSoundUnlock } from "@/lib/sound";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import HomePage from "@/pages/HomePage";
+import WorkShowroom from "@/components/work/WorkShowroom";
+import WorkDetail from "@/components/work/WorkDetail";
 
 const ProjectsPage = lazy(() => import("@/pages/ProjectsPage"));
 const AboutPage = lazy(() => import("@/pages/AboutPage"));
@@ -176,6 +178,12 @@ export default function App() {
           <Route path="/projects/" element={<ProjectsPage lang="en" />} />
           <Route path="/es/projects" element={<ProjectsPage lang="es" />} />
           <Route path="/es/projects/" element={<ProjectsPage lang="es" />} />
+          <Route path="/work" element={<WorkShowroom lang="en" />} />
+          <Route path="/work/" element={<WorkShowroom lang="en" />} />
+          <Route path="/work/:slug" element={<WorkDetail lang="en" />} />
+          <Route path="/es/work" element={<WorkShowroom lang="es" />} />
+          <Route path="/es/work/" element={<WorkShowroom lang="es" />} />
+          <Route path="/es/work/:slug" element={<WorkDetail lang="es" />} />
           <Route path="/about" element={<AboutPage lang="en" />} />
           <Route path="/about/" element={<AboutPage lang="en" />} />
           <Route path="/es/about" element={<AboutPage lang="es" />} />
