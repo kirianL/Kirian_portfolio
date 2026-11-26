@@ -42,11 +42,22 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   const [activeSection, setActiveSection] = useState(0);
   const [openNotes, setOpenNotes] = useState<Record<string, boolean>>({});
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [lightboxClosing, setLightboxClosing] = useState(false);
+  const [stepDir, setStepDir] = useState<-1 | 1>(1);
+  // One flag per section screenshot: the grid skeleton holds the box until the
+  // file decodes, then fades out and leaves the capture in place.
+  const [loadedShots, setLoadedShots] = useState<Record<string, boolean>>({});
 
   const sectionsRef = useRef<HTMLDivElement | null>(null);
   const lightboxRef = useRef<HTMLDivElement | null>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  const markShotLoaded = useCallback((id: string) => {
+    setLoadedShots((current) =>
+      current[id] ? current : { ...current, [id]: true },
+    );
+  }, []);
 
   const metaRef = useRiseIn<HTMLDivElement>({
     start: "now",
@@ -155,10 +166,37 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
     return () => cancelAnimationFrame(id);
   }, [isLightboxOpen]);
 
-  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+  const openLightbox = useCallback((index: number) => {
+    setStepDir(1);
+    setLightboxClosing(false);
+    setLightboxIndex(index);
+  }, []);
+
+  const closeLightbox = useCallback(() => {
+    const reduced =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setLightboxIndex(null);
+      return;
+    }
+    setLightboxClosing(true);
+  }, []);
+
+  // The dialog fades out over 220ms; keeping it mounted for that beat is what
+  // makes closing read as a transition instead of a hard cut.
+  useEffect(() => {
+    if (!lightboxClosing) return;
+    const id = window.setTimeout(() => {
+      setLightboxIndex(null);
+      setLightboxClosing(false);
+    }, 220);
+    return () => window.clearTimeout(id);
+  }, [lightboxClosing]);
 
   const stepLightbox = useCallback(
     (direction: -1 | 1) => {
+      setStepDir(direction);
       setLightboxIndex((current) => {
         if (current === null || sections.length === 0) return current;
         return (current + direction + sections.length) % sections.length;
@@ -257,14 +295,21 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
     );
   }
 
+  // Case study titles carry the project name and the tagline in one string,
+  // separated by a dash. Splitting on the escape keeps this file free of the
+  // literal character while matching the stored separator exactly.
+  const TITLE_SEPARATOR = /\s\u2014\s/;
   const src = isEs ? item.imageEs : item.imageEn;
-  const title = (isEs ? item.titleEs : item.title).split(" — ")[0];
-  const description = (isEs ? item.titleEs : item.title).split(" — ")[1] ?? "";
+  const title = (isEs ? item.titleEs : item.title).split(TITLE_SEPARATOR)[0];
+  const description =
+    (isEs ? item.titleEs : item.title).split(TITLE_SEPARATOR)[1] ?? "";
   const role = isEs ? item.roleEs : item.role;
 
   const itemIndex = WORK_ITEMS.findIndex((w) => w.id === item.id);
   const nextItem = WORK_ITEMS[(itemIndex + 1) % WORK_ITEMS.length];
-  const nextTitle = (isEs ? nextItem.titleEs : nextItem.title).split(" — ")[0];
+  const nextTitle = (isEs ? nextItem.titleEs : nextItem.title).split(
+    TITLE_SEPARATOR,
+  )[0];
   const nextRole = isEs ? nextItem.roleEs : nextItem.role;
   const nextHref = isEs ? `/es/work/${nextItem.id}` : `/work/${nextItem.id}`;
 
@@ -306,7 +351,7 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
       {/* Shared-element hero: the carousel thumbnail becomes this image. A
           plain <img> paints from cache so the transition snapshot is never
           blank (a canvas would still be drawing at capture time), and being the
-          full-resolution file it is also the sharper of the two captures — the
+          full-resolution file it is also the sharper of the two captures, the
           one `data-vt-hero` lets the flight pick. The box keeps the
           thumbnail's 16:10 ratio in CSS, so the flight is a pure scale and the
           target never depends on the file having loaded. */}
@@ -428,6 +473,9 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
               const note = isEs ? section.noteEs : section.noteEn;
               const isNoteOpen = openNotes[section.id] === true;
               const noteId = `work-note-${section.id}`;
+              const shotSrc = isEs ? section.imageEs : section.imageEn;
+              const shotHeight = isEs ? section.heightEs : section.heightEn;
+              const shotLoaded = loadedShots[section.id] === true;
 
               return (
                 <article
@@ -452,23 +500,39 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
 
                   <button
                     type="button"
-                    onClick={() => setLightboxIndex(index)}
-                    aria-label={`${sectionTitle} — ${isEs ? "ampliar captura" : "open larger"}`}
-                    className="group relative mt-5 block w-full cursor-zoom-in overflow-hidden rounded-[10px] bg-[#141414] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
+                    onClick={() => openLightbox(index)}
+                    aria-label={`${sectionTitle}: ${isEs ? "ampliar captura" : "open larger"}`}
+                    className="group relative mt-5 block w-full cursor-pointer overflow-hidden rounded-[10px] bg-[#141414] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
                   >
                     <img
-                      src={section.image}
-                      alt={`${sectionTitle} — ${title}`}
+                      src={shotSrc}
+                      alt={`${sectionTitle}, ${title}`}
                       width={section.width}
-                      height={section.height}
+                      height={shotHeight}
                       loading="lazy"
                       decoding="async"
                       draggable={false}
-                      className="block h-auto w-full rounded-[10px] ring-1 ring-white/[0.06] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.012]"
+                      onLoad={() => markShotLoaded(section.id)}
+                      ref={(node) => {
+                        // A cached capture can finish before React attaches the
+                        // handler; `complete` is the only trace it left.
+                        if (node?.complete && node.naturalWidth > 0) {
+                          markShotLoaded(section.id);
+                        }
+                      }}
+                      className="block h-auto w-full rounded-[10px] ring-1 ring-white/[0.06]"
                     />
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute right-2.5 bottom-2.5 inline-flex items-center gap-1.5 rounded-[6px] bg-black/65 px-2 py-1 font-hero-sans text-[11px] font-medium text-white/90 opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+                      className={`work-shot-skeleton ${shotLoaded ? "is-loaded" : ""}`}
+                    />
+                    <span
+                      aria-hidden="true"
+                      className={`pointer-events-none absolute right-2.5 bottom-2.5 z-[3] inline-flex items-center gap-1.5 rounded-[6px] bg-black/65 px-2 py-1 font-hero-sans text-[11px] font-medium text-white/90 backdrop-blur-sm transition-opacity duration-200 ${
+                        shotLoaded
+                          ? "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+                          : "opacity-0"
+                      }`}
                     >
                       <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
@@ -595,7 +659,8 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
             aria-label={`${isEs ? "Captura" : "Screenshot"}: ${
               isEs ? lightboxSection.titleEs : lightboxSection.titleEn
             }`}
-            className="work-lightbox fixed inset-0 z-[100] flex flex-col bg-[#050505]/[0.96] backdrop-blur-[3px]"
+            data-state={lightboxClosing ? "closing" : "open"}
+            className="work-lightbox fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a0a]/75 px-4 py-6 backdrop-blur-sm sm:px-6"
           >
             <button
               type="button"
@@ -605,74 +670,77 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
               tabIndex={-1}
             />
 
-            <div className="relative z-10 flex h-14 shrink-0 items-center justify-between gap-4 px-4 sm:px-6">
-              <span className="min-w-0 font-hero-sans text-[12px] leading-[16px] text-[#f5f5f5a6]">
-                <span className="tabular-nums text-[#d1c5ad]">
-                  {String((lightboxIndex ?? 0) + 1).padStart(2, "0")}
+            <div className="work-lightbox__panel relative z-10 flex max-h-[92vh] w-[90vw] max-w-4xl flex-col overflow-hidden rounded-[14px] border border-white/[0.1] bg-[#0b0b0b]">
+              <div className="flex h-12 shrink-0 items-center justify-between gap-4 border-b border-white/[0.06] px-4 sm:px-5">
+                <span className="min-w-0 font-hero-sans text-[11.5px] leading-[16px] text-[#f5f5f5a6]">
+                  <span className="tabular-nums text-[#d1c5ad]">
+                    {String((lightboxIndex ?? 0) + 1).padStart(2, "0")}
+                  </span>
+                  <span className="mx-1.5 text-[#f5f5f540]">/</span>
+                  <span className="tabular-nums text-[#f5f5f55c]">
+                    {String(sections.length).padStart(2, "0")}
+                  </span>
+                  <span className="mx-1.5 text-[#f5f5f540]">/</span>
+                  <span className="truncate">
+                    {isEs ? lightboxSection.labelEs : lightboxSection.labelEn}
+                  </span>
                 </span>
-                <span className="mx-1.5 text-[#f5f5f540]">/</span>
-                <span className="tabular-nums text-[#f5f5f55c]">
-                  {String(sections.length).padStart(2, "0")}
+
+                <button
+                  ref={lightboxCloseRef}
+                  type="button"
+                  onClick={closeLightbox}
+                  aria-label={isEs ? "Cerrar captura" : "Close screenshot"}
+                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/[0.12] text-[#f5f5f5a6] transition-[background-color,color] duration-200 hover:bg-white/[0.08] hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
+                >
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6 6 18" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-[#060606] px-2 py-2 sm:px-3 sm:py-3">
+                <img
+                  key={lightboxSection.id}
+                  src={isEs ? lightboxSection.imageEs : lightboxSection.imageEn}
+                  alt={`${isEs ? lightboxSection.titleEs : lightboxSection.titleEn}, ${title}`}
+                  width={lightboxSection.width}
+                  height={isEs ? lightboxSection.heightEs : lightboxSection.heightEn}
+                  data-dir={stepDir === 1 ? "next" : "prev"}
+                  draggable={false}
+                  className="work-lightbox__image block max-h-[76vh] max-w-full rounded-[8px] object-contain ring-1 ring-white/[0.08] select-none"
+                />
+              </div>
+
+              <div className="flex h-14 shrink-0 items-center justify-between gap-3 border-t border-white/[0.06] px-3 sm:px-5">
+                <button
+                  type="button"
+                  onClick={() => stepLightbox(-1)}
+                  aria-label={isEs ? "Sección anterior" : "Previous section"}
+                  className="inline-flex h-9 items-center gap-2 rounded-[8px] border border-white/[0.12] px-3 font-hero-sans text-[12px] text-[#f5f5f5c4] transition-[background-color,border-color,color] duration-200 hover:border-white/[0.24] hover:bg-white/[0.06] hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
+                >
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6" />
+                  </svg>
+                  <span className="hidden sm:inline">{isEs ? "Anterior" : "Previous"}</span>
+                </button>
+
+                <span className="hidden font-hero-sans text-[11px] tracking-[0.03em] text-[#f5f5f540] sm:inline">
+                  Esc {isEs ? "para cerrar" : "to close"} <span className="mx-1.5 text-[#f5f5f530]">/</span> ← → {isEs ? "para navegar" : "to navigate"}
                 </span>
-                <span className="mx-1.5 text-[#f5f5f540]">/</span>
-                <span className="truncate">
-                  {isEs ? lightboxSection.labelEs : lightboxSection.labelEn}
-                </span>
-              </span>
 
-              <button
-                ref={lightboxCloseRef}
-                type="button"
-                onClick={closeLightbox}
-                aria-label={isEs ? "Cerrar captura" : "Close screenshot"}
-                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/[0.12] text-[#f5f5f5a6] transition-[background-color,color] duration-200 hover:bg-white/[0.08] hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
-              >
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true">
-                  <path d="M6 6l12 12M18 6 6 18" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="relative z-10 flex min-h-0 flex-1 items-center justify-center px-3 pb-1 sm:px-14">
-              <img
-                key={lightboxSection.id}
-                src={lightboxSection.image}
-                alt={`${isEs ? lightboxSection.titleEs : lightboxSection.titleEn} — ${title}`}
-                width={lightboxSection.width}
-                height={lightboxSection.height}
-                draggable={false}
-                className="work-lightbox__image block max-h-full max-w-full rounded-[10px] object-contain ring-1 ring-white/[0.1] shadow-[0_30px_100px_-30px_rgba(0,0,0,0.9)] select-none"
-              />
-            </div>
-
-            <div className="relative z-10 flex h-[68px] shrink-0 items-center justify-between gap-4 px-4 sm:px-6">
-              <button
-                type="button"
-                onClick={() => stepLightbox(-1)}
-                aria-label={isEs ? "Sección anterior" : "Previous section"}
-                className="inline-flex h-10 items-center gap-2 rounded-[8px] border border-white/[0.12] px-3 font-hero-sans text-[12px] text-[#f5f5f5c4] transition-[background-color,border-color,color] duration-200 hover:border-white/[0.24] hover:bg-white/[0.06] hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
-              >
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="m15 18-6-6 6-6" />
-                </svg>
-                <span className="hidden sm:inline">{isEs ? "Anterior" : "Previous"}</span>
-              </button>
-
-              <span className="hidden font-hero-sans text-[11px] tracking-[0.03em] text-[#f5f5f540] sm:inline">
-                Esc {isEs ? "para cerrar" : "to close"} <span className="mx-1.5 text-[#f5f5f530]">/</span> ← → {isEs ? "para navegar" : "to navigate"}
-              </span>
-
-              <button
-                type="button"
-                onClick={() => stepLightbox(1)}
-                aria-label={isEs ? "Siguiente sección" : "Next section"}
-                className="inline-flex h-10 items-center gap-2 rounded-[8px] border border-white/[0.12] px-3 font-hero-sans text-[12px] text-[#f5f5f5c4] transition-[background-color,border-color,color] duration-200 hover:border-white/[0.24] hover:bg-white/[0.06] hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
-              >
-                <span className="hidden sm:inline">{isEs ? "Siguiente" : "Next"}</span>
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="m9 18 6-6-6-6" />
-                </svg>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => stepLightbox(1)}
+                  aria-label={isEs ? "Siguiente sección" : "Next section"}
+                  className="inline-flex h-9 items-center gap-2 rounded-[8px] border border-white/[0.12] px-3 font-hero-sans text-[12px] text-[#f5f5f5c4] transition-[background-color,border-color,color] duration-200 hover:border-white/[0.24] hover:bg-white/[0.06] hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
+                >
+                  <span className="hidden sm:inline">{isEs ? "Siguiente" : "Next"}</span>
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>,
           document.body,

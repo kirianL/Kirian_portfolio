@@ -6,16 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: light)"
-      content="#ffffff"
-    />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: dark)"
-      content="#111113"
-    />
+    <meta name="theme-color" content="#0a0a0a" />
     <!-- Immediate Zero-FOUC Theme Initializer (Runs before render) -->
     <script>
       (function () {
@@ -26,10 +17,8 @@
         var isDark = saved ? saved === "dark" : prefersDark;
 
         document.documentElement.classList.toggle("dark", isDark);
-        document.documentElement.style.colorScheme = isDark ? "dark" : "light";
-        document.documentElement.style.backgroundColor = isDark
-          ? "#111113"
-          : "#ffffff";
+        document.documentElement.style.colorScheme = "dark";
+        document.documentElement.style.backgroundColor = "#0a0a0a";
       })();
     </script>
 

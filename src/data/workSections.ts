@@ -1,16 +1,23 @@
 /**
  * Section-by-section breakdown for each case study.
  *
- * The captures are the Spanish build of each site, at 2× density. Width and
- * height are kept here so every card reserves its exact box before the lazy
- * image decodes — the page never shifts under the section index while the user
- * scrolls.
+ * Every capture exists twice: the English and the Spanish build of each site,
+ * at 2x density, inside `public/work/<slug>/en|es/`. Width is shared; height
+ * differs per locale because a translated sentence reflows the section. Both
+ * heights are kept here so every card reserves its exact box before the lazy
+ * image decodes, and the page never shifts under the section index while the
+ * user scrolls.
+ *
+ * Copy rule: no hyphens, em dashes or middle dots in any prose field. Commas,
+ * periods, colons and semicolons carry the pauses instead.
  */
 export interface WorkSection {
   id: string;
-  image: string;
+  imageEn: string;
+  imageEs: string;
   width: number;
-  height: number;
+  heightEn: number;
+  heightEs: number;
   labelEn: string;
   labelEs: string;
   titleEn: string;
@@ -25,9 +32,11 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
   koragrid: [
     {
       id: "hero",
-      image: "/work/koragrid/01.png",
+      imageEn: "/work/koragrid/en/01.png",
+      imageEs: "/work/koragrid/es/01.png",
       width: 2880,
-      height: 1452,
+      heightEn: 1452,
+      heightEs: 1452,
       labelEn: "Hero",
       labelEs: "Portada",
       titleEn: "The product number is the first thing you read",
@@ -37,15 +46,17 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
       whyEs:
         "El titular se queda en una columna de 660 px mientras el panel en vivo de abajo carga la lectura de kW en números tabulares azules. La página vende medición, así que un número real hace más trabajo que tres frases abstractas. Los chips de sector van debajo de la lectura porque cambiar el escenario es la forma más rápida de probar que el panel no es una maqueta.",
       noteEn:
-        "The kW value only animates while the console is in view, and the figure uses tabular numerals so the line does not jog when 412,8 becomes 413,2. The panel is a real backdrop-blur layer over the spectrum graphic, not a flattened image.",
+        "The kW value only animates while the console is in view, and the figure uses tabular numerals so the line does not jog when 412,8 becomes 413,2. The panel is a real blur layer over the spectrum graphic, not a flattened image.",
       noteEs:
-        "El valor en kW solo se anima cuando el panel está en pantalla, y la cifra usa números tabulares para que la línea no baile cuando 412,8 pasa a 413,2. El panel es una capa real de backdrop-blur sobre el gráfico de espectro, no una imagen aplanada.",
+        "El valor en kW solo se anima cuando el panel está en pantalla, y la cifra usa números tabulares para que la línea no baile cuando 412,8 pasa a 413,2. El panel es una capa real de desenfoque sobre el gráfico de espectro, no una imagen aplanada.",
     },
     {
       id: "traceability",
-      image: "/work/koragrid/02.png",
+      imageEn: "/work/koragrid/en/02.png",
+      imageEs: "/work/koragrid/es/02.png",
       width: 2880,
-      height: 1122,
+      heightEn: 1122,
+      heightEs: 1122,
       labelEn: "Traceability",
       labelEs: "Trazabilidad",
       titleEn: "Five claims, five numbered stops",
@@ -55,21 +66,23 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
       whyEs:
         "En vez de cinco tarjetas idénticas, las afirmaciones viven dentro de un párrafo y cada una recibe un cuadrado numerado. La afirmación activa se vuelve blanca y el resto baja a gris, así que el ojo sigue una secuencia y no una cuadrícula. El contenido lo pide: cada paso depende del anterior, desde leer un circuito hasta vincular una compensación local.",
       noteEn:
-        "The five stops are buttons, and the 18–19px badge keeps the sentence from reflowing when the selection changes. The copy block keeps a fixed measure so the five lines never jump between states.",
+        "The five stops are buttons, and the 18px badge keeps the sentence from reflowing when the selection changes. The copy block keeps a fixed measure so the five lines never jump between states.",
       noteEs:
-        "Las cinco paradas son botones, y la insignia de 18–19 px evita que la frase se reacomode al cambiar la selección. El bloque de texto mantiene una medida fija para que las cinco líneas no salten entre estados.",
+        "Las cinco paradas son botones, y la insignia de 18 px evita que la frase se reacomode al cambiar la selección. El bloque de texto mantiene una medida fija para que las cinco líneas no salten entre estados.",
     },
     {
       id: "problem",
-      image: "/work/koragrid/03.png",
+      imageEn: "/work/koragrid/en/03.png",
+      imageEs: "/work/koragrid/es/03.png",
       width: 2880,
-      height: 1674,
+      heightEn: 1674,
+      heightEs: 1674,
       labelEn: "Problem",
       labelEs: "Problema",
       titleEn: "A light break that makes the diagnosis feel clinical",
       titleEs: "Un corte claro que vuelve clínico el diagnóstico",
       whyEn:
-        "The dark hero and the dark traceability block run into a full-width cream section, which is the layout equivalent of turning on the lights. Logos sit in a thin strip above the argument, before the reader is asked to care, because recognition buys the next ten seconds. Three equal columns name the failures without icons or oversized headings; the copy is the evidence.",
+        "The dark hero and the dark traceability block run into a cream section that spans the full width, which is the layout equivalent of turning on the lights. Logos sit in a thin strip above the argument, before the reader is asked to care, because recognition buys the next ten seconds. Three equal columns name the failures without icons or oversized headings; the copy is the evidence.",
       whyEs:
         "El hero oscuro y el bloque de trazabilidad desembocan en una sección crema a todo el ancho, que es el equivalente visual de encender la luz. Los logos van en una franja delgada antes del argumento, porque el reconocimiento compra los siguientes diez segundos. Tres columnas iguales nombran las fallas sin iconos ni titulares gigantes; el texto es la evidencia.",
       noteEn:
@@ -79,53 +92,59 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
     },
     {
       id: "modeling",
-      image: "/work/koragrid/04.png",
+      imageEn: "/work/koragrid/en/04.png",
+      imageEs: "/work/koragrid/es/04.png",
       width: 2880,
-      height: 1744,
+      heightEn: 1744,
+      heightEs: 1744,
       labelEn: "Modeling",
       labelEs: "Modelado",
       titleEn: "Two canvases instead of a feature list",
       titleEs: "Dos lienzos en lugar de una lista de funciones",
       whyEn:
-        "Load modeling is hard to explain in bullets, so the section gives it two 16:10 ASCII canvases and lets them take half the width each. The heading stays at 640px; the visuals do the describing. The copy under each canvas names the operational win — catch a spike before the 15-minute window closes — instead of restating the animation.",
+        "Load modeling is hard to explain in bullets, so the section gives it two 16:10 ASCII canvases and lets them take half the width each. The heading stays at 640px; the visuals do the describing. The copy under each canvas names the operational win, catching a spike before the window of 15 minutes closes, instead of restating the animation.",
       whyEs:
-        "Modelar carga es difícil de explicar en viñetas, así que la sección le da dos lienzos ASCII de 16:10 y deja que cada uno ocupe la mitad del ancho. El titular se queda en 640 px; los visuales describen. El texto bajo cada lienzo nombra la ganancia operativa —detectar un pico antes de que cierre la ventana de 15 minutos— en lugar de repetir la animación.",
+        "Modelar carga es difícil de explicar en viñetas, así que la sección le da dos lienzos ASCII de 16:10 y deja que cada uno ocupe la mitad del ancho. El titular se queda en 640 px; los visuales describen. El texto bajo cada lienzo nombra la ganancia operativa, detectar un pico antes de que cierre la ventana de 15 minutos, en lugar de repetir la animación.",
       noteEn:
-        "Each canvas draws procedural ASCII at a 7px cell width, so it scales without shipping a video or a sprite sheet. The cards sit on a 1px rule grid and drop their animation under prefers-reduced-motion.",
+        "Each canvas draws procedural ASCII at a 7px cell width, so it scales without shipping a video or a sprite sheet. The cards sit on a rule grid of 1px lines and drop their animation when the system asks for less motion.",
       noteEs:
-        "Cada lienzo dibuja ASCII procedural con celdas de 7 px, así que escala sin enviar un video ni una hoja de sprites. Las tarjetas viven sobre una retícula de líneas de 1 px y apagan su animación con prefers-reduced-motion.",
+        "Cada lienzo dibuja ASCII procedural con celdas de 7 px, así que escala sin enviar un video ni una hoja de sprites. Las tarjetas viven sobre una retícula de líneas de 1 px y apagan su animación cuando el sistema pide menos movimiento.",
     },
     {
       id: "grid-stress",
-      image: "/work/koragrid/05.png",
+      imageEn: "/work/koragrid/en/05.png",
+      imageEs: "/work/koragrid/es/05.png",
       width: 2880,
-      height: 1658,
+      heightEn: 1658,
+      heightEs: 1658,
       labelEn: "Grid stress",
       labelEs: "Red bajo presión",
       titleEn: "The warning comes before the pitch",
       titleEs: "La advertencia llega antes que la propuesta",
       whyEn:
-        "The section opens with an overloaded transformer and a 42-minute countdown, not with a feature. The order matters: a grid operator already knows the risk, so the page earns attention by naming the specific failure first. The ASCII tower occupies the middle while the alert panel and the resolution copy bracket it, which keeps the eye moving from problem to method.",
+        "The section opens with an overloaded transformer and a countdown of 42 minutes, not with a feature. The order matters: a grid operator already knows the risk, so the page earns attention by naming the specific failure first. The ASCII tower occupies the middle while the alert panel and the resolution copy bracket it, which keeps the eye moving from problem to method.",
       whyEs:
         "La sección abre con un transformador sobrecargado y una cuenta de 42 minutos, no con una función. El orden importa: quien opera una red ya conoce el riesgo, así que la página gana atención nombrando primero la falla concreta. La torre ASCII ocupa el centro mientras el panel de alerta y el texto de solución la enmarcan, lo que lleva el ojo del problema al método.",
       noteEn:
-        "The critical tag is a small solid red chip, not an animated badge; the urgency comes from the 42-minute figure next to it. The tower is drawn glyph by glyph on a canvas, so there is no poster frame to download before the section can paint.",
+        "The critical tag is a small solid red chip, not an animated badge; the urgency comes from the figure of 42 minutes next to it. The tower is drawn glyph by glyph on a canvas, so there is no poster frame to download before the section can paint.",
       noteEs:
         "La etiqueta de crítico es un chip rojo sólido y pequeño, no una insignia animada; la urgencia viene de la cifra de 42 minutos al lado. La torre se dibuja glifo por glifo en un canvas, así que no hay un póster que descargar antes de que la sección pinte.",
     },
     {
       id: "coverage",
-      image: "/work/koragrid/06.png",
+      imageEn: "/work/koragrid/en/06.png",
+      imageEs: "/work/koragrid/es/06.png",
       width: 2880,
-      height: 964,
+      heightEn: 964,
+      heightEs: 964,
       labelEn: "Coverage",
       labelEs: "Cobertura",
       titleEn: "Close on a map, not a form",
       titleEs: "Cerrar con un mapa, no con un formulario",
       whyEn:
-        "The last section states national coverage and stops. A map of Costa Rica answers the remaining question — where does this actually run — without another feature block. The single CTA is deliberately quiet: after five sections of proof, a hard sell would read as panic.",
+        "The last section states national coverage and stops. A map of Costa Rica answers the remaining question, where does this actually run, without another feature block. The single CTA is deliberately quiet: after five sections of proof, a hard sell would read as panic.",
       whyEs:
-        "La última sección declara cobertura nacional y se detiene. Un mapa de Costa Rica responde la pregunta que queda —dónde corre esto de verdad— sin otro bloque de funciones. El único CTA es deliberadamente discreto: después de cinco secciones de prueba, una venta agresiva se leería como pánico.",
+        "La última sección declara cobertura nacional y se detiene. Un mapa de Costa Rica responde la pregunta que queda, dónde corre esto de verdad, sin otro bloque de funciones. El único CTA es deliberadamente discreto: después de cinco secciones de prueba, una venta agresiva se leería como pánico.",
       noteEn:
         "The map is vector, not a screenshot, and the section height is held around 480px on desktop so the page does not end in a long empty tail. The CTA is the only interactive element left, which keeps the exit obvious.",
       noteEs:
@@ -136,27 +155,31 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
   customerup: [
     {
       id: "hero",
-      image: "/work/customerup/01.png",
+      imageEn: "/work/customerup/en/01.png",
+      imageEs: "/work/customerup/es/01.png",
       width: 2880,
-      height: 2118,
+      heightEn: 2120,
+      heightEs: 2120,
       labelEn: "Hero",
       labelEs: "Portada",
       titleEn: "A campaign panel does the explaining",
       titleEs: "Un panel de campaña hace la explicación",
       whyEn:
-        "The left side states the offer in three short lines and the right side shows the thing being sold: a campaign with email, push and in-app counts. That split keeps the headline from carrying the whole argument. Navigation is pushed to a single row above, so the eye lands on the product, not the menu.",
+        "The left side states the offer in three short lines and the right side shows the thing being sold: a campaign with email, push and in app counts. That split keeps the headline from carrying the whole argument. Navigation is pushed to a single row above, so the eye lands on the product, not the menu.",
       whyEs:
         "El lado izquierdo plantea la oferta en tres líneas cortas y el derecho muestra lo que se vende: una campaña con conteos de correo, push y app. Esa división evita que el titular cargue todo el argumento. La navegación se reduce a una fila arriba, así que el ojo cae en el producto, no en el menú.",
       noteEn:
-        "Each channel row is a label/value pair on the same baseline, and the 3.424 / 2.343 / 1.200 figures use tabular numerals so the three rows align. The card is sized to the hero's optical centre instead of being stretched to the column edge.",
+        "Each channel row is a label and value pair on the same baseline, and the 3.424 / 2.343 / 1.200 figures use tabular numerals so the three rows align. The card is sized to the hero's optical centre instead of being stretched to the column edge.",
       noteEs:
-        "Cada fila de canal es un par etiqueta/valor en la misma línea base, y las cifras 3.424 / 2.343 / 1.200 usan números tabulares para que las tres filas alineen. La tarjeta se dimensiona al centro óptico del hero en vez de estirarse al borde de la columna.",
+        "Cada fila de canal es un par etiqueta y valor en la misma línea base, y las cifras 3.424 / 2.343 / 1.200 usan números tabulares para que las tres filas alineen. La tarjeta se dimensiona al centro óptico del hero en vez de estirarse al borde de la columna.",
     },
     {
       id: "scale",
-      image: "/work/customerup/02.png",
+      imageEn: "/work/customerup/en/02.png",
+      imageEs: "/work/customerup/es/02.png",
       width: 2880,
-      height: 2242,
+      heightEn: 2156,
+      heightEs: 2242,
       labelEn: "Scale",
       labelEs: "Escala",
       titleEn: "The metrics get the biggest type on the page",
@@ -166,15 +189,17 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
       whyEs:
         "99,55%, 34B+, 5,4B+ y 24/5 van arriba de sus leyendas y pesan más que el titular de la sección. La inversión es intencional: una plataforma de datos tiene que probar volumen antes de explicar funciones. Las tres columnas de servicios de abajo son más discretas, así que la sección se lee como evidencia primero y capacidades después.",
       noteEn:
-        "The four numbers count up once when the strip enters the viewport and use tabular numerals, so their width never wobbles mid-animation. The strip is separated by a single top rule rather than four boxes.",
+        "The four numbers count up once when the strip enters the viewport and use tabular numerals, so their width never wobbles mid animation. The strip is separated by a single top rule rather than four boxes.",
       noteEs:
         "Los cuatro números cuentan una vez cuando la franja entra en pantalla y usan números tabulares, así que su ancho no tiembla a mitad de la animación. La franja se separa con una sola línea superior, no con cuatro cajas.",
     },
     {
       id: "data-hub",
-      image: "/work/customerup/03.png",
+      imageEn: "/work/customerup/en/03.png",
+      imageEs: "/work/customerup/es/03.png",
       width: 2880,
-      height: 1570,
+      heightEn: 1568,
+      heightEs: 1570,
       labelEn: "Data hub",
       labelEs: "Hub de datos",
       titleEn: "One diagram replaces a paragraph about architecture",
@@ -190,27 +215,31 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
     },
     {
       id: "why-us",
-      image: "/work/customerup/04.png",
+      imageEn: "/work/customerup/en/04.png",
+      imageEs: "/work/customerup/es/04.png",
       width: 2880,
-      height: 1844,
+      heightEn: 1950,
+      heightEs: 1844,
       labelEn: "Why us",
       labelEs: "Por qué nosotros",
       titleEn: "A bento grid that admits it is a bento grid",
       titleEs: "Una retícula que admite que es una retícula",
       whyEn:
-        "The heading and paragraph take the top band, then the proof splits into unequal tiles: a growth chart, two short claims, a three-step timeline and a 12/12 figure. Unequal spans stop the eye from treating every claim as equal, which matters when one tile is a chart and another is a sentence. The 2026 figure is labelled as an estimate, not dressed up as actual revenue.",
+        "The heading and paragraph take the top band, then the proof splits into unequal tiles: a growth chart, two short claims, a timeline of three steps and a 12/12 figure. Unequal spans stop the eye from treating every claim as equal, which matters when one tile is a chart and another is a sentence. The 2026 figure is labelled as an estimate, not dressed up as actual revenue.",
       whyEs:
         "El titular y el párrafo ocupan la banda superior, y la prueba se divide en piezas desiguales: un gráfico de crecimiento, dos afirmaciones cortas, una línea de tres pasos y una cifra 12/12. Los tamaños distintos evitan que el ojo trate todas las afirmaciones por igual, lo que importa cuando una pieza es un gráfico y otra es una frase. La cifra 2026 se rotula como estimación, no se disfraza de ingreso real.",
       noteEn:
-        "The growth chart is a real plot with 2025 and 2026 labels, not a decorative squiggle. Timeline steps are text-first, so translating '1 semana' cannot break a fixed-width graphic.",
+        "The growth chart is a real plot with 2025 and 2026 labels, not a decorative squiggle. Timeline steps are written as text, so translating '1 semana' cannot break a graphic with a fixed width.",
       noteEs:
         "El gráfico de crecimiento es un trazado real con etiquetas 2025 y 2026, no un garabato decorativo. Los pasos de la línea de tiempo son texto, así que traducir «1 semana» no rompe un gráfico de ancho fijo.",
     },
     {
       id: "problem",
-      image: "/work/customerup/05.png",
+      imageEn: "/work/customerup/en/05.png",
+      imageEs: "/work/customerup/es/05.png",
       width: 2880,
-      height: 1614,
+      heightEn: 1614,
+      heightEs: 1614,
       labelEn: "The problem",
       labelEs: "El problema",
       titleEn: "A failure chart with a time axis",
@@ -226,36 +255,40 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
     },
     {
       id: "services",
-      image: "/work/customerup/06.png",
+      imageEn: "/work/customerup/en/06.png",
+      imageEs: "/work/customerup/es/06.png",
       width: 2880,
-      height: 1662,
+      heightEn: 1662,
+      heightEs: 1662,
       labelEn: "Services",
       labelEs: "Servicios",
       titleEn: "A lime panel inside a dark page",
       titleEs: "Un panel lima dentro de una página oscura",
       whyEn:
-        "The services block is a single forest-green panel inset into a lime band, with a photo on the left and a 2×2 grid on the right. The contrast reversal tells the reader this is the commercial turn of the page without another heading ornament. One card is lime because the primary offer needs different weight, not because the grid needed decoration.",
+        "The services block is a single forest green panel inset into a lime band, with a photo on the left and a 2×2 grid on the right. The contrast reversal tells the reader this is the commercial turn of the page without another heading ornament. One card is lime because the primary offer needs different weight, not because the grid needed decoration.",
       whyEs:
         "El bloque de servicios es un solo panel verde bosque dentro de una banda lima, con una foto a la izquierda y una cuadrícula 2×2 a la derecha. La inversión de contraste avisa que aquí gira la página hacia lo comercial sin otro adorno en el titular. Una tarjeta es lima porque la oferta principal necesita otro peso, no porque la cuadrícula necesitara decoración.",
       noteEn:
-        "The panel uses a 24px radius at desktop and 16px on mobile, and every card keeps a 126px minimum height so the arrow badges line up across rows. The photo is object-cover inside its own frame, so a slow image never reflows the grid.",
+        "The panel uses a 24px radius at desktop and 16px on mobile, and every card keeps a 126px minimum height so the arrow badges line up across rows. The photo fills its own frame, so a slow image never reflows the grid.",
       noteEs:
-        "El panel usa radio de 24 px en escritorio y 16 px en móvil, y cada tarjeta mantiene 126 px de altura mínima para que las flechas alineen entre filas. La foto es object-cover dentro de su propio marco, así que una imagen lenta nunca reacomoda la cuadrícula.",
+        "El panel usa radio de 24 px en escritorio y 16 px en móvil, y cada tarjeta mantiene 126 px de altura mínima para que las flechas alineen entre filas. La foto cubre su propio marco, así que una imagen lenta nunca reacomoda la cuadrícula.",
     },
   ],
 
   "kora-finance": [
     {
       id: "hero",
-      image: "/work/kora-finance/01.png",
+      imageEn: "/work/kora-finance/en/01.png",
+      imageEs: "/work/kora-finance/es/01.png",
       width: 2880,
-      height: 1800,
+      heightEn: 1800,
+      heightEs: 1800,
       labelEn: "Hero",
       labelEs: "Portada",
       titleEn: "Local rails, named in the headline",
       titleEs: "Rieles locales, nombrados en el titular",
       whyEn:
-        "The headline names colones and SINPE instead of 'modern treasury', because the product only matters if the reader recognises their own banking rails. 'Colones' sits inside a pale pill, which is a local-currency marker rather than a decorative highlight. The hero photograph of 100-colón coins on moss carries the rest of the context.",
+        "The headline names colones and SINPE instead of 'modern treasury', because the product only matters if the reader recognises their own banking rails. 'Colones' sits inside a pale pill, which is a local currency marker rather than a decorative highlight. The hero photograph of coins of 100 colones on moss carries the rest of the context.",
       whyEs:
         "El titular nombra colones y SINPE en vez de «tesorería moderna», porque el producto solo importa si el lector reconoce sus propios rieles bancarios. «Colones» va dentro de una píldora clara, que funciona como marca de moneda local y no como resaltado decorativo. La fotografía de monedas de 100 colones sobre musgo carga el resto del contexto.",
       noteEn:
@@ -265,45 +298,51 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
     },
     {
       id: "platform",
-      image: "/work/kora-finance/02.png",
+      imageEn: "/work/kora-finance/en/02.png",
+      imageEs: "/work/kora-finance/es/02.png",
       width: 2880,
-      height: 1978,
+      heightEn: 1978,
+      heightEs: 1978,
       labelEn: "Platform",
       labelEs: "Plataforma",
-      titleEn: "The dashboard is the section's proof",
+      titleEn: "The dashboard is the proof of the section",
       titleEs: "El panel es la prueba de la sección",
       whyEn:
         "Under a short heading, the page shows a full treasury dashboard with four accounts, totals in CRC and USD, and a spend bar filled to 18,4M of 25M. The numbers are specific and uneven on purpose: a real account does not carry round balances. Two feature blurbs sit below the mock, so the interface argues first and the copy annotates it.",
       whyEs:
         "Bajo un titular corto, la página muestra un panel de tesorería completo con cuatro cuentas, totales en CRC y USD y una barra de gasto llena hasta 18,4M de 25M. Los números son específicos y dispares a propósito: una cuenta real no tiene saldos redondos. Dos textos de funciones van debajo de la maqueta, así que la interfaz argumenta primero y el texto la anota.",
       noteEn:
-        "Every figure in the mock uses tabular numerals, and the currency column is right-aligned so decimal points stack. The account status is a small text label instead of a green pill, which keeps the panel from looking like a dashboard template.",
+        "Every figure in the mock uses tabular numerals, and the currency column is aligned to the right so decimal points stack. The account status is a small text label instead of a green pill, which keeps the panel from looking like a dashboard template.",
       noteEs:
         "Cada cifra de la maqueta usa números tabulares, y la columna de moneda se alinea a la derecha para que los decimales apilen. El estado de la cuenta es una etiqueta de texto pequeña en vez de una píldora verde, lo que evita que el panel parezca una plantilla de dashboard.",
     },
     {
       id: "flow",
-      image: "/work/kora-finance/03.png",
+      imageEn: "/work/kora-finance/en/03.png",
+      imageEs: "/work/kora-finance/es/03.png",
       width: 2880,
-      height: 1688,
+      heightEn: 1688,
+      heightEs: 1688,
       labelEn: "Flow",
       labelEs: "Flujo",
-      titleEn: "A wiring diagram, not a three-step explainer",
+      titleEn: "A wiring diagram, not an explainer in three steps",
       titleEs: "Un diagrama de cableado, no un explicativo de tres pasos",
       whyEn:
         "The section draws the actual connections: banks on the left, Kora in the middle, SINPE, MONEX/BCCR and Hacienda on the right. Each node is labelled with the institution it represents, so the diagram doubles as an integration list. The copy is reduced to two lines because the topology is the explanation.",
       whyEs:
         "La sección dibuja las conexiones reales: bancos a la izquierda, Kora en el centro, SINPE, MONEX/BCCR y Hacienda a la derecha. Cada nodo está rotulado con la institución que representa, así que el diagrama también funciona como lista de integraciones. El texto se reduce a dos líneas porque la topología es la explicación.",
       noteEn:
-        "Paths are 1px SVG strokes with small dashed pulses travelling toward Kora; the animation stops under prefers-reduced-motion. Node labels are HTML, so a bank name can grow in Spanish without redrawing the diagram.",
+        "Paths are 1px SVG strokes with small dashed pulses travelling toward Kora; the animation stops when the system asks for less motion. Node labels are HTML, so a bank name can grow in Spanish without redrawing the diagram.",
       noteEs:
-        "Las rutas son trazos SVG de 1 px con pequeños pulsos discontinuos que viajan hacia Kora; la animación se detiene con prefers-reduced-motion. Las etiquetas de los nodos son HTML, así que un nombre de banco puede crecer en español sin redibujar el diagrama.",
+        "Las rutas son trazos SVG de 1 px con pequeños pulsos discontinuos que viajan hacia Kora; la animación se detiene cuando el sistema pide menos movimiento. Las etiquetas de los nodos son HTML, así que un nombre de banco puede crecer en español sin redibujar el diagrama.",
     },
     {
       id: "ecosystem",
-      image: "/work/kora-finance/04.png",
+      imageEn: "/work/kora-finance/en/04.png",
+      imageEs: "/work/kora-finance/es/04.png",
       width: 2880,
-      height: 1116,
+      heightEn: 1116,
+      heightEs: 1116,
       labelEn: "Ecosystem",
       labelEs: "Ecosistema",
       titleEn: "Sixteen marks, two rows, one tooltip",
@@ -313,41 +352,45 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
       whyEs:
         "La sección de integraciones muestra los bancos y servicios como un campo compacto de fichas en vez de un muro de logos grises con leyenda. Al pasar el cursor sobre una ficha aparece el nombre completo de la institución, así que la sección puede ser densa sin esconder qué significa cada marca. El texto se queda en dos líneas; los nombres son el contenido.",
       noteEn:
-        "Two rows hold 16 tiles, each with a fixed square cell so a 1990s bank mark and a 2020s fintech mark do not fight over scale. The tooltip uses the first-hover delay / instant-neighbour pattern, so scanning the grid does not feel twitchy.",
+        "Two rows hold 16 tiles, each with a fixed square cell so a 1990s bank mark and a fintech mark of the 2020s do not fight over scale. The tooltip waits on the first hover and then opens at once on its neighbours, so scanning the grid does not feel twitchy.",
       noteEs:
         "Dos filas sostienen 16 fichas, cada una con una celda cuadrada fija para que una marca bancaria de los 90 y una fintech de 2020 no peleen por escala. El tooltip usa el patrón de retraso en el primer hover y apertura instantánea en los vecinos, así que recorrer la cuadrícula no se siente nervioso.",
     },
     {
       id: "compliance",
-      image: "/work/kora-finance/05.png",
+      imageEn: "/work/kora-finance/en/05.png",
+      imageEs: "/work/kora-finance/es/05.png",
       width: 2880,
-      height: 1658,
+      heightEn: 1658,
+      heightEs: 1658,
       labelEn: "Compliance",
       labelEs: "Cumplimiento",
       titleEn: "Regulation as a feature row",
       titleEs: "La regulación como fila de funciones",
       whyEn:
-        "Three figures — 100% SUGEF traceability, 99,99% TLS 1.3, 16+ banks and cooperatives — carry the section. Each one is a compliance claim a finance lead can repeat in a meeting, which is more useful than another paragraph about security. The heading stays short and the stat labels do the qualifying.",
+        "Three figures carry the section: 100% SUGEF traceability, 99,99% TLS 1.3, 16+ banks and cooperatives. Each one is a compliance claim a finance lead can repeat in a meeting, which is more useful than another paragraph about security. The heading stays short and the stat labels do the qualifying.",
       whyEs:
-        "Tres cifras —100% trazabilidad SUGEF, 99,99% TLS 1.3, 16+ bancos y cooperativas— cargan la sección. Cada una es una afirmación de cumplimiento que un responsable financiero puede repetir en una reunión, más útil que otro párrafo sobre seguridad. El titular se mantiene corto y las leyendas de las cifras califican.",
+        "Tres cifras cargan la sección: 100% trazabilidad SUGEF, 99,99% TLS 1.3, 16+ bancos y cooperativas. Cada una es una afirmación de cumplimiento que un responsable financiero puede repetir en una reunión, más útil que otro párrafo sobre seguridad. El titular se mantiene corto y las leyendas de las cifras califican.",
       noteEn:
-        "The three figures share a row and a baseline; captions may wrap to two lines instead of shrinking the number. No shield icons or badge graphics — the numbers are the badge.",
+        "The three figures share a row and a baseline; captions may wrap to two lines instead of shrinking the number. No shield icons or badge graphics: the numbers are the badge.",
       noteEs:
         "Las tres cifras comparten fila y línea base; las leyendas pueden ocupar dos líneas en vez de encoger el número. Sin iconos de escudo ni gráficos de insignia: los números son la insignia.",
     },
     {
       id: "pricing",
-      image: "/work/kora-finance/06.png",
+      imageEn: "/work/kora-finance/en/06.png",
+      imageEs: "/work/kora-finance/es/06.png",
       width: 2880,
-      height: 2116,
+      heightEn: 2140,
+      heightEs: 2116,
       labelEn: "Pricing",
       labelEs: "Precios",
       titleEn: "Three plans, one recommended",
       titleEs: "Tres planes, uno recomendado",
       whyEn:
-        "The middle plan gets the emphasis through a stronger border and a label, not through scale or a badge explosion. Each card lists what changes between tiers — bank count, team seats, ERP access — so the upgrade decision is readable without a comparison table. Monthly and annual sit as a two-state switch above the cards.",
+        "The middle plan gets the emphasis through a stronger border and a label, not through scale or a badge explosion. Each card lists what changes between tiers, the bank count, team seats and ERP access, so the upgrade decision is readable without a comparison table. Monthly and annual sit as a two state switch above the cards.",
       whyEs:
-        "El plan del medio recibe el énfasis con un borde más fuerte y una etiqueta, no con escala ni una explosión de insignias. Cada tarjeta lista lo que cambia entre niveles —cantidad de bancos, miembros del equipo, acceso a ERP— así que la decisión de subir de plan se lee sin tabla comparativa. Mensual y anual viven como un interruptor de dos estados sobre las tarjetas.",
+        "El plan del medio recibe el énfasis con un borde más fuerte y una etiqueta, no con escala ni una explosión de insignias. Cada tarjeta lista lo que cambia entre niveles, cantidad de bancos, miembros del equipo y acceso a ERP, así que la decisión de subir de plan se lee sin tabla comparativa. Mensual y anual viven como un interruptor de dos estados sobre las tarjetas.",
       noteEn:
         "The recommended card is one step lighter and one border stronger; its CTA is the only filled button in the row. Feature lists share a fixed leading, so the three cards end at different heights instead of being padded into false symmetry.",
       noteEs:
@@ -358,27 +401,31 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
   "alder-psicologia": [
     {
       id: "hero",
-      image: "/work/alder-psicologia/01.png",
+      imageEn: "/work/alder-psicologia/en/01.png",
+      imageEs: "/work/alder-psicologia/es/01.png",
       width: 2880,
-      height: 1240,
+      heightEn: 1240,
+      heightEs: 1240,
       labelEn: "Hero",
       labelEs: "Portada",
       titleEn: "Clinical proof below the first sentence",
       titleEs: "Prueba clínica debajo de la primera frase",
       whyEn:
-        "The headline is warm, but the three panels underneath are clinical artifacts: a portrait, a PHQ-9 outcome dial at 86% and a weekly mood tracker. That combination answers the quiet question a therapy client actually has — is this a real practice? — before the copy asks for a booking. The dark forest background gives the cards enough contrast to read as instruments.",
+        "The headline is warm, but the three panels underneath are clinical artifacts: a portrait, a PHQ9 outcome dial at 86% and a weekly mood tracker. That combination answers the quiet question a therapy client actually has before the copy asks for a booking: is this a real practice? The dark forest background gives the cards enough contrast to read as instruments.",
       whyEs:
-        "El titular es cálido, pero los tres paneles de abajo son artefactos clínicos: un retrato, un dial de resultados PHQ-9 al 86% y un seguimiento semanal del ánimo. Esa combinación responde la pregunta silenciosa de un paciente —¿esto es una práctica real?— antes de que el texto pida una cita. El fondo verde bosque da a las tarjetas suficiente contraste para leerse como instrumentos.",
+        "El titular es cálido, pero los tres paneles de abajo son artefactos clínicos: un retrato, un dial de resultados PHQ9 al 86% y un seguimiento semanal del ánimo. Esa combinación responde, antes de que el texto pida una cita, la pregunta silenciosa de un paciente: ¿esto es una práctica real? El fondo verde bosque da a las tarjetas suficiente contraste para leerse como instrumentos.",
       noteEn:
-        "The outcome dial is a 34-dot SVG ring with five ticks and a carousel of five quotes; 86% is the resting state, not a one-off number. The portrait is grayscale with a contrast filter, so it does not pull focus from the data.",
+        "The outcome dial is an SVG ring of 34 dots with five ticks and a carousel of five quotes; 86% is the resting state, not a single figure. The portrait is grayscale with a contrast filter, so it does not pull focus from the data.",
       noteEs:
         "El dial de resultados es un anillo SVG de 34 puntos con cinco marcas y un carrusel de cinco citas; 86% es el estado inicial, no una cifra aislada. El retrato va en escala de grises con filtro de contraste, así que no le roba foco a los datos.",
     },
     {
       id: "services",
-      image: "/work/alder-psicologia/02.png",
+      imageEn: "/work/alder-psicologia/en/02.png",
+      imageEs: "/work/alder-psicologia/es/02.png",
       width: 2880,
-      height: 1538,
+      heightEn: 1496,
+      heightEs: 1538,
       labelEn: "Services",
       labelEs: "Servicios",
       titleEn: "Modality and duration before the pitch",
@@ -388,15 +435,17 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
       whyEs:
         "Cada columna de servicio dice para quién es, luego el formato y la duración. Ese es el orden que necesita alguien indeciso: individual, pareja o en línea primero; 50 o 60 minutos después; el CTA al final. Tres columnas bastan porque las opciones realmente son tres, no porque la plantilla tuviera tres espacios.",
       noteEn:
-        "The duration shares a line with the CTA, so the two facts a client compares sit together. The cards use different editorial backdrops — rings, an arch, a wave — drawn as inline SVG, which keeps the three modalities distinct without three icon boxes.",
+        "The duration shares a line with the CTA, so the two facts a client compares sit together. The cards use different editorial backdrops (rings, an arch, a wave) drawn as inline SVG, which keeps the three modalities distinct without three icon boxes.",
       noteEs:
-        "La duración comparte línea con el CTA, así que los dos datos que un paciente compara quedan juntos. Las tarjetas usan fondos editoriales distintos —anillos, un arco, una onda— dibujados como SVG en línea, lo que distingue las tres modalidades sin tres cajas de iconos.",
+        "La duración comparte línea con el CTA, así que los dos datos que un paciente compara quedan juntos. Las tarjetas usan fondos editoriales distintos (anillos, un arco, una onda) dibujados como SVG en línea, lo que distingue las tres modalidades sin tres cajas de iconos.",
     },
     {
       id: "approach",
-      image: "/work/alder-psicologia/03.png",
+      imageEn: "/work/alder-psicologia/en/03.png",
+      imageEs: "/work/alder-psicologia/es/03.png",
       width: 2880,
-      height: 1324,
+      heightEn: 1366,
+      heightEs: 1324,
       labelEn: "Approach",
       labelEs: "Enfoque",
       titleEn: "Four modalities, one open at a time",
@@ -406,33 +455,37 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
       whyEs:
         "TCC, ACT, EMDR y MBCT aparecen como cuatro pestañas con subrayado, y solo una explicación está visible. Quien busca terapia no necesita los cuatro métodos a la vez; necesita saber que la práctica puede elegir. El panel lavanda evita que el detalle clínico se vuelva una página de manual.",
       noteEn:
-        "The active tab is marked by a 2px underline instead of a filled pill, so the four codes stay equally readable. The panel swaps an illustration and a short focus/cadence block; no accordion, no hidden tabs.",
+        "The active tab is marked by a 2px underline instead of a filled pill, so the four codes stay equally readable. The panel swaps an illustration and a short block of focus and cadence; no accordion, no hidden tabs.",
       noteEs:
-        "La pestaña activa se marca con un subrayado de 2 px en vez de una píldora rellena, así que los cuatro códigos siguen igual de legibles. El panel cambia una ilustración y un bloque corto de enfoque/ritmo; sin acordeón ni pestañas escondidas.",
+        "La pestaña activa se marca con un subrayado de 2 px en vez de una píldora rellena, así que los cuatro códigos siguen igual de legibles. El panel cambia una ilustración y un bloque corto de enfoque y ritmo; sin acordeón ni pestañas escondidas.",
     },
     {
       id: "team",
-      image: "/work/alder-psicologia/04.png",
+      imageEn: "/work/alder-psicologia/en/04.png",
+      imageEs: "/work/alder-psicologia/es/04.png",
       width: 2880,
-      height: 1468,
+      heightEn: 1390,
+      heightEs: 1468,
       labelEn: "Team",
       labelEs: "Equipo",
       titleEn: "Four faces, four specialities",
       titleEs: "Cuatro rostros, cuatro especialidades",
       whyEn:
-        "Portraits are cropped to the same ratio and the bios are limited to two or three lines, so the section reads as a team rather than a set of personal brands. Each speciality is specific — couples, burnout, trauma/EMDR, sleep — which lets a reader self-select. The heading carries the reassurance; the cards carry the credentials.",
+        "Portraits are cropped to the same ratio and the bios are limited to two or three lines, so the section reads as a team rather than a set of personal brands. Each speciality is specific (couples, burnout, trauma and EMDR, sleep), which lets a reader self select. The heading carries the reassurance; the cards carry the credentials.",
       whyEs:
-        "Los retratos se recortan a la misma proporción y las biografías se limitan a dos o tres líneas, así que la sección se lee como un equipo y no como un conjunto de marcas personales. Cada especialidad es concreta —pareja, desgaste laboral, trauma/EMDR, sueño—, lo que permite que el lector se identifique. El titular da la tranquilidad; las tarjetas dan las credenciales.",
+        "Los retratos se recortan a la misma proporción y las biografías se limitan a dos o tres líneas, así que la sección se lee como un equipo y no como un conjunto de marcas personales. Cada especialidad es concreta (pareja, desgaste laboral, trauma y EMDR, sueño), lo que permite que el lector se identifique. El titular da la tranquilidad; las tarjetas dan las credenciales.",
       noteEn:
-        "The four images use object-cover in a fixed frame, so a landscape portrait and a studio portrait still line up. Names, roles and specialities are DOM text, not baked into the photo.",
+        "The four images fill a fixed frame, so a landscape portrait and a studio portrait still line up. Names, roles and specialities are DOM text, not baked into the photo.",
       noteEs:
-        "Las cuatro imágenes usan object-cover en un marco fijo, así que un retrato horizontal y uno de estudio siguen alineados. Los nombres, cargos y especialidades son texto DOM, no están dentro de la foto.",
+        "Las cuatro imágenes cubren un marco fijo, así que un retrato horizontal y uno de estudio siguen alineados. Los nombres, cargos y especialidades son texto DOM, no están dentro de la foto.",
     },
     {
       id: "testimonials",
-      image: "/work/alder-psicologia/05.png",
+      imageEn: "/work/alder-psicologia/en/05.png",
+      imageEs: "/work/alder-psicologia/es/05.png",
       width: 2880,
-      height: 1378,
+      heightEn: 1378,
+      heightEs: 1378,
       labelEn: "Testimonials",
       labelEs: "Testimonios",
       titleEn: "Anonymity is stated, then respected",
@@ -448,19 +501,21 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
     },
     {
       id: "mood-check",
-      image: "/work/alder-psicologia/06.png",
+      imageEn: "/work/alder-psicologia/en/06.png",
+      imageEs: "/work/alder-psicologia/es/06.png",
       width: 2880,
-      height: 1180,
+      heightEn: 1180,
+      heightEs: 1180,
       labelEn: "Mood check",
       labelEs: "Registro de ánimo",
       titleEn: "One question, four answers",
       titleEs: "Una pregunta, cuatro respuestas",
       whyEn:
-        "The closing section turns the intake into a single question — how have you felt this week? — with four mood options and percentages. It demonstrates the patient portal without asking the visitor to imagine it. The voseo in 'sentís' is deliberate: this is Costa Rican Spanish, not a neutral translation.",
+        "The closing section turns the intake into a single question, how have you felt this week, with four mood options and percentages. It demonstrates the patient portal without asking the visitor to imagine it. The voseo in 'sentís' is deliberate: this is Costa Rican Spanish, not a neutral translation.",
       whyEs:
-        "La sección de cierre convierte la admisión en una sola pregunta —¿cómo te has sentido esta semana?— con cuatro estados de ánimo y porcentajes. Demuestra el portal del paciente sin pedirle al visitante que lo imagine. El voseo en «sentís» es deliberado: es español costarricense, no una traducción neutra.",
+        "La sección de cierre convierte la admisión en una sola pregunta, cómo te has sentido esta semana, con cuatro estados de ánimo y porcentajes. Demuestra el portal del paciente sin pedirle al visitante que lo imagine. El voseo en «sentís» es deliberado: es español costarricense, no una traducción neutra.",
       noteEn:
-        "The check-in sits inside a lavender arch built from CSS borders and a large top radius, with three mood buttons on the perimeter. Choosing one updates all four percentages at once; the widget previews the portal, and the numbers are demo data.",
+        "The check in sits inside a lavender arch built from CSS borders and a large top radius, with three mood buttons on the perimeter. Choosing one updates all four percentages at once; the widget previews the portal, and the numbers are demo data.",
       noteEs:
         "El registro vive dentro de un arco lavanda construido con bordes CSS y un radio superior grande, con tres botones de ánimo en el perímetro. Elegir uno actualiza los cuatro porcentajes a la vez; el widget muestra el portal y las cifras son datos de demostración.",
     },
@@ -469,9 +524,11 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
   "mp-legal": [
     {
       id: "hero",
-      image: "/work/mp-legal/1.png",
-      width: 2850,
-      height: 1800,
+      imageEn: "/work/mp-legal/en/01.png",
+      imageEs: "/work/mp-legal/es/01.png",
+      width: 2880,
+      heightEn: 1800,
+      heightEs: 1800,
       labelEn: "Hero",
       labelEs: "Portada",
       titleEn: "The promise is written as a sentence, not a slogan",
@@ -487,9 +544,11 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
     },
     {
       id: "about",
-      image: "/work/mp-legal/2.png",
-      width: 2850,
-      height: 2274,
+      imageEn: "/work/mp-legal/en/02.png",
+      imageEs: "/work/mp-legal/es/02.png",
+      width: 2880,
+      heightEn: 2190,
+      heightEs: 2274,
       labelEn: "About",
       labelEs: "Nosotros",
       titleEn: "A quiet paragraph and three hard numbers",
@@ -499,21 +558,23 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
       whyEs:
         "La sección de nosotros dedica un párrafo a la historia de la firma y luego pone 31 años, 2.700+ clientes y 70+ especialistas en una sola línea. Para clientes privados, la trayectoria y la cantidad de clientes son el producto real; el texto sería menos convincente sin ellas. El CTA sigue siendo un enlace de texto porque la sección todavía construye confianza.",
       noteEn:
-        "The stats sit below a top rule, separated by 1px vertical rules, with tabular numerals and units set at 16px so 'años' never competes with '31'. The numbers use the same garnet as the headings, which keeps the section in one colour family.",
+        "The stats sit below a top rule, separated by vertical rules of 1px, with tabular numerals and units set at 16px so 'años' never competes with '31'. The numbers use the same garnet as the headings, which keeps the section in one colour family.",
       noteEs:
         "Las cifras van debajo de una línea superior, separadas por líneas verticales de 1 px, con números tabulares y unidades a 16 px para que «años» nunca compita con «31». Los números usan el mismo granate que los titulares, lo que mantiene la sección en una sola familia de color.",
     },
     {
       id: "practice-areas",
-      image: "/work/mp-legal/3.png",
+      imageEn: "/work/mp-legal/en/03.png",
+      imageEs: "/work/mp-legal/es/03.png",
       width: 2880,
-      height: 1688,
+      heightEn: 1690,
+      heightEs: 1688,
       labelEn: "Practice areas",
       labelEs: "Áreas de práctica",
       titleEn: "Four topics in one row, no accordion",
       titleEs: "Cuatro temas en una fila, sin acordeón",
       whyEn:
-        "Four practice areas share one row, each with a 4:3 dark image, a 1px top rule and a three-line description naming the actual instruments: BCCR reports, SINPE and MONEX transfers, succession protocols, foreign account structures. The density is the point — this reader is evaluating competence, not browsing. 'Conocer más' repeats in every cell so the row stays scannable.",
+        "Four practice areas share one row, each with a 4:3 dark image, a top rule of 1px and a description of three lines naming the actual instruments: BCCR reports, SINPE and MONEX transfers, succession protocols, foreign account structures. The density is the point: this reader is evaluating competence, not browsing. 'Conocer más' repeats in every cell so the row stays scannable.",
       whyEs:
         "Cuatro áreas de práctica comparten una fila, cada una con una imagen oscura 4:3, una línea superior de 1 px y una descripción de tres líneas que nombra los instrumentos reales: reportes al BCCR, transferencias SINPE y MONEX, protocolos sucesorios, estructuras de cuentas en el exterior. La densidad es el punto: este lector evalúa competencia, no pasea. «Conocer más» se repite en cada celda para que la fila siga siendo escaneable.",
       noteEn:
@@ -523,15 +584,17 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
     },
     {
       id: "videos-faq",
-      image: "/work/mp-legal/4.png",
+      imageEn: "/work/mp-legal/en/04.png",
+      imageEs: "/work/mp-legal/es/04.png",
       width: 2880,
-      height: 2102,
+      heightEn: 2102,
+      heightEs: 2102,
       labelEn: "Videos + FAQ",
       labelEs: "Videos + preguntas",
       titleEn: "Short answers, with the runtime printed",
       titleEs: "Respuestas cortas, con la duración impresa",
       whyEn:
-        "Two video cards show 08:42 and 11:15 before the play button, so the visitor knows the cost of watching. The FAQ sits below them in two dual-tone cards, with the question in larger type than the answer. It is the same editorial logic as the rest of the page: state the commitment before asking for attention.",
+        "Two video cards show 08:42 and 11:15 before the play button, so the visitor knows the cost of watching. The FAQ sits below them in two dual tone cards, with the question in larger type than the answer. It is the same editorial logic as the rest of the page: state the commitment before asking for attention.",
       whyEs:
         "Dos tarjetas de video muestran 08:42 y 11:15 antes del botón de reproducción, así que el visitante sabe cuánto cuesta mirar. Las preguntas frecuentes van debajo en dos tarjetas de doble tono, con la pregunta en tipo mayor que la respuesta. Es la misma lógica editorial del resto de la página: declarar el compromiso antes de pedir atención.",
       noteEn:
@@ -541,9 +604,11 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
     },
     {
       id: "regional-network",
-      image: "/work/mp-legal/5.png",
+      imageEn: "/work/mp-legal/en/05.png",
+      imageEs: "/work/mp-legal/es/05.png",
       width: 2880,
-      height: 1544,
+      heightEn: 1652,
+      heightEs: 1544,
       labelEn: "Regional network",
       labelEs: "Red regional",
       titleEn: "A map that doubles as a directory",
@@ -553,27 +618,29 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
       whyEs:
         "El mapa rotula Guatemala, Honduras, El Salvador, Nicaragua, Costa Rica y Panamá, y una tarjeta lista los bancos costarricenses. Esa combinación responde tanto «hasta dónde llegan» como «con quién trabajan de verdad». Costa Rica recibe el detalle porque es el mercado base; el resto de la región recibe un nombre y un punto.",
       noteEn:
-        "The map is projected from world-atlas TopoJSON with d3-geo at 720×460, and pins are projected from lon/lat; clicking a pin swaps the jurisdiction card without leaving the page. Only the six Central American countries are highlighted, so the rest of the world stays as quiet context.",
+        "The map is projected from the world atlas TopoJSON with d3 at 720×460, and pins are projected from lon and lat; clicking a pin swaps the jurisdiction card without leaving the page. Only the six Central American countries are highlighted, so the rest of the world stays as quiet context.",
       noteEs:
-        "El mapa se proyecta desde TopoJSON de world-atlas con d3-geo a 720×460, y los puntos se proyectan desde lon/lat; al hacer clic en un punto cambia la tarjeta de jurisdicción sin salir de la página. Solo los seis países de Centroamérica se resaltan, así que el resto del mundo queda como contexto discreto.",
+        "El mapa se proyecta desde el TopoJSON del atlas mundial con d3 a 720×460, y los puntos se proyectan desde longitud y latitud; al hacer clic en un punto cambia la tarjeta de jurisdicción sin salir de la página. Solo los seis países de Centroamérica se resaltan, así que el resto del mundo queda como contexto discreto.",
     },
     {
       id: "news",
-      image: "/work/mp-legal/6.png",
+      imageEn: "/work/mp-legal/en/06.png",
+      imageEs: "/work/mp-legal/es/06.png",
       width: 2880,
-      height: 1588,
+      heightEn: 1590,
+      heightEs: 1588,
       labelEn: "News",
       labelEs: "Noticias",
       titleEn: "Date first, headline second",
       titleEs: "Fecha primero, titular después",
       whyEn:
-        "The news section uses date-led rows instead of image cards, which keeps the focus on the argument in each article. Three pieces are enough to suggest an active practice without pretending to be a media site. 'Ver todas las noticias' sits at the top right, where a reader who already trusts the firm will find it.",
+        "The news section uses date led rows instead of image cards, which keeps the focus on the argument in each article. Three pieces are enough to suggest an active practice without pretending to be a media site. 'Ver todas las noticias' sits at the top right, where a reader who already trusts the firm will find it.",
       whyEs:
         "La sección de noticias usa filas guiadas por fecha en vez de tarjetas con imagen, lo que mantiene el foco en el argumento de cada artículo. Tres piezas bastan para sugerir una práctica activa sin pretender ser un medio. «Ver todas las noticias» va arriba a la derecha, donde lo encuentra quien ya confía en la firma.",
       noteEn:
-        "Each row is a date column, a 220×135 thumbnail, a title/excerpt column and an arrow at the far right; the date leads the reading order. On mobile the columns stack and the excerpt clamps, so the list stays scannable without horizontal scroll.",
+        "Each row is a date column, a 220×135 thumbnail, a column with the title and excerpt, and an arrow at the far right; the date leads the reading order. On mobile the columns stack and the excerpt clamps, so the list stays scannable without horizontal scroll.",
       noteEs:
-        "Cada fila es una columna de fecha, una miniatura de 220×135, una columna de titular/extracto y una flecha al extremo derecho; la fecha abre el orden de lectura. En móvil las columnas se apilan y el extracto se recorta, así que la lista sigue escaneable sin desplazamiento horizontal.",
+        "Cada fila es una columna de fecha, una miniatura de 220×135, una columna con el titular y el extracto, y una flecha al extremo derecho; la fecha abre el orden de lectura. En móvil las columnas se apilan y el extracto se recorta, así que la lista sigue escaneable sin desplazamiento horizontal.",
     },
   ],
 };
