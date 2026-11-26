@@ -30,12 +30,11 @@ export default function WorkHistorySection({ lang }: WorkHistorySectionProps) {
   const data = dictionaries[isEs ? "ES" : "EN"];
 
   const workLabel = isEs ? "Trabajo" : "Work";
-  const projectsLabel = isEs ? "Proyectos" : "Projects";
 
   return (
     <section
       id="work-history"
-      aria-label={isEs ? "Experiencia y proyectos" : "Experience and projects"}
+      aria-label={isEs ? "Experiencia" : "Experience"}
       className="work-history work-col-header mx-auto px-6 sm:px-0 pb-24 sm:pb-32"
     >
       <div className="work-history-panel">
@@ -49,35 +48,6 @@ export default function WorkHistorySection({ lang }: WorkHistorySectionProps) {
               <span className="work-history-year">{exp.year}–</span>
             </li>
           ))}
-        </ul>
-
-        <h2 className="work-history-heading work-history-heading--second">
-          {projectsLabel}
-        </h2>
-        <ul className="work-history-list">
-          {WORK_ITEMS.map((item) => {
-            const title = isEs ? item.titleEs : item.title;
-            const [name, ...rest] = title.split(" — ");
-            const description = rest.join(" — ");
-            return (
-              <li key={item.id} className="work-history-row">
-                <LogoSlot name={name} />
-                {item.href ? (
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="work-history-name work-history-name--link"
-                  >
-                    {name}
-                  </a>
-                ) : (
-                  <span className="work-history-name">{name}</span>
-                )}
-                <span className="work-history-meta">{description}</span>
-              </li>
-            );
-          })}
         </ul>
       </div>
     </section>

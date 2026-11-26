@@ -139,7 +139,7 @@ export default function HomePage({ lang }: HomePageProps) {
       {/* Second Section: Selected Work Horizontal Carousel */}
       <SelectedWorkCarousel lang={lang} />
 
-      {/* Third Section: compact Work / Projects history */}
+      {/* Third Section: compact Work history */}
       <WorkHistorySection lang={lang} />
 
       {/* Floating Toast Notification */}

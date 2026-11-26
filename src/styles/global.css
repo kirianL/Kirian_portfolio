@@ -1876,10 +1876,6 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   color: #f5f5f5;
 }
 
-.work-history-heading--second {
-  margin-top: 34px;
-}
-
 .work-history-list {
   display: flex;
   flex-direction: column;
