@@ -1,9 +1,10 @@
 import * as React from "react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import GridRevealImage from "@/components/ui/GridRevealImage";
 import { rememberScrollNow } from "@/lib/scrollMemory";
 import { warmImage } from "@/lib/warmImage";
+import { workOpenedFromHome } from "@/lib/workNav";
 import {
   navigateWithTransition,
   markSharedElement,
@@ -204,6 +205,7 @@ interface SelectedWorkCarouselProps {
 export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps) {
   const isEs = lang === "es";
   const navigate = useNavigate();
+  const location = useLocation();
   const headingRef = useLineReveal<HTMLHeadingElement>({
     mask: true,
     start: "view",
@@ -245,11 +247,34 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
   // Restore the horizontal offset during the commit. A shared-element flight
   // captures the page the moment it mounts, so the card that is flying back has
   // to already sit where the user left it — not at the start of the track.
+  //
+  // A card that was opened from a position the saved offset no longer covers
+  // (the track was dragged elsewhere, or the viewport got narrower) is nudged
+  // into view before the capture, so the hero always has a visible target to
+  // land on instead of flying to an off-screen box.
   useLayoutEffect(() => {
     const el = trackRef.current;
     if (!el) return;
     const restored = carouselOffsets[lang] ?? 0;
     if (restored > 0) el.scrollLeft = restored;
+
+    const flightCard = Array.from(
+      el.querySelectorAll<HTMLAnchorElement>("[data-work-card][href]"),
+    ).find((card) => isPendingSharedCard(card.getAttribute("href") ?? ""));
+    if (flightCard) {
+      const trackRect = el.getBoundingClientRect();
+      const cardRect = flightCard.getBoundingClientRect();
+      const gutter = 16;
+      const left = cardRect.left - trackRect.left;
+      const right = cardRect.right - trackRect.left;
+      if (left < 0) {
+        el.scrollLeft = Math.max(0, el.scrollLeft + left - gutter);
+      } else if (right > el.clientWidth) {
+        el.scrollLeft = el.scrollLeft + right - el.clientWidth + gutter;
+      }
+      carouselOffsets[lang] = el.scrollLeft;
+    }
+
     updateScrollButtons();
   }, [lang, updateScrollButtons]);
 
@@ -329,7 +354,11 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
     rememberScrollNow();
     const anchor = e.currentTarget as HTMLElement;
     markSharedElement(anchor.querySelector(".work-shared-image"));
-    navigateWithTransition(() => navigate(to));
+    // Record the origin in this history entry: the detail can then tell a
+    // "back to my card" from a "back to the previous project" chain.
+    navigateWithTransition(() =>
+      navigate(to, { state: workOpenedFromHome(location.pathname) }),
+    );
   };
 
   return (

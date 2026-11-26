@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { WORK_ITEMS } from "@/components/home/SelectedWorkCarousel";
 import MetaBadges from "@/components/work/MetaBadges";
 import GridRevealImage from "@/components/ui/GridRevealImage";
 import { getWorkSections } from "@/data/workSections";
 import { readRememberedScroll } from "@/lib/scrollMemory";
 import { navigateWithTransition } from "@/lib/viewTransition";
+import { warmImage } from "@/lib/warmImage";
+import { readWorkNavState, workOpenedFromWork } from "@/lib/workNav";
 import { useLineReveal, useRiseIn } from "@/lib/reveal";
 
 interface WorkDetailProps {
@@ -32,9 +34,21 @@ function sectionDomId(id: string) {
   return `work-section-${id}`;
 }
 
+/**
+ * "Next project" stays on the same route pattern, so React would keep the
+ * component instance and its `useRiseIn` / `useLineReveal` effects would never
+ * run again for the new slug. The key remounts the page for each project, which
+ * is what makes the hero settle and the copy reveal restart cleanly.
+ */
 export default function WorkDetail({ lang }: WorkDetailProps) {
   const { slug } = useParams<{ slug: string }>();
+  return <WorkDetailView key={slug ?? "missing"} lang={lang} />;
+}
+
+function WorkDetailView({ lang }: WorkDetailProps) {
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const isEs = lang === "es";
   const item = WORK_ITEMS.find((w) => w.id === slug);
   const sections = getWorkSections(slug).slice(1);
@@ -203,23 +217,52 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
     return () => window.removeEventListener("keydown", onKey, true);
   }, [isLightboxOpen, closeLightbox, stepLightbox]);
 
-  // Return to whichever page the project was opened from (home, projects…).
-  // Only fall back to home when the detail was opened directly in a new tab.
+  // Return to whichever page the project was opened from. The origin travels
+  // in this history entry's state: a detail opened from another detail goes
+  // back sideways, while one opened from the home carousel flies into its card.
   const homePath = isEs ? "/es" : "/";
   const projectHref = isEs ? `/es/work/${slug}` : `/work/${slug}`;
+  const navState = readWorkNavState(location.state);
+
+  // Shared-element return: the hero flies into its card on the home track. A
+  // chain of projects can pop several entries at once and still land on the
+  // carousel in a single transition.
+  const goToSelectedWork = (steps?: number) => {
+    if (!item) {
+      navigate(homePath);
+      return;
+    }
+    navigateWithTransition(
+      () => {
+        if (typeof steps === "number" && steps < 0) navigate(steps);
+        else navigate(homePath);
+      },
+      {
+        scrollY: readRememberedScroll(homePath) ?? 0,
+        sharedHref: projectHref,
+      },
+    );
+  };
 
   const goBack = () => {
-    const idx = (window.history.state as { idx?: number } | null)?.idx;
-    if (typeof idx === "number" && idx > 0) {
-      // Fly the hero back into the card it came from, on the page exactly as it
-      // was left: same scroll, same carousel offset, same card.
+    if (!item) {
+      navigate(homePath);
+      return;
+    }
+    if (navState?.workFrom === "work") {
+      // Previous entry is another project: slide back to it. Waiting for its
+      // own path resolves on the mount frame, so this never hangs on a card
+      // that does not exist on a detail page.
       navigateWithTransition(() => navigate(-1), {
-        scrollY: readRememberedScroll(homePath) ?? 0,
-        sharedHref: item ? projectHref : undefined,
+        dir: "prev",
+        scrollY: 0,
+        awaitSelector: `[data-work-path="${navState.workFromPath}"]`,
       });
       return;
     }
-    navigate(homePath);
+    // Opened from the carousel (or directly, with no recorded origin): go home
+    // and let the hero fly back into the matching card.
+    goToSelectedWork(navState?.workFrom === "home" ? -1 : undefined);
   };
 
   if (!item) {
@@ -252,6 +295,9 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   )[0];
   const nextRole = isEs ? nextItem.roleEs : nextItem.role;
   const nextHref = isEs ? `/es/work/${nextItem.id}` : `/work/${nextItem.id}`;
+  // Same file as the next detail hero: warming it on intent means the incoming
+  // page can be captured sharp instead of waiting for a decode mid-flight.
+  const nextSrc = isEs ? nextItem.imageEs : nextItem.imageEn;
 
   const lightboxSection =
     lightboxIndex !== null ? sections[lightboxIndex] : undefined;
@@ -284,15 +330,36 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   const handleNextProject = (e: ReactMouseEvent<HTMLAnchorElement>) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     e.preventDefault();
-    navigate(nextHref);
+    // Detail -> detail is a directional page change: the copy and hero move as
+    // one page instead of morphing the old project's hero into the new one.
+    navigateWithTransition(
+      () =>
+        navigate(nextHref, {
+          state: workOpenedFromWork(projectHref, navState),
+        }),
+      {
+        dir: "next",
+        scrollY: 0,
+        awaitSelector: `[data-work-path="${nextHref}"]`,
+      },
+    );
+  };
+
+  const handleBackToSelectedWork = () => {
+    const steps = navState?.workHomeSteps;
+    goToSelectedWork(typeof steps === "number" ? -steps : undefined);
   };
 
   return (
-    <main id="main-content" className="work-detail min-h-screen w-full bg-[#0a0a0a] text-[#f5f5f5]">
+    <main
+      id="main-content"
+      data-work-path={projectHref}
+      className="work-detail min-h-screen w-full bg-[#0a0a0a] text-[#f5f5f5]"
+    >
       <div className="work-col-header mx-auto px-6 sm:px-0 pt-20 sm:pt-24 min-[1600px]:pt-28">
         <button
           onClick={goBack}
-          className="inline-flex items-center gap-1.5 font-hero-sans text-[13px] text-[#f5f5f59e] hover:text-[#f5f5f5] transition-colors duration-200 cursor-pointer"
+          className="inline-flex items-center gap-1.5 font-hero-sans text-[13px] text-[#f5f5f59e] hover:text-[#f5f5f5] transition-[color,opacity,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] active:opacity-60 active:scale-[0.97] cursor-pointer"
           data-cuelume-hover="tick"
         >
           <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -490,8 +557,11 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
         <a
           href={nextHref}
           onClick={handleNextProject}
+          onPointerEnter={() => warmImage(nextSrc)}
+          onFocus={() => warmImage(nextSrc)}
+          onTouchStart={() => warmImage(nextSrc)}
           data-cuelume-hover="tick"
-          className="group mt-4 flex items-start justify-between gap-6 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
+          className="group mt-4 flex items-start justify-between gap-6 rounded-[2px] transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] active:opacity-75 active:scale-[0.995] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
         >
           <span className="min-w-0">
             <span className="block font-hero-serif text-[26px] leading-[1.12] tracking-[-0.01em] text-[#f5f5f5] transition-colors duration-200 group-hover:text-[#eadfca]">
@@ -502,7 +572,7 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
             </span>
           </span>
           <svg
-            className="mt-1.5 h-5 w-5 shrink-0 text-[#f5f5f58a] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1 group-hover:text-[#f5f5f5]"
+            className="mt-1.5 h-5 w-5 shrink-0 text-[#f5f5f58a] transition-[transform,color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1 group-active:translate-x-1 group-hover:text-[#f5f5f5]"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -518,9 +588,9 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
         <div className="mt-12 flex items-center justify-between gap-4 border-t border-white/[0.07] pt-5">
           <button
             type="button"
-            onClick={goBack}
+            onClick={handleBackToSelectedWork}
             data-cuelume-hover="tick"
-            className="inline-flex items-center gap-1.5 font-hero-sans text-[12px] text-[#f5f5f594] hover:text-[#f5f5f5] transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
+            className="inline-flex items-center gap-1.5 font-hero-sans text-[12px] text-[#f5f5f594] hover:text-[#f5f5f5] transition-[color,opacity,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] active:opacity-60 active:scale-[0.97] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
           >
             <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M19 12H5m7 7-7-7 7-7" />

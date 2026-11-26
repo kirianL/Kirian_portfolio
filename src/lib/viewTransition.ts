@@ -77,7 +77,23 @@ export interface TransitionOptions {
   scrollY?: number;
   /** Card href that has to be back in place on the incoming page. */
   sharedHref?: string;
+  /**
+   * Directional page change (detail -> detail). No element flies: the outgoing
+   * page and the incoming one slide/fade past each other, which is what makes
+   * "Next project" read as moving forward instead of a hard cut.
+   */
+  dir?: "next" | "prev";
+  /**
+   * Selector the incoming route must contain before it is captured. Only the
+   * shared-card path needs to wait for a mount; a POP navigation renders in a
+   * later task, so directional changes use this to wait for the right page
+   * instead of capturing the outgoing one.
+   */
+  awaitSelector?: string;
 }
+
+/** Root attribute that switches the stylesheet to the directional keyframes. */
+const DIR_ATTR = "data-vt-dir";
 
 /** Fired once the flight is over, so the incoming copy can start revealing. */
 export const VT_END_EVENT = "portfolio:vt-end";
@@ -237,12 +253,17 @@ export function navigateWithTransition(
   }
 
   const targetY = options.scrollY ?? 0;
-  const sharedHref = options.sharedHref ?? null;
+  const directional = options.dir === "next" || options.dir === "prev";
+  const sharedHref = directional ? null : (options.sharedHref ?? null);
   const cardSelector = sharedHref
     ? `[data-work-card][href="${sharedHref}"]`
     : null;
+  const awaitSelector = options.awaitSelector ?? null;
   pendingSharedHref = sharedHref;
-  returningFlight = sharedHref !== null;
+  // A return is a restored page: its copy is already complete when captured,
+  // so nothing is revealed again after the flight. Going back to the previous
+  // detail is exactly that, so it gets the same treatment.
+  returningFlight = sharedHref !== null || options.dir === "prev";
   let ended = false;
   let capTimer = 0;
 
@@ -253,9 +274,10 @@ export function navigateWithTransition(
     returningFlight = false;
     window.clearTimeout(capTimer);
     markSharedElement(null);
-    // The pseudo tree is gone by now; dropping the attribute keeps a later
-    // flight from inheriting this one's layer choice.
+    // The pseudo tree is gone by now; dropping the attributes keeps a later
+    // flight from inheriting this one's layer choice or direction.
     document.documentElement.removeAttribute(FLYER_ATTR);
+    document.documentElement.removeAttribute(DIR_ATTR);
     if (document.documentElement.dataset.vt !== "flying") return;
     delete document.documentElement.dataset.vt;
     window.dispatchEvent(new Event(VT_END_EVENT));
@@ -265,6 +287,13 @@ export function navigateWithTransition(
     // Set before the call: the incoming page mounts inside the update callback,
     // and `startViewTransition` may dispatch that callback in a later task.
     document.documentElement.dataset.vt = "flying";
+    if (directional) {
+      // The old state is captured right after this call returns, so the
+      // stylesheet already sees the direction (and hides the hero from its own
+      // named group: detail -> detail must move as whole pages, not morph one
+      // screenshot into a different project's screenshot).
+      document.documentElement.setAttribute(DIR_ATTR, options.dir as string);
+    }
 
     // Must be called on `document`: extracting the method loses `this`.
     // The callback may be async: a history POP renders in a later task, and
@@ -275,6 +304,15 @@ export function navigateWithTransition(
       // the flight would morph the old page into a copy of itself, then cut.
       // `BrowserRouter useTransitions={false}` makes this a real sync commit.
       flushSync(navigate);
+
+      // A POP navigation (`navigate(-1)`, `navigate(-3)`) commits in a later
+      // task: wait for the destination page, never capture the one we are
+      // leaving. The selector is precise (the expected path), so this settles
+      // on the mount frame instead of the old fixed 1200ms cap.
+      if (awaitSelector !== null) {
+        await waitForElement(awaitSelector, 900);
+        if (ended) return;
+      }
 
       if (cardSelector !== null) {
         // The card remounts with this navigation, so it can only be marked
@@ -291,7 +329,8 @@ export function navigateWithTransition(
       parkAt(targetY);
       // The hero is painted from the full-resolution file: without this the
       // snapshot is the dark plate behind an undecoded image.
-      await waitForPaint();
+      await waitForPaint(directional ? 320 : 420);
+      if (directional) return;
       // Card -> detail: hand the flight to the hero capture, which is both the
       // sharper frame and the one that matches where the image lands — the card
       // canvas would be blown up into this box for the whole flight and then
@@ -311,6 +350,7 @@ export function navigateWithTransition(
     returningFlight = false;
     delete document.documentElement.dataset.vt;
     document.documentElement.removeAttribute(FLYER_ATTR);
+    document.documentElement.removeAttribute(DIR_ATTR);
     navigate();
     if (typeof options.scrollY === "number") parkAt(options.scrollY);
   }
