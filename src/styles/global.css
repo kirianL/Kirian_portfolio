@@ -2184,6 +2184,69 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   }
 }
 
+/* Section notes — the panel opens by animating a grid row from 0fr to 1fr, so
+   the disclosure has a real height transition without measuring the text in JS.
+   The inner wrapper carries the overflow clip; `aria-hidden` on the region keeps
+   the collapsed copy out of the accessibility tree. */
+.work-note-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 320ms var(--work-ease-out),
+    opacity 220ms linear;
+}
+
+.work-note-panel > div {
+  overflow: hidden;
+}
+
+.work-note-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+/* Lightbox — the overlay fades in once, the image settles by 1.5%. Stepping
+   between sections remounts the <img> (keyed by id), so the small scale reads as
+   a state change instead of a flash. */
+.work-lightbox {
+  animation: work-lightbox-in 200ms ease-out both;
+}
+
+.work-lightbox__image {
+  animation: work-lightbox-image-in 320ms var(--work-ease-out) both;
+}
+
+@keyframes work-lightbox-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes work-lightbox-image-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-note-panel {
+    transition-duration: 0.01ms !important;
+  }
+
+  .work-lightbox,
+  .work-lightbox__image {
+    animation-duration: 0.01ms !important;
+  }
+}
+
 /* Meta badges — copied from the reference pills: 32px tall, 4px radius, a 1px
    border one step darker than the fill, a soft fill and a deep ink. The ramp is
    neutral; the year sits one step deeper so the row keeps a hierarchy. */
