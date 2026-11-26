@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { flushSync } from "react-dom";
 import GridRevealImage from "@/components/ui/GridRevealImage";
 import {
   WORK_ITEMS,
@@ -11,21 +10,10 @@ interface WorkShowroomProps {
   lang: "en" | "es";
 }
 
-/** Navigate with a shared-element View Transition when supported. */
+/** Plain client-side navigation — reliable in every browser, same tab. */
 function useWorkNavigate() {
   const navigate = useNavigate();
-  return React.useCallback(
-    (to: string) => {
-      const startVT = (document as any).startViewTransition;
-      if (typeof startVT === "function") {
-        // Call on `document` directly — extracting the method loses `this`.
-        (document as any).startViewTransition(() => flushSync(() => navigate(to)));
-      } else {
-        navigate(to);
-      }
-    },
-    [navigate],
-  );
+  return React.useCallback((to: string) => navigate(to), [navigate]);
 }
 
 function titleOf(item: SelectedWorkItem, isEs: boolean) {
@@ -119,7 +107,6 @@ export default function WorkShowroom({ lang }: WorkShowroomProps) {
                   go(to);
                 }}
                 className={`work-pile__card work-pile__card--${i + 1}`}
-                style={{ viewTransitionName: `work-image-${item.id}` } as React.CSSProperties}
                 data-cuelume-hover="tick"
                 aria-label={`${isEs ? "Abrir" : "Open"} ${name}`}
               >

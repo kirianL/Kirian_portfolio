@@ -2195,13 +2195,25 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   .work-card, .work-card:nth-child(even) { transform: none; }
 }
 
-/* Detail hero + info */
+/* Detail hero + info — the hero "settles" into center on entry: a gentle
+   lift + scale from 0.95, compositor-only transform/opacity, no jank. */
 .work-detail__hero {
   box-shadow: 0 24px 80px -30px rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  transform: translateY(18px) scale(0.95);
+  transform-origin: 50% 40%;
+  transition: opacity var(--work-dur-hero) var(--work-ease-out),
+    transform var(--work-dur-hero) var(--work-ease-out);
+  will-change: opacity, transform;
 }
+.work-detail__hero.is-ready {
+  opacity: 1;
+  transform: none;
+}
+
 .work-detail__info {
   opacity: 0;
-  transform: translateY(12px) scale(var(--work-scale-from));
+  transform: translateY(12px);
   transition: opacity var(--work-dur-info) var(--work-ease-out) var(--work-delay-info),
     transform var(--work-dur-info) var(--work-ease-out) var(--work-delay-info);
   will-change: opacity, transform;
@@ -2211,29 +2223,12 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   transform: none;
 }
 
-/* Shared-element FLIP: the screenshot flies from card to hero and centers. */
-::view-transition-group(*) {
-  animation-duration: var(--work-dur-hero);
-  animation-timing-function: var(--work-ease-out);
-}
-::view-transition-group(work-image-*) {
-  z-index: 60;
-}
-::view-transition-old(work-image-*),
-::view-transition-new(work-image-*) {
-  animation: none;
-  mix-blend-mode: normal;
-  object-fit: cover;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .work-pile__card,
   .work-card,
+  .work-detail__hero,
   .work-detail__info {
     transition-duration: 0.01ms !important;
-  }
-  ::view-transition-group(*) {
-    animation-duration: 0.01ms !important;
   }
 }
 

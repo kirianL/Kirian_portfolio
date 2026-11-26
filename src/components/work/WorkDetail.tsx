@@ -1,7 +1,5 @@
-import * as React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { flushSync } from "react-dom";
 import GridRevealImage from "@/components/ui/GridRevealImage";
 import { WORK_ITEMS } from "@/components/home/SelectedWorkCarousel";
 
@@ -47,16 +45,7 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   const description = (isEs ? item.titleEs : item.title).split(" — ")[1] ?? "";
   const role = isEs ? item.roleEs : item.role;
 
-  const goBack = () => {
-    const to = isEs ? "/es/work" : "/work";
-    const startVT = (document as any).startViewTransition;
-    if (typeof startVT === "function") {
-      // Call on `document` directly — extracting the method loses `this`.
-      (document as any).startViewTransition(() => flushSync(() => navigate(to)));
-    } else {
-      navigate(to);
-    }
-  };
+  const goBack = () => navigate(isEs ? "/es/work" : "/work");
 
   return (
     <main id="main-content" className="work-detail min-h-screen w-full bg-[#0a0a0a] text-[#f5f5f5]">
@@ -73,11 +62,10 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
         </button>
       </div>
 
-      {/* Shared-element hero — the screenshot flies in and centers */}
+      {/* Hero settles into center with a smooth scale/translate — no jank. */}
       <section className="work-col-header mx-auto px-6 sm:px-0 mt-8" aria-label={title}>
         <div
-          className="work-detail__hero w-full overflow-hidden rounded-[12px] bg-[#141414] ring-1 ring-white/[0.06]"
-          style={{ viewTransitionName: `work-image-${item.id}` } as React.CSSProperties}
+          className={`work-detail__hero w-full overflow-hidden rounded-[12px] bg-[#141414] ring-1 ring-white/[0.06] ${ready ? "is-ready" : ""}`}
         >
           <GridRevealImage src={src} alt={title} aspect={16 / 10} />
         </div>
