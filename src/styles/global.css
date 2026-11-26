@@ -2044,16 +2044,8 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   }
 }
 
-/* GridReveal canvas reacts to the card hover just like the old <img> did. */
-.work-thumb-reveal canvas {
-  transition: filter 500ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .group:hover .work-thumb-reveal canvas {
-    filter: blur(2px) brightness(0.78);
-  }
-}
+/* Work thumbnails keep their pixels untouched on hover: the affordance is the
+   "View site" label + arrow, not a filter over the artwork. */
 
 /* ==========================================================================
    Work detail — dark editorial page for a single project.
@@ -2068,6 +2060,40 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 @media (max-width: 767px) {
   :root {
     --work-dur-hero: 320ms;
+  }
+}
+
+/* Shared-element FLIP: the carousel thumbnail flies into the detail hero.
+   Old and new snapshots morph as one image (no cross-fade, no zoom blur). */
+::view-transition-group(work-image) {
+  animation-duration: 460ms;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  border-radius: 10px;
+  overflow: clip;
+  z-index: 60;
+}
+::view-transition-old(work-image),
+::view-transition-new(work-image) {
+  animation: none;
+  mix-blend-mode: normal;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* The rest of the page cross-fades briefly under the flying image. */
+::view-transition-old(root) {
+  animation-duration: 150ms;
+}
+::view-transition-new(root) {
+  animation-duration: 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
   }
 }
 

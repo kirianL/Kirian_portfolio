@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import GridRevealImage from "@/components/ui/GridRevealImage";
 import { WORK_ITEMS } from "@/components/home/SelectedWorkCarousel";
 
 interface WorkDetailProps {
@@ -53,6 +53,17 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   const description = (isEs ? item.titleEs : item.title).split(" — ")[1] ?? "";
   const role = isEs ? item.roleEs : item.role;
 
+  // With a View Transition the browser itself flies the carousel thumbnail
+  // into this hero, so the CSS "settle" entrance would double-animate it.
+  const supportsViewTransition =
+    typeof document !== "undefined" &&
+    typeof (document as any).startViewTransition === "function" &&
+    !(
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  const heroReady = ready || supportsViewTransition;
+
   return (
     <main id="main-content" className="work-detail min-h-screen w-full bg-[#0a0a0a] text-[#f5f5f5]">
       <div className="work-col-header mx-auto px-6 sm:px-0 pt-20 sm:pt-24">
@@ -68,12 +79,27 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
         </button>
       </div>
 
-      {/* Hero settles into center with a smooth scale/translate — no jank. */}
+      {/* Shared-element hero: the carousel thumbnail becomes this image. A
+          plain <img> paints from cache so the transition snapshot is never
+          blank (a canvas would still be drawing at capture time). */}
       <section className="work-col-header mx-auto px-6 sm:px-0 mt-8" aria-label={title}>
         <div
-          className={`work-detail__hero w-full overflow-hidden rounded-[12px] bg-[#141414] ring-1 ring-white/[0.06] ${ready ? "is-ready" : ""}`}
+          className={`work-detail__hero w-full overflow-hidden rounded-[12px] bg-[#141414] ring-1 ring-white/[0.06] ${heroReady ? "is-ready" : ""}`}
+          style={
+            {
+              viewTransitionName: "work-image",
+            } as CSSProperties
+          }
         >
-          <GridRevealImage src={src} alt={title} aspect={16 / 10} />
+          <img
+            src={src}
+            alt={title}
+            width={1920}
+            height={1200}
+            draggable={false}
+            decoding="sync"
+            className="block h-full w-full object-cover select-none"
+          />
         </div>
       </section>
 

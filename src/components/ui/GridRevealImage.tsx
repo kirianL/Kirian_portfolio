@@ -6,6 +6,7 @@ interface GridRevealImageProps {
   aspect?: number;
   className?: string;
   estimatedDuration?: number;
+  style?: React.CSSProperties;
 }
 
 const CELLS = 180;
@@ -376,6 +377,7 @@ export default function GridRevealImage({
   aspect = 16 / 10,
   className = "",
   estimatedDuration = 6000,
+  style,
 }: GridRevealImageProps) {
   const ratio = Number.isFinite(aspect) && aspect > 0 ? aspect : 1;
   const frameRef = useRef<HTMLDivElement>(null);
@@ -570,7 +572,7 @@ export default function GridRevealImage({
     <div
       ref={frameRef}
       className={`relative w-full overflow-hidden ${className}`}
-      style={{ aspectRatio: ratio }}
+      style={{ aspectRatio: ratio, ...style }}
     >
       <canvas
         ref={canvasRef}

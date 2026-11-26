@@ -91,6 +91,7 @@ export default function App() {
   const scrollByKeyRef = useRef<Record<string, number>>({});
   const currentKeyRef = useRef(locationKey);
   currentKeyRef.current = locationKey;
+  const restoringRef = useRef(false);
 
   useEffect(() => {
     try {
@@ -159,9 +160,10 @@ export default function App() {
   useEffect(() => {
     let rafId = 0;
     const rememberScroll = () => {
-      if (rafId) return;
+      if (rafId || restoringRef.current) return;
       rafId = requestAnimationFrame(() => {
         rafId = 0;
+        if (restoringRef.current) return;
         const y = Math.round(window.scrollY);
         scrollByKeyRef.current[currentKeyRef.current] = y;
         rememberScrollNow();
@@ -195,34 +197,65 @@ export default function App() {
       shouldRestore = true;
     }
 
-    const apply = (y: number) => {
-      lenisRef.current?.scrollTo(y, { immediate: true });
+    const apply = (y: number, refreshDimensions = true) => {
+      const lenis = lenisRef.current;
+      if (lenis) {
+        // Lenis caches the previous page's height. Without a resize it clamps
+        // the restore to the old page's max scroll and keeps forcing it back.
+        if (refreshDimensions) lenis.resize();
+        lenis.scrollTo(y, { immediate: true });
+      }
       window.scrollTo({ top: y, left: 0, behavior: "instant" });
     };
 
+    restoringRef.current = shouldRestore;
     apply(targetY);
 
-    // Re-apply after paint and once webfonts settle: late layout shifts above
-    // the target section would otherwise leave the viewport near the top.
-    let rafA = 0;
-    let rafB = 0;
+    // The restored page can still be shorter than the saved position while
+    // below-the-fold content mounts (the browser would clamp the scroll and
+    // leave the viewport too high). Re-apply for a few frames until the page
+    // is fully laid out, stopping the moment the user takes over.
+    let rafId = 0;
+    let frames = 0;
+    let stable = 0;
     let cancelled = false;
     const cancelRestore = () => {
       cancelled = true;
+      restoringRef.current = false;
     };
 
     if (shouldRestore) {
-      rafA = requestAnimationFrame(() => {
-        rafB = requestAnimationFrame(() => apply(targetY));
-      });
-      window.addEventListener("wheel", cancelRestore, { passive: true, once: true });
-      window.addEventListener("touchstart", cancelRestore, { passive: true, once: true });
-      window.addEventListener("keydown", cancelRestore, { once: true });
-      document.fonts?.ready
-        .then(() => {
-          if (!cancelled && Math.abs(window.scrollY - targetY) > 4) apply(targetY);
-        })
-        .catch(() => {});
+      window.addEventListener("wheel", cancelRestore, { passive: true });
+      window.addEventListener("touchstart", cancelRestore, { passive: true });
+      window.addEventListener("keydown", cancelRestore);
+      window.addEventListener("pointerdown", cancelRestore);
+
+      const settle = () => {
+        if (cancelled) return;
+        if (frames++ > 60) {
+          restoringRef.current = false;
+          return;
+        }
+        if (Math.abs(window.scrollY - targetY) <= 1 && document.readyState === "complete") {
+          stable++;
+          if (stable > 6) {
+            restoringRef.current = false;
+            return;
+          }
+        } else {
+          stable = 0;
+          apply(targetY);
+        }
+        rafId = requestAnimationFrame(settle);
+      };
+      rafId = requestAnimationFrame(settle);
+
+      const onLoad = () => {
+        if (!cancelled) apply(targetY);
+      };
+      if (document.readyState !== "complete") {
+        window.addEventListener("load", onLoad, { once: true });
+      }
     }
 
     if ((window as any).posthog?.capture) {
@@ -230,11 +263,12 @@ export default function App() {
     }
 
     return () => {
-      cancelAnimationFrame(rafA);
-      cancelAnimationFrame(rafB);
+      cancelAnimationFrame(rafId);
+      restoringRef.current = false;
       window.removeEventListener("wheel", cancelRestore);
       window.removeEventListener("touchstart", cancelRestore);
       window.removeEventListener("keydown", cancelRestore);
+      window.removeEventListener("pointerdown", cancelRestore);
     };
   }, [pathname, locationKey, navigationType]);
 
