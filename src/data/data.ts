@@ -99,6 +99,7 @@ const es = {
       companyColor: "bg-[#eef2ff]/90 hover:bg-[#e0e7ff] border-[#c7d2fe]/60 text-[#4f46e5] dark:bg-[#1e1b4b]/60 dark:border-[#3730a3]/50 dark:text-[#818cf8] dark:hover:bg-[#312e81]/60",
       companyLogo: "code",
       description: "Diseño, desarrollo y entrega de soluciones digitales personalizadas para clientes de Ultimate Media Productions, liderando proyectos desde la recolección de requerimientos hasta el despliegue. Construcción de aplicaciones web escalables, automatización de flujos de trabajo e integración de APIs de terceros para optimizar la eficiencia operativa y fortalecer la presencia digital.",
+      shortImprovements: ["Soluciones digitales personalizadas para clientes", "Aplicaciones web escalables con arquitectura moderna", "Automatización de flujos de trabajo y integración de APIs"],
       stack: ["Next.js", "TypeScript", "React 19", "Node.js", "PostgreSQL", "Tailwind CSS", "Prisma ORM", "Docker"]
     },
     {
@@ -110,6 +111,7 @@ const es = {
       companyColor: "bg-[#f3f3f3]/90 hover:bg-[#e4e4e7] border-black/5 text-[#111111] dark:bg-zinc-800/80 dark:border-zinc-700/50 dark:text-zinc-200 dark:hover:bg-zinc-700/80",
       companyLogo: "cal",
       description: "Desarrollador Full-Stack en WebmasterCR, encargado del diseño, desarrollo e implementación de aplicaciones web completas, trabajando tanto en el frontend como en el backend. Participé en la creación de interfaces modernas, optimización de rendimiento y desarrollo de APIs, utilizando tecnologías actuales para ofrecer soluciones eficientes y escalables.",
+      shortImprovements: ["Aplicaciones web completas con interfaces modernas", "Optimización de rendimiento y experiencia de usuario", "Desarrollo de APIs e integraciones de servicios"],
       stack: ["React", "TypeScript", "Node.js", "REST APIs", "Tailwind CSS"]
     },
     {
@@ -121,6 +123,7 @@ const es = {
       companyColor: "bg-[#ffebee]/90 hover:bg-[#ffcdd2] border-[#ffd0d6]/50 text-[#ff5a5f] dark:bg-[#3e1b1d] dark:border-[#5c2a2d] dark:text-[#ff8a8f] dark:hover:bg-[#4d2225]",
       companyLogo: "airbnb",
       description: "Asociado con Universidad Latina de Costa Rica. Diseñé e implementé un sistema integral full-stack para la gestión académica del Liceo Experimental Bilingüe Pococí (LEBP). El sistema centraliza la administración de estudiantes, matrículas, asistencia con alertas por correo, calificaciones y reportes en PDF/Excel. Construido con Next.js (App Router), React 19, TypeScript, PostgreSQL y Prisma ORM; implementando autenticación JWT con control de acceso por roles (RBAC) y un sistema robusto de auditoría.",
+      shortImprovements: ["Sistema integral full-stack para gestión académica", "Centralización de estudiantes, matrículas y asistencia", "Construido con Next.js, React 19, TypeScript, PostgreSQL y Prisma ORM"],
       stack: ["Next.js", "React 19", "TypeScript", "PostgreSQL", "Prisma ORM", "JWT / RBAC"]
     }
   ],
@@ -341,6 +344,7 @@ const en: typeof es = {
       companyColor: "bg-[#eef2ff]/90 hover:bg-[#e0e7ff] border-[#c7d2fe]/60 text-[#4f46e5] dark:bg-[#1e1b4b]/60 dark:border-[#3730a3]/50 dark:text-[#818cf8] dark:hover:bg-[#312e81]/60",
       companyLogo: "code",
       description: "Designed and delivered custom digital solutions for clients, leading projects from requirements gathering to deployment. Built scalable web applications, automated business workflows, and integrated third-party APIs to improve operational efficiency and strengthen clients' digital presence.",
+      shortImprovements: ["Custom digital solutions built for clients", "Scalable web applications on modern architecture", "Workflow automation and third-party API integrations"],
       stack: ["Next.js", "TypeScript", "React 19", "Node.js", "PostgreSQL", "Tailwind CSS", "Prisma ORM", "Docker"]
     },
     {
@@ -352,6 +356,7 @@ const en: typeof es = {
       companyColor: "bg-[#f3f3f3]/90 hover:bg-[#e4e4e7] border-black/5 text-[#111111] dark:bg-zinc-800/80 dark:border-zinc-700/50 dark:text-zinc-200 dark:hover:bg-zinc-700/80",
       companyLogo: "cal",
       description: "Full-Stack Developer at WebmasterCR, responsible for designing, developing, and implementing end-to-end web applications across both frontend and backend. Participated in building modern user interfaces, optimizing performance, and developing REST APIs to deliver efficient, scalable digital solutions.",
+      shortImprovements: ["End-to-end web applications with modern interfaces", "Performance and user experience optimization", "REST API development and service integrations"],
       stack: ["React", "TypeScript", "Node.js", "REST APIs", "Tailwind CSS"]
     },
     {
@@ -363,6 +368,7 @@ const en: typeof es = {
       companyColor: "bg-[#ffebee]/90 hover:bg-[#ffcdd2] border-[#ffd0d6]/50 text-[#ff5a5f] dark:bg-[#3e1b1d] dark:border-[#5c2a2d] dark:text-[#ff8a8f] dark:hover:bg-[#4d2225]",
       companyLogo: "airbnb",
       description: "Associated with Universidad Latina de Costa Rica. Designed and implemented a comprehensive full-stack system for academic management at Liceo Experimental Bilingüe Pococí (LEBP). The system centralizes student administration, enrollment, real-time attendance with email notifications, grades, and PDF/Excel reports. Built with Next.js (App Router), React 19, TypeScript, PostgreSQL, and Prisma ORM; featuring JWT authentication with Role-Based Access Control (RBAC) and a robust audit log system.",
+      shortImprovements: ["Comprehensive full-stack academic management system", "Centralized students, enrollment and attendance", "Built with Next.js, React 19, TypeScript, PostgreSQL and Prisma ORM"],
       stack: ["Next.js", "React 19", "TypeScript", "PostgreSQL", "Prisma ORM", "JWT / RBAC"]
     }
   ],

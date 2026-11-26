@@ -1945,12 +1945,118 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   white-space: nowrap;
 }
 
+/* Each row is a group: the static line plus a smooth expandable panel. */
+.work-history-item {
+  display: block;
+}
+
+.work-history-name--button {
+  padding: 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+.work-history-name--button:hover {
+  text-decoration-color: #f5f5f5;
+}
+
+.work-history-name--button:focus-visible {
+  outline: 1px solid rgba(245, 245, 245, 0.5);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* Smooth, modern reveal: animate grid rows from 0fr to 1fr (no max-height
+   guesswork, no jank). Content stays in the DOM for accessibility. */
+.work-history-expand {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 300ms ease;
+  opacity: 0;
+}
+
+.work-history-expand.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.work-history-expand-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.work-history-expand-label {
+  margin: 14px 0 8px;
+  font-family: Inter, "Inter Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  color: #f5f5f59e;
+  text-transform: uppercase;
+}
+
+.work-history-expand-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.work-history-expand-item {
+  margin: 0 0 5px;
+  font-family: Inter, "Inter Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 19px;
+  letter-spacing: 0.01em;
+  color: #f5f5f5;
+}
+
+.work-history-expand-rule {
+  height: 1px;
+  margin: 12px 0 0;
+  background: rgba(245, 245, 245, 0.1);
+}
+
+.work-history-expand-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+}
+
+.work-history-expand-tag {
+  font-family: Inter, "Inter Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f5f5f5;
+  background: transparent;
+  border: 1px solid rgba(245, 245, 245, 0.18);
+  padding: 3px 7px;
+  white-space: nowrap;
+}
+
 @media (max-width: 639px) {
   .work-history-row,
   .work-history-meta,
   .work-history-year {
     font-size: 16px;
     line-height: 21px;
+  }
+
+  .work-history-expand-label {
+    font-size: 11px;
+  }
+
+  .work-history-expand-item {
+    font-size: 13px;
   }
 }
 
