@@ -60,10 +60,7 @@ function ShowroomCard({
       data-cuelume-hover="tick"
       aria-label={`${isEs ? "Abrir" : "Open"} ${name}`}
     >
-      <div
-        className="work-card__media w-full overflow-hidden rounded-[8px] bg-[#141414] ring-1 ring-white/[0.06]"
-        style={{ viewTransitionName: `work-image-${item.id}` } as React.CSSProperties}
-      >
+      <div className="work-card__media w-full overflow-hidden rounded-[8px] bg-[#141414] ring-1 ring-white/[0.06]">
         <GridRevealImage src={src} alt={name} aspect={16 / 10} />
       </div>
       <div className="mt-3 px-0.5 flex flex-col gap-0.5">
