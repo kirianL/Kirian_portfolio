@@ -18,7 +18,7 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
 
   const metaRef = useRiseIn<HTMLDivElement>({
     start: "now",
-    delay: 80,
+    delay: 30,
     distance: 8,
     selector: ".meta-badge",
     stagger: 55,
@@ -27,19 +27,19 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   const titleRef = useLineReveal<HTMLHeadingElement>({
     mask: true,
     start: "now",
-    delay: 120,
+    delay: 80,
     stagger: 80,
     duration: 900,
   });
   const descriptionRef = useLineReveal<HTMLParagraphElement>({
     start: "now",
-    delay: 220,
+    delay: 160,
     stagger: 55,
     duration: 720,
   });
   const ctaRef = useRiseIn<HTMLAnchorElement>({
     start: "now",
-    delay: 340,
+    delay: 240,
     distance: 12,
   });
 
@@ -113,7 +113,7 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
           blank (a canvas would still be drawing at capture time). */}
       <section className="work-col-header mx-auto px-6 sm:px-0 mt-8" aria-label={title}>
         <div
-          className={`work-detail__hero w-full overflow-hidden rounded-[12px] bg-[#141414] ring-1 ring-white/[0.06] ${heroReady ? "is-ready" : ""}`}
+          className={`work-detail__hero w-full overflow-hidden rounded-[10px] bg-[#141414] ring-1 ring-white/[0.06] ${heroReady ? "is-ready" : ""}`}
           style={
             {
               viewTransitionName: "work-image",

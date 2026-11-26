@@ -107,6 +107,30 @@ function flushQueue() {
  */
 let readyGate: Promise<void> | null = null;
 
+/**
+ * While a shared-element transition is flying, the incoming page is captured as
+ * a still image with its copy hidden. Revealing that copy before the flight
+ * ends would swap the still for a half-drawn block at the exact frame the
+ * thumbnails hands over — the classic "text pops" glitch. So the gate holds
+ * until the transition reports it is done (with a hard cap, so copy can never
+ * stay hidden if the API never settles).
+ */
+function transitionGate() {
+  if (typeof document === "undefined") return Promise.resolve();
+  if (document.documentElement.dataset.vt !== "flying") return Promise.resolve();
+  return new Promise<void>((resolve) => {
+    let settled = false;
+    const done = () => {
+      if (settled) return;
+      settled = true;
+      window.removeEventListener("portfolio:vt-end", done);
+      resolve();
+    };
+    window.addEventListener("portfolio:vt-end", done);
+    window.setTimeout(done, 1600);
+  });
+}
+
 function revealReady() {
   if (!readyGate) {
     readyGate = fontsReady().then(
@@ -116,7 +140,10 @@ function revealReady() {
         }),
     );
   }
-  return readyGate;
+  // The font gate resolves once per page load; the transition gate is checked
+  // on every mount, because a route can arrive mid-flight long after fonts
+  // have landed.
+  return Promise.all([readyGate, transitionGate()]).then(() => undefined);
 }
 
 function splitBatched(el: HTMLElement, options: SplitOptions) {

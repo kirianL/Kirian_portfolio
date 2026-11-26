@@ -103,7 +103,7 @@ function WorkCard({ item, isEs, showSpanishWork, index, onOpen }: WorkCardProps)
   const cardInner = (
     <>
       <div className="rounded-[14px] p-2.5 sm:p-3 bg-white/[0.035] border border-white/[0.07] transition-[border-color,background-color] duration-200 group-hover:border-white/[0.15] group-hover:bg-white/[0.05]">
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[8px] bg-[#141414] ring-1 ring-white/[0.06] work-thumb">
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[10px] bg-[#141414] ring-1 ring-white/[0.06] work-thumb">
           <GridRevealImage
             src={showSpanishWork ? item.imageEs : item.imageEn}
             alt={title}

@@ -206,6 +206,10 @@ html.lenis body {
     font-size: 16px;
     background-color: var(--color-grayscale-1);
     color: var(--color-grayscale-12);
+    /* Same content width whether or not the page scrolls: without this, a
+       short page (a project detail) loses the scrollbar and everything shifts
+       sideways by its width the instant the page changes. */
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -2084,10 +2088,18 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 }
 
 /* Shared-element FLIP: the carousel thumbnail flies into the detail hero.
-   Old and new snapshots morph as one image (no cross-fade, no zoom blur). */
+   Old and new snapshots morph as one image (no cross-fade, no zoom blur).
+   The group radius matches both ends exactly (10px on the card image, the hero
+   and the flying layer) so the corners never snap on handoff. The ease is the
+   same curve as the rest of the site, so the landing decelerates instead of
+   stopping dead. */
+::view-transition {
+  background-color: #0a0a0a;
+}
+
 ::view-transition-group(work-image) {
-  animation-duration: 460ms;
-  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  animation-duration: 440ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   border-radius: 10px;
   overflow: clip;
   z-index: 60;
@@ -2101,12 +2113,18 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   height: 100%;
 }
 
-/* The rest of the page cross-fades briefly under the flying image. */
+/* The page under the flyer dissolves instead of cross-fading with the home:
+   the outgoing page clears quickly so its cards and labels never ghost behind
+   the incoming copy, and the new page arrives on the same near-black canvas. */
 ::view-transition-old(root) {
-  animation-duration: 150ms;
+  animation-duration: 130ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  mix-blend-mode: normal;
 }
 ::view-transition-new(root) {
-  animation-duration: 200ms;
+  animation-duration: 240ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  mix-blend-mode: normal;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2145,8 +2163,8 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 }
 
 /* Meta badges — copied from the reference pills: 32px tall, 4px radius, a 1px
-   border one step darker than the fill, soft tinted background and deep ink of
-   the same family. Blue = design, green = engineering, red = year. */
+   border one step darker than the fill, a soft fill and a deep ink. The ramp is
+   neutral; the year sits one step deeper so the row keeps a hierarchy. */
 .meta-badges {
   display: flex;
   flex-wrap: wrap;
@@ -2155,9 +2173,9 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 }
 
 .meta-badge {
-  --badge-fill: #cacef9;
-  --badge-edge: #a0a0c8;
-  --badge-ink: #312e81;
+  --badge-fill: #e6e6e9;
+  --badge-edge: #b3b3ba;
+  --badge-ink: #1b1b1f;
 
   display: inline-flex;
   align-items: center;
@@ -2176,19 +2194,11 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   user-select: none;
 }
 
-.meta-badge[data-tone="green"] {
-  --badge-fill: #c9f0d3;
-  --badge-edge: #9cc7a7;
-  --badge-ink: #14532d;
-}
-
-.meta-badge[data-tone="red"] {
-  --badge-fill: #fbd1d1;
-  --badge-edge: #d1a1a1;
-  --badge-ink: #7c1d1d;
-}
-
 .meta-badge[data-badge-year] {
+  --badge-fill: #d2d2d7;
+  --badge-edge: #a1a1aa;
+  --badge-ink: #18181b;
+
   font-variant-numeric: tabular-nums;
 }
 
