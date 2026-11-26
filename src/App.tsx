@@ -10,6 +10,7 @@ import {
 import Lenis from "lenis";
 import { bind, setVolume } from "cuelume";
 import { installSoundUnlock } from "@/lib/sound";
+import { readRememberedScroll, rememberScrollNow } from "@/lib/scrollMemory";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import HomePage from "@/pages/HomePage";
 import WorkDetail from "@/components/work/WorkDetail";
@@ -156,43 +157,85 @@ export default function App() {
 
   // Track the scroll position of the entry we're currently on.
   useEffect(() => {
+    let rafId = 0;
     const rememberScroll = () => {
-      scrollByKeyRef.current[currentKeyRef.current] = window.scrollY;
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        const y = Math.round(window.scrollY);
+        scrollByKeyRef.current[currentKeyRef.current] = y;
+        rememberScrollNow();
+      });
     };
     window.addEventListener("scroll", rememberScroll, { passive: true });
-    return () => window.removeEventListener("scroll", rememberScroll);
+    return () => {
+      window.removeEventListener("scroll", rememberScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // Scroll restoration + PostHog pageview on route change
   useEffect(() => {
-    const savedScroll = sessionStorage.getItem("portfolio_lang_scroll");
+    const savedLangScroll = sessionStorage.getItem("portfolio_lang_scroll");
     let targetY = 0;
+    let shouldRestore = false;
 
-    if (savedScroll !== null) {
+    if (savedLangScroll !== null) {
       // Language switch keeps the user's exact position across translations.
-      targetY = parseInt(savedScroll, 10) || 0;
+      targetY = parseInt(savedLangScroll, 10) || 0;
       sessionStorage.removeItem("portfolio_lang_scroll");
+      shouldRestore = true;
     } else if (navigationType === "POP") {
       // Back/forward (including "Back" from a project detail): restore the
-      // position we had on that history entry, not the top of the page.
-      targetY = scrollByKeyRef.current[locationKey] ?? 0;
+      // position we had on that page, not the top of it.
+      targetY =
+        readRememberedScroll(pathname) ??
+        scrollByKeyRef.current[locationKey] ??
+        0;
+      shouldRestore = true;
     }
 
-    lenisRef.current?.scrollTo(targetY, { immediate: true });
-    window.scrollTo({ top: targetY, left: 0, behavior: "instant" });
-    // A second pass after layout settles catches late font/image shifts.
-    const rafId = requestAnimationFrame(() => {
-      if (navigationType === "POP" && savedScroll === null) {
-        const y = scrollByKeyRef.current[locationKey] ?? targetY;
-        lenisRef.current?.scrollTo(y, { immediate: true });
-        window.scrollTo({ top: y, left: 0, behavior: "instant" });
-      }
-    });
+    const apply = (y: number) => {
+      lenisRef.current?.scrollTo(y, { immediate: true });
+      window.scrollTo({ top: y, left: 0, behavior: "instant" });
+    };
+
+    apply(targetY);
+
+    // Re-apply after paint and once webfonts settle: late layout shifts above
+    // the target section would otherwise leave the viewport near the top.
+    let rafA = 0;
+    let rafB = 0;
+    let cancelled = false;
+    const cancelRestore = () => {
+      cancelled = true;
+    };
+
+    if (shouldRestore) {
+      rafA = requestAnimationFrame(() => {
+        rafB = requestAnimationFrame(() => apply(targetY));
+      });
+      window.addEventListener("wheel", cancelRestore, { passive: true, once: true });
+      window.addEventListener("touchstart", cancelRestore, { passive: true, once: true });
+      window.addEventListener("keydown", cancelRestore, { once: true });
+      document.fonts?.ready
+        .then(() => {
+          if (!cancelled && Math.abs(window.scrollY - targetY) > 4) apply(targetY);
+        })
+        .catch(() => {});
+    }
 
     if ((window as any).posthog?.capture) {
       (window as any).posthog.capture("$pageview");
     }
-    return () => cancelAnimationFrame(rafId);
+
+    return () => {
+      cancelAnimationFrame(rafA);
+      cancelAnimationFrame(rafB);
+      window.removeEventListener("wheel", cancelRestore);
+      window.removeEventListener("touchstart", cancelRestore);
+      window.removeEventListener("keydown", cancelRestore);
+    };
   }, [pathname, locationKey, navigationType]);
 
   return (

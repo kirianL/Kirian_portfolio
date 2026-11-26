@@ -2,6 +2,7 @@ import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GridRevealImage from "@/components/ui/GridRevealImage";
+import { rememberScrollNow } from "@/lib/scrollMemory";
 
 export interface SelectedWorkItem {
   id: string;
@@ -166,6 +167,8 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
       dragStateRef.current.dragged = false;
       return;
     }
+    // Capture the exact spot before leaving so "Back" returns here, not to the hero.
+    rememberScrollNow();
     navigate(to);
   };
 
