@@ -4,6 +4,7 @@ import { play } from "cuelume";
 import RedDitherBanner from "@/components/hero/RedDitherBanner";
 import CentralHero from "@/components/hero/CentralHero";
 import SelectedWorkCarousel from "@/components/home/SelectedWorkCarousel";
+import WorkHistorySection from "@/components/home/WorkHistorySection";
 import { dictionaries } from "@/data/data";
 import { professionalServiceSchema } from "@/lib/seo";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
@@ -137,6 +138,9 @@ export default function HomePage({ lang }: HomePageProps) {
 
       {/* Second Section: Selected Work Horizontal Carousel */}
       <SelectedWorkCarousel lang={lang} />
+
+      {/* Third Section: compact Work / Projects history */}
+      <WorkHistorySection lang={lang} />
 
       {/* Floating Toast Notification */}
       <div

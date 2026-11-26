@@ -14,7 +14,7 @@ export interface SelectedWorkItem {
   soon?: boolean;
 }
 
-const WORK_ITEMS: SelectedWorkItem[] = [
+export const WORK_ITEMS: SelectedWorkItem[] = [
   {
     id: "koragrid",
     title: "KoraGrid — Real-time Energy Telemetry & ESG Control",
