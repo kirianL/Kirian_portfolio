@@ -9,16 +9,16 @@ import { flushSync } from "react-dom";
  * clear exactly what it added without touching a page's own static name (the
  * detail hero keeps `work-image` for the way back).
  */
+const SHARED_ATTR = "data-vt-shared";
+
 export function markSharedElement(el: Element | null) {
-  document
-    .querySelectorAll<HTMLElement>("[data-vt-shared]")
-    .forEach((node) => {
-      node.style.viewTransitionName = "";
-      node.removeAttribute("data-vt-shared");
-    });
+  document.querySelectorAll<HTMLElement>(`[${SHARED_ATTR}]`).forEach((node) => {
+    node.style.viewTransitionName = "";
+    node.removeAttribute(SHARED_ATTR);
+  });
   if (el instanceof HTMLElement) {
     el.style.viewTransitionName = "work-image";
-    el.setAttribute("data-vt-shared", "");
+    el.setAttribute(SHARED_ATTR, "");
   }
 }
 
@@ -46,11 +46,45 @@ export function isReturningFlight() {
   return returningFlight;
 }
 
+/**
+ * Which snapshot of the shared image flies.
+ *
+ * The two ends do not hold the same pixels: the carousel card is a `<canvas>`
+ * whose backing store is clamped to 2x DPR, the detail hero is the
+ * full-resolution `<img>`. The visible layer is painted at `100%` of the group
+ * box and therefore scaled *up* on the way into the hero, so flying the card
+ * capture softens the whole 440ms and then snaps to the sharp hero at handoff.
+ *
+ * The rule is: fly the capture that already holds the large frame.
+ *
+ * - `back` (detail → card) — the outgoing capture *is* the hero. That is the
+ *   default the stylesheet describes, and the way back needs no help.
+ * - `forward` (card → detail) — the incoming capture is the hero, so it takes
+ *   the flight, but only after this module has confirmed it decoded: an
+ *   undecoded `<img>` is snapshotted as the empty `#141414` plate it sits on,
+ *   and a dark box flying over the copy is worse than a soft frame.
+ *
+ * Hence the root attribute only ever has to say "the new capture is good":
+ * with it, `new` flies; without it, the always-painted `old` does.
+ */
+const FLYER_ATTR = "data-vt-flyer";
+
+/** The element whose capture must carry real pixels before it may fly. */
+const HERO_ATTR = "data-vt-hero";
+
 export interface TransitionOptions {
   /** Scroll offset the incoming page must sit at while it is captured. */
   scrollY?: number;
   /** Card href that has to be back in place on the incoming page. */
   sharedHref?: string;
+}
+
+/** Fired once the flight is over, so the incoming copy can start revealing. */
+export const VT_END_EVENT = "portfolio:vt-end";
+
+interface LenisLike {
+  scrollTo?: (value: number, options?: object) => void;
+  resize?: () => void;
 }
 
 /**
@@ -64,42 +98,113 @@ export interface TransitionOptions {
  * layout agree.
  */
 function parkAt(y: number) {
-  const lenis = (window as unknown as { __lenis?: { scrollTo?: (v: number, o?: object) => void } })
-    .__lenis;
-  // Sync Lenis first so it does not animate the old offset back on the next frame.
-  lenis?.scrollTo?.(y, { immediate: true, force: true });
+  const lenis = (window as unknown as { __lenis?: LenisLike }).__lenis;
+  if (lenis) {
+    // Lenis still caches the outgoing page's height. Refreshing it *before*
+    // scrolling keeps the engine from clamping the offset on its next frame.
+    lenis.resize?.();
+    lenis.scrollTo?.(y, { immediate: true, force: true });
+  }
+  // Lenis may not exist at all (touch devices, reduced motion), and it is the
+  // native offset — not its internal target — that the browser captures.
   window.scrollTo({ top: y, left: 0, behavior: "instant" });
-  document.documentElement.scrollTop = y;
-  document.body.scrollTop = y;
 }
-
-/** Fired once the flight is over, so the incoming copy can start revealing. */
-export const VT_END_EVENT = "portfolio:vt-end";
 
 /**
  * Wait until the incoming page is actually in the DOM.
  *
  * `navigate(-1)` goes through `history.go`, which the browser resolves in a
  * later task — so the route renders *after* the transition callback returns
- * unless we wait for it. Polling for the element we are about to animate is the
- * most direct signal; the cap keeps a bad route from freezing the page.
+ * unless we wait for it. A MutationObserver resolves the moment the element
+ * lands (timers are throttled to one task per frame here, which pushed the
+ * capture a frame or more past the mount); the cap keeps a bad route from
+ * freezing the page.
  */
-function waitForElement(selector: string, timeout = 900) {
+function waitForElement(selector: string, timeout = 1200) {
   return new Promise<void>((resolve) => {
     if (document.querySelector(selector)) return resolve();
-    const started = performance.now();
-    // Timers, not rAF: the browser blocks frame production while it waits for
-    // the update callback, so a rAF loop would never run and the transition
-    // would abort on its DOM-update timeout.
-    const tick = () => {
-      if (document.querySelector(selector) || performance.now() - started > timeout) {
-        resolve();
-        return;
-      }
-      window.setTimeout(tick, 12);
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      observer.disconnect();
+      window.clearTimeout(timer);
+      resolve();
     };
-    window.setTimeout(tick, 12);
+    const observer = new MutationObserver(() => {
+      if (document.querySelector(selector)) finish();
+    });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
+    const timer = window.setTimeout(finish, timeout);
   });
+}
+
+/**
+ * Resolve once the incoming page can be painted without placeholder boxes.
+ *
+ * The browser captures the new state as soon as the update callback settles,
+ * and that capture paints *layout*, not `load`. A hero `<img>` that is still
+ * decoding is snapped as the empty `#141414` plate behind it — the dark box
+ * that then flies across the page, over the copy it should be landing above.
+ * Decoding the frames that are actually on screen, and waiting for the webfont
+ * (whose swap reflows the headline), keeps the capture honest. Every job is
+ * capped so a broken file can never hold the flight hostage.
+ */
+async function waitForPaint(timeout = 420) {
+  const jobs: Promise<unknown>[] = [];
+
+  const fonts = typeof document !== "undefined" ? document.fonts : undefined;
+  if (fonts && fonts.status !== "loaded") {
+    jobs.push(fonts.ready.catch(() => undefined));
+  }
+
+  const viewport = window.innerHeight;
+  for (const img of Array.from(document.images)) {
+    if (!img.getAttribute("src")) continue;
+    const rect = img.getBoundingClientRect();
+    // Off-screen art is not in the snapshot worth paying for.
+    if (rect.width === 0 || rect.bottom < 0 || rect.top > viewport) continue;
+    if (!img.complete || img.naturalWidth === 0) {
+      jobs.push(
+        new Promise<void>((resolve) => {
+          const done = () => {
+            img.removeEventListener("load", done);
+            img.removeEventListener("error", done);
+            resolve();
+          };
+          img.addEventListener("load", done, { once: true });
+          img.addEventListener("error", done, { once: true });
+        }),
+      );
+      continue;
+    }
+    const decoded = img.decode?.();
+    if (decoded) jobs.push(decoded.catch(() => undefined));
+  }
+
+  if (jobs.length === 0) return;
+  await Promise.race([
+    Promise.all(jobs),
+    new Promise<void>((resolve) => window.setTimeout(resolve, timeout)),
+  ]);
+}
+
+/**
+ * True when the shared element would be snapshotted from real pixels.
+ *
+ * `waitForPaint` only *asks* for the decode and settles at its cap whatever
+ * happens, so the outcome has to be read back. A container (the hero box) is
+ * judged by the `<img>` inside it; a canvas destination has no intrinsic frame
+ * to lose and is not a candidate for this check.
+ */
+function captureIsReady(el: Element | null) {
+  if (!el) return false;
+  const img = el instanceof HTMLImageElement ? el : el.querySelector("img");
+  if (!img) return false;
+  return img.complete && img.naturalWidth > 0;
 }
 
 /**
@@ -125,59 +230,88 @@ export function navigateWithTransition(
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (typeof doc.startViewTransition === "function" && !reduce) {
-    const targetY = options.scrollY ?? 0;
-    const sharedHref = options.sharedHref ?? null;
-    const cardSelector = sharedHref
-      ? `[data-work-card][href="${sharedHref}"]`
-      : null;
-    pendingSharedHref = sharedHref;
-    returningFlight = sharedHref !== null;
-    let ended = false;
-
-    try {
-      // Must be called on `document`: extracting the method loses `this`.
-      // The callback may be async: a history POP renders in a later task, and
-      // the browser only captures the incoming page once the promise resolves.
-      const transition = doc.startViewTransition(async () => {
-        flushSync(navigate);
-        if (cardSelector !== null) {
-          // The card remounts with this navigation, so it can only be marked
-          // once the new page is in the DOM — still before the capture.
-          await waitForElement(cardSelector);
-          if (ended) return;
-          parkAt(targetY);
-          const card = document.querySelector<HTMLElement>(cardSelector);
-          markSharedElement(card?.querySelector(".work-shared-image") ?? null);
-          return;
-        }
-        parkAt(targetY);
-      });
-
-      // The incoming page mounts inside the update callback, so it can read
-      // this flag and hold its reveal until the image has landed.
-      document.documentElement.dataset.vt = "flying";
-      const end = () => {
-        if (ended) return;
-        ended = true;
-        pendingSharedHref = null;
-        returningFlight = false;
-        markSharedElement(null);
-        if (document.documentElement.dataset.vt !== "flying") return;
-        delete document.documentElement.dataset.vt;
-        window.dispatchEvent(new Event(VT_END_EVENT));
-      };
-      transition.finished.then(end, end);
-      // Hard cap: a cancelled transition must not leave the page mid-reveal.
-      window.setTimeout(end, 1600);
-      return;
-    } catch {
-      /* a transition is already running — just navigate */
-      pendingSharedHref = null;
-      returningFlight = false;
-    }
+  if (typeof doc.startViewTransition !== "function" || reduce) {
+    navigate();
+    if (typeof options.scrollY === "number") parkAt(options.scrollY);
+    return;
   }
 
-  navigate();
-  if (typeof options.scrollY === "number") parkAt(options.scrollY);
+  const targetY = options.scrollY ?? 0;
+  const sharedHref = options.sharedHref ?? null;
+  const cardSelector = sharedHref
+    ? `[data-work-card][href="${sharedHref}"]`
+    : null;
+  pendingSharedHref = sharedHref;
+  returningFlight = sharedHref !== null;
+  let ended = false;
+  let capTimer = 0;
+
+  const end = () => {
+    if (ended) return;
+    ended = true;
+    pendingSharedHref = null;
+    returningFlight = false;
+    window.clearTimeout(capTimer);
+    markSharedElement(null);
+    // The pseudo tree is gone by now; dropping the attribute keeps a later
+    // flight from inheriting this one's layer choice.
+    document.documentElement.removeAttribute(FLYER_ATTR);
+    if (document.documentElement.dataset.vt !== "flying") return;
+    delete document.documentElement.dataset.vt;
+    window.dispatchEvent(new Event(VT_END_EVENT));
+  };
+
+  try {
+    // Set before the call: the incoming page mounts inside the update callback,
+    // and `startViewTransition` may dispatch that callback in a later task.
+    document.documentElement.dataset.vt = "flying";
+
+    // Must be called on `document`: extracting the method loses `this`.
+    // The callback may be async: a history POP renders in a later task, and
+    // the browser only captures the incoming page once the promise resolves.
+    const transition = doc.startViewTransition(async () => {
+      // The router runs its state updates in `startTransition`, which no
+      // `flushSync` can flush — the route would land *after* the capture and
+      // the flight would morph the old page into a copy of itself, then cut.
+      // `BrowserRouter useTransitions={false}` makes this a real sync commit.
+      flushSync(navigate);
+
+      if (cardSelector !== null) {
+        // The card remounts with this navigation, so it can only be marked
+        // once the new page is in the DOM — still before the capture. Its
+        // canvas is primed in a layout effect, so the capture is complete.
+        await waitForElement(cardSelector);
+        if (ended) return;
+        parkAt(targetY);
+        const card = document.querySelector<HTMLElement>(cardSelector);
+        markSharedElement(card?.querySelector(".work-shared-image") ?? null);
+        return;
+      }
+
+      parkAt(targetY);
+      // The hero is painted from the full-resolution file: without this the
+      // snapshot is the dark plate behind an undecoded image.
+      await waitForPaint();
+      // Card -> detail: hand the flight to the hero capture, which is both the
+      // sharper frame and the one that matches where the image lands — the card
+      // canvas would be blown up into this box for the whole flight and then
+      // snap. Only when it really decoded, or the plate flies as a dark box.
+      if (captureIsReady(document.querySelector(`[${HERO_ATTR}]`))) {
+        document.documentElement.setAttribute(FLYER_ATTR, "new");
+      }
+    });
+
+    transition.finished.then(end, end);
+    // Hard cap: a cancelled transition must not leave the page mid-reveal.
+    capTimer = window.setTimeout(end, 1600);
+  } catch {
+    // A transition is already running (or the commit failed): clean up the
+    // flags we set and navigate plainly, so no page is left waiting on a gate.
+    pendingSharedHref = null;
+    returningFlight = false;
+    delete document.documentElement.dataset.vt;
+    document.documentElement.removeAttribute(FLYER_ATTR);
+    navigate();
+    if (typeof options.scrollY === "number") parkAt(options.scrollY);
+  }
 }

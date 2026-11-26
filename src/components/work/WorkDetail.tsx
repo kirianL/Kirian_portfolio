@@ -123,10 +123,15 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
 
       {/* Shared-element hero: the carousel thumbnail becomes this image. A
           plain <img> paints from cache so the transition snapshot is never
-          blank (a canvas would still be drawing at capture time). */}
+          blank (a canvas would still be drawing at capture time), and being the
+          full-resolution file it is also the sharper of the two captures — the
+          one `data-vt-hero` lets the flight pick. The box keeps the
+          thumbnail's 16:10 ratio in CSS, so the flight is a pure scale and the
+          target never depends on the file having loaded. */}
       <section className="work-col-header mx-auto px-6 sm:px-0 mt-8" aria-label={title}>
         <div
-          className={`work-detail__hero w-full overflow-hidden rounded-[10px] bg-[#141414] ring-1 ring-white/[0.06] ${heroReady ? "is-ready" : ""}`}
+          data-vt-hero=""
+          className={`work-detail__hero aspect-[16/10] w-full overflow-hidden rounded-[10px] bg-[#141414] ring-1 ring-white/[0.06] ${heroReady ? "is-ready" : ""}`}
           style={
             {
               viewTransitionName: "work-image",

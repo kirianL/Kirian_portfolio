@@ -397,10 +397,22 @@ export default function GridRevealImage({
   const durationRef = useRef(estimatedDuration);
   durationRef.current = estimatedDuration;
 
+  // Frozen per source: the decision has to hold for the whole mount, because
+  // the flight flags clear the moment it lands and a re-render must not turn
+  // the landed photo back into a grid reveal.
+  const primingRef = useRef({ src, priming: prime || isReturningFlight() });
+  if (primingRef.current.src !== src) {
+    primingRef.current = { src, priming: prime || isReturningFlight() };
+  }
+  const priming = primingRef.current.priming;
+
   // Runs during the commit, before the browser can snapshot the page, so a
   // card that is the destination of a shared-element flight is never empty.
+  // A returning flight restores the whole home page, so every card that has a
+  // decoded bitmap is primed at once — the outgoing page must be complete when
+  // the browser captures the new state, not just the card the hero lands on.
   useLayoutEffect(() => {
-    if (!prime) return;
+    if (!priming) return;
     const canvas = canvasRef.current;
     const frame = frameRef.current;
     const image = src ? decodedImages.get(src) : null;
@@ -416,7 +428,7 @@ export default function GridRevealImage({
     canvas.height = height;
     const fit = coverRect(image.naturalWidth, image.naturalHeight, width, height);
     ctx.drawImage(image, fit.dx, fit.dy, fit.dw, fit.dh);
-  }, [prime, src]);
+  }, [priming, src]);
 
   useEffect(() => {
     let cleanup: (() => void) | undefined;
@@ -450,7 +462,7 @@ export default function GridRevealImage({
       // The card the flight is landing on must already be a photo — both when the
       // browser snapshots the page and after it lands. Without this the grid
       // reveal would restart and flip the landed image back to tiles.
-      const primed = prime ? decodedImages.get(src) : undefined;
+      const primed = priming ? decodedImages.get(src) : undefined;
       if (primed?.naturalWidth) {
         const paint = () => {
           const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -643,15 +655,13 @@ export default function GridRevealImage({
       };
     };
 
-    // A flight is running and this canvas is not its destination: hold every
+    // A flight is running and this canvas is not its target: hold every
     // allocation and decode until the image has landed. Five canvas surfaces
-    // built in one commit is exactly the kind of long task that drops frames
-    // out of the transition.
-    if (
-      !prime &&
-      !isReturningFlight() &&
-      document.documentElement.dataset.vt === "flying"
-    ) {
+    // (tree build, sampler, load, rAF loop) built in one commit is exactly the
+    // kind of long task that drops frames out of a flight — and on the way back
+    // it delayed the capture by ~150ms. A primed canvas has already painted the
+    // photo during the commit, so it loses nothing by waiting.
+    if (!prime && document.documentElement.dataset.vt === "flying") {
       let started = false;
       const onEnd = () => {
         if (started) return;
@@ -670,7 +680,7 @@ export default function GridRevealImage({
     return () => {
       cleanup?.();
     };
-  }, [src, ratio, prime]);
+  }, [src, ratio, prime, priming]);
 
   return (
     <div

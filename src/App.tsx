@@ -209,8 +209,20 @@ export default function App() {
       window.scrollTo({ top: y, left: 0, behavior: "instant" });
     };
 
-    restoringRef.current = shouldRestore;
-    apply(targetY);
+    // A shared-element flight parks the incoming page itself, before the
+    // browser snapshots it, and it has to stay there while the image is in the
+    // air. Re-applying the offset here (or nudging it on later frames) slides
+    // the page under the flyer and lands the flight off-target.
+    const flightOwnsScroll =
+      document.documentElement.dataset.vt === "flying";
+
+    // While the flight owns the scroll there is nothing to protect from being
+    // recorded: the parked value *is* the page's position.
+    restoringRef.current = shouldRestore && !flightOwnsScroll;
+
+    if (!flightOwnsScroll) {
+      apply(targetY);
+    }
 
     // The restored page can still be shorter than the saved position while
     // below-the-fold content mounts (the browser would clamp the scroll and
@@ -225,7 +237,7 @@ export default function App() {
       restoringRef.current = false;
     };
 
-    if (shouldRestore) {
+    if (shouldRestore && !flightOwnsScroll) {
       window.addEventListener("wheel", cancelRestore, { passive: true });
       window.addEventListener("touchstart", cancelRestore, { passive: true });
       window.addEventListener("keydown", cancelRestore);
