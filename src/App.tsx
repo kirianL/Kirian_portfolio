@@ -12,6 +12,7 @@ import { bind, setVolume } from "cuelume";
 import { installSoundUnlock } from "@/lib/sound";
 import { readRememberedScroll, rememberScrollNow } from "@/lib/scrollMemory";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { Analytics } from "@vercel/analytics/react";
 import HomePage from "@/pages/HomePage";
 import WorkDetail from "@/components/work/WorkDetail";
 
@@ -306,6 +307,7 @@ export default function App() {
       </Suspense>
 
       <SpeedInsights />
+      <Analytics />
     </>
   );
 }
