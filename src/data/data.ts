@@ -91,6 +91,18 @@ const es = {
   },
   experienceList: [
     {
+      year: "2025",
+      period: "2025 – presente",
+      role: "Ingeniero de Software",
+      company: "Sorin Labs",
+      companyUrl: "https://sorinlabs.dev",
+      companyColor: "bg-[#eef2ff]/90 border-[#c7d2fe]/60 text-[#4f46e5]",
+      companyLogo: "code",
+      description: "Desarrollo de productos digitales y soluciones web para Sorin Labs, contribuyendo a proyectos de frontend y backend con tecnologías modernas.",
+      shortImprovements: ["Productos digitales desarrollados para Sorin Labs", "Interfaces y aplicaciones web con tecnologías modernas", "Colaboración en equipos de ingeniería"],
+      stack: ["React", "TypeScript", "Next.js", "Node.js", "Tailwind CSS"]
+    },
+    {
       year: "2026",
       period: "ene. 2026 – presente",
       role: "Ingeniero de Software",
@@ -336,8 +348,20 @@ const en: typeof es = {
   },
   experienceList: [
     {
+      year: "2025",
+      period: "2025 - Present",
+      role: "Software Engineer",
+      company: "Sorin Labs",
+      companyUrl: "https://sorinlabs.dev",
+      companyColor: "bg-[#eef2ff]/90 border-[#c7d2fe]/60 text-[#4f46e5]",
+      companyLogo: "code",
+      description: "Digital products and web solutions developed for Sorin Labs, contributing to frontend and backend projects with modern technologies.",
+      shortImprovements: ["Digital products built for Sorin Labs", "Modern web interfaces and applications", "Collaboration within engineering teams"],
+      stack: ["React", "TypeScript", "Next.js", "Node.js", "Tailwind CSS"]
+    },
+    {
       year: "2026",
-      period: "Jan. 2026 – Present",
+      period: "Jan. 2026 - Present",
       role: "Software Engineer",
       company: "Ultimate Media Productions",
       companyUrl: "https://ultimatemediaproductions.com",
