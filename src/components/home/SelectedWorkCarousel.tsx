@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import GridRevealImage from "@/components/ui/GridRevealImage";
 
 export interface SelectedWorkItem {
   id: string;
@@ -213,14 +214,12 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
           const cardInner = (
             <>
               <div className="rounded-[14px] p-2.5 sm:p-3 bg-white/[0.035] border border-white/[0.07] transition-[border-color,background-color] duration-200 group-hover:border-white/[0.15] group-hover:bg-white/[0.05]">
-                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[8px] bg-[#141414] ring-1 ring-white/[0.06]">
-                  <img
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[8px] bg-[#141414] ring-1 ring-white/[0.06] work-thumb">
+                  <GridRevealImage
                     src={showSpanishWork ? item.imageEs : item.imageEn}
                     alt={title}
-                    loading={item.id === WORK_ITEMS[0].id ? "eager" : "lazy"}
-                    decoding="async"
-                    draggable={false}
-                    className="w-full h-full object-cover object-top transition-[filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:blur-[2px] group-hover:brightness-[0.78] select-none"
+                    aspect={16 / 10}
+                    className="work-thumb-reveal"
                   />
                   <span
                     className="work-view-icon pointer-events-none absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] translate-y-1 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"

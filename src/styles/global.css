@@ -2044,6 +2044,17 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   }
 }
 
+/* GridReveal canvas reacts to the card hover just like the old <img> did. */
+.work-thumb-reveal canvas {
+  transition: filter 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .work-thumb-reveal canvas {
+    filter: blur(2px) brightness(0.78);
+  }
+}
+
 /* Compact Work / Projects history — same type scale and palette as the hero
    so it reads as one continuous editorial column, not a separate card. */
 .work-history-panel {
