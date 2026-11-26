@@ -27,14 +27,22 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
     return () => window.removeEventListener("keydown", onKey);
   });
 
+  // Return to whichever page the project was opened from (home, projects…).
+  // Only fall back to home when the detail was opened directly in a new tab.
+  const goBack = () => {
+    const idx = (window.history.state as { idx?: number } | null)?.idx;
+    if (typeof idx === "number" && idx > 0) navigate(-1);
+    else navigate(isEs ? "/es" : "/");
+  };
+
   if (!item) {
     return (
       <main id="main-content" className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] flex items-center justify-center">
         <button
-          onClick={() => navigate(isEs ? "/es/work" : "/work")}
+          onClick={goBack}
           className="font-hero-sans text-[13px] text-[#f5f5f59e] hover:text-[#f5f5f5] transition-colors"
         >
-          {isEs ? "← Volver al trabajo" : "← Back to work"}
+          {isEs ? "← Volver" : "← Back"}
         </button>
       </main>
     );
@@ -44,8 +52,6 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   const title = (isEs ? item.titleEs : item.title).split(" — ")[0];
   const description = (isEs ? item.titleEs : item.title).split(" — ")[1] ?? "";
   const role = isEs ? item.roleEs : item.role;
-
-  const goBack = () => navigate(isEs ? "/es/work" : "/work");
 
   return (
     <main id="main-content" className="work-detail min-h-screen w-full bg-[#0a0a0a] text-[#f5f5f5]">

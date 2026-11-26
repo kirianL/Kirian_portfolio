@@ -1,12 +1,11 @@
 import * as React from "react";
 import { lazy, Suspense, useEffect, useRef } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import { bind, setVolume } from "cuelume";
 import { installSoundUnlock } from "@/lib/sound";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import HomePage from "@/pages/HomePage";
-import WorkShowroom from "@/components/work/WorkShowroom";
 import WorkDetail from "@/components/work/WorkDetail";
 
 const ProjectsPage = lazy(() => import("@/pages/ProjectsPage"));
@@ -178,11 +177,12 @@ export default function App() {
           <Route path="/projects/" element={<ProjectsPage lang="en" />} />
           <Route path="/es/projects" element={<ProjectsPage lang="es" />} />
           <Route path="/es/projects/" element={<ProjectsPage lang="es" />} />
-          <Route path="/work" element={<WorkShowroom lang="en" />} />
-          <Route path="/work/" element={<WorkShowroom lang="en" />} />
+          {/* The showroom is gone: /work just sends you back home. */}
+          <Route path="/work" element={<Navigate to="/" replace />} />
+          <Route path="/work/" element={<Navigate to="/" replace />} />
           <Route path="/work/:slug" element={<WorkDetail lang="en" />} />
-          <Route path="/es/work" element={<WorkShowroom lang="es" />} />
-          <Route path="/es/work/" element={<WorkShowroom lang="es" />} />
+          <Route path="/es/work" element={<Navigate to="/es" replace />} />
+          <Route path="/es/work/" element={<Navigate to="/es" replace />} />
           <Route path="/es/work/:slug" element={<WorkDetail lang="es" />} />
           <Route path="/about" element={<AboutPage lang="en" />} />
           <Route path="/about/" element={<AboutPage lang="en" />} />
