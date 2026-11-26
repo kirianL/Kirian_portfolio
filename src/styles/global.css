@@ -540,6 +540,10 @@ html.dark .cr-branch-svg {
   background: var(--color-grayscale-1);
   opacity: 0;
   pointer-events: none;
+  /* Fade in below the dithered banner so the overlay never shows as a hard
+     dark rectangle over the artwork. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 120px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 120px);
   transition: opacity 600ms ease-in-out 430ms;
 }
 
@@ -573,6 +577,15 @@ html.dark .cr-branch-svg {
   )
   .bio-dimmer {
   transition-duration: 860ms;
+}
+
+/* Work cards: on touch devices there is no hover, so the "view project"
+   affordance stays visible over the thumbnail. A single tap opens the link. */
+@media (hover: none) {
+  .work-view-icon {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 .bio-pencil-word {
@@ -1760,9 +1773,37 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   transition: padding-top 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (min-width: 1024px) and (max-height: 880px) {
+/* On mobile the hero must not re-center when the accordion grows: anchor the
+   column at the top so only the content below "see more" moves. */
+@media (max-width: 767px) {
+  .hero-section {
+    justify-content: flex-start;
+  }
+}
+
+/* No hover on touch devices: pencil marks and their notes must never appear,
+   so an accidental tap can't draw a circle or open a note. */
+@media (max-width: 767px) {
+  .bio-mark,
+  .bio-hand-note,
+  .ulatina-note,
+  .bio-focus-scope--hero .bio-dimmer {
+    display: none !important;
+  }
+}
+
+/* On laptops the expanded bio must not push the CTAs below the fold. Give the
+   column back the top breathing room only while the panel is open. */
+@media (min-width: 1024px) {
   .hero-section:has(.bio-acc[data-open="true"]) {
-    padding-top: 11svh;
+    padding-top: 3svh;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 780px) {
+  .hero-section:has(.bio-acc[data-open="true"]) {
+    justify-content: flex-start;
+    padding-top: 2svh;
   }
 }
 

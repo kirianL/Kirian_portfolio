@@ -611,6 +611,14 @@ export default function CentralHero({
 
   const onActivate = useCallback(
     (id: string, wordEl: HTMLElement, clientX?: number, clientY?: number) => {
+      // Mobile has no real hover. Never activate pencil marks there, so an
+      // accidental tap can't draw a circle or open a note.
+      if (
+        typeof window !== "undefined" &&
+        window.matchMedia("(max-width: 767px)").matches
+      ) {
+        return;
+      }
       if (leaveTimerRef.current) {
         window.clearTimeout(leaveTimerRef.current);
         leaveTimerRef.current = null;

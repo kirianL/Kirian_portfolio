@@ -35,6 +35,7 @@ const WORK_ITEMS: SelectedWorkItem[] = [
     year: "2026",
     imageEn: "/work/customerup-en.jpg",
     imageEs: "/work/customerup-es.jpg",
+    href: "https://data-website-sandy.vercel.app/",
   },
   {
     id: "kora-finance",
@@ -45,6 +46,7 @@ const WORK_ITEMS: SelectedWorkItem[] = [
     year: "2026",
     imageEn: "/work/kora-finance-en.jpg",
     imageEs: "/work/kora-finance-es.jpg",
+    href: "https://financewebsite-three.vercel.app/",
   },
   {
     id: "alder-psicologia",
@@ -55,6 +57,7 @@ const WORK_ITEMS: SelectedWorkItem[] = [
     year: "2026",
     imageEn: "/work/alder-psicologia-en.jpg",
     imageEs: "/work/alder-psicologia-es.jpg",
+    href: "https://psychologywebsite.vercel.app/",
   },
   {
     id: "mp-legal",
@@ -65,6 +68,7 @@ const WORK_ITEMS: SelectedWorkItem[] = [
     year: "2026",
     imageEn: "/work/mp-legal-en.jpg",
     imageEs: "/work/mp-legal-es.jpg",
+    href: "https://legalwebsite-69vd.vercel.app/",
   },
 ];
 
@@ -209,15 +213,34 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
           const cardInner = (
             <>
               <div className="rounded-[14px] p-2.5 sm:p-3 bg-white/[0.035] border border-white/[0.07] transition-[border-color,background-color] duration-200 group-hover:border-white/[0.15] group-hover:bg-white/[0.05]">
-                <div className="aspect-[16/10] w-full overflow-hidden rounded-[8px] bg-[#141414] ring-1 ring-white/[0.06]">
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[8px] bg-[#141414] ring-1 ring-white/[0.06]">
                   <img
                     src={showSpanishWork ? item.imageEs : item.imageEn}
                     alt={title}
                     loading={item.id === WORK_ITEMS[0].id ? "eager" : "lazy"}
                     decoding="async"
                     draggable={false}
-                    className="w-full h-full object-cover object-top transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02] select-none"
+                    className="w-full h-full object-cover object-top transition-[filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:blur-[2px] group-hover:brightness-[0.78] select-none"
                   />
+                  <span
+                    className="work-view-icon pointer-events-none absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] translate-y-1 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+                    aria-hidden="true"
+                  >
+                    <span className="font-hero-sans text-[12px] font-medium tracking-[-0.01em]">
+                      {isEs ? "Ver página" : "View site"}
+                    </span>
+                    <svg
+                      className="h-3.5 w-3.5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M7 17L17 7M7 7h10v10" />
+                    </svg>
+                  </span>
                 </div>
               </div>
 
