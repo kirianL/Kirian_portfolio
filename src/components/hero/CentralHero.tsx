@@ -51,6 +51,7 @@ import GitHubActivityNote from "@/components/hero/GitHubActivityNote";
 import LifePhotosNote from "@/components/hero/LifePhotosNote";
 import ULatinaNote from "@/components/hero/ULatinaNote";
 import { getViewerTimeZone, getCountryCodeFromTimeZone } from "@/lib/viewer-locale";
+import { useLineReveal, useRiseIn } from "@/lib/reveal";
 
 export interface CentralHeroProps {
   lang: "EN" | "ES";
@@ -454,6 +455,21 @@ function getPencilWordClasses(id: string, handlers: PencilWordHandlers, base: st
   }`;
 }
 
+/**
+ * One plain bio line. kugiri is safe here because the line is a single static
+ * string: no React-managed node lives inside it, so rebuilding the split on a
+ * width change can never detach a child React still owns.
+ */
+function BioLine({ text }: { text: string }) {
+  const ref = useLineReveal<HTMLParagraphElement>({
+    start: "view",
+    delay: 40,
+    stagger: 45,
+    duration: 680,
+  });
+  return <p ref={ref}>{text}</p>;
+}
+
 export default function CentralHero({
   lang,
   name,
@@ -503,6 +519,80 @@ export default function CentralHero({
   const [gameIconBg, setGameIconBg] = useState<string | null>(null);
   const [gameIconColor, setGameIconColor] = useState("#ff4655");
   const [bioOpen, setBioOpen] = useState(false);
+
+  // Entry choreography: the name and the opening bio line are split into the
+  // lines the browser painted; everything interactive rises as a block. The
+  // delays are the order the eye is meant to travel down the column.
+  const nameRef = useLineReveal<HTMLHeadingElement>({
+    unit: "words",
+    mask: true,
+    start: "now",
+    delay: 40,
+    stagger: 55,
+    duration: 760,
+  });
+  // The opening line ends in the company link, and kugiri restores a block by
+  // replacing its markup, so this one rises whole instead of being split.
+  const introRef = useRiseIn<HTMLParagraphElement>({
+    start: "now",
+    delay: 330,
+    distance: 12,
+    duration: 720,
+  });
+  const topBarRef = useRiseIn<HTMLDivElement>({
+    start: "now",
+    distance: 8,
+    selector: "a",
+  });
+  const pronunciationRef = useRiseIn<HTMLSpanElement>({
+    start: "now",
+    delay: 200,
+    distance: 8,
+  });
+  const tickerRef = useRiseIn<HTMLSpanElement>({
+    start: "now",
+    delay: 240,
+    distance: 8,
+  });
+  const basedInRef = useRiseIn<HTMLParagraphElement>({
+    start: "now",
+    delay: 280,
+    distance: 8,
+  });
+  const seeMoreRef = useRiseIn<HTMLButtonElement>({
+    start: "now",
+    delay: 390,
+    distance: 8,
+  });
+  // The first expanded line owns the Universidad Latina pencil word, so it
+  // rises as a block when the panel opens instead of being split.
+  const ulatinaLineRef = useRiseIn<HTMLParagraphElement>({
+    start: "view",
+    distance: 10,
+    duration: 700,
+  });
+  const lifeRef = useRiseIn<HTMLParagraphElement>({
+    start: "now",
+    delay: 430,
+    distance: 10,
+  });
+  const githubRef = useRiseIn<HTMLParagraphElement>({
+    start: "now",
+    delay: 470,
+    distance: 10,
+  });
+  const contactRef = useRiseIn<HTMLParagraphElement>({
+    start: "now",
+    delay: 510,
+    distance: 10,
+  });
+  const ctaRef = useRiseIn<HTMLElement>({
+    start: "now",
+    delay: 560,
+    distance: 12,
+    selector: "a",
+    stagger: 70,
+  });
 
   const scopeRef = useRef<HTMLDivElement | null>(null);
   const ulatinaNoteRef = useRef<HTMLDivElement | null>(null);
@@ -697,7 +787,7 @@ export default function CentralHero({
       <div className="bio-dimmer" aria-hidden="true" />
 
       {/* Minimalist top bar (clean left, social right) */}
-      <div className="flex items-center justify-end mb-8 sm:mb-10">
+      <div ref={topBarRef} className="flex items-center justify-end mb-8 sm:mb-10">
         <a
           href={socialUrl}
           target="_blank"
@@ -742,10 +832,11 @@ export default function CentralHero({
       {/* Identity Block (Instrument Serif + Pronunciation + Vertical Role Ticker) */}
       <div className="flex flex-col items-start mb-6">
         <div className="flex flex-wrap items-baseline gap-x-2.5">
-          <h1 className="font-hero-serif tracking-[0.01em] select-none leading-[1.08]">
+          <h1 ref={nameRef} className="font-hero-serif tracking-[0.01em] select-none leading-[1.08]">
             {name}
           </h1>
           <span
+            ref={pronunciationRef}
             className="font-hero-sans text-[13px] font-normal text-[#f5f5f59e] tracking-[0.02em] select-none"
             aria-hidden="true"
           >
@@ -753,9 +844,11 @@ export default function CentralHero({
           </span>
         </div>
 
-        <RoleTicker roles={roles} />
+        <span ref={tickerRef} className="inline-flex">
+          <RoleTicker roles={roles} />
+        </span>
 
-        <p className="mt-2 inline-flex items-center gap-1.5 font-hero-sans text-[13.5px] font-normal leading-normal tracking-normal text-[#f5f5f59e]">
+        <p ref={basedInRef} className="mt-2 inline-flex items-center gap-1.5 font-hero-sans text-[13.5px] font-normal leading-normal tracking-normal text-[#f5f5f59e]">
           <span>{basedInPrefix}</span>
           <CR
             title="Costa Rica"
@@ -856,7 +949,7 @@ export default function CentralHero({
 
       {/* Staggered Editorial Bio */}
       <div className="hero-editorial-bio flex flex-col gap-3.5 font-hero-sans">
-        <p>
+        <p ref={introRef}>
           {rolePrefix}{" "}
           <a
             href={companyUrl}
@@ -876,6 +969,7 @@ export default function CentralHero({
         <div className="bio-acc" data-open={bioOpen ? "true" : "false"}>
           <button
             type="button"
+            ref={seeMoreRef}
             id="bio-acc-toggle"
             className="bio-acc-head"
             aria-expanded={bioOpen}
@@ -907,12 +1001,12 @@ export default function CentralHero({
               <div className="bio-acc-lines flex flex-col gap-2.5">
                 {lines.map((line, idx) => {
                   const wordIndex = idx === 0 ? line.indexOf(ulatinaWord) : -1;
-                  if (wordIndex < 0) return <p key={idx}>{line}</p>;
+                  if (wordIndex < 0) return <BioLine key={idx} text={line} />;
 
                   const before = line.slice(0, wordIndex);
                   const after = line.slice(wordIndex + ulatinaWord.length);
                   return (
-                    <p key={idx}>
+                    <p key={idx} ref={ulatinaLineRef}>
                       {before}
                       <span
                         tabIndex={0}
@@ -968,7 +1062,7 @@ export default function CentralHero({
           </div>
         </div>
 
-        <p>
+        <p ref={lifeRef}>
           {lifeLine.before}{" "}
           <span
             tabIndex={0}
@@ -1024,7 +1118,7 @@ export default function CentralHero({
           {lifeLine.after}
         </p>
 
-        <p>
+        <p ref={githubRef}>
           {githubLine.before}{" "}
           <a
             href={githubLine.url}
@@ -1077,7 +1171,7 @@ export default function CentralHero({
           {githubLine.after}
         </p>
 
-        <p className="flex flex-wrap items-center gap-1.5 pt-0.5">
+        <p ref={contactRef} className="flex flex-wrap items-center gap-1.5 pt-0.5">
           <span>{reachOutPrefix}</span>
           <RotatingContact
             email={email}
@@ -1091,7 +1185,7 @@ export default function CentralHero({
       </div>
 
       {/* Dual Pill Buttons */}
-      <nav aria-label={navLabel} className="flex flex-wrap items-center gap-2.5 mt-6 sm:mt-7">
+      <nav ref={ctaRef} aria-label={navLabel} className="flex flex-wrap items-center gap-2.5 mt-6 sm:mt-7">
         <PillButton variant="primary-light" href={ctaPrimaryHref}>
           <span>{ctaPrimaryLabel}</span>
           <svg

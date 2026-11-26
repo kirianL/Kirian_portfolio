@@ -1,5 +1,6 @@
 import * as React from "react";
 import { dictionaries } from "@/data/data";
+import { useLineReveal, useRiseIn } from "@/lib/reveal";
 import umpLogo from "@/assets/Logos/UMP.svg";
 import sorinLabsLogo from "@/assets/Logos/SorinLabs/LogoBlanco.svg";
 
@@ -46,6 +47,20 @@ export default function WorkHistorySection({ lang }: WorkHistorySectionProps) {
   const improvementsLabel = isEs ? "Mejoras" : "Improvements";
   const toolsLabel = isEs ? "Herramientas" : "Tools";
 
+  const headingRef = useLineReveal<HTMLHeadingElement>({
+    mask: true,
+    start: "view",
+    duration: 760,
+  });
+  const rowsRef = useRiseIn<HTMLUListElement>({
+    start: "view",
+    selector: "li",
+    delay: 50,
+    stagger: 55,
+    distance: 12,
+    duration: 640,
+  });
+
   // Sorin Labs starts open on first entry so its improvements + tools are
   // visible immediately, matching the intended editorial layout.
   const [expandedIndex, setExpandedIndex] = React.useState<number | null>(() => {
@@ -62,8 +77,8 @@ export default function WorkHistorySection({ lang }: WorkHistorySectionProps) {
       className="work-history work-col-header mx-auto px-6 sm:px-0 pb-24 sm:pb-32"
     >
       <div className="work-history-panel">
-        <h2 className="work-history-heading">{workLabel}</h2>
-        <ul className="work-history-list">
+        <h2 ref={headingRef} className="work-history-heading">{workLabel}</h2>
+        <ul ref={rowsRef} className="work-history-list">
           {data.experienceList.map((exp, i) => {
             const isOpen = expandedIndex === i;
             const panelId = `work-history-panel-${i}`;

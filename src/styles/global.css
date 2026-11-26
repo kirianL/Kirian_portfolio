@@ -981,6 +981,26 @@ html.dark .cr-branch-svg {
   hyphens: none;
 }
 
+/* ==========================================================================
+   Entry motion (kugiri)
+
+   kugiri cuts the copy where the browser already broke it, so every revealed
+   unit is a real painted line. The only state this stylesheet owns is the
+   pause between mount and the split being ready: a block the visitor can
+   already see waits invisibly for those few milliseconds instead of flashing
+   cell text and re-flowing under them. Everything after that is Web Animations,
+   and `prefers-reduced-motion` never splits at all.
+   ========================================================================== */
+[data-reveal="waiting"] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal="waiting"] {
+    opacity: 1;
+  }
+}
+
 /* Bio "ver más" disclosure.
    The track animates 0fr ↔ 1fr so the panel grows with the content's own
    height (no JS measuring), while the inner copy fades and lifts into
@@ -2113,21 +2133,13 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   transform: none;
 }
 
+/* The detail copy reveals line by line (kugiri); only the hero settles here. */
 .work-detail__info {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity var(--work-dur-info) var(--work-ease-out) var(--work-delay-info),
-    transform var(--work-dur-info) var(--work-ease-out) var(--work-delay-info);
-  will-change: opacity, transform;
-}
-.work-detail__info.is-ready {
-  opacity: 1;
-  transform: none;
+  will-change: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .work-detail__hero,
-  .work-detail__info {
+  .work-detail__hero {
     transition-duration: 0.01ms !important;
   }
 }

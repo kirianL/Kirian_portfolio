@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import GridRevealImage from "@/components/ui/GridRevealImage";
 import { rememberScrollNow } from "@/lib/scrollMemory";
 import { navigateWithTransition, markSharedElement } from "@/lib/viewTransition";
+import { useLineReveal, useRiseIn } from "@/lib/reveal";
 
 export interface SelectedWorkItem {
   id: string;
@@ -76,6 +77,101 @@ export const WORK_ITEMS: SelectedWorkItem[] = [
   },
 ];
 
+interface WorkCardProps {
+  item: SelectedWorkItem;
+  isEs: boolean;
+  showSpanishWork: boolean;
+  index: number;
+  onOpen: (event: React.MouseEvent, to: string) => void;
+}
+
+function WorkCard({ item, isEs, showSpanishWork, index, onOpen }: WorkCardProps) {
+  // Cards rise one after another as they enter the track's visible area; a
+  // card dragged in from the right gets its own reveal then.
+  const ref = useRiseIn<HTMLElement>({
+    start: "view",
+    delay: 40 + index * 60,
+    distance: 16,
+    duration: 700,
+  });
+
+  const title = isEs ? item.titleEs : item.title;
+  const role = isEs ? item.roleEs : item.role;
+  const to = isEs ? `/es/work/${item.id}` : `/work/${item.id}`;
+
+  const cardInner = (
+    <>
+      <div className="rounded-[14px] p-2.5 sm:p-3 bg-white/[0.035] border border-white/[0.07] transition-[border-color,background-color] duration-200 group-hover:border-white/[0.15] group-hover:bg-white/[0.05]">
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[8px] bg-[#141414] ring-1 ring-white/[0.06] work-thumb">
+          <GridRevealImage
+            src={showSpanishWork ? item.imageEs : item.imageEn}
+            alt={title}
+            aspect={16 / 10}
+            className="work-thumb-reveal work-shared-image"
+          />
+          <span
+            className="work-view-icon pointer-events-none absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] translate-y-1 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+            aria-hidden="true"
+          >
+            <span className="font-hero-sans text-[12px] font-medium tracking-[-0.01em]">
+              {isEs ? "Ver página" : "View site"}
+            </span>
+            <svg
+              className="h-3.5 w-3.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M7 17L17 7M7 7h10v10" />
+            </svg>
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-3 px-0.5 flex flex-col gap-0.5">
+        <div className="flex items-baseline gap-1.5 min-w-0">
+          <h3 className="font-hero-sans text-[13.5px] min-[2000px]:text-[15px] font-medium text-[#f5f5f5] tracking-[-0.01em] leading-snug truncate">
+            {title}
+          </h3>
+          {item.soon && (
+            <span className="font-hero-sans text-[12px] text-[#f5f5f55c] shrink-0">
+              · {isEs ? "pronto" : "soon"}
+            </span>
+          )}
+        </div>
+        <p className="font-hero-sans text-[12px] min-[2000px]:text-[13.5px] text-[#f5f5f57a] leading-snug">
+          {role} · {item.year}
+        </p>
+      </div>
+    </>
+  );
+
+  return item.href ? (
+    <a
+      ref={ref as React.Ref<HTMLAnchorElement>}
+      data-work-card=""
+      href={to}
+      onClick={(e) => onOpen(e, to)}
+      draggable={false}
+      data-cuelume-hover="tick"
+      className="group block w-[82vw] sm:w-[430px] lg:w-[460px] min-[2000px]:w-[540px] shrink-0 select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad] rounded-[14px]"
+    >
+      {cardInner}
+    </a>
+  ) : (
+    <article
+      ref={ref}
+      data-work-card=""
+      className="group w-[82vw] sm:w-[430px] lg:w-[460px] min-[2000px]:w-[540px] shrink-0 select-none"
+    >
+      {cardInner}
+    </article>
+  );
+}
+
 interface SelectedWorkCarouselProps {
   lang: "en" | "es";
 }
@@ -83,6 +179,17 @@ interface SelectedWorkCarouselProps {
 export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps) {
   const isEs = lang === "es";
   const navigate = useNavigate();
+  const headingRef = useLineReveal<HTMLHeadingElement>({
+    mask: true,
+    start: "view",
+    stagger: 60,
+    duration: 760,
+  });
+  const resumeRef = useRiseIn<HTMLAnchorElement>({
+    start: "view",
+    delay: 90,
+    distance: 8,
+  });
   // Screenshots always follow the page language: / -> English captures, /es -> Spanish captures.
   const showSpanishWork = isEs;
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -184,6 +291,7 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
       {/* Header Row aligned to hero editorial column */}
       <div className="work-col-header mx-auto px-6 sm:px-0 flex items-center justify-between mb-5">
         <h2
+          ref={headingRef}
           id="selected-work-heading"
           className="font-hero-sans text-[13.5px] min-[2000px]:text-[15px] font-medium text-[#f5f5f5] tracking-[-0.01em] select-none"
         >
@@ -191,6 +299,7 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
         </h2>
 
         <a
+          ref={resumeRef}
           href={isEs ? "/CVs/CV_KirianLuna_ES.pdf" : "/CVs/CV_KirianLuna_EN.pdf"}
           target="_blank"
           rel="noopener noreferrer"
@@ -227,82 +336,16 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
           isDragging ? "cursor-grabbing select-none" : "cursor-grab"
         }`}
       >
-        {WORK_ITEMS.map((item) => {
-          const title = isEs ? item.titleEs : item.title;
-          const role = isEs ? item.roleEs : item.role;
-
-          const cardInner = (
-            <>
-              <div className="rounded-[14px] p-2.5 sm:p-3 bg-white/[0.035] border border-white/[0.07] transition-[border-color,background-color] duration-200 group-hover:border-white/[0.15] group-hover:bg-white/[0.05]">
-                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[8px] bg-[#141414] ring-1 ring-white/[0.06] work-thumb">
-                  <GridRevealImage
-                    src={showSpanishWork ? item.imageEs : item.imageEn}
-                    alt={title}
-                    aspect={16 / 10}
-                    className="work-thumb-reveal work-shared-image"
-                  />
-                  <span
-                    className="work-view-icon pointer-events-none absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] translate-y-1 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
-                    aria-hidden="true"
-                  >
-                    <span className="font-hero-sans text-[12px] font-medium tracking-[-0.01em]">
-                      {isEs ? "Ver página" : "View site"}
-                    </span>
-                    <svg
-                      className="h-3.5 w-3.5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M7 17L17 7M7 7h10v10" />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-3 px-0.5 flex flex-col gap-0.5">
-                <div className="flex items-baseline gap-1.5 min-w-0">
-                  <h3 className="font-hero-sans text-[13.5px] min-[2000px]:text-[15px] font-medium text-[#f5f5f5] tracking-[-0.01em] leading-snug truncate">
-                    {title}
-                  </h3>
-                  {item.soon && (
-                    <span className="font-hero-sans text-[12px] text-[#f5f5f55c] shrink-0">
-                      · {isEs ? "pronto" : "soon"}
-                    </span>
-                  )}
-                </div>
-                <p className="font-hero-sans text-[12px] min-[2000px]:text-[13.5px] text-[#f5f5f57a] leading-snug">
-                  {role} · {item.year}
-                </p>
-              </div>
-            </>
-          );
-
-          return item.href ? (
-            <a
-              key={item.id}
-              data-work-card=""
-              href={isEs ? `/es/work/${item.id}` : `/work/${item.id}`}
-              onClick={(e) => handleCardClick(e, isEs ? `/es/work/${item.id}` : `/work/${item.id}`)}
-              draggable={false}
-              data-cuelume-hover="tick"
-              className="group block w-[82vw] sm:w-[430px] lg:w-[460px] min-[2000px]:w-[540px] shrink-0 select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad] rounded-[14px]"
-            >
-              {cardInner}
-            </a>
-          ) : (
-            <article
-              key={item.id}
-              data-work-card=""
-              className="group w-[82vw] sm:w-[430px] lg:w-[460px] min-[2000px]:w-[540px] shrink-0 select-none"
-            >
-              {cardInner}
-            </article>
-          );
-        })}
+        {WORK_ITEMS.map((item, index) => (
+          <WorkCard
+            key={item.id}
+            item={item}
+            isEs={isEs}
+            showSpanishWork={showSpanishWork}
+            index={index}
+            onOpen={handleCardClick}
+          />
+        ))}
       </div>
 
       {/* Bottom Drag Indicator + Prev/Next Controls */}

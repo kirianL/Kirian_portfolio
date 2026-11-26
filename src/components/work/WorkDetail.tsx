@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { WORK_ITEMS } from "@/components/home/SelectedWorkCarousel";
+import { useLineReveal, useRiseIn } from "@/lib/reveal";
 
 interface WorkDetailProps {
   lang: "en" | "es";
@@ -13,6 +14,31 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   const isEs = lang === "es";
   const item = WORK_ITEMS.find((w) => w.id === slug);
   const [ready, setReady] = useState(false);
+
+  const roleRef = useLineReveal<HTMLParagraphElement>({
+    start: "now",
+    delay: 80,
+    stagger: 50,
+    duration: 620,
+  });
+  const titleRef = useLineReveal<HTMLHeadingElement>({
+    mask: true,
+    start: "now",
+    delay: 120,
+    stagger: 80,
+    duration: 900,
+  });
+  const descriptionRef = useLineReveal<HTMLParagraphElement>({
+    start: "now",
+    delay: 220,
+    stagger: 55,
+    duration: 720,
+  });
+  const ctaRef = useRiseIn<HTMLAnchorElement>({
+    start: "now",
+    delay: 340,
+    distance: 12,
+  });
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setReady(true));
@@ -103,22 +129,30 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
         </div>
       </section>
 
-      <section
-        className={`work-detail__info work-col-header mx-auto px-6 sm:px-0 mt-10 ${ready ? "is-ready" : ""}`}
-      >
-        <p className="font-hero-sans text-[13px] uppercase tracking-[0.02em] text-[#f5f5f59e] mb-3">
+      <section className="work-detail__info work-col-header mx-auto px-6 sm:px-0 mt-10">
+        <p
+          ref={roleRef}
+          className="font-hero-sans text-[13px] uppercase tracking-[0.02em] text-[#f5f5f59e] mb-3"
+        >
           {role} · {item.year}
         </p>
-        <h1 className="font-hero-serif text-[30px] min-[2000px]:text-[38px] leading-[1.1] tracking-[-0.01em] text-[#d1c5ad]">
+        <h1
+          ref={titleRef}
+          className="font-hero-serif text-[30px] min-[2000px]:text-[38px] leading-[1.1] tracking-[-0.01em] text-[#d1c5ad]"
+        >
           {title}
         </h1>
         {description && (
-          <p className="mt-4 font-hero-sans text-[16px] font-[450] leading-[21px] text-[#f5f5f5b8] max-w-[52ch]">
+          <p
+            ref={descriptionRef}
+            className="mt-4 font-hero-sans text-[16px] font-[450] leading-[21px] text-[#f5f5f5b8] max-w-[52ch]"
+          >
             {description}
           </p>
         )}
         {item.href && (
           <a
+            ref={ctaRef}
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
