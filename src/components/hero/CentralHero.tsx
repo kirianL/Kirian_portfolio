@@ -45,6 +45,7 @@ import US from "country-flag-icons/react/3x2/US";
 import UY from "country-flag-icons/react/3x2/UY";
 import VE from "country-flag-icons/react/3x2/VE";
 import PillButton from "@/components/ui/PillButton";
+import RotatingContact from "@/components/hero/RotatingContact";
 import RoleTicker from "@/components/hero/RoleTicker";
 import GitHubActivityNote from "@/components/hero/GitHubActivityNote";
 import LifePhotosNote from "@/components/hero/LifePhotosNote";
@@ -79,6 +80,10 @@ export interface CentralHeroProps {
   };
   reachOutPrefix: string;
   email: string;
+  discordUrl: string;
+  discordUser: string;
+  instagramUrl: string;
+  linkedinUrl: string;
   ctaPrimaryLabel: string;
   ctaPrimaryHref: string;
   ctaSecondaryLabel: string;
@@ -467,6 +472,10 @@ export default function CentralHero({
   lifeLine,
   reachOutPrefix,
   email,
+  discordUrl,
+  discordUser,
+  instagramUrl,
+  linkedinUrl,
   ctaPrimaryLabel,
   ctaPrimaryHref,
   ctaSecondaryLabel,
@@ -1070,31 +1079,14 @@ export default function CentralHero({
 
         <p className="flex flex-wrap items-center gap-1.5 pt-0.5">
           <span>{reachOutPrefix}</span>
-          <button
-            type="button"
-            onClick={() => onCopyEmail(email)}
-            data-cuelume-hover="tick"
-            data-cuelume-press=""
-            title={email}
-            className="inline-flex items-center gap-1.5 text-[#f5f5f5] hover:text-[#d1c5ad] transition-colors duration-200 cursor-pointer group font-medium"
-          >
-            <svg
-              className="w-3.5 h-3.5 text-[#f5f5f57a] group-hover:text-[#d1c5ad] group-hover:-translate-y-[1px] group-hover:-rotate-6 transition-[color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] shrink-0"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <rect width="20" height="16" x="2" y="4" rx="2" />
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-            </svg>
-            <span className="underline decoration-white/20 underline-offset-4 group-hover:decoration-[#d1c5ad]/60 transition-[text-decoration-color] duration-200">
-              {email}
-            </span>
-          </button>
+          <RotatingContact
+            email={email}
+            discordUrl={discordUrl}
+            discordUser={discordUser}
+            instagramUrl={instagramUrl}
+            linkedinUrl={linkedinUrl}
+            onCopyEmail={onCopyEmail}
+          />
         </p>
       </div>
 

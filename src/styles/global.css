@@ -1090,6 +1090,176 @@ html.dark .cr-branch-svg {
   }
 }
 
+/* Rotating contact row: a minimal refresh trigger plus a crossfading value.
+   The blur masks the swap so it reads as one morph, not two fading objects. */
+.contact-rotate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: #f5f5f5bd;
+  cursor: pointer;
+  transition: color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contact-rotate svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+  transition: transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.contact-icon {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.contact-value--discord .contact-icon {
+  color: #5865f2;
+}
+
+.contact-value--instagram .contact-icon {
+  color: #e1306c;
+}
+
+.contact-value--linkedin .contact-icon {
+  color: #77b1e8;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-rotate:hover {
+    color: #d1c5ad;
+  }
+}
+
+.contact-rotate:active {
+  transform: scale(0.9);
+}
+
+.contact-rotate:focus-visible {
+  outline: 1px solid rgba(245, 245, 245, 0.5);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.contact-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #f5f5f5;
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 150ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 150ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-value:hover {
+    color: #d1c5ad;
+  }
+}
+
+.contact-icon--gmail {
+  width: 15px;
+  height: 15px;
+}
+
+/* Per-network brand color for the value text and monochrome icons. */
+.contact-value--gmail {
+  color: #f5f5f5;
+}
+
+.contact-value--gmail span {
+  text-decoration-color: rgba(245, 245, 245, 0.2);
+}
+
+.contact-value--discord {
+  color: #5865f2;
+}
+
+.contact-value--discord span,
+.contact-value--instagram span,
+.contact-value--linkedin span {
+  text-decoration-color: currentColor;
+}
+
+.contact-value--instagram {
+  color: #e1306c;
+}
+
+.contact-value--linkedin {
+  color: #77b1e8;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-value--gmail:hover {
+    color: #d1c5ad;
+  }
+
+  .contact-value--discord:hover {
+    color: #7c86ff;
+  }
+
+  .contact-value--instagram:hover {
+    color: #f0568b;
+  }
+
+  .contact-value--linkedin:hover {
+    color: #a3cdeb;
+  }
+}
+
+/* Fade the old value out with a slight upward lift + blur, then the new one
+   mounts at its resting state (key change re-triggers the reveal). */
+.contact-reveal {
+  animation: contact-in 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.contact-reveal.is-out {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(-4px);
+  animation: none;
+  transition-duration: 150ms;
+}
+
+@keyframes contact-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-rotate svg,
+  .contact-rotate,
+  .contact-value,
+  .contact-reveal,
+  .contact-reveal.is-out {
+    transition-duration: 0ms;
+    animation: none;
+  }
+}
+
 .bio-pencil-word[data-note-align="end"] .bio-hand-note {
   left: auto;
   right: 0;

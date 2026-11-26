@@ -128,6 +128,10 @@ export default function HomePage({ lang }: HomePageProps) {
           }}
           reachOutPrefix={isEs ? "Escríbeme a" : "Reach out to me at"}
           email={data.contact.email}
+          discordUrl={data.contact.discord}
+          discordUser={data.contact.discordUser}
+          instagramUrl="https://www.instagram.com/kiluzie/"
+          linkedinUrl={data.contact.linkedin}
           ctaPrimaryLabel={isEs ? "agendar llamada" : "book a call"}
           ctaPrimaryHref={isEs ? "/es/contact" : "/contact"}
           ctaSecondaryLabel={isEs ? "ver mi trabajo" : "view my work"}
