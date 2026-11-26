@@ -18,8 +18,9 @@ const LOGOS: Record<string, string> = {
 
 function LogoSlot({ name }: { name: string }) {
   const src = LOGOS[name];
+  const tint = name === "Sorin Labs" ? "sorin" : name === "Ultimate Media Productions" ? "ump" : "";
   return (
-    <span className="work-history-logo">
+    <span className={`work-history-logo${tint ? ` work-history-logo--${tint}` : ""}`}>
       {src ? (
         <img
           className="work-history-logo-img"
