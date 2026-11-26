@@ -2178,6 +2178,18 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   will-change: auto;
 }
 
+@media (min-width: 1600px) {
+  .work-detail .work-col-header {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 2000px) {
+  .work-detail .work-col-header {
+    max-width: 860px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .work-detail__hero {
     transition-duration: 0.01ms !important;
@@ -2205,73 +2217,12 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   opacity: 1;
 }
 
-/* Section screenshot loading grid — a faint 64px cell grid holds the frame
-   while the lazy capture decodes, with a slow sheen crossing it. It sits above
-   the photo and fades out on load, so a card is never an empty box. */
-.work-shot-skeleton {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  overflow: hidden;
-  border-radius: 10px;
-  pointer-events: none;
-  background-color: #131313;
-  background-image: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0.045) 1px,
-      transparent 1px
-    ),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    radial-gradient(
-      120% 90% at 50% 0%,
-      rgba(209, 197, 173, 0.07),
-      transparent 62%
-    );
-  background-size: 64px 64px, 64px 64px, 100% 100%;
-  background-position: -1px -1px, -1px -1px, 0 0;
-  opacity: 1;
-  transition: opacity 560ms cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 560ms;
-}
-
-.work-shot-skeleton::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    100deg,
-    transparent 42%,
-    rgba(255, 255, 255, 0.055) 50%,
-    rgba(209, 197, 173, 0.085) 54%,
-    transparent 62%
-  );
-  transform: translate3d(-100%, 0, 0);
-  animation: work-shot-sheen 1.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-.work-shot-skeleton.is-loaded {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.work-shot-skeleton.is-loaded::before {
-  animation: none;
-}
-
-@keyframes work-shot-sheen {
-  from {
-    transform: translate3d(-100%, 0, 0);
-  }
-  to {
-    transform: translate3d(100%, 0, 0);
-  }
-}
-
-/* Lightbox — a contained dialog over a softened backdrop, so the page behind it
-   stays readable instead of disappearing. Opening lifts the panel by 8px and
-   1.5%; closing mirrors it in 220ms; stepping remounts the image (keyed by id)
-   and enters from the direction of travel. The curve is the one the brief fixes
-   for this surface, kept local so the rest of the work page keeps its own. */
+/* Lightbox — the capture itself is the dialog. There is no panel, border or
+   inner surface: the photo floats on the softened backdrop with only a hairline
+   ring, and the neighbours sit dimmed at the sides. Opening lifts the stage by
+   8px and 1.5%; closing mirrors it in 220ms; stepping remounts the image (keyed
+   by id) and enters from the direction of travel. The curve is the one the brief
+   fixes for this surface, kept local so the work page keeps its own. */
 .work-lightbox {
   --work-lightbox-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -2285,16 +2236,12 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   pointer-events: none;
 }
 
-.work-lightbox__panel {
-  box-shadow: 0 40px 120px -40px rgba(0, 0, 0, 0.95);
+.work-lightbox[data-state="open"] .work-lightbox__stage {
+  animation: work-lightbox-stage-in 380ms var(--work-lightbox-ease) both;
 }
 
-.work-lightbox[data-state="open"] .work-lightbox__panel {
-  animation: work-lightbox-panel-in 380ms var(--work-lightbox-ease) both;
-}
-
-.work-lightbox[data-state="closing"] .work-lightbox__panel {
-  animation: work-lightbox-panel-out 220ms var(--work-lightbox-ease) both;
+.work-lightbox[data-state="closing"] .work-lightbox__stage {
+  animation: work-lightbox-stage-out 220ms var(--work-lightbox-ease) both;
 }
 
 .work-lightbox__image {
@@ -2303,6 +2250,12 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 
 .work-lightbox__image[data-dir="prev"] {
   animation-name: work-lightbox-image-in-prev;
+}
+
+/* The side previews are keyed by section, so they re-enter on every step a
+   touch after the photo and settle instead of popping. */
+.work-lightbox__peek {
+  animation: work-lightbox-peek-in 420ms var(--work-lightbox-ease) 40ms both;
 }
 
 @keyframes work-lightbox-in {
@@ -2323,7 +2276,7 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   }
 }
 
-@keyframes work-lightbox-panel-in {
+@keyframes work-lightbox-stage-in {
   from {
     opacity: 0;
     transform: translateY(8px) scale(0.985);
@@ -2334,7 +2287,7 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   }
 }
 
-@keyframes work-lightbox-panel-out {
+@keyframes work-lightbox-stage-out {
   from {
     opacity: 1;
     transform: none;
@@ -2342,6 +2295,17 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   to {
     opacity: 0;
     transform: translateY(4px) scale(0.99);
+  }
+}
+
+@keyframes work-lightbox-peek-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -2372,18 +2336,12 @@ main[class*="bg-[#0a0a0a]"] ::selection {
     transition-duration: 0.01ms !important;
   }
 
-  .work-shot-skeleton {
-    transition-duration: 0.01ms !important;
-  }
-
-  .work-shot-skeleton::before {
-    animation: none;
-  }
-
   .work-lightbox[data-state],
-  .work-lightbox__panel,
-  .work-lightbox__image {
+  .work-lightbox__stage,
+  .work-lightbox__image,
+  .work-lightbox__peek {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
   }
 }
 

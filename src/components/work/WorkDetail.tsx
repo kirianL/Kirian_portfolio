@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { WORK_ITEMS } from "@/components/home/SelectedWorkCarousel";
 import MetaBadges from "@/components/work/MetaBadges";
+import GridRevealImage from "@/components/ui/GridRevealImage";
 import { getWorkSections } from "@/data/workSections";
 import { readRememberedScroll } from "@/lib/scrollMemory";
 import { navigateWithTransition } from "@/lib/viewTransition";
@@ -36,28 +37,17 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   const navigate = useNavigate();
   const isEs = lang === "es";
   const item = WORK_ITEMS.find((w) => w.id === slug);
-  const sections = getWorkSections(slug);
+  const sections = getWorkSections(slug).slice(1);
   const [ready, setReady] = useState(false);
 
-  const [activeSection, setActiveSection] = useState(0);
   const [openNotes, setOpenNotes] = useState<Record<string, boolean>>({});
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [lightboxClosing, setLightboxClosing] = useState(false);
   const [stepDir, setStepDir] = useState<-1 | 1>(1);
-  // One flag per section screenshot: the grid skeleton holds the box until the
-  // file decodes, then fades out and leaves the capture in place.
-  const [loadedShots, setLoadedShots] = useState<Record<string, boolean>>({});
 
-  const sectionsRef = useRef<HTMLDivElement | null>(null);
   const lightboxRef = useRef<HTMLDivElement | null>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
-
-  const markShotLoaded = useCallback((id: string) => {
-    setLoadedShots((current) =>
-      current[id] ? current : { ...current, [id]: true },
-    );
-  }, []);
 
   const metaRef = useRiseIn<HTMLDivElement>({
     start: "now",
@@ -100,40 +90,6 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
-
-  // Keep the index honest: the section whose top has passed the reading line
-  // is active, regardless of how many cards happen to intersect the viewport.
-  useEffect(() => {
-    const root = sectionsRef.current;
-    if (!root || sections.length === 0) return;
-    const nodes = Array.from(root.querySelectorAll<HTMLElement>("[data-work-section]"));
-    if (nodes.length === 0) return;
-
-    const pick = () => {
-      const line = window.innerHeight * 0.42;
-      let next = 0;
-      for (let i = 0; i < nodes.length; i += 1) {
-        if (nodes[i].getBoundingClientRect().top <= line) next = i;
-      }
-      setActiveSection(next);
-    };
-
-    if (typeof IntersectionObserver === "undefined") {
-      pick();
-      window.addEventListener("scroll", pick, { passive: true });
-      return () => window.removeEventListener("scroll", pick);
-    }
-
-    // A thin band around 42% of the viewport: one boundary crossing at a time,
-    // even when a tall screenshot covers most of the page.
-    const observer = new IntersectionObserver(pick, {
-      rootMargin: "-40% 0px -55% 0px",
-      threshold: 0,
-    });
-    nodes.forEach((node) => observer.observe(node));
-    pick();
-    return () => observer.disconnect();
-  }, [slug, sections.length]);
 
   const isLightboxOpen = lightboxIndex !== null;
 
@@ -225,8 +181,14 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
         return;
       }
       if (e.key !== "Tab") return;
-      const focusables = lightboxRef.current?.querySelectorAll<HTMLElement>("button");
-      if (!focusables || focusables.length === 0) return;
+      // Hidden previews stay in the DOM at every size, so the trap only counts
+      // buttons that actually paint and can receive focus.
+      const focusables = Array.from(
+        lightboxRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([tabindex="-1"])',
+        ) ?? [],
+      ).filter((el) => el.getClientRects().length > 0);
+      if (focusables.length === 0) return;
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
       if (e.shiftKey && document.activeElement === first) {
@@ -258,28 +220,6 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
       return;
     }
     navigate(homePath);
-  };
-
-  const goToSection = (index: number) => {
-    const section = sections[index];
-    if (!section) return;
-    const target = document.getElementById(sectionDomId(section.id));
-    if (!target) return;
-    setActiveSection(index);
-
-    const reduced =
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const top = Math.max(
-      0,
-      target.getBoundingClientRect().top + window.scrollY - 84,
-    );
-    const lenis = getLenis();
-    if (lenis && typeof lenis.scrollTo === "function") {
-      lenis.scrollTo(top, { immediate: reduced, duration: 1.05 });
-    } else {
-      window.scrollTo({ top, behavior: reduced ? "auto" : "smooth" });
-    }
   };
 
   if (!item) {
@@ -315,6 +255,20 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
 
   const lightboxSection =
     lightboxIndex !== null ? sections[lightboxIndex] : undefined;
+  // Neighbours for the side previews: previous only when there is one, next
+  // wrapping to the first section, exactly like the arrow keys do.
+  const lightboxPrev =
+    lightboxIndex !== null && lightboxIndex > 0
+      ? sections[lightboxIndex - 1]
+      : undefined;
+  const lightboxNext =
+    lightboxIndex !== null && sections.length > 1
+      ? sections[(lightboxIndex + 1) % sections.length]
+      : undefined;
+  const lightboxNextIndex =
+    lightboxIndex !== null && sections.length > 0
+      ? (lightboxIndex + 1) % sections.length
+      : 0;
 
   // With a View Transition the browser itself flies the carousel thumbnail
   // into this hero, so the CSS "settle" entrance would double-animate it.
@@ -335,7 +289,7 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
 
   return (
     <main id="main-content" className="work-detail min-h-screen w-full bg-[#0a0a0a] text-[#f5f5f5]">
-      <div className="work-col-header mx-auto px-6 sm:px-0 pt-20 sm:pt-24">
+      <div className="work-col-header mx-auto px-6 sm:px-0 pt-20 sm:pt-24 min-[1600px]:pt-28">
         <button
           onClick={goBack}
           className="inline-flex items-center gap-1.5 font-hero-sans text-[13px] text-[#f5f5f59e] hover:text-[#f5f5f5] transition-colors duration-200 cursor-pointer"
@@ -414,58 +368,10 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
 
       {sections.length > 0 && (
         <section
-          className="work-col-header mx-auto px-6 sm:px-0 mt-16 sm:mt-20"
-          aria-labelledby="work-sections-heading"
+          className="work-col-header mx-auto px-6 sm:px-0 mt-16 sm:mt-20 min-[1600px]:mt-20"
+          aria-label={isEs ? "Recorrido por pantallas" : "Screen walkthrough"}
         >
-          <div className="flex items-end justify-between gap-4 border-t border-white/[0.08] pt-5">
-            <h2
-              id="work-sections-heading"
-              className="font-hero-sans text-[13.5px] font-medium text-[#f5f5f5] tracking-[-0.01em]"
-            >
-              {isEs ? "Notas de sección" : "Section notes"}
-            </h2>
-            <span className="font-hero-sans text-[11px] tabular-nums text-[#f5f5f54d]">
-              {String(sections.length).padStart(2, "0")} {isEs ? "secciones" : "sections"}
-            </span>
-          </div>
-          <p className="mt-2 max-w-[44ch] font-hero-sans text-[13px] leading-[19px] text-[#f5f5f58a]">
-            {isEs
-              ? "Decisiones de layout, tipografía y datos detrás de cada pantalla."
-              : "Layout, type and data decisions behind each screen."}
-          </p>
-
-          <nav
-            aria-label={isEs ? "Índice de secciones" : "Section index"}
-            className="sticky top-0 z-30 -mx-6 mt-6 border-y border-white/[0.07] bg-[#0a0a0a]/[0.92] backdrop-blur-md sm:mx-0"
-          >
-            <div className="flex items-center gap-1.5 overflow-x-auto px-6 py-2.5 sm:px-0">
-              {sections.map((section, index) => {
-                const isActive = activeSection === index;
-                return (
-                  <button
-                    key={section.id}
-                    id={`work-index-${section.id}`}
-                    type="button"
-                    onClick={() => goToSection(index)}
-                    aria-current={isActive ? "true" : undefined}
-                    aria-label={`${isEs ? "Sección" : "Section"} ${String(index + 1).padStart(2, "0")}: ${
-                      isEs ? section.labelEs : section.labelEn
-                    }`}
-                    title={isEs ? section.labelEs : section.labelEn}
-                    className={`inline-flex h-8 min-w-[42px] shrink-0 items-center justify-center rounded-[6px] border px-2 font-hero-sans text-[11.5px] font-medium tabular-nums tracking-[0.03em] transition-[background-color,border-color,color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.96] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad] ${
-                      isActive
-                        ? "border-[#d1c5ad] bg-[#d1c5ad] text-[#0a0a0a]"
-                        : "border-white/[0.09] bg-transparent text-[#f5f5f580] hover:border-white/[0.22] hover:text-[#f5f5f5]"
-                    }`}
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </button>
-                );
-              })}
-            </div>
-          </nav>
-
-          <div ref={sectionsRef}>
+          <div className="border-t border-white/[0.08] pt-10">
             {sections.map((section, index) => {
               const sectionTitle = isEs ? section.titleEs : section.titleEn;
               const sectionLabel = isEs ? section.labelEs : section.labelEn;
@@ -475,73 +381,49 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
               const noteId = `work-note-${section.id}`;
               const shotSrc = isEs ? section.imageEs : section.imageEn;
               const shotHeight = isEs ? section.heightEs : section.heightEn;
-              const shotLoaded = loadedShots[section.id] === true;
 
               return (
                 <article
                   key={section.id}
                   id={sectionDomId(section.id)}
-                  data-work-section={index}
-                  className="scroll-mt-24 pt-12 first:pt-10"
+                  className="mt-16 first:mt-0 sm:mt-20"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="font-hero-sans text-[11px] font-medium tabular-nums tracking-[0.06em] text-[#d1c5ad]">
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-hero-sans text-[11px] font-medium tabular-nums tracking-[0.08em] text-[#d1c5adb3]">
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <span aria-hidden="true" className="h-px flex-1 bg-white/[0.07]" />
-                    <span className="font-hero-sans text-[11px] text-[#f5f5f559]">
+                    <span className="font-hero-sans text-[11.5px] tracking-[0.01em] text-[#f5f5f58a]">
                       {sectionLabel}
                     </span>
+                    <span
+                      aria-hidden="true"
+                      className="h-px flex-1 bg-white/[0.07]"
+                    />
                   </div>
 
-                  <h3 className="mt-3 max-w-[30ch] font-hero-serif text-[22px] sm:text-[25px] leading-[1.16] tracking-[-0.01em] text-[#ece7dc]">
+                  <h2 className="mt-4 max-w-[28ch] font-hero-serif text-[21px] leading-[1.18] tracking-[-0.01em] text-[#ece7dc] sm:text-[24px]">
                     {sectionTitle}
-                  </h3>
+                  </h2>
 
+                  {/* Same GridRevealImage the carousel uses: the box keeps the
+                      capture's exact ratio, so the reveal resolves into the
+                      screenshot with no layout shift, and the file is painted
+                      on the canvas rather than in a plain <img>. */}
                   <button
                     type="button"
                     onClick={() => openLightbox(index)}
                     aria-label={`${sectionTitle}: ${isEs ? "ampliar captura" : "open larger"}`}
-                    className="group relative mt-5 block w-full cursor-pointer overflow-hidden rounded-[10px] bg-[#141414] text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
+                    className="group relative mt-5 block w-full cursor-zoom-in overflow-hidden rounded-[10px] bg-[#141414] text-left ring-1 ring-white/[0.06] transition-[box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:ring-white/[0.14] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
                   >
-                    <img
+                    <GridRevealImage
                       src={shotSrc}
                       alt={`${sectionTitle}, ${title}`}
-                      width={section.width}
-                      height={shotHeight}
-                      loading="lazy"
-                      decoding="async"
-                      draggable={false}
-                      onLoad={() => markShotLoaded(section.id)}
-                      ref={(node) => {
-                        // A cached capture can finish before React attaches the
-                        // handler; `complete` is the only trace it left.
-                        if (node?.complete && node.naturalWidth > 0) {
-                          markShotLoaded(section.id);
-                        }
-                      }}
-                      className="block h-auto w-full rounded-[10px] ring-1 ring-white/[0.06]"
+                      aspect={section.width / shotHeight}
+                      className="rounded-[10px]"
                     />
-                    <span
-                      aria-hidden="true"
-                      className={`work-shot-skeleton ${shotLoaded ? "is-loaded" : ""}`}
-                    />
-                    <span
-                      aria-hidden="true"
-                      className={`pointer-events-none absolute right-2.5 bottom-2.5 z-[3] inline-flex items-center gap-1.5 rounded-[6px] bg-black/65 px-2 py-1 font-hero-sans text-[11px] font-medium text-white/90 backdrop-blur-sm transition-opacity duration-200 ${
-                        shotLoaded
-                          ? "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
-                          : "opacity-0"
-                      }`}
-                    >
-                      <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                      </svg>
-                      {isEs ? "Ampliar" : "Zoom"}
-                    </span>
                   </button>
 
-                  <p className="mt-5 font-hero-sans text-[14px] leading-[1.58] text-[#f5f5f5b0]">
+                  <p className="mt-6 max-w-[54ch] text-pretty font-hero-sans text-[14px] leading-[1.62] text-[#f5f5f5b0]">
                     {why}
                   </p>
 
@@ -555,32 +437,35 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
                     }
                     aria-expanded={isNoteOpen}
                     aria-controls={noteId}
-                    className="mt-5 flex w-full items-center justify-between gap-3 border-t border-white/[0.07] pt-3 text-left cursor-pointer group/note focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
+                    className="group/note mt-5 inline-flex items-center gap-2 py-2 text-left cursor-pointer text-[#f5f5f59e] transition-colors duration-200 hover:text-[#eadfca] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
                   >
-                    <span className="font-hero-sans text-[12px] font-medium text-[#d1c5ad] transition-colors group-hover/note:text-[#eadfca]">
-                      {isEs ? "Nota técnica" : "Design & Eng Note"}
+                    <span className="font-hero-sans text-[12px] font-medium tracking-[0.01em]">
+                      {isEs ? "Nota" : "Note"}
                     </span>
-                    <span
-                      aria-hidden="true"
-                      className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[#d1c5ad]/35 text-[#d1c5ad] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    <svg
+                      className={`h-3 w-3 text-[#d1c5ada6] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/note:text-[#eadfca] ${
                         isNoteOpen ? "rotate-45" : ""
                       }`}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.9"
+                      strokeLinecap="round"
+                      aria-hidden="true"
                     >
-                      <svg className="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
-                        <path d="M12 5v14M5 12h14" />
-                      </svg>
-                    </span>
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
                   </button>
                   <div
                     id={noteId}
                     role="region"
-                    aria-label={isEs ? "Nota técnica" : "Design and engineering note"}
+                    aria-label={isEs ? "Nota" : "Note"}
                     aria-hidden={!isNoteOpen}
                     data-open={isNoteOpen ? "true" : "false"}
                     className="work-note-panel"
                   >
                     <div>
-                      <p className="pt-3 font-hero-sans text-[13px] leading-[1.62] text-[#f5f5f594]">
+                      <p className="pt-3 max-w-[54ch] font-hero-sans text-[13px] leading-[1.62] text-[#f5f5f594]">
                         {note}
                       </p>
                     </div>
@@ -660,7 +545,7 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
               isEs ? lightboxSection.titleEs : lightboxSection.titleEn
             }`}
             data-state={lightboxClosing ? "closing" : "open"}
-            className="work-lightbox fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a0a]/75 px-4 py-6 backdrop-blur-sm sm:px-6"
+            className="work-lightbox fixed inset-0 z-[100] overflow-hidden bg-[#0a0a0a]/80 backdrop-blur-md"
           >
             <button
               type="button"
@@ -670,28 +555,30 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
               tabIndex={-1}
             />
 
-            <div className="work-lightbox__panel relative z-10 flex max-h-[92vh] w-[90vw] max-w-4xl flex-col overflow-hidden rounded-[14px] border border-white/[0.1] bg-[#0b0b0b]">
-              <div className="flex h-12 shrink-0 items-center justify-between gap-4 border-b border-white/[0.06] px-4 sm:px-5">
-                <span className="min-w-0 font-hero-sans text-[11.5px] leading-[16px] text-[#f5f5f5a6]">
-                  <span className="tabular-nums text-[#d1c5ad]">
+            {/* No panel, no frame: the capture floats on the backdrop and only
+                the metadata, close control and neighbouring previews sit around
+                it. Every edge of this stage is a gutter the image can use. */}
+            <div className="work-lightbox__stage relative z-10 flex h-full w-full flex-col">
+              <div className="flex shrink-0 items-start justify-between gap-4 px-5 pt-5 sm:px-8 sm:pt-6">
+                <div className="min-w-0">
+                  <p className="font-hero-sans text-[11px] tabular-nums tracking-[0.08em] text-[#d1c5ad]">
                     {String((lightboxIndex ?? 0) + 1).padStart(2, "0")}
-                  </span>
-                  <span className="mx-1.5 text-[#f5f5f540]">/</span>
-                  <span className="tabular-nums text-[#f5f5f55c]">
-                    {String(sections.length).padStart(2, "0")}
-                  </span>
-                  <span className="mx-1.5 text-[#f5f5f540]">/</span>
-                  <span className="truncate">
+                    <span className="mx-1.5 text-[#f5f5f540]">/</span>
+                    <span className="text-[#f5f5f55c]">
+                      {String(sections.length).padStart(2, "0")}
+                    </span>
+                  </p>
+                  <p className="mt-1 truncate font-hero-sans text-[12.5px] leading-[17px] text-[#f5f5f5b0]">
                     {isEs ? lightboxSection.labelEs : lightboxSection.labelEn}
-                  </span>
-                </span>
+                  </p>
+                </div>
 
                 <button
                   ref={lightboxCloseRef}
                   type="button"
                   onClick={closeLightbox}
                   aria-label={isEs ? "Cerrar captura" : "Close screenshot"}
-                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/[0.12] text-[#f5f5f5a6] transition-[background-color,color] duration-200 hover:bg-white/[0.08] hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
+                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] text-[#f5f5f5a6] ring-1 ring-white/[0.1] transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-white/[0.07] hover:text-[#f5f5f5] active:scale-[0.94] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
                 >
                   <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true">
                     <path d="M6 6l12 12M18 6 6 18" />
@@ -699,47 +586,173 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
                 </button>
               </div>
 
-              <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-[#060606] px-2 py-2 sm:px-3 sm:py-3">
-                <img
-                  key={lightboxSection.id}
-                  src={isEs ? lightboxSection.imageEs : lightboxSection.imageEn}
-                  alt={`${isEs ? lightboxSection.titleEs : lightboxSection.titleEn}, ${title}`}
-                  width={lightboxSection.width}
-                  height={isEs ? lightboxSection.heightEs : lightboxSection.heightEn}
-                  data-dir={stepDir === 1 ? "next" : "prev"}
-                  draggable={false}
-                  className="work-lightbox__image block max-h-[76vh] max-w-full rounded-[8px] object-contain ring-1 ring-white/[0.08] select-none"
-                />
+              <div className="flex min-h-0 flex-1 items-center justify-center gap-4 px-4 py-4 sm:gap-7 sm:px-8">
+                {/* The first section has no neighbour on the left; the empty
+                    gutter keeps the capture the same size and centred, so
+                    stepping never resizes it. */}
+                {!lightboxPrev && (
+                  <div
+                    aria-hidden="true"
+                    className="hidden w-[13vw] max-w-[168px] shrink-0 md:block"
+                  />
+                )}
+
+                {lightboxPrev && (
+                  <button
+                    key={`prev-${lightboxPrev.id}`}
+                    type="button"
+                    onClick={() => stepLightbox(-1)}
+                    aria-label={`${isEs ? "Ver sección" : "View section"} ${String(
+                      lightboxIndex ?? 0,
+                    ).padStart(2, "0")}: ${
+                      isEs ? lightboxPrev.labelEs : lightboxPrev.labelEn
+                    }`}
+                    className="work-lightbox__peek group hidden w-[13vw] max-w-[168px] shrink-0 flex-col items-start gap-2.5 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad] md:flex"
+                  >
+                    <span className="block w-full overflow-hidden rounded-[8px] ring-1 ring-white/[0.07]">
+                      <img
+                        src={isEs ? lightboxPrev.imageEs : lightboxPrev.imageEn}
+                        alt=""
+                        width={lightboxPrev.width}
+                        height={
+                          isEs ? lightboxPrev.heightEs : lightboxPrev.heightEn
+                        }
+                        loading="lazy"
+                        decoding="async"
+                        draggable={false}
+                        className="block aspect-[16/10] w-full object-cover object-top opacity-40 transition-opacity duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-85 select-none"
+                      />
+                    </span>
+                    <span className="flex w-full items-center gap-1.5 font-hero-sans text-[10.5px] leading-[14px] text-[#f5f5f55c] transition-colors duration-200 group-hover:text-[#f5f5f5a6]">
+                      <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="m15 18-6-6 6-6" />
+                      </svg>
+                      <span className="tabular-nums text-[#d1c5adb3]">
+                        {String(lightboxIndex ?? 0).padStart(2, "0")}
+                      </span>
+                      <span className="truncate">
+                        {isEs ? lightboxPrev.labelEs : lightboxPrev.labelEn}
+                      </span>
+                    </span>
+                  </button>
+                )}
+
+                <div className="flex min-w-0 flex-1 items-center justify-center">
+                  <img
+                    key={lightboxSection.id}
+                    src={isEs ? lightboxSection.imageEs : lightboxSection.imageEn}
+                    alt={`${isEs ? lightboxSection.titleEs : lightboxSection.titleEn}, ${title}`}
+                    width={lightboxSection.width}
+                    height={isEs ? lightboxSection.heightEs : lightboxSection.heightEn}
+                    data-dir={stepDir === 1 ? "next" : "prev"}
+                    draggable={false}
+                    className="work-lightbox__image block max-h-[60vh] max-w-full rounded-[10px] bg-[#111111] object-contain ring-1 ring-white/[0.08] select-none sm:max-h-[74vh]"
+                  />
+                </div>
+
+                {lightboxNext && (
+                  <button
+                    key={`next-${lightboxNext.id}`}
+                    type="button"
+                    onClick={() => stepLightbox(1)}
+                    aria-label={`${isEs ? "Ver sección" : "View section"} ${String(
+                      lightboxNextIndex + 1,
+                    ).padStart(2, "0")}: ${
+                      isEs ? lightboxNext.labelEs : lightboxNext.labelEn
+                    }`}
+                    className="work-lightbox__peek group hidden w-[13vw] max-w-[168px] shrink-0 flex-col items-end gap-2.5 text-right cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad] md:flex"
+                  >
+                    <span className="block w-full overflow-hidden rounded-[8px] ring-1 ring-white/[0.07]">
+                      <img
+                        src={isEs ? lightboxNext.imageEs : lightboxNext.imageEn}
+                        alt=""
+                        width={lightboxNext.width}
+                        height={
+                          isEs ? lightboxNext.heightEs : lightboxNext.heightEn
+                        }
+                        loading="lazy"
+                        decoding="async"
+                        draggable={false}
+                        className="block aspect-[16/10] w-full object-cover object-top opacity-40 transition-opacity duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-85 select-none"
+                      />
+                    </span>
+                    <span className="flex w-full items-center justify-end gap-1.5 font-hero-sans text-[10.5px] leading-[14px] text-[#f5f5f55c] transition-colors duration-200 group-hover:text-[#f5f5f5a6]">
+                      <span className="truncate">
+                        {isEs ? lightboxNext.labelEs : lightboxNext.labelEn}
+                      </span>
+                      <span className="tabular-nums text-[#d1c5adb3]">
+                        {String(lightboxNextIndex + 1).padStart(2, "0")}
+                      </span>
+                      <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6" />
+                      </svg>
+                    </span>
+                  </button>
+                )}
               </div>
 
-              <div className="flex h-14 shrink-0 items-center justify-between gap-3 border-t border-white/[0.06] px-3 sm:px-5">
-                <button
-                  type="button"
-                  onClick={() => stepLightbox(-1)}
-                  aria-label={isEs ? "Sección anterior" : "Previous section"}
-                  className="inline-flex h-9 items-center gap-2 rounded-[8px] border border-white/[0.12] px-3 font-hero-sans text-[12px] text-[#f5f5f5c4] transition-[background-color,border-color,color] duration-200 hover:border-white/[0.24] hover:bg-white/[0.06] hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
-                >
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="m15 18-6-6 6-6" />
-                  </svg>
-                  <span className="hidden sm:inline">{isEs ? "Anterior" : "Previous"}</span>
-                </button>
+              {/* Phones keep the sides clear: stepping lives in one quiet bar. */}
+              <div className="flex shrink-0 items-center gap-3 px-5 pb-6 pt-3 md:hidden">
+                {lightboxPrev && (
+                  <button
+                    type="button"
+                    onClick={() => stepLightbox(-1)}
+                    aria-label={`${isEs ? "Ver sección" : "View section"} ${String(
+                      lightboxIndex ?? 0,
+                    ).padStart(2, "0")}: ${
+                      isEs ? lightboxPrev.labelEs : lightboxPrev.labelEn
+                    }`}
+                    className="inline-flex items-center gap-1.5 font-hero-sans text-[11.5px] text-[#f5f5f59e] transition-colors duration-200 hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
+                  >
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="m15 18-6-6 6-6" />
+                    </svg>
+                    <span className="tabular-nums">
+                      {String(lightboxIndex ?? 0).padStart(2, "0")}
+                    </span>
+                  </button>
+                )}
 
-                <span className="hidden font-hero-sans text-[11px] tracking-[0.03em] text-[#f5f5f540] sm:inline">
-                  Esc {isEs ? "para cerrar" : "to close"} <span className="mx-1.5 text-[#f5f5f530]">/</span> ← → {isEs ? "para navegar" : "to navigate"}
-                </span>
-
-                <button
-                  type="button"
-                  onClick={() => stepLightbox(1)}
-                  aria-label={isEs ? "Siguiente sección" : "Next section"}
-                  className="inline-flex h-9 items-center gap-2 rounded-[8px] border border-white/[0.12] px-3 font-hero-sans text-[12px] text-[#f5f5f5c4] transition-[background-color,border-color,color] duration-200 hover:border-white/[0.24] hover:bg-white/[0.06] hover:text-[#f5f5f5] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
-                >
-                  <span className="hidden sm:inline">{isEs ? "Siguiente" : "Next"}</span>
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="m9 18 6-6-6-6" />
-                  </svg>
-                </button>
+                {lightboxNext && (
+                  <button
+                    type="button"
+                    onClick={() => stepLightbox(1)}
+                    aria-label={`${isEs ? "Ver sección" : "View section"} ${String(
+                      lightboxNextIndex + 1,
+                    ).padStart(2, "0")}: ${
+                      isEs ? lightboxNext.labelEs : lightboxNext.labelEn
+                    }`}
+                    className="group ml-auto inline-flex items-center gap-2.5 rounded-[10px] bg-white/[0.05] py-1.5 pl-1.5 pr-3.5 ring-1 ring-white/[0.09] transition-[background-color,ring-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-white/[0.09] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d1c5ad]"
+                  >
+                    <span className="block h-9 w-14 overflow-hidden rounded-[6px] ring-1 ring-white/[0.08]">
+                      <img
+                        src={isEs ? lightboxNext.imageEs : lightboxNext.imageEn}
+                        alt=""
+                        width={lightboxNext.width}
+                        height={
+                          isEs ? lightboxNext.heightEs : lightboxNext.heightEn
+                        }
+                        loading="lazy"
+                        decoding="async"
+                        draggable={false}
+                        className="block h-full w-full object-cover object-top opacity-80 transition-opacity duration-200 group-hover:opacity-100 select-none"
+                      />
+                    </span>
+                    <span className="flex min-w-0 flex-col items-start leading-tight">
+                      <span className="font-hero-sans text-[9.5px] tabular-nums tracking-[0.06em] text-[#f5f5f55c]">
+                        {String(lightboxNextIndex + 1).padStart(2, "0")}
+                        <span className="mx-1 text-[#f5f5f540]">/</span>
+                        {String(sections.length).padStart(2, "0")}
+                      </span>
+                      <span className="mt-0.5 max-w-[38vw] truncate font-hero-sans text-[11.5px] text-[#f5f5f5c4]">
+                        {isEs ? lightboxNext.labelEs : lightboxNext.labelEn}
+                      </span>
+                    </span>
+                    <svg className="h-3.5 w-3.5 shrink-0 text-[#f5f5f57a] transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="m9 18 6-6-6-6" />
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
           </div>,
