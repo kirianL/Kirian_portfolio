@@ -2144,6 +2144,72 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   }
 }
 
+/* Meta badges — copied from the reference pills: 32px tall, 4px radius, a 1px
+   border one step darker than the fill, soft tinted background and deep ink of
+   the same family. Blue = design, green = engineering, red = year. */
+.meta-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.meta-badge {
+  --badge-fill: #cacef9;
+  --badge-edge: #a0a0c8;
+  --badge-ink: #312e81;
+
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--badge-edge);
+  border-radius: 4px;
+  background: var(--badge-fill);
+  color: var(--badge-ink);
+  font-family: var(--font-hero-sans);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.meta-badge[data-tone="green"] {
+  --badge-fill: #c9f0d3;
+  --badge-edge: #9cc7a7;
+  --badge-ink: #14532d;
+}
+
+.meta-badge[data-tone="red"] {
+  --badge-fill: #fbd1d1;
+  --badge-edge: #d1a1a1;
+  --badge-ink: #7c1d1d;
+}
+
+.meta-badge[data-badge-year] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Card scale: the same pill, smaller, so it does not overpower a 13.5px title. */
+.meta-badges--sm {
+  gap: 8px;
+}
+
+.meta-badges--sm .meta-badge {
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meta-badge {
+    transition: none;
+  }
+}
+
 /* Compact Work / Projects history — same type scale and palette as the hero
    so it reads as one continuous editorial column, not a separate card. */
 .work-history-panel {

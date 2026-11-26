@@ -5,6 +5,7 @@ import GridRevealImage from "@/components/ui/GridRevealImage";
 import { rememberScrollNow } from "@/lib/scrollMemory";
 import { navigateWithTransition, markSharedElement } from "@/lib/viewTransition";
 import { useLineReveal, useRiseIn } from "@/lib/reveal";
+import MetaBadges from "@/components/work/MetaBadges";
 
 export interface SelectedWorkItem {
   id: string;
@@ -142,9 +143,12 @@ function WorkCard({ item, isEs, showSpanishWork, index, onOpen }: WorkCardProps)
             </span>
           )}
         </div>
-        <p className="font-hero-sans text-[12px] min-[2000px]:text-[13.5px] text-[#f5f5f57a] leading-snug">
-          {role} · {item.year}
-        </p>
+        <MetaBadges
+          role={role}
+          year={item.year}
+          size="sm"
+          className="mt-1.5"
+        />
       </div>
     </>
   );

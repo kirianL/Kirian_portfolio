@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { WORK_ITEMS } from "@/components/home/SelectedWorkCarousel";
+import MetaBadges from "@/components/work/MetaBadges";
 import { useLineReveal, useRiseIn } from "@/lib/reveal";
 
 interface WorkDetailProps {
@@ -15,11 +16,13 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
   const item = WORK_ITEMS.find((w) => w.id === slug);
   const [ready, setReady] = useState(false);
 
-  const roleRef = useLineReveal<HTMLParagraphElement>({
+  const metaRef = useRiseIn<HTMLDivElement>({
     start: "now",
     delay: 80,
-    stagger: 50,
-    duration: 620,
+    distance: 8,
+    selector: ".meta-badge",
+    stagger: 55,
+    duration: 640,
   });
   const titleRef = useLineReveal<HTMLHeadingElement>({
     mask: true,
@@ -130,12 +133,9 @@ export default function WorkDetail({ lang }: WorkDetailProps) {
       </section>
 
       <section className="work-detail__info work-col-header mx-auto px-6 sm:px-0 mt-10">
-        <p
-          ref={roleRef}
-          className="font-hero-sans text-[13px] uppercase tracking-[0.02em] text-[#f5f5f59e] mb-3"
-        >
-          {role} · {item.year}
-        </p>
+        <div ref={metaRef} className="mb-4">
+          <MetaBadges role={role} year={item.year} />
+        </div>
         <h1
           ref={titleRef}
           className="font-hero-serif text-[30px] min-[2000px]:text-[38px] leading-[1.1] tracking-[-0.01em] text-[#d1c5ad]"
