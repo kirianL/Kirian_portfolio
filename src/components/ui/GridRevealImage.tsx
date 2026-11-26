@@ -19,6 +19,11 @@ const COLOR_MS = 420;
 const GUTTER_FROM = 0.35;
 const GUTTER_TO = 0.75;
 const PHOTO_FROM = 0.93;
+// A load faster than this is a cache hit — skip the reveal and show the photo.
+const INSTANT_MS = 150;
+
+// Sources already revealed in this session never animate again.
+const revealedSources = new Set<string>();
 
 type Cell = {
   x: number;
@@ -407,10 +412,19 @@ export default function GridRevealImage({
 
     let loadedAt = -1;
     let cancelled = false;
+    let frameId = 0;
+    let last = 0;
+    let elapsed = 0;
+    let eased = 0;
+    let split = 0;
+    let stopped = false;
+    let visible = true;
+    let instant = false;
+    const startedAt = performance.now();
 
-    const render = (split: number, now: number) => {
+    const render = (s: number, now: number) => {
       scene.dark = document.documentElement.classList.contains("dark");
-      scene.split = split;
+      scene.split = s;
       scene.fade = loadedAt < 0 ? 0 : smoothstep(0, COLOR_MS, now - loadedAt);
       drawScene(scene);
     };
@@ -448,8 +462,27 @@ export default function GridRevealImage({
         if (cancelled) return;
         if (!el.naturalWidth || !el.naturalHeight) return;
         scene.image = el;
+        // A cache hit (or an image already revealed this session) skips the
+        // whole reveal — paint the crisp frame immediately and stop.
+        instant =
+          revealedSources.has(src) ||
+          performance.now() - startedAt < INSTANT_MS;
+        scene.hasColors = readAverages(el, root, branches, instant ? 1 : scene.split);
+
+        if (instant) {
+          revealedSources.add(src);
+          loadedAt = performance.now() - COLOR_MS; // full-opacity photo
+          if (reduce) {
+            repaint();
+          } else {
+            render(1, performance.now());
+            stopped = true;
+            cancelAnimationFrame(frameId);
+          }
+          return;
+        }
+
         loadedAt = performance.now();
-        scene.hasColors = readAverages(el, root, branches, scene.split);
         if (reduce) repaint();
       };
       el.onerror = () => {
@@ -469,15 +502,8 @@ export default function GridRevealImage({
       };
     }
 
-    let frameId = 0;
-    let last = 0;
-    let elapsed = 0;
-    let eased = 0;
-    let split = 0;
-    let stopped = false;
-    let visible = true;
-
     const tick = (now: number) => {
+      if (stopped) return;
       frameId = requestAnimationFrame(tick);
       if (!last) last = now;
       const dt = Math.min((now - last) / 1000, 0.05);
@@ -499,9 +525,10 @@ export default function GridRevealImage({
       split += (wanted - split) * (1 - Math.exp(-dt * 4));
       render(split, now);
 
-      if (ready && eased > 0.995 && now - loadedAt > COLOR_MS) {
+      if (ready && !instant && eased > 0.995 && now - loadedAt > COLOR_MS) {
         if (split > 0.9995) {
           render(1, now);
+          revealedSources.add(src);
           stopped = true;
           cancelAnimationFrame(frameId);
         }
