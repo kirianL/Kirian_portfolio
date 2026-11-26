@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import GridRevealImage from "@/components/ui/GridRevealImage";
 
 export interface SelectedWorkItem {
@@ -79,6 +80,7 @@ interface SelectedWorkCarouselProps {
 
 export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps) {
   const isEs = lang === "es";
+  const navigate = useNavigate();
   // Screenshots always follow the page language: / -> English captures, /es -> Spanish captures.
   const showSpanishWork = isEs;
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -125,7 +127,8 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
       dragged: false,
     };
     setIsDragging(true);
-    el.setPointerCapture(e.pointerId);
+    // No pointer capture yet: capturing here retargets the click to the track,
+    // so a plain click on a card never reaches its link.
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -134,9 +137,16 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
     if (!el) return;
     const dx = e.clientX - dragStateRef.current.startX;
     if (Math.abs(dx) > 6) {
-      dragStateRef.current.dragged = true;
+      if (!dragStateRef.current.dragged) {
+        dragStateRef.current.dragged = true;
+        // Capture only once a real drag starts, so the drag keeps tracking
+        // outside the track and its click stays suppressed.
+        try {
+          el.setPointerCapture(e.pointerId);
+        } catch {}
+      }
+      el.scrollLeft = dragStateRef.current.scrollLeft - dx;
     }
-    el.scrollLeft = dragStateRef.current.scrollLeft - dx;
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -148,11 +158,15 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
     } catch {}
   };
 
-  const handleCardClick = (e: React.MouseEvent) => {
+  const handleCardClick = (e: React.MouseEvent, to: string) => {
+    // Let the browser handle modified clicks (new tab/window) on the real href.
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
     if (dragStateRef.current.dragged) {
-      e.preventDefault();
       dragStateRef.current.dragged = false;
+      return;
     }
+    navigate(to);
   };
 
   return (
@@ -265,10 +279,8 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
             <a
               key={item.id}
               data-work-card=""
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleCardClick}
+              href={isEs ? `/es/work/${item.id}` : `/work/${item.id}`}
+              onClick={(e) => handleCardClick(e, isEs ? `/es/work/${item.id}` : `/work/${item.id}`)}
               draggable={false}
               data-cuelume-hover="tick"
               className="group block w-[82vw] sm:w-[430px] lg:w-[460px] min-[2000px]:w-[540px] shrink-0 select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad] rounded-[14px]"
