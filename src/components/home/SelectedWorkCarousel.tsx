@@ -129,6 +129,7 @@ function WorkCard({ item, isEs, showSpanishWork, index, onOpen }: WorkCardProps)
             aspect={16 / 10}
             className="work-thumb-reveal work-shared-image"
             prime={isFlightTarget}
+            fetchPriority={index < 3 ? "high" : "auto"}
             dominantColor={workImageColor(coverSrc)}
           />
           <span
@@ -221,6 +222,16 @@ export default function SelectedWorkCarousel({ lang }: SelectedWorkCarouselProps
   });
   // Screenshots always follow the page language: / -> English captures, /es -> Spanish captures.
   const showSpanishWork = isEs;
+
+  useEffect(() => {
+    WORK_ITEMS.forEach((item, index) => {
+      warmImage(
+        showSpanishWork ? item.imageEs : item.imageEn,
+        index < 3 ? "high" : "low",
+      );
+    });
+  }, [showSpanishWork]);
+
   const trackRef = useRef<HTMLDivElement | null>(null);
   const dragStateRef = useRef({
     isDown: false,

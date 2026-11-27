@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { VT_END_EVENT } from "@/lib/viewTransition";
+import { decodedImages } from "@/lib/warmImage";
 
 interface GridRevealImageProps {
   src: string;
@@ -8,6 +9,7 @@ interface GridRevealImageProps {
   className?: string;
   estimatedDuration?: number;
   style?: React.CSSProperties;
+  fetchPriority?: "high" | "low" | "auto";
   /**
    * This canvas is the destination of a shared-element flight: its setup runs in
    * the same commit instead of waiting for the flight to end, so the captured
@@ -37,12 +39,10 @@ const PHOTO_FROM = 0.93;
 // A load faster than this is a cache hit — skip the reveal and show the photo.
 // The same window gates the mosaic: the grid is a fallback for an image that is
 // genuinely late, so nothing about it is built before this elapses.
-const INSTANT_MS = 150;
+const INSTANT_MS = 1200;
 
 // Sources already revealed in this session never animate again.
 const revealedSources = new Set<string>();
-// The decoded bitmap for each source, so a remount can paint it synchronously.
-const decodedImages = new Map<string, HTMLImageElement>();
 
 type Cell = {
   x: number;
@@ -458,6 +458,7 @@ export default function GridRevealImage({
   className = "",
   estimatedDuration = 6000,
   style,
+  fetchPriority = "high",
   prime = false,
   dominantColor,
 }: GridRevealImageProps) {
@@ -598,72 +599,6 @@ export default function GridRevealImage({
         typeof ResizeObserver === "function" ? new ResizeObserver(resize) : null;
       observer?.observe(frame);
 
-      const load = (url: string, withCors: boolean) => {
-        const el = new Image();
-        // Same-origin files never taint the canvas, so they are requested exactly
-        // like a plain <img>. That keeps one cache entry and one decoded frame
-        // shared with the detail hero — which the view transition has to paint
-        // before the flight can start.
-        const sameOrigin = !/^(https?:)?\/\//i.test(url) || url.startsWith(location.origin);
-        if (withCors && !sameOrigin) el.crossOrigin = "anonymous";
-        el.decoding = "async";
-        el.onload = () => {
-          if (cancelled) return;
-          if (!el.naturalWidth || !el.naturalHeight) return;
-          scene.image = el;
-          decodedImages.set(url, el);
-
-          // A cache hit, a photo already revealed this session, or one that
-          // landed before the skeleton timer fired: there is nothing to resolve,
-          // so paint the crisp frame and stop. The grid only runs for images
-          // that were actually late.
-          instant =
-            revealedSources.has(src) ||
-            !tree ||
-            performance.now() - startedAt < INSTANT_MS;
-
-          if (instant) {
-            revealedSources.add(src);
-            scene.hasColors = true;
-            loadedAt = performance.now() - COLOR_MS; // full-opacity photo
-            if (skeletonTimer !== undefined) {
-              window.clearTimeout(skeletonTimer);
-              skeletonTimer = undefined;
-            }
-            if (reduce) {
-              repaint();
-            } else {
-              render(1, performance.now());
-              stopped = true;
-              running = false;
-              cancelAnimationFrame(frameId);
-            }
-            return;
-          }
-
-          // The mosaic is waiting on the photo: sample it so the tiles resolve
-          // into the image's own colours before it fades in.
-          const mosaic = tree;
-          if (mosaic) {
-            scene.hasColors = readAverages(
-              el,
-              mosaic.root,
-              mosaic.branches,
-              scene.split,
-            );
-          }
-          loadedAt = performance.now();
-          if (reduce) repaint();
-        };
-        el.onerror = () => {
-          if (cancelled) return;
-          if (withCors) load(url, false);
-        };
-        el.src = url;
-      };
-
-      if (src) load(src, true);
-
       const tick = (now: number) => {
         if (stopped) return;
         frameId = requestAnimationFrame(tick);
@@ -712,6 +647,10 @@ export default function GridRevealImage({
       const startSkeleton = () => {
         skeletonTimer = undefined;
         if (stopped || cancelled || reduce) return;
+        if (!prime && document.documentElement.dataset.vt === "flying") {
+          window.addEventListener(VT_END_EVENT, startSkeleton, { once: true });
+          return;
+        }
         if (!tree) {
           tree = buildTree(ratio);
           scene.root = tree.root;
@@ -729,6 +668,86 @@ export default function GridRevealImage({
       if (!reduce) {
         skeletonTimer = window.setTimeout(startSkeleton, INSTANT_MS);
       }
+
+      const load = (url: string, withCors: boolean) => {
+        const el = new Image();
+        // Same-origin files never taint the canvas, so they are requested exactly
+        // like a plain <img>. That keeps one cache entry and one decoded frame
+        // shared with the detail hero — which the view transition has to paint
+        // before the flight can start.
+        const sameOrigin = !/^(https?:)?\/\//i.test(url) || url.startsWith(location.origin);
+        if (withCors && !sameOrigin) el.crossOrigin = "anonymous";
+        el.fetchPriority = fetchPriority;
+        el.decoding = fetchPriority === "high" ? "sync" : "async";
+        let handled = false;
+        const handleLoad = () => {
+          if (handled || cancelled) return;
+          if (!el.naturalWidth || !el.naturalHeight) return;
+          handled = true;
+          el.onload = null;
+          scene.image = el;
+          decodedImages.set(url, el);
+
+          // A cache hit, a photo already revealed this session, or one that
+          // landed before the skeleton timer fired: there is nothing to resolve,
+          // so paint the crisp frame and stop. The grid only runs for images
+          // that were actually late.
+          instant =
+            revealedSources.has(src) ||
+            !tree ||
+            performance.now() - startedAt < INSTANT_MS;
+
+          if (instant) {
+            revealedSources.add(src);
+            scene.hasColors = true;
+            loadedAt = performance.now() - COLOR_MS; // full-opacity photo
+            if (skeletonTimer !== undefined) {
+              window.clearTimeout(skeletonTimer);
+              skeletonTimer = undefined;
+            }
+            if (reduce) {
+              repaint();
+            } else {
+              render(1, performance.now());
+              stopped = true;
+              running = false;
+              cancelAnimationFrame(frameId);
+            }
+            return;
+          }
+
+          // The mosaic is waiting on the photo: sample it so the tiles resolve
+          // into the image's own colours before it fades in.
+          const mosaic = tree;
+          if (mosaic) {
+            scene.hasColors = readAverages(
+              el,
+              mosaic.root,
+              mosaic.branches,
+              scene.split,
+            );
+          }
+          loadedAt = performance.now();
+          if (reduce) repaint();
+        };
+        el.onload = handleLoad;
+        el.onerror = () => {
+          if (cancelled) return;
+          if (withCors) {
+            load(url, false);
+          } else {
+            if (skeletonTimer !== undefined) {
+              window.clearTimeout(skeletonTimer);
+              skeletonTimer = undefined;
+            }
+            startSkeleton();
+          }
+        };
+        el.src = url;
+        if (el.complete && el.naturalWidth > 0) handleLoad();
+      };
+
+      if (src) load(src, true);
 
       const visibility =
         typeof IntersectionObserver === "function"
@@ -755,38 +774,18 @@ export default function GridRevealImage({
       return () => {
         cancelled = true;
         if (skeletonTimer !== undefined) window.clearTimeout(skeletonTimer);
+        window.removeEventListener(VT_END_EVENT, startSkeleton);
         cancelAnimationFrame(frameId);
         observer?.disconnect();
         visibility?.disconnect();
       };
     };
 
-    // A flight is running and this canvas is not its target: hold every
-    // allocation and decode until the image has landed. Five canvas surfaces
-    // (tree build, sampler, load, rAF loop) built in one commit is exactly the
-    // kind of long task that drops frames out of a flight — and on the way back
-    // it delayed the capture by ~150ms. A primed canvas has already painted the
-    // photo during the commit, so it loses nothing by waiting.
-    if (!prime && document.documentElement.dataset.vt === "flying") {
-      let started = false;
-      const onEnd = () => {
-        if (started) return;
-        started = true;
-        cleanup = init();
-      };
-      window.addEventListener(VT_END_EVENT, onEnd, { once: true });
-      return () => {
-        started = true;
-        window.removeEventListener(VT_END_EVENT, onEnd);
-        cleanup?.();
-      };
-    }
-
     cleanup = init();
     return () => {
       cleanup?.();
     };
-  }, [src, ratio, prime, dominantColor]);
+  }, [src, ratio, prime, dominantColor, fetchPriority]);
 
   return (
     <div

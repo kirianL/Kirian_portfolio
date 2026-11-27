@@ -318,6 +318,27 @@ const fontsHref = loadSerifFonts
       crossorigin
     />
     <link rel="stylesheet" href={fontsHref} />
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+      href={lang === 'es' ? '/work/koragrid-es.webp' : '/work/koragrid-en.webp'}
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+      href={lang === 'es' ? '/work/customerup-es.webp' : '/work/customerup-en.webp'}
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+      href={lang === 'es' ? '/work/kora-finance-es.webp' : '/work/kora-finance-en.webp'}
+    />
     <link rel="dns-prefetch" href="https://api.lanyard.rest" />
     <link rel="dns-prefetch" href="https://i.scdn.co" />
 

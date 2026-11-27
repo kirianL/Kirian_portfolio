@@ -173,6 +173,16 @@ function WorkDetailView({ lang }: WorkDetailProps) {
   }, [slug]);
 
   useEffect(() => {
+    if (!item) return;
+    const heroSrc = isEs ? item.imageEs : item.imageEn;
+    const currentIndex = WORK_ITEMS.findIndex((w) => w.id === item.id);
+    const next = WORK_ITEMS[(currentIndex + 1) % WORK_ITEMS.length];
+    const upcomingSrc = isEs ? next.imageEs : next.imageEn;
+    warmImage(heroSrc, "high");
+    warmImage(upcomingSrc, "low");
+  }, [item, isEs, slug]);
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       // The lightbox owns Escape while it is open; its own listener runs first.
       if (lightboxIndex !== null) return;
@@ -422,6 +432,8 @@ function WorkDetailView({ lang }: WorkDetailProps) {
             alt={title}
             width={1920}
             height={1200}
+            loading="eager"
+            fetchPriority="high"
             draggable={false}
             decoding="sync"
             className="block h-full w-full object-cover select-none"
@@ -518,6 +530,7 @@ function WorkDetailView({ lang }: WorkDetailProps) {
                       alt={`${sectionTitle}, ${title}`}
                       aspect={section.width / shotHeight}
                       className="rounded-[10px]"
+                      fetchPriority={index === 0 ? "high" : "auto"}
                       dominantColor={workImageColor(shotSrc)}
                     />
                   </button>
@@ -746,6 +759,8 @@ function WorkDetailView({ lang }: WorkDetailProps) {
                     alt={`${isEs ? lightboxSection.titleEs : lightboxSection.titleEn}, ${title}`}
                     width={lightboxSection.width}
                     height={isEs ? lightboxSection.heightEs : lightboxSection.heightEn}
+                    fetchPriority="high"
+                    decoding="sync"
                     data-dir={stepDir === 1 ? "next" : "prev"}
                     draggable={false}
                     className="work-lightbox__image block max-h-[60vh] max-w-full rounded-[10px] bg-[#111111] object-contain ring-1 ring-white/[0.08] select-none sm:max-h-[74vh]"
