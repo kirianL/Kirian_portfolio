@@ -1,5 +1,5 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { VT_END_EVENT, isReturningFlight } from "@/lib/viewTransition";
+import { useEffect, useLayoutEffect, useRef } from "react";
+import { VT_END_EVENT } from "@/lib/viewTransition";
 
 interface GridRevealImageProps {
   src: string;
@@ -9,17 +9,16 @@ interface GridRevealImageProps {
   estimatedDuration?: number;
   style?: React.CSSProperties;
   /**
-   * Paint a cached copy of the photo synchronously on mount.
-   *
-   * A shared-element transition captures the page right after it mounts. This
-   * card is the destination of that flight, so its canvas must already hold the
-   * photo at capture time — otherwise the browser snapshots an empty box.
+   * This canvas is the destination of a shared-element flight: its setup runs in
+   * the same commit instead of waiting for the flight to end, so the captured
+   * page already holds the photo.
    */
   prime?: boolean;
   /**
-   * Dominant colour of the photo, used while it loads. Without it the mosaic
-   * falls back to the page surface; it never paints the neutral white tiles a
-   * canvas used to show on a light theme.
+   * Dominant colour of the photo. It fills the box before the file arrives and
+   * tones the mosaic while a late image loads. Without it the placeholder falls
+   * back to the page surface; it never paints the neutral white tiles a canvas
+   * used to show on a light theme.
    */
   dominantColor?: string;
 }
@@ -36,6 +35,8 @@ const GUTTER_FROM = 0.35;
 const GUTTER_TO = 0.75;
 const PHOTO_FROM = 0.93;
 // A load faster than this is a cache hit — skip the reveal and show the photo.
+// The same window gates the mosaic: the grid is a fallback for an image that is
+// genuinely late, so nothing about it is built before this elapses.
 const INSTANT_MS = 150;
 
 // Sources already revealed in this session never animate again.
@@ -445,6 +446,10 @@ function readAverages(
  * Port of Rare UI's GridReveal: a grid of colour sampled tiles that splits and
  * resolves into the real photo as it arrives — the "loading state for AI
  * images" feel, applied to the work thumbnails. Uses no extra dependencies.
+ *
+ * The mosaic is not a required first frame. It is the state for "the image has
+ * not arrived": a decoded or cached photo is painted straight away, and the
+ * tile tree is only built once the file misses the cache-hit window.
  */
 export default function GridRevealImage({
   src,
@@ -460,24 +465,15 @@ export default function GridRevealImage({
   const frameRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const durationRef = useRef(estimatedDuration);
-  durationRef.current = estimatedDuration;
+  useEffect(() => {
+    durationRef.current = estimatedDuration;
+  }, [estimatedDuration]);
 
-  // Frozen per source: the decision has to hold for the whole mount, because
-  // the flight flags clear the moment it lands and a re-render must not turn
-  // the landed photo back into a grid reveal.
-  const primingRef = useRef({ src, priming: prime || isReturningFlight() });
-  if (primingRef.current.src !== src) {
-    primingRef.current = { src, priming: prime || isReturningFlight() };
-  }
-  const priming = primingRef.current.priming;
-
-  // Runs during the commit, before the browser can snapshot the page, so a
-  // card that is the destination of a shared-element flight is never empty.
-  // A returning flight restores the whole home page, so every card that has a
-  // decoded bitmap is primed at once — the outgoing page must be complete when
-  // the browser captures the new state, not just the card the hero lands on.
+  // A photo decoded earlier in this session (another card, the detail hero, a
+  // previous mount) is the real thing, so it is painted during the commit: the
+  // card never flashes the grid and a shared-element flight always captures a
+  // filled box. This runs before the browser can snapshot the page.
   useLayoutEffect(() => {
-    if (!priming) return;
     const canvas = canvasRef.current;
     const frame = frameRef.current;
     const image = src ? decodedImages.get(src) : null;
@@ -493,7 +489,7 @@ export default function GridRevealImage({
     canvas.height = height;
     const fit = coverRect(image.naturalWidth, image.naturalHeight, width, height);
     ctx.drawImage(image, fit.dx, fit.dy, fit.dw, fit.dh);
-  }, [priming, src]);
+  }, [src]);
 
   useEffect(() => {
     let cleanup: (() => void) | undefined;
@@ -508,11 +504,14 @@ export default function GridRevealImage({
       const reduce = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
-      const { root, branches } = buildTree(ratio);
 
+      // The mosaic is a fallback, never a required first frame. The scene opens
+      // as a single cell in the photo's dominant colour (so the box never reads
+      // as a white surface) and the 180-cell tree is only built if the file
+      // turns out to be genuinely late.
       const scene: Scene = {
         ctx,
-        root,
+        root: makeCell(0, 0, 1, 1, null),
         width: 0,
         height: 0,
         scale: 1,
@@ -524,11 +523,11 @@ export default function GridRevealImage({
         image: null,
       };
 
-      // The card the flight is landing on must already be a photo — both when the
-      // browser snapshots the page and after it lands. Without this the grid
-      // reveal would restart and flip the landed image back to tiles.
-      const primed = priming ? decodedImages.get(src) : undefined;
-      if (primed?.naturalWidth) {
+      // Already decoded this session: the photo is present, so it is the only
+      // thing to paint. No grid, no reveal, no sampler.
+      const cached = src ? decodedImages.get(src) : undefined;
+      if (cached?.naturalWidth) {
+        const image = cached;
         const paint = () => {
           const dpr = Math.min(window.devicePixelRatio || 1, 2);
           const rect = frame.getBoundingClientRect();
@@ -538,7 +537,7 @@ export default function GridRevealImage({
           scene.scale = dpr;
           scene.width = width;
           scene.height = height;
-          scene.image = primed;
+          scene.image = image;
           scene.hasColors = true;
           scene.split = 1;
           scene.fade = 1;
@@ -553,9 +552,12 @@ export default function GridRevealImage({
         return () => resizeObserver?.disconnect();
       }
 
+      let tree: { root: Cell; branches: Cell[] } | null = null;
+      let skeletonTimer: number | undefined;
       let loadedAt = -1;
       let cancelled = false;
       let frameId = 0;
+      let running = false;
       let last = 0;
       let elapsed = 0;
       let eased = 0;
@@ -610,31 +612,46 @@ export default function GridRevealImage({
           if (!el.naturalWidth || !el.naturalHeight) return;
           scene.image = el;
           decodedImages.set(url, el);
-          // A cache hit (or an image already revealed this session) skips the
-          // whole reveal — paint the crisp frame immediately and stop.
+
+          // A cache hit, a photo already revealed this session, or one that
+          // landed before the skeleton timer fired: there is nothing to resolve,
+          // so paint the crisp frame and stop. The grid only runs for images
+          // that were actually late.
           instant =
             revealedSources.has(src) ||
+            !tree ||
             performance.now() - startedAt < INSTANT_MS;
-          // With no reveal to run the photo covers the tile grid at once, so the
-          // sampled colours are never shown — skip the decode and readback that a
-          // large cover would otherwise cost inside the transition's update step.
-          scene.hasColors = instant
-            ? true
-            : readAverages(el, root, branches, scene.split);
 
           if (instant) {
             revealedSources.add(src);
+            scene.hasColors = true;
             loadedAt = performance.now() - COLOR_MS; // full-opacity photo
+            if (skeletonTimer !== undefined) {
+              window.clearTimeout(skeletonTimer);
+              skeletonTimer = undefined;
+            }
             if (reduce) {
               repaint();
             } else {
               render(1, performance.now());
               stopped = true;
+              running = false;
               cancelAnimationFrame(frameId);
             }
             return;
           }
 
+          // The mosaic is waiting on the photo: sample it so the tiles resolve
+          // into the image's own colours before it fades in.
+          const mosaic = tree;
+          if (mosaic) {
+            scene.hasColors = readAverages(
+              el,
+              mosaic.root,
+              mosaic.branches,
+              scene.split,
+            );
+          }
           loadedAt = performance.now();
           if (reduce) repaint();
         };
@@ -646,14 +663,6 @@ export default function GridRevealImage({
       };
 
       if (src) load(src, true);
-
-      if (reduce) {
-        repaint();
-        return () => {
-          cancelled = true;
-          observer?.disconnect();
-        };
-      }
 
       const tick = (now: number) => {
         if (stopped) return;
@@ -683,17 +692,43 @@ export default function GridRevealImage({
             render(1, now);
             revealedSources.add(src);
             stopped = true;
+            running = false;
             cancelAnimationFrame(frameId);
           }
         }
       };
 
       const start = () => {
-        if (stopped) return;
+        if (stopped || running) return;
+        running = true;
         last = 0;
         cancelAnimationFrame(frameId);
         frameId = requestAnimationFrame(tick);
       };
+
+      // Nothing about the mosaic exists until this fires, and it fires only when
+      // the photo missed the cache-hit window. That is the whole condition: the
+      // grid is strictly the state for "the image has not arrived".
+      const startSkeleton = () => {
+        skeletonTimer = undefined;
+        if (stopped || cancelled || reduce) return;
+        if (!tree) {
+          tree = buildTree(ratio);
+          scene.root = tree.root;
+          split = 0;
+          eased = 0;
+          elapsed = 0;
+          scene.clock = 0;
+        }
+        render(0, performance.now());
+        if (visible) start();
+      };
+
+      // Reduced motion never gets the mosaic: a solid block in the photo's
+      // colour stands in until the file lands, so the tree is never built.
+      if (!reduce) {
+        skeletonTimer = window.setTimeout(startSkeleton, INSTANT_MS);
+      }
 
       const visibility =
         typeof IntersectionObserver === "function"
@@ -701,18 +736,25 @@ export default function GridRevealImage({
               ([entry]) => {
                 if (entry.isIntersecting === visible) return;
                 visible = entry.isIntersecting;
-                if (visible) start();
-                else cancelAnimationFrame(frameId);
+                if (!visible) {
+                  running = false;
+                  cancelAnimationFrame(frameId);
+                } else if (tree) {
+                  start();
+                }
               },
               { rootMargin: "150px" },
             )
           : null;
       visibility?.observe(frame);
 
-      start();
+      // Until then the box is a single cell of the photo's dominant colour, so
+      // it never reads as an empty white surface.
+      if (reduce) repaint();
 
       return () => {
         cancelled = true;
+        if (skeletonTimer !== undefined) window.clearTimeout(skeletonTimer);
         cancelAnimationFrame(frameId);
         observer?.disconnect();
         visibility?.disconnect();
@@ -744,7 +786,7 @@ export default function GridRevealImage({
     return () => {
       cleanup?.();
     };
-  }, [src, ratio, prime, priming, dominantColor]);
+  }, [src, ratio, prime, dominantColor]);
 
   return (
     <div
