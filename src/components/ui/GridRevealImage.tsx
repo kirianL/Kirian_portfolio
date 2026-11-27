@@ -16,6 +16,12 @@ interface GridRevealImageProps {
    * photo at capture time — otherwise the browser snapshots an empty box.
    */
   prime?: boolean;
+  /**
+   * Dominant colour of the photo, used while it loads. Without it the mosaic
+   * falls back to the page surface; it never paints the neutral white tiles a
+   * canvas used to show on a light theme.
+   */
+  dominantColor?: string;
 }
 
 const CELLS = 180;
@@ -60,6 +66,19 @@ type Sums = {
   l: number;
   l2: number;
 };
+
+type Rgb = {
+  r: number;
+  g: number;
+  b: number;
+};
+
+// The surface every work card sits on. A placeholder may be toned by the photo
+// but it must never read as an empty white box, so this is also the fallback
+// when the photo has no usable colour of its own.
+const FALLBACK_COLOR: Rgb = { r: 20, g: 20, b: 20 }; // #141414
+const MAX_PLACEHOLDER_LUMA = 0.72;
+const MIN_PLACEHOLDER_CHROMA = 0.16;
 
 const clamp01 = (n: number) => (n > 0 ? (n < 1 ? n : 1) : 0);
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -229,7 +248,7 @@ type Scene = {
   width: number;
   height: number;
   scale: number;
-  dark: boolean;
+  base: Rgb;
   clock: number;
   split: number;
   fade: number;
@@ -248,22 +267,67 @@ type Patch = {
   tone: number;
 };
 
-function greyOf(tone: number, dark: boolean, clock: number) {
-  return (
-    (dark ? 30 : 228) + tone * 13 + Math.sin(clock * 1.5 + tone * 6.28) * 3
-  );
+function parseRgb(value?: string): Rgb | null {
+  if (!value) return null;
+  const hex = value.trim().replace(/^#/, "");
+  if (!/^(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(hex)) return null;
+  const full =
+    hex.length === 3
+      ? hex
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : hex;
+  const n = Number.parseInt(full, 16);
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+/**
+ * Resolve the colour painted before the photo arrives. A near-white, low
+ * chroma colour has no usable hue and would recreate the white box this
+ * placeholder exists to avoid, so it falls back to the dark page surface.
+ * Chromatic captures keep their own dominant colour, even when it is light.
+ */
+function placeholderColor(value?: string): Rgb {
+  const rgb = parseRgb(value);
+  if (!rgb) return FALLBACK_COLOR;
+
+  const max = Math.max(rgb.r, rgb.g, rgb.b);
+  const min = Math.min(rgb.r, rgb.g, rgb.b);
+  const luma = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+  const chroma = (max - min) / 255;
+
+  if (luma > MAX_PLACEHOLDER_LUMA && chroma < MIN_PLACEHOLDER_CHROMA) {
+    return FALLBACK_COLOR;
+  }
+  return rgb;
+}
+
+/** A slight, deterministic lift per tile keeps the mosaic alive while it waits. */
+function tileColor(base: Rgb, tone: number, clock: number) {
+  const lift =
+    0.84 + tone * 0.32 + Math.sin(clock * 1.5 + tone * 6.28) * 0.03;
+  const clamp = (n: number) => (n < 0 ? 0 : n > 255 ? 255 : Math.round(n));
+  return {
+    r: clamp(base.r * lift),
+    g: clamp(base.g * lift),
+    b: clamp(base.b * lift),
+  };
 }
 
 function drawScene(s: Scene) {
   const { ctx, root, width, height, split } = s;
   const tint = s.hasColors ? s.fade : 0;
-  const shade = (grey: number, target: number) =>
-    Math.round(mix(grey, target, tint));
-  const base = greyOf(root.tone, s.dark, s.clock);
+  const shade = (base: number, target: number) =>
+    Math.round(mix(base, target, tint));
+  const base = tileColor(s.base, root.tone, s.clock);
 
-  ctx.fillStyle = `rgb(${Math.round(shade(base, root.r) * 0.92)},${Math.round(
-    shade(base, root.g) * 0.92,
-  )},${Math.round(shade(base, root.b) * 0.92)})`;
+  // The backdrop sits a touch under the tiles, so the gaps read as a surface
+  // rather than as more tiles while the mosaic opens.
+  ctx.fillStyle = `rgb(${shade(base.r * 0.92, root.r)},${shade(
+    base.g * 0.92,
+    root.g,
+  )},${shade(base.b * 0.92, root.b)})`;
   ctx.fillRect(0, 0, width, height);
 
   const soft = 1 - smoothstep(GUTTER_FROM, GUTTER_TO, split);
@@ -287,8 +351,8 @@ function drawScene(s: Scene) {
     const innerH = h - top - (onBottom ? 0 : gutter);
     if (innerW <= 0 || innerH <= 0) return;
 
-    const grey = greyOf(p.tone, s.dark, s.clock);
-    ctx.fillStyle = `rgb(${shade(grey, p.r)},${shade(grey, p.g)},${shade(grey, p.b)})`;
+    const tile = tileColor(s.base, p.tone, s.clock);
+    ctx.fillStyle = `rgb(${shade(tile.r, p.r)},${shade(tile.g, p.g)},${shade(tile.b, p.b)})`;
 
     if (rounded) {
       const radius = Math.min(innerW, innerH) * 0.12 * soft;
@@ -390,6 +454,7 @@ export default function GridRevealImage({
   estimatedDuration = 6000,
   style,
   prime = false,
+  dominantColor,
 }: GridRevealImageProps) {
   const ratio = Number.isFinite(aspect) && aspect > 0 ? aspect : 1;
   const frameRef = useRef<HTMLDivElement>(null);
@@ -451,7 +516,7 @@ export default function GridRevealImage({
         width: 0,
         height: 0,
         scale: 1,
-        dark: false,
+        base: placeholderColor(dominantColor),
         clock: 0,
         split: 0,
         fade: 0,
@@ -501,7 +566,6 @@ export default function GridRevealImage({
       const startedAt = performance.now();
 
       const render = (s: number, now: number) => {
-        scene.dark = document.documentElement.classList.contains("dark");
         scene.split = s;
         scene.fade = loadedAt < 0 ? 0 : smoothstep(0, COLOR_MS, now - loadedAt);
         drawScene(scene);
@@ -680,7 +744,7 @@ export default function GridRevealImage({
     return () => {
       cleanup?.();
     };
-  }, [src, ratio, prime, priming]);
+  }, [src, ratio, prime, priming, dominantColor]);
 
   return (
     <div

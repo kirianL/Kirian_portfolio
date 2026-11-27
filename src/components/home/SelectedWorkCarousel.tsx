@@ -2,6 +2,7 @@ import * as React from "react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import GridRevealImage from "@/components/ui/GridRevealImage";
+import { workImageColor } from "@/data/workColors";
 import { rememberScrollNow } from "@/lib/scrollMemory";
 import { warmImage } from "@/lib/warmImage";
 import { workOpenedFromHome } from "@/lib/workNav";
@@ -128,6 +129,7 @@ function WorkCard({ item, isEs, showSpanishWork, index, onOpen }: WorkCardProps)
             aspect={16 / 10}
             className="work-thumb-reveal work-shared-image"
             prime={isFlightTarget}
+            dominantColor={workImageColor(coverSrc)}
           />
           <span
             className="work-view-icon pointer-events-none absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)] translate-y-1 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"

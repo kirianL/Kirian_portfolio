@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { WORK_ITEMS } from "@/components/home/SelectedWorkCarousel";
 import MetaBadges from "@/components/work/MetaBadges";
 import GridRevealImage from "@/components/ui/GridRevealImage";
+import { workImageColor } from "@/data/workColors";
 import { getWorkSections } from "@/data/workSections";
 import { readRememberedScroll } from "@/lib/scrollMemory";
 import { navigateWithTransition } from "@/lib/viewTransition";
@@ -35,6 +36,22 @@ function sectionDomId(id: string) {
 }
 
 /**
+ * Whether the detail hero is on screen right now.
+ *
+ * The shared-element return flies the hero into its carousel card, which only
+ * reads as a flight while the hero is actually visible. From the bottom of a
+ * case study its box sits thousands of pixels above the viewport, and the
+ * browser would take that off-screen snapshot and drag it down across the
+ * whole page — the "streak from above" this guards against.
+ */
+function heroIsInView() {
+  const hero = document.querySelector<HTMLElement>("[data-vt-hero]");
+  if (!hero) return false;
+  const rect = hero.getBoundingClientRect();
+  return rect.bottom > 40 && rect.top < window.innerHeight;
+}
+
+/**
  * "Next project" stays on the same route pattern, so React would keep the
  * component instance and its `useRiseIn` / `useLineReveal` effects would never
  * run again for the new slug. The key remounts the page for each project, which
@@ -52,6 +69,66 @@ function WorkDetailView({ lang }: WorkDetailProps) {
   const isEs = lang === "es";
   const item = WORK_ITEMS.find((w) => w.id === slug);
   const sections = getWorkSections(slug).slice(1);
+
+  // Return to whichever page the project was opened from. The origin travels
+  // in this history entry's state: a detail opened from another detail goes
+  // back sideways, while one opened from the home carousel flies into its card.
+  const homePath = isEs ? "/es" : "/";
+  const projectHref = isEs ? `/es/work/${slug}` : `/work/${slug}`;
+  const navState = readWorkNavState(location.state);
+
+  // Shared-element return: the hero flies into its card on the home track. A
+  // chain of projects can pop several entries at once and still land on the
+  // carousel in a single transition.
+  const goToSelectedWork = (steps?: number) => {
+    if (!item) {
+      navigate(homePath);
+      return;
+    }
+    const goHome = () => {
+      if (typeof steps === "number" && steps < 0) navigate(steps);
+      else navigate(homePath);
+    };
+    const scrollY = readRememberedScroll(homePath) ?? 0;
+    if (!heroIsInView()) {
+      // Scrolled past the hero ("Back to selected work" at the bottom, Escape
+      // far down): there is no visible end to fly from, so the snapshot would
+      // be captured above the viewport and streak down. The page change hides
+      // the hero and lands home at the remembered position as a plain fade.
+      navigateWithTransition(goHome, {
+        dir: "fade",
+        scrollY,
+        awaitSelector: "#selected-work",
+      });
+      return;
+    }
+    navigateWithTransition(goHome, {
+      scrollY,
+      sharedHref: projectHref,
+    });
+  };
+
+  const goBack = () => {
+    if (!item) {
+      navigate(homePath);
+      return;
+    }
+    if (navState?.workFrom === "work") {
+      // Previous entry is another project: slide back to it. Waiting for its
+      // own path resolves on the mount frame, so this never hangs on a card
+      // that does not exist on a detail page.
+      navigateWithTransition(() => navigate(-1), {
+        dir: "prev",
+        scrollY: 0,
+        awaitSelector: `[data-work-path="${navState.workFromPath}"]`,
+      });
+      return;
+    }
+    // Opened from the carousel (or directly, with no recorded origin): go home
+    // and let the hero fly back into the matching card.
+    goToSelectedWork(navState?.workFrom === "home" ? -1 : undefined);
+  };
+
   const [ready, setReady] = useState(false);
 
   const [openNotes, setOpenNotes] = useState<Record<string, boolean>>({});
@@ -217,54 +294,6 @@ function WorkDetailView({ lang }: WorkDetailProps) {
     return () => window.removeEventListener("keydown", onKey, true);
   }, [isLightboxOpen, closeLightbox, stepLightbox]);
 
-  // Return to whichever page the project was opened from. The origin travels
-  // in this history entry's state: a detail opened from another detail goes
-  // back sideways, while one opened from the home carousel flies into its card.
-  const homePath = isEs ? "/es" : "/";
-  const projectHref = isEs ? `/es/work/${slug}` : `/work/${slug}`;
-  const navState = readWorkNavState(location.state);
-
-  // Shared-element return: the hero flies into its card on the home track. A
-  // chain of projects can pop several entries at once and still land on the
-  // carousel in a single transition.
-  const goToSelectedWork = (steps?: number) => {
-    if (!item) {
-      navigate(homePath);
-      return;
-    }
-    navigateWithTransition(
-      () => {
-        if (typeof steps === "number" && steps < 0) navigate(steps);
-        else navigate(homePath);
-      },
-      {
-        scrollY: readRememberedScroll(homePath) ?? 0,
-        sharedHref: projectHref,
-      },
-    );
-  };
-
-  const goBack = () => {
-    if (!item) {
-      navigate(homePath);
-      return;
-    }
-    if (navState?.workFrom === "work") {
-      // Previous entry is another project: slide back to it. Waiting for its
-      // own path resolves on the mount frame, so this never hangs on a card
-      // that does not exist on a detail page.
-      navigateWithTransition(() => navigate(-1), {
-        dir: "prev",
-        scrollY: 0,
-        awaitSelector: `[data-work-path="${navState.workFromPath}"]`,
-      });
-      return;
-    }
-    // Opened from the carousel (or directly, with no recorded origin): go home
-    // and let the hero fly back into the matching card.
-    goToSelectedWork(navState?.workFrom === "home" ? -1 : undefined);
-  };
-
   if (!item) {
     return (
       <main id="main-content" className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] flex items-center justify-center">
@@ -320,7 +349,8 @@ function WorkDetailView({ lang }: WorkDetailProps) {
   // into this hero, so the CSS "settle" entrance would double-animate it.
   const supportsViewTransition =
     typeof document !== "undefined" &&
-    typeof (document as any).startViewTransition === "function" &&
+    typeof (document as Document & { startViewTransition?: unknown })
+      .startViewTransition === "function" &&
     !(
       typeof window.matchMedia === "function" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -383,6 +413,7 @@ function WorkDetailView({ lang }: WorkDetailProps) {
           style={
             {
               viewTransitionName: "work-image",
+              backgroundColor: workImageColor(src),
             } as CSSProperties
           }
         >
@@ -487,6 +518,7 @@ function WorkDetailView({ lang }: WorkDetailProps) {
                       alt={`${sectionTitle}, ${title}`}
                       aspect={section.width / shotHeight}
                       className="rounded-[10px]"
+                      dominantColor={workImageColor(shotSrc)}
                     />
                   </button>
 

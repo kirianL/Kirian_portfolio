@@ -78,11 +78,15 @@ export interface TransitionOptions {
   /** Card href that has to be back in place on the incoming page. */
   sharedHref?: string;
   /**
-   * Directional page change (detail -> detail). No element flies: the outgoing
-   * page and the incoming one slide/fade past each other, which is what makes
-   * "Next project" read as moving forward instead of a hard cut.
+   * Page change with nothing shared. `next` / `prev` slide the two pages past
+   * each other, which is what makes "Next project" read as moving forward
+   * instead of a hard cut; `fade` is the plain root crossfade.
+   *
+   * Every value hides the detail hero from its own named group, so a hero that
+   * is off-screen (returning to the carousel from the bottom of a case study)
+   * can never be flown down across the page.
    */
-  dir?: "next" | "prev";
+  dir?: "next" | "prev" | "fade";
   /**
    * Selector the incoming route must contain before it is captured. Only the
    * shared-card path needs to wait for a mount; a POP navigation renders in a
@@ -253,8 +257,8 @@ export function navigateWithTransition(
   }
 
   const targetY = options.scrollY ?? 0;
-  const directional = options.dir === "next" || options.dir === "prev";
-  const sharedHref = directional ? null : (options.sharedHref ?? null);
+  const hasDir = options.dir !== undefined;
+  const sharedHref = hasDir ? null : (options.sharedHref ?? null);
   const cardSelector = sharedHref
     ? `[data-work-card][href="${sharedHref}"]`
     : null;
@@ -263,7 +267,10 @@ export function navigateWithTransition(
   // A return is a restored page: its copy is already complete when captured,
   // so nothing is revealed again after the flight. Going back to the previous
   // detail is exactly that, so it gets the same treatment.
-  returningFlight = sharedHref !== null || options.dir === "prev";
+  returningFlight =
+    sharedHref !== null ||
+    options.dir === "prev" ||
+    options.dir === "fade";
   let ended = false;
   let capTimer = 0;
 
@@ -287,11 +294,11 @@ export function navigateWithTransition(
     // Set before the call: the incoming page mounts inside the update callback,
     // and `startViewTransition` may dispatch that callback in a later task.
     document.documentElement.dataset.vt = "flying";
-    if (directional) {
+    if (hasDir) {
       // The old state is captured right after this call returns, so the
       // stylesheet already sees the direction (and hides the hero from its own
-      // named group: detail -> detail must move as whole pages, not morph one
-      // screenshot into a different project's screenshot).
+      // named group: a page change must move as whole pages, never morph a
+      // screenshot — least of all one that sits above the viewport).
       document.documentElement.setAttribute(DIR_ATTR, options.dir as string);
     }
 
@@ -329,8 +336,8 @@ export function navigateWithTransition(
       parkAt(targetY);
       // The hero is painted from the full-resolution file: without this the
       // snapshot is the dark plate behind an undecoded image.
-      await waitForPaint(directional ? 320 : 420);
-      if (directional) return;
+      await waitForPaint(hasDir ? 320 : 420);
+      if (hasDir) return;
       // Card -> detail: hand the flight to the hero capture, which is both the
       // sharper frame and the one that matches where the image lands — the card
       // canvas would be blown up into this box for the whole flight and then

@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "send-newsletter": "node --env-file=.env scripts/send-newsletter.js",
-    "fetch:contributions": "node scripts/fetch-github-contributions.mjs"
+    "fetch:contributions": "node scripts/fetch-github-contributions.mjs",
+    "work:colors": "node scripts/generate-work-colors.mjs"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
