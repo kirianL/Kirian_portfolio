@@ -2298,6 +2298,104 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   opacity: 1;
 }
 
+.work-note-pencil__ink {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  stroke-opacity: 0.62;
+}
+
+.work-note-pencil__travel {
+  transform-box: view-box;
+  offset-path: path("M 2.9 18.9 C 4.4 17.4 5.6 20.3 7.1 18.6 C 8.3 17.2 9.3 19.5 10.2 17.6");
+  offset-anchor: 10.2px 17.6px;
+  offset-distance: 100%;
+  offset-rotate: 0deg;
+}
+
+.work-note-pencil__nib {
+  transform-box: view-box;
+  transform-origin: 10.2px 17.6px;
+}
+
+.work-note-trigger:hover .work-note-pencil__ink,
+.work-note-trigger:focus-visible .work-note-pencil__ink {
+  animation: work-note-draw 760ms cubic-bezier(0.42, 0.02, 0.2, 1) both;
+}
+
+.work-note-trigger:hover .work-note-pencil__travel,
+.work-note-trigger:focus-visible .work-note-pencil__travel {
+  animation: work-note-travel 760ms cubic-bezier(0.42, 0.02, 0.2, 1) both;
+}
+
+.work-note-trigger:hover .work-note-pencil__nib,
+.work-note-trigger:focus-visible .work-note-pencil__nib {
+  animation: work-note-nib 760ms cubic-bezier(0.42, 0.02, 0.2, 1) both;
+}
+
+@keyframes work-note-draw {
+  0% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  14% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  18% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  24% {
+    stroke-dashoffset: 1;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes work-note-travel {
+  0% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  14% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+  18% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  24% {
+    offset-distance: 0%;
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes work-note-nib {
+  0% {
+    transform: rotate(-2.6deg);
+  }
+  24% {
+    transform: rotate(2deg);
+  }
+  58% {
+    transform: rotate(-1.5deg);
+  }
+  84% {
+    transform: rotate(1deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
 /* Lightbox — the capture itself is the dialog. There is no panel, border or
    inner surface: the photo floats on the softened backdrop with only a hairline
    ring, and the neighbours sit dimmed at the sides. Opening lifts the stage by
@@ -2415,6 +2513,12 @@ main[class*="bg-[#0a0a0a]"] ::selection {
 @media (prefers-reduced-motion: reduce) {
   .work-note-panel {
     transition-duration: 0.01ms !important;
+  }
+
+  .work-note-pencil__ink,
+  .work-note-pencil__travel,
+  .work-note-pencil__nib {
+    animation: none !important;
   }
 
   .work-lightbox[data-state],

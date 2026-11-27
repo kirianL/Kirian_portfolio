@@ -340,6 +340,9 @@ function WorkDetailView({ lang }: WorkDetailProps) {
 
   const lightboxSection =
     lightboxIndex !== null ? sections[lightboxIndex] : undefined;
+  const lightboxVideo = isEs
+    ? lightboxSection?.videoEs
+    : lightboxSection?.videoEn;
   // Neighbours for the side previews: previous only when there is one, next
   // wrapping to the first section, exactly like the arrow keys do.
   const lightboxPrev =
@@ -491,6 +494,7 @@ function WorkDetailView({ lang }: WorkDetailProps) {
               const noteId = `work-note-${section.id}`;
               const shotSrc = isEs ? section.imageEs : section.imageEn;
               const shotHeight = isEs ? section.heightEs : section.heightEn;
+              const shotVideo = isEs ? section.videoEs : section.videoEn;
 
               return (
                 <article
@@ -525,14 +529,29 @@ function WorkDetailView({ lang }: WorkDetailProps) {
                     aria-label={`${sectionTitle}: ${isEs ? "ampliar captura" : "open larger"}`}
                     className="group relative mt-5 block w-full cursor-zoom-in overflow-hidden rounded-[10px] bg-[#141414] text-left ring-1 ring-white/[0.06] transition-[box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:ring-white/[0.14] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d1c5ad]"
                   >
-                    <GridRevealImage
-                      src={shotSrc}
-                      alt={`${sectionTitle}, ${title}`}
-                      aspect={section.width / shotHeight}
-                      className="rounded-[10px]"
-                      fetchPriority={index === 0 ? "high" : "auto"}
-                      dominantColor={workImageColor(shotSrc)}
-                    />
+                    {shotVideo ? (
+                      <video
+                        src={shotVideo}
+                        poster={shotSrc}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="auto"
+                        aria-label={`${sectionTitle}, ${title}`}
+                        className="block w-full rounded-[10px] object-cover"
+                        style={{ aspectRatio: section.width / shotHeight }}
+                      />
+                    ) : (
+                      <GridRevealImage
+                        src={shotSrc}
+                        alt={`${sectionTitle}, ${title}`}
+                        aspect={section.width / shotHeight}
+                        className="rounded-[10px]"
+                        fetchPriority={index === 0 ? "high" : "auto"}
+                        dominantColor={workImageColor(shotSrc)}
+                      />
+                    )}
                   </button>
 
                   <p className="mt-6 max-w-[54ch] text-pretty font-hero-sans text-[14px] leading-[1.62] text-[#f5f5f5b0]">
@@ -753,18 +772,36 @@ function WorkDetailView({ lang }: WorkDetailProps) {
                 )}
 
                 <div className="flex min-w-0 flex-1 items-center justify-center">
-                  <img
-                    key={lightboxSection.id}
-                    src={isEs ? lightboxSection.imageEs : lightboxSection.imageEn}
-                    alt={`${isEs ? lightboxSection.titleEs : lightboxSection.titleEn}, ${title}`}
-                    width={lightboxSection.width}
-                    height={isEs ? lightboxSection.heightEs : lightboxSection.heightEn}
-                    fetchPriority="high"
-                    decoding="sync"
-                    data-dir={stepDir === 1 ? "next" : "prev"}
-                    draggable={false}
-                    className="work-lightbox__image block max-h-[60vh] max-w-full rounded-[10px] bg-[#111111] object-contain ring-1 ring-white/[0.08] select-none sm:max-h-[74vh]"
-                  />
+                  {lightboxVideo ? (
+                    <video
+                      key={lightboxSection.id}
+                      src={lightboxVideo}
+                      poster={isEs ? lightboxSection.imageEs : lightboxSection.imageEn}
+                      aria-label={`${isEs ? lightboxSection.titleEs : lightboxSection.titleEn}, ${title}`}
+                      width={lightboxSection.width}
+                      height={isEs ? lightboxSection.heightEs : lightboxSection.heightEn}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="auto"
+                      data-dir={stepDir === 1 ? "next" : "prev"}
+                      className="work-lightbox__image block max-h-[60vh] max-w-full rounded-[10px] bg-[#111111] object-contain ring-1 ring-white/[0.08] select-none sm:max-h-[74vh]"
+                    />
+                  ) : (
+                    <img
+                      key={lightboxSection.id}
+                      src={isEs ? lightboxSection.imageEs : lightboxSection.imageEn}
+                      alt={`${isEs ? lightboxSection.titleEs : lightboxSection.titleEn}, ${title}`}
+                      width={lightboxSection.width}
+                      height={isEs ? lightboxSection.heightEs : lightboxSection.heightEn}
+                      fetchPriority="high"
+                      decoding="sync"
+                      data-dir={stepDir === 1 ? "next" : "prev"}
+                      draggable={false}
+                      className="work-lightbox__image block max-h-[60vh] max-w-full rounded-[10px] bg-[#111111] object-contain ring-1 ring-white/[0.08] select-none sm:max-h-[74vh]"
+                    />
+                  )}
                 </div>
 
                 {lightboxNext && (

@@ -15,6 +15,8 @@ export interface WorkSection {
   id: string;
   imageEn: string;
   imageEs: string;
+  videoEn?: string;
+  videoEs?: string;
   width: number;
   heightEn: number;
   heightEs: number;
@@ -94,6 +96,8 @@ export const WORK_SECTIONS: Record<string, WorkSection[]> = {
       id: "modeling",
       imageEn: "/work/koragrid/en/04.png",
       imageEs: "/work/koragrid/es/04.png",
+      videoEn: "/work/koragrid/videos/en/04.mp4",
+      videoEs: "/work/koragrid/videos/es/04.mp4",
       width: 2880,
       heightEn: 1740,
       heightEs: 1742,
