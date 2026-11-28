@@ -25,7 +25,7 @@
       })();
     </script>
     <style>
-      html.js #root > main {
+      html.js #root > [data-static-fallback] {
         display: none;
       }
     </style>
@@ -151,7 +151,7 @@
     class="antialiased bg-[#0a0a0a] text-[#f5f5f5]"
   >
     <div id="root">
-      <main>
+      <main data-static-fallback>
         <h1>Kirian Luna</h1>
         <p>Software Engineer based in Costa Rica. Full-stack web engineering with TypeScript, React, Next.js and Astro.</p>
         <section>
