@@ -37,9 +37,8 @@ const GUTTER_FROM = 0.35;
 const GUTTER_TO = 0.75;
 const PHOTO_FROM = 0.93;
 // A load faster than this is a cache hit — skip the reveal and show the photo.
-// The same window gates the mosaic: the grid is a fallback for an image that is
-// genuinely late, so nothing about it is built before this elapses.
-const INSTANT_MS = 1200;
+// The mosaic starts immediately if the image isn't loaded so there is never a blank card.
+const INSTANT_MS = 80;
 
 // Sources already revealed in this session never animate again.
 const revealedSources = new Set<string>();
@@ -641,9 +640,8 @@ export default function GridRevealImage({
         frameId = requestAnimationFrame(tick);
       };
 
-      // Nothing about the mosaic exists until this fires, and it fires only when
-      // the photo missed the cache-hit window. That is the whole condition: the
-      // grid is strictly the state for "the image has not arrived".
+      // Start the mosaic immediately if not cached / ready, so the card
+      // animates its grid skeleton right away instead of showing an empty black box.
       const startSkeleton = () => {
         skeletonTimer = undefined;
         if (stopped || cancelled || reduce) return;
@@ -663,10 +661,8 @@ export default function GridRevealImage({
         if (visible) start();
       };
 
-      // Reduced motion never gets the mosaic: a solid block in the photo's
-      // colour stands in until the file lands, so the tree is never built.
-      if (!reduce) {
-        skeletonTimer = window.setTimeout(startSkeleton, INSTANT_MS);
+      if (!reduce && !cached?.naturalWidth) {
+        startSkeleton();
       }
 
       const load = (url: string, withCors: boolean) => {
@@ -688,14 +684,10 @@ export default function GridRevealImage({
           scene.image = el;
           decodedImages.set(url, el);
 
-          // A cache hit, a photo already revealed this session, or one that
-          // landed before the skeleton timer fired: there is nothing to resolve,
-          // so paint the crisp frame and stop. The grid only runs for images
-          // that were actually late.
+          // A cache hit or already revealed source: paint the crisp frame and stop.
           instant =
             revealedSources.has(src) ||
-            !tree ||
-            performance.now() - startedAt < INSTANT_MS;
+            (!tree && performance.now() - startedAt < INSTANT_MS);
 
           if (instant) {
             revealedSources.add(src);
