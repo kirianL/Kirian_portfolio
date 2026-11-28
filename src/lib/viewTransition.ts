@@ -250,7 +250,16 @@ export function navigateWithTransition(
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (typeof doc.startViewTransition !== "function" || reduce) {
+  // On touch / mobile devices (especially iOS Safari), morphing the shared card
+  // into the hero creates ghost rect artifacts and glitches with dynamic viewports.
+  // Fall back to clean, instant native navigation without the flight.
+  const isTouch =
+    typeof window !== "undefined" &&
+    (window.matchMedia?.("(pointer: coarse)").matches ||
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0);
+
+  if (typeof doc.startViewTransition !== "function" || reduce || isTouch) {
     navigate();
     if (typeof options.scrollY === "number") parkAt(options.scrollY);
     return;

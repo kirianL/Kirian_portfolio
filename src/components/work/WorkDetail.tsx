@@ -360,7 +360,15 @@ function WorkDetailView({ lang }: WorkDetailProps) {
 
   // With a View Transition the browser itself flies the carousel thumbnail
   // into this hero, so the CSS "settle" entrance would double-animate it.
+  // Touch / mobile devices skip view transitions, so they always use clean settle / ready.
+  const isTouch =
+    typeof window !== "undefined" &&
+    (window.matchMedia?.("(pointer: coarse)").matches ||
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0);
+
   const supportsViewTransition =
+    !isTouch &&
     typeof document !== "undefined" &&
     typeof (document as Document & { startViewTransition?: unknown })
       .startViewTransition === "function" &&

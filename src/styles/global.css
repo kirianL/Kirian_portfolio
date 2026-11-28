@@ -2240,6 +2240,18 @@ main[class*="bg-[#0a0a0a]"] ::selection {
   }
 }
 
+@media (pointer: coarse) {
+  ::view-transition-group(work-image) {
+    animation: none !important;
+  }
+  .work-detail__hero {
+    view-transition-name: none !important;
+    transition: opacity 220ms ease-out !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
 /* Detail hero + info — the hero "settles" into center on entry: a gentle
    lift + scale from 0.95, compositor-only transform/opacity, no jank. The box
    keeps the thumbnail's 16:10 ratio in CSS as well as in the markup: the
