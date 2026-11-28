@@ -18,11 +18,17 @@
           window.matchMedia("(prefers-color-scheme: dark)").matches;
         var isDark = saved ? saved === "dark" : prefersDark;
 
+        document.documentElement.classList.add("js");
         document.documentElement.classList.toggle("dark", isDark);
         document.documentElement.style.colorScheme = "dark";
         document.documentElement.style.backgroundColor = "#0a0a0a";
       })();
     </script>
+    <style>
+      html.js #root > main {
+        display: none;
+      }
+    </style>
 
     <!-- Favicons & Manifest -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
