@@ -37,8 +37,9 @@ const GUTTER_FROM = 0.35;
 const GUTTER_TO = 0.75;
 const PHOTO_FROM = 0.93;
 // A load faster than this is a cache hit — skip the reveal and show the photo.
-// The mosaic starts immediately if the image isn't loaded so there is never a blank card.
-const INSTANT_MS = 80;
+// Reduced threshold so user always gets the intended mosaic reveal animation
+// unless the exact image was already revealed in the current session.
+const INSTANT_MS = 16;
 
 // Sources already revealed in this session never animate again.
 const revealedSources = new Set<string>();
@@ -76,7 +77,9 @@ type Rgb = {
 // The surface every work card sits on. A placeholder may be toned by the photo
 // but it must never read as an empty white box, so this is also the fallback
 // when the photo has no usable colour of its own.
-const FALLBACK_COLOR: Rgb = { r: 20, g: 20, b: 20 }; // #141414
+// We use a base with sufficient brightness (#1c1c1e) so that subdivision tiles
+// and borders are clearly visible even on pure black or dark cards.
+const FALLBACK_COLOR: Rgb = { r: 28, g: 28, b: 30 }; // #1c1c1e
 const MAX_PLACEHOLDER_LUMA = 0.72;
 const MIN_PLACEHOLDER_CHROMA = 0.16;
 
@@ -303,15 +306,21 @@ function placeholderColor(value?: string): Rgb {
   return rgb;
 }
 
-/** A slight, deterministic lift per tile keeps the mosaic alive while it waits. */
+/** A deterministic lift and contrast adjustment per tile keeps the mosaic visibly alive. */
 function tileColor(base: Rgb, tone: number, clock: number) {
+  // Ensure dark bases still have noticeable brightness steps between tiles
+  const adjustedBase = {
+    r: Math.max(base.r, 24),
+    g: Math.max(base.g, 24),
+    b: Math.max(base.b, 24),
+  };
   const lift =
-    0.84 + tone * 0.32 + Math.sin(clock * 1.5 + tone * 6.28) * 0.03;
+    0.78 + tone * 0.44 + Math.sin(clock * 1.5 + tone * 6.28) * 0.04;
   const clamp = (n: number) => (n < 0 ? 0 : n > 255 ? 255 : Math.round(n));
   return {
-    r: clamp(base.r * lift),
-    g: clamp(base.g * lift),
-    b: clamp(base.b * lift),
+    r: clamp(adjustedBase.r * lift),
+    g: clamp(adjustedBase.g * lift),
+    b: clamp(adjustedBase.b * lift),
   };
 }
 
@@ -322,16 +331,15 @@ function drawScene(s: Scene) {
     Math.round(mix(base, target, tint));
   const base = tileColor(s.base, root.tone, s.clock);
 
-  // The backdrop sits a touch under the tiles, so the gaps read as a surface
-  // rather than as more tiles while the mosaic opens.
-  ctx.fillStyle = `rgb(${shade(base.r * 0.92, root.r)},${shade(
-    base.g * 0.92,
+  // The backdrop sits under the tiles with crisp separation so gutters read clearly
+  ctx.fillStyle = `rgb(${shade(Math.max(10, base.r * 0.7), root.r)},${shade(
+    Math.max(10, base.g * 0.7),
     root.g,
-  )},${shade(base.b * 0.92, root.b)})`;
+  )},${shade(Math.max(12, base.b * 0.7), root.b)})`;
   ctx.fillRect(0, 0, width, height);
 
   const soft = 1 - smoothstep(GUTTER_FROM, GUTTER_TO, split);
-  const gutter = s.scale * soft;
+  const gutter = Math.max(1, s.scale * 1.25) * soft;
   const rounded = soft > 0.01 && typeof ctx.roundRect === "function";
 
   const paint = (p: Patch) => {
