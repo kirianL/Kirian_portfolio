@@ -194,17 +194,17 @@ function WorkDetailView({ lang }: WorkDetailProps) {
 
   const isLightboxOpen = lightboxIndex !== null;
 
-  // Lock the page while zoomed. Lenis has its own RAF loop, so stopping it is
-  // as important as hiding the overflow.
+  // Lock the page while zoomed without mutating <html> overflow, which causes
+  // iOS Safari to re-measure the dynamic viewport and flash the safe areas.
   useEffect(() => {
     if (!isLightboxOpen) return;
-    const root = document.documentElement;
-    const previousOverflow = root.style.overflow;
+    const body = document.body;
+    const previousOverflow = body.style.overflow;
     const lenis = getLenis();
-    root.style.overflow = "hidden";
+    body.style.overflow = "hidden";
     lenis?.stop?.();
     return () => {
-      root.style.overflow = previousOverflow;
+      body.style.overflow = previousOverflow;
       lenis?.start?.();
     };
   }, [isLightboxOpen]);
@@ -397,9 +397,9 @@ function WorkDetailView({ lang }: WorkDetailProps) {
     <main
       id="main-content"
       data-work-path={projectHref}
-      className="work-detail min-h-screen w-full bg-[#0a0a0a] text-[#f5f5f5]"
+      className="work-detail min-h-[100dvh] w-full bg-[#0a0a0a] text-[#f5f5f5]"
     >
-      <div className="work-col-header mx-auto px-6 sm:px-0 pt-20 sm:pt-24 min-[1600px]:pt-28">
+      <div className="work-col-header mx-auto px-6 sm:px-0 pt-[calc(5rem+env(safe-area-inset-top))] sm:pt-24 min-[1600px]:pt-28">
         <button
           onClick={goBack}
           className="inline-flex items-center gap-1.5 font-hero-sans text-[13px] text-[#f5f5f59e] hover:text-[#f5f5f5] transition-[color,opacity,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] active:opacity-60 active:scale-[0.97] cursor-pointer"
@@ -679,20 +679,20 @@ function WorkDetailView({ lang }: WorkDetailProps) {
               isEs ? lightboxSection.titleEs : lightboxSection.titleEn
             }`}
             data-state={lightboxClosing ? "closing" : "open"}
-            className="work-lightbox fixed inset-0 z-[100] overflow-hidden bg-[#0a0a0a]/80 backdrop-blur-md"
+            className="work-lightbox fixed inset-0 z-[100] h-dvh w-full overflow-hidden overscroll-none bg-[#0a0a0a]/92 backdrop-blur-md"
           >
             <button
               type="button"
               aria-label={isEs ? "Cerrar" : "Close"}
               onClick={closeLightbox}
-              className="absolute inset-0 z-0 cursor-zoom-out"
+              className="absolute inset-0 z-0 cursor-zoom-out touch-none"
               tabIndex={-1}
             />
 
             {/* No panel, no frame: the capture floats on the backdrop and only
                 the metadata, close control and neighbouring previews sit around
                 it. Every edge of this stage is a gutter the image can use. */}
-            <div className="work-lightbox__stage relative z-10 flex h-full w-full flex-col">
+            <div className="work-lightbox__stage relative z-10 flex h-full w-full flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
               <div className="flex shrink-0 items-start justify-between gap-4 px-5 pt-5 sm:px-8 sm:pt-6">
                 <div className="min-w-0">
                   <p className="font-hero-sans text-[11px] tabular-nums tracking-[0.08em] text-[#d1c5ad]">
@@ -786,7 +786,7 @@ function WorkDetailView({ lang }: WorkDetailProps) {
                       playsInline
                       preload="auto"
                       data-dir={stepDir === 1 ? "next" : "prev"}
-                      className="work-lightbox__image block max-h-[60vh] max-w-full rounded-[10px] bg-[#111111] object-contain ring-1 ring-white/[0.08] select-none sm:max-h-[74vh]"
+                      className="work-lightbox__image block max-h-[58dvh] max-w-full rounded-[10px] bg-[#111111] object-contain ring-1 ring-white/[0.08] select-none sm:max-h-[74dvh]"
                     />
                   ) : (
                     <img
@@ -799,7 +799,7 @@ function WorkDetailView({ lang }: WorkDetailProps) {
                       decoding="sync"
                       data-dir={stepDir === 1 ? "next" : "prev"}
                       draggable={false}
-                      className="work-lightbox__image block max-h-[60vh] max-w-full rounded-[10px] bg-[#111111] object-contain ring-1 ring-white/[0.08] select-none sm:max-h-[74vh]"
+                      className="work-lightbox__image block max-h-[58dvh] max-w-full rounded-[10px] bg-[#111111] object-contain ring-1 ring-white/[0.08] select-none sm:max-h-[74dvh]"
                     />
                   )}
                 </div>

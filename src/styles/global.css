@@ -40,11 +40,12 @@ html,
 body {
   position: relative;
   overflow-x: clip;
-  background-color: var(--color-grayscale-1);
+  background-color: #0a0a0a;
   color: var(--color-grayscale-12);
   font-family: var(--font-sans);
   margin: 0;
   padding: 0;
+  overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -346,6 +347,8 @@ html.lenis body {
 
 ::view-transition-image-pair(root) {
   isolation: isolate;
+  overflow: clip;
+  background-color: #0a0a0a;
 }
 
 /* The pages only dissolve, and they do it as a reveal rather than a crossfade:
@@ -402,41 +405,45 @@ html.lenis body {
 
 @keyframes vtDirOutNext {
   from {
-    transform: translateX(0);
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
   }
   to {
-    transform: translateX(-6%);
+    opacity: 0.45;
+    transform: translate3d(-12%, 0, 0) scale(0.985);
   }
 }
 
 @keyframes vtDirInNext {
   from {
     opacity: 0;
-    transform: translateX(10%);
+    transform: translate3d(16%, 0, 0) scale(0.992);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
 @keyframes vtDirOutPrev {
   from {
-    transform: translateX(0);
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
   }
   to {
-    transform: translateX(6%);
+    opacity: 0.45;
+    transform: translate3d(12%, 0, 0) scale(0.985);
   }
 }
 
 @keyframes vtDirInPrev {
   from {
     opacity: 0;
-    transform: translateX(-10%);
+    transform: translate3d(-16%, 0, 0) scale(0.992);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
