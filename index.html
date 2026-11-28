@@ -124,11 +124,42 @@
     <meta name="twitter:image:alt" content="Kirian Luna | Software Engineer" />
     <meta name="twitter:site" content="@kiriandev" />
     <meta name="twitter:creator" content="@kiriandev" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Kirian Luna",
+        "url": "https://kirian.dev/",
+        "description": "Software Engineer based in Costa Rica. Full-stack web engineering with TypeScript, React, Next.js and Astro.",
+        "sameAs": [
+          "https://github.com/kirianL",
+          "https://linkedin.com/in/kirianluna",
+          "https://x.com/kiriandev"
+        ]
+      }
+    </script>
   </head>
   <body
     class="antialiased bg-[#0a0a0a] text-[#f5f5f5]"
   >
-    <div id="root"></div>
+    <div id="root">
+      <main>
+        <h1>Kirian Luna</h1>
+        <p>Software Engineer based in Costa Rica. Full-stack web engineering with TypeScript, React, Next.js and Astro.</p>
+        <section>
+          <h2>Selected Work</h2>
+          <ul>
+            <li>KoraGrid — Real-time Energy Telemetry &amp; ESG Platform</li>
+            <li>CustomerUp — Customer Experience &amp; Feedback Platform</li>
+            <li>Kora Finance — Financial Management &amp; Analytics</li>
+            <li>Alder Psicología — Clinical Psychology &amp; Wellness Platform</li>
+            <li>GigBlades — SaaS platform for DJs with bookings and self-managed dashboards</li>
+          </ul>
+        </section>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
